@@ -131,6 +131,9 @@
     }
 </style>
 <style>
+    html, body{
+        background-color: transparent !important;
+    }
     input {
         background-color: transparent !important;
     }
@@ -649,7 +652,7 @@
                 const file_path_from_url = queryParams.file;
                 if (query_from_url != null || query_from_url != undefined) {
                     setTextAndTriggerInputEvent(query_from_url)
-                } else if (file_path_from_url != null) {
+                } else if (file_path_from_url != null || file_path_from_url != undefined) {
                     displayFile(file_path_from_url)
                 }
             }
