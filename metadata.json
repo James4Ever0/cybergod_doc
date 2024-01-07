@@ -257,7 +257,7 @@
         "50": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/README.md",
             "entry_id": 422,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "51": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py",
@@ -402,7 +402,7 @@
         "79": {
             "filepath": "/binary_program_synthesis_cpu_assembly_execution/README.md",
             "entry_id": 638,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "80": {
             "filepath": "/binary_program_synthesis_cpu_assembly_execution/bnn_data_ingest.py",
@@ -462,7 +462,7 @@
         "91": {
             "filepath": "/containerized_chatgpt_agent/README.md",
             "entry_id": 700,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "92": {
             "filepath": "/containerized_chatgpt_agent/ai_captialism.py",
@@ -607,7 +607,7 @@
         "120": {
             "filepath": "/dynamic_plasticity_neural_networks/README.md",
             "entry_id": 892,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "121": {
             "filepath": "/dynamic_plasticity_neural_networks/dnn_reference.py",
@@ -652,7 +652,7 @@
         "129": {
             "filepath": "/hardware_capture_hid_power_control/README.md",
             "entry_id": 936,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "130": {
             "filepath": "/hardware_capture_hid_power_control/common_keycodes.py",
@@ -732,7 +732,7 @@
         "145": {
             "filepath": "/propaganda/video_script/README.md",
             "entry_id": 1070,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "146": {
             "filepath": "/propaganda/video_script/clyde_script.txt",
@@ -777,7 +777,7 @@
         "154": {
             "filepath": "/qstar_my_guess/README.md",
             "entry_id": 1114,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "155": {
             "filepath": "/qstar_my_guess/astar_test.py",
@@ -817,7 +817,7 @@
         "162": {
             "filepath": "/rt_x_experiments/README.md",
             "entry_id": 1210,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "163": {
             "filepath": "/rt_x_experiments/requirements.txt",
@@ -972,7 +972,7 @@
         "193": {
             "filepath": "/the_frozen_forest_intro/README.md",
             "entry_id": 1462,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "194": {
             "filepath": "/the_frozen_forest_intro/drissionpage_common.py",
@@ -1052,7 +1052,7 @@
         "209": {
             "filepath": "/ubuntu_qemu_utm_arm_record/README.md",
             "entry_id": 1610,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "210": {
             "filepath": "/ubuntu_qemu_utm_arm_record/audio_record.py",
@@ -1197,7 +1197,7 @@
         "238": {
             "filepath": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/README.md",
             "entry_id": 1786,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "239": {
             "filepath": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/check_vm.sh",
@@ -1327,7 +1327,7 @@
         "264": {
             "filepath": "/usb_power_management/linux/README.md",
             "entry_id": 1898,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "265": {
             "filepath": "/usb_power_management/linux/devcontrol.sh",
@@ -1337,7 +1337,7 @@
         "266": {
             "filepath": "/usb_power_management/windows/README.md",
             "entry_id": 1912,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         }
     },
     "project_name": "agi_computer_control",
