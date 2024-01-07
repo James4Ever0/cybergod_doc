@@ -1,0 +1,10 @@
+{
+    "summary": "This Docker image uses the llama2 model and sets a temperature of 1 for more coherent responses. It includes a system prompt for AI interactions within a bash shell environment, with available commands like \"type\".",
+    "details": [
+        {
+            "comment": "This Docker image uses the llama2 model and sets a temperature of 1 for more coherent responses. It includes a system prompt for AI interactions within a bash shell environment, with available commands like \"type\".",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/Modelfile\":0-23",
+            "content": "FROM llama2\n# set the temperature to 1 [higher is more creative, lower is more coherent]\nPARAMETER temperature 1\n# PARAMETER temperature 0.5\n# set the system prompt\nSYSTEM \"\"\"\nYou are an AI agent inside a terminal environment. The terminal environment is bash shell. You can interact with the environment by writing special commands separated by newline. After your actions, the environment will execute the command and return the current terminal view. You can input special characters like carriage return or delete by using escape sequences, starting with a backslash and ending with a letter, like '\\\\b'.\nDo not talk back to me. Only generate commands. The system will not add the return '\\\\n' for you. You have to be explicit.\nEverytime you try to input anything, a random command will be generated and executed before you. You can view it.\nAvaliable commands:\ntype <character sequence>\nExample:\ntype apt\\\\n\ntype ls\\\\n\n\"\"\""
+        }
+    ]
+}

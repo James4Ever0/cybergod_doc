@@ -1,0 +1,10 @@
+{
+    "summary": "The code is taking a snapshot of the virtual machine named \"Ubuntu 16.04\" and then restoring different snapshots (Snapshot 3, Snapshot 7, Snapshot 14) to various states. Note that Snapshot 12 has a bug and cannot be restored.",
+    "details": [
+        {
+            "comment": "The code is taking a snapshot of the virtual machine named \"Ubuntu 16.04\" and then restoring different snapshots (Snapshot 3, Snapshot 7, Snapshot 14) to various states. Note that Snapshot 12 has a bug and cannot be restored.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/restore_vm.sh\":0-7",
+            "content": "# take snapshot\n# vboxmanage snapshot \"Ubuntu 16.04\" take \"Snapshot 3\"\n# restore snapshot\nvboxmanage snapshot \"Ubuntu 16.04\" restore \"Snapshot 14\"\n# 12 has bug.\n# vboxmanage snapshot \"Ubuntu 16.04\" restore \"Snapshot 7\"\n# vboxmanage snapshot \"Ubuntu 16.04\" restore \"Snapshot 6\"\n# vboxmanage snapshot \"Ubuntu 16.04\" restore \"Snapshot 3\""
+        }
+    ]
+}

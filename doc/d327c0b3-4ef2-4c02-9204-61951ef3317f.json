@@ -1,0 +1,10 @@
+{
+    "summary": "This code is listing two PyTorch libraries: classifier-free-guidance-pytorch and efficientnet-pytorch.",
+    "details": [
+        {
+            "comment": "This code is listing two PyTorch libraries: classifier-free-guidance-pytorch and efficientnet-pytorch.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/rt_x_experiments/rt_x_test_code/requirements.txt\":0-1",
+            "content": "classifier-free-guidance-pytorch\nefficientnet-pytorch"
+        }
+    ]
+}

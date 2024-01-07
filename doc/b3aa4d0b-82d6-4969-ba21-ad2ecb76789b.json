@@ -1,0 +1,10 @@
+{
+    "summary": "This code reads a binary file, converts it to a stream of zeroes and ones, groups the bits into 8-bit groups (bytes), and writes the result in text format with one byte per line.",
+    "details": [
+        {
+            "comment": "This code reads a binary file, converts it to a stream of zeroes and ones, groups the bits into 8-bit groups (bytes), and writes the result in text format with one byte per line.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/binary_program_synthesis_cpu_assembly_execution/convert_binary_files_as_zero_and_one_streams.py\":0-26",
+            "content": "# binaries? this reminds me of binary neural networks. whoa there!\n# import numpy as np\nfilepath = \"README.md\"\noutput_path = \"converted_binary_view.txt\"\n# import binascii\n# this can do the job of hex\nimport itertools\nwith open(filepath, \"rb\") as f:\n    _bytes = f.read()\n    # char = f.read(1)\n    # arr = np.frombuffer(char, dtype=np.bool_) # this will not work.\n    # arr = np.frombuffer(char, dtype=np.uint8)\n    # arr = np.array(list(char)).astype(np.uint8)\n    # print(arr)\n    # print(char)\n    # bin_array = np.unpackbits(arr)\n    # bin_array = np.unpackbits(arr).astype(np.bool_)\n    # print(bin_array)  # [False  True False False  True False False  True]\n    bit_repr = [format(it, '08b') for it in _bytes]\n    line_list = []\n    for index, bit_group in itertools.groupby(enumerate(bit_repr), key=lambda x: x[0]//8):\n        line = \" \".join([it for _, it in bit_group])\n        line_list.append(line)\n    with open(output_path, 'w+') as fw:\n        fw.write(\"\\n\".join(line_list))"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "This code defines an abstract base class (ABC) with a method and an implementation class that overrides the method. It also shows how to get an error when trying to instantiate an abstract class or non-implementing class.",
+    "details": [
+        {
+            "comment": "This code defines an abstract base class (ABC) with a method and an implementation class that overrides the method. It also shows how to get an error when trying to instantiate an abstract class or non-implementing class.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/test/test_abstract_impl.py\":0-25",
+            "content": "from abc import ABC, abstractmethod\nclass abs_class(ABC):\n    def method(self):\n        \"doc here\"\n        return self._method_impl()\n    @abstractmethod\n    def _method_impl(self):\n        ...\nclass impl_class(abs_class):\n    def _method_impl(self):\n        return 1\nclass impl_class2(abs_class):\n    def non_relevant(self):\n        ...\nprint(impl_class().method())\n# print(impl_class2()) # error\n# print(abs_class()) # error"
+        }
+    ]
+}

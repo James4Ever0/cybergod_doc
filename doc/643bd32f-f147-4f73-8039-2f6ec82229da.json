@@ -1,0 +1,10 @@
+{
+    "summary": "Code snippet for testing concatenation using torch library with directml acceleration.",
+    "details": [
+        {
+            "comment": "Code snippet for testing concatenation using torch library with directml acceleration.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/directml_yolov5/test_concat.py\":0-13",
+            "content": "import torch\nimport torch_directml\ndev = torch_directml.device()\na = torch.ones((20, 20))\na.to(dev)\nprint(torch.cat([a, a]))\nprint(torch.cat([a, a], dim=1))\nprint(torch.cat([a, a], 1))\nprint(torch.cat((a, a), 1))\nprint(torch.cat((a, a, a), 1))\nprint(torch.cat((a, a, a, a), 1))\nprint(torch.cat((a, a, a, a, a), 1))"
+        }
+    ]
+}

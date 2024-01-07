@@ -1,0 +1,10 @@
+{
+    "summary": "Attempting to access non-existent key \"2\" from dictionary \"a\", resulting in a KeyError.",
+    "details": [
+        {
+            "comment": "Attempting to access non-existent key \"2\" from dictionary \"a\", resulting in a KeyError.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/try_better_exceptions.py\":1-2",
+            "content": "a = {1:\"a\"}\nprint(a[2]) # must be error."
+        }
+    ]
+}

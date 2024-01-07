@@ -1,0 +1,10 @@
+{
+    "summary": "This is a list of dependencies required for the project. The code checks the operating system and adds specific packages accordingly, such as pexpect and whexpect for POSIX and Windows systems respectively, py-applescript for MacOS, pygetwindow for both Windows and MacOS, docker, func-timeout, progressbar2, better-exceptions, easyprocess, requests, and frozendict. The # comment indicates that frozendict may be optional.",
+    "details": [
+        {
+            "comment": "This is a list of dependencies required for the project. The code checks the operating system and adds specific packages accordingly, such as pexpect and whexpect for POSIX and Windows systems respectively, py-applescript for MacOS, pygetwindow for both Windows and MacOS, docker, func-timeout, progressbar2, better-exceptions, easyprocess, requests, and frozendict. The # comment indicates that frozendict may be optional.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/requirements.txt\":0-12",
+            "content": "pexpect==4.6.0; os_name == 'posix'\nwexpect==4.0.0; os_name == 'nt'\npy-applescript; platform_system == 'Darwin'\npygetwindow; platform_system == 'Windows'\npygetwindow; platform_system == 'Darwin'\ndocker\nfunc-timeout\nprogressbar2\nbetter-exceptions\neasyprocess\nelevate\nrequests\n# frozendict"
+        }
+    ]
+}

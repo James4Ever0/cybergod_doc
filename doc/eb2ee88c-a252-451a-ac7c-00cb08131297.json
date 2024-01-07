@@ -1,0 +1,10 @@
+{
+    "summary": "Killing streaming_utils session and related processes.\n\nQuestion (0-1): Can you provide a brief explanation of what the code does?",
+    "details": [
+        {
+            "comment": "Killing streaming_utils session and related processes.\n\nQuestion (0-1): Can you provide a brief explanation of what the code does?",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/off_streaming_utils.sh\":0-4",
+            "content": "tmux kill-session -t streaming_utils\nps aux | grep bash | grep -v grep | grep kali_prepare_dirs_loop.sh | awk '{print $2}' | xargs -iabc kill -s TERM abc\ntmux kill-session -t kali_prepare_two_webdav_dirs\n# location of ubuntu vm: 10.0.2.15"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Exploring an undetectable, cage-based method to control the bot without battery power using keyboard and mouse input.",
+    "details": [
+        {
+            "comment": "Exploring an undetectable, cage-based method to control the bot without battery power using keyboard and mouse input.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/lego_mindstorm_physical_mouse_keyboard_control/README.md\":0-10",
+            "content": "And this thing is proposed by our fellows, which is absolutely undetectable by any anti-cheating software.\nIsolated in the cage, so our dataset is names as such.\nWe will try to explore something inside the cage and get interesting results, like using the keyboard and the mouse while looking at the computer screen.\nMost importantly, [how](https://www.eurobricks.com/forum/index.php?/forums/topic/195337-ev3-ac-power-adapter/) do we make it work [without battery power](https://bricksafe.com/pages/Heppu/wip-/ac-adapter), and how to send commands to the bot?\nIs there ssh access to the bot?\nWe can [control](https://github.com/ChristophGaukel/ev3-python3) the bot without ev3dev operate system"
+        }
+    ]
+}

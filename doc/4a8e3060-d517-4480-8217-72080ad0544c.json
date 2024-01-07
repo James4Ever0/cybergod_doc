@@ -1,0 +1,10 @@
+{
+    "summary": "The code is showing a terminal session where a user is inputting and receiving responses. It displays commands, system prompts, and cursor movements.",
+    "details": [
+        {
+            "comment": "The code is showing a terminal session where a user is inputting and receiving responses. It displays commands, system prompts, and cursor movements.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/action_state_machine/example.txt\":0-0",
+            "content": "<human>are you doing just fine?<self>i am fine.<terminal_read>100</terminal_read>root@localhost ~/<type>hello world/n<reply>i am doing just fine. are you ok?<terminal_cursor_back>100</terminal_cursor_back><type>hello world</type><terminal_read>100</terminal_read>root@localhost ~/hello world\\nno such command\\nhello world\\nno such command\\nroot@localhost ~/</terminal_read><read_around_cursor>root@localhost ~/<cursor><move_cursor_forward>10</move_cursor_forward><read_around_cursor>root@localhost ~/<cursor><move_cursor_back>10</move_cursor_back>10<read_around_cursor>root@localhost ~/<cursor><type>hello world<read_around_cursor>root@localhost ~/hello world<cursor>"
+        }
+    ]
+}

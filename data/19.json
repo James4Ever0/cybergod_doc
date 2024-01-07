@@ -1,0 +1,88 @@
+{
+    "1900": {
+        "file_id": 264,
+        "content": "do not use 'laptop-mode' or 'powertop' or 'tlp'\n## mountpoint\nneed some event-driven/async control flow to handle this. always control the program according to the latest status.\n----\ncommand `eject <mountpoint>` will do `umount` and `rmdir` simultaneously.\n----\nyou may listen to events emitted by `udevadm monitor` and kill rclone server if detached. after rclone server is killed, you can remove the mountpoint and its content if it is not mounted.\nyou may use system events monitoring to solve the problem. applicable on multiple platforms.\n----\ncall `rmdir <mountpoint>` for safer removal.\nif the program is still running and writing to mountpoint but disk is not available, then file will be created under that mountpoint, making it impossible to remount the disk to the same location (non-empty) unless remove that mountpoint by force.\n## uas versus usb-storage\nnote: doing this might not help much, since we have this kind of disk detaching issue even with usb-storage driver (might be insufficient power",
+        "type": "code",
+        "location": "/usb_power_management/linux/README.md:1-25"
+    },
+    "1901": {
+        "file_id": 264,
+        "content": "This code discusses issues with detaching disks and provides solutions for controlling programs, handling events, and removing mountpoints safely.",
+        "type": "comment"
+    },
+    "1902": {
+        "file_id": 264,
+        "content": "?)\n----\nalthough uas (usb attached scsi) is faster than usb-storage (usb bot (bulk-only transport)), it is not stable. a bad standard specification and massive derivatives from vendors result into compatibility problems with linux kernel.\n[issues on uas driver](https://forums.linuxmint.com/viewtopic.php?t=320801)\n```bash\n# method 1: only blacklist those unsupported uas devices\n###########################################################\n# look for bus number and device number of which using uas driver\nlsusb -t\n# get device id\nlsusb\n# write those device id to rule\necho \"options usb-storage quirks=174c:1153:u,152d:0578:u,174c:2364:u,152d:0583:u\" > /etc/modprobe.d/blacklist-uas-on-quirks.conf\n# method 2: disable uas kernel module entirely (not working?)\n###########################################################\n# get module dependencies\nmodinfo uas\n# check if uas is not builtin (maybe we should just delete that damn kernel module (not working?))\nfind /lib/modules/$(uname -r) | grep uas\n# not built-in, but d",
+        "type": "code",
+        "location": "/usb_power_management/linux/README.md:25-49"
+    },
+    "1903": {
+        "file_id": 264,
+        "content": "This code discusses issues with USB Attached SCSI (UAS) and suggests two methods to resolve them. The first method involves blacklisting unsupported UAS devices by obtaining device information using 'lsusb -t' and 'lsusb', and then adding the device IDs to a configuration file. The second method is disabling the UAS kernel module entirely, but it mentions that this method isn't working.",
+        "type": "comment"
+    },
+    "1904": {
+        "file_id": 264,
+        "content": "ynamically loaded\necho \"blacklist uas\" >> /etc/modprobe.d/blacklist.conf\n# after reboot, check if uas is disabled.\nlsmod | grep uas\n# !!!!!!!!!!!!!!!!!!!!!!!for both methods!!!!!!!!!!!!!!!!!!!!!!!\n# do not forget to run this command\n# you may not install (for compatibility reasons) latest non-free firmware from \"firmware-misc-nonfree\" (apt) if this command emits any error related to \"missing firmware\"\nsudo update-initramfs -u\n```\n## hdparm\ndisable power management\n```bash\nhdparm -B 255 /dev/sd<n>\n```\n## dirty bytes\n```bash\necho $((16*1024*1024)) > /proc/sys/vm/dirty_bytes\necho $((48*1024*1024)) > /proc/sys/vm/dirty_background_bytes\n```\n## sync\nwhen trying to activate external disks in regular intervals, remember to sync changes to devices:\n```bash\ntouch <mountpoint>/.keepalive; sync; rm -f <mountpoint>/.keepalive; sync\n```\n## webdav\nserver (may manually/explicitly restart on reconnection):\n```bash\n# first mount the hard drive to some path.\nrclone serve webdav /root\n# add \"-L\" to follow symlinks\n```\nclient (only need",
+        "type": "code",
+        "location": "/usb_power_management/linux/README.md:49-93"
+    },
+    "1905": {
+        "file_id": 264,
+        "content": "This code is related to USB power management for Linux. It mentions several commands and actions that need to be performed in order to disable power management, set dirty bytes, sync changes to devices, and serve a webdav server or client. The comments provided are brief explanations of each section of the code.",
+        "type": "comment"
+    },
+    "1906": {
+        "file_id": 264,
+        "content": " to start once when server is running):\n```bash\n# need \"davfs2\" package\nmkdir /mnt/root_webdav\necho -e \"\\n\\n\" | mount -t davfs http://127.0.0.1:8080/ /mnt/root_webdav/\n```\n## auto mount external/removable drives (to fixed path)\ncheck if automount is enabled\n```bash\ngsettings list-recursively org.gnome.desktop.media-handling \n```\ndisable gnome automount:\n```bash\ngsettings set org.gnome.desktop.media-handling automount true\ngsettings set org.gnome.desktop.media-handling automount-open true\n```\nwrite this to `/etc/fstab`:\n```\nUUID=XXXXXXXXXXXXXXX    /myhdd <fstype>  auto,nofail,noatime,rw,user    0   0\n```\nrun this command every minute with crontab:\n```bash\nmount -a\n```\n## reset usb\nunder `/sys/bus/pci/drivers/(xhci_hci|ehci)`, echo usb device ids (once at a time) to `unbind` and `bind` respectively to reset usb devices.\nthe same for `/sys/bus/usb/drivers/*`.\nfind device id by \"lsusb\". use command \"usbreset\" from package \"usbutils\".",
+        "type": "code",
+        "location": "/usb_power_management/linux/README.md:93-134"
+    },
+    "1907": {
+        "file_id": 264,
+        "content": "This code is configuring the system to automatically mount external/removable drives to a fixed path. It also includes instructions for resetting USB devices using specific device IDs obtained from \"lsusb\" command and packages like \"davfs2\" and \"usbutils\".",
+        "type": "comment"
+    },
+    "1908": {
+        "file_id": 265,
+        "content": "/usb_power_management/linux/devcontrol.sh",
+        "type": "filepath"
+    },
+    "1909": {
+        "file_id": 265,
+        "content": "This script turns on power management for all USB devices, sets the power level to \"on\", disables hardware LPM for USB 3.0, and disables USB 3.1 hardware LPM.",
+        "type": "summary"
+    },
+    "1910": {
+        "file_id": 265,
+        "content": "# ref: https://www.kernel.org/doc/html/v4.16/driver-api/usb/power-management.html\ncd /sys/bus/usb/devices\nls -1 */power/control | xargs -Iabc bash -c \"echo on > abc\"\nls -1 */power/level | xargs -Iabc bash -c \"echo on > abc\"\necho -1 > /sys/module/usbcore/parameters/autosuspend/.\nls -1 */power/usb2_hardware_lpm | xargs -Iabc bash -c \"echo n > abc\"\n# ls -1 */power/usb3_hardware_lpm_u1 | xargs -Iabc bash -c \"echo disable > abc\"\n# ls -1 */power/usb3_hardware_lpm_u2 | xargs -Iabc bash -c \"echo disable > abc\"",
+        "type": "code",
+        "location": "/usb_power_management/linux/devcontrol.sh:1-8"
+    },
+    "1911": {
+        "file_id": 265,
+        "content": "This script turns on power management for all USB devices, sets the power level to \"on\", disables hardware LPM for USB 3.0, and disables USB 3.1 hardware LPM.",
+        "type": "comment"
+    },
+    "1912": {
+        "file_id": 266,
+        "content": "/usb_power_management/windows/README.md",
+        "type": "filepath"
+    },
+    "1913": {
+        "file_id": 266,
+        "content": "Enables USB devices to remain active and prevents Windows from automatically suspending them.",
+        "type": "summary"
+    },
+    "1914": {
+        "file_id": 266,
+        "content": "[disable usb selective suspend](https://www.tenforums.com/tutorials/73187-turn-off-usb-selective-suspend-windows-10-a.html)\nuninstall uas driver from device manager? (nope. it will block access)\n设备管理器 -> 通用串行总线控制器 -> 设备 -> 电源管理 -> 取消复选框",
+        "type": "code",
+        "location": "/usb_power_management/windows/README.md:1-5"
+    },
+    "1915": {
+        "file_id": 266,
+        "content": "Enables USB devices to remain active and prevents Windows from automatically suspending them.",
+        "type": "comment"
+    }
+}

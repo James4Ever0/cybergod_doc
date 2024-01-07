@@ -1,0 +1,15 @@
+{
+    "summary": "The code imports libraries, defines the `makeQuant` function to create a quantizer layer, and initializes variables. It generates a random tensor, applies embedding and quantization layers, performs matrix multiplication and softmax operation for attention, and outputs binary values from the quantized results while printing intermediate outputs.",
+    "details": [
+        {
+            "comment": "The code imports necessary libraries and defines a function `makeQuant` that creates a quantizer layer for regulating input and kernel values to integers. It also initializes variables, including the dimension (`dim`) and sequence length (`seqlen`), and creates a tensor `x_in` with random integer data.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/binary_program_synthesis_cpu_assembly_execution/bnn_data_ingest.py\":0-36",
+            "content": "import larq  # keras/tensorflow\n# ref: https://github.com/itayhubara/BinaryNet.pytorch\nimport tensorflow as tf\nimport random\n# tf.experimental.numpy.experimental_enable_numpy_behavior()\ndim = 2\n# dim = 10\ndef makeQuant(in_dim, out_dim):\n    layer = larq.layers.QuantDense(  # this will regulate all values into integers\n        units=out_dim,  # anything -> 2\n        # units=dim,\n        input_quantizer=larq.quantizers.SteSign(clip_value=1.0),\n        kernel_quantizer=larq.quantizers.SteSign(clip_value=1.0),\n        kernel_constraint=larq.constraints.WeightClip(clip_value=1.0),\n        # input_shape=(42,), # still working? not in sequential.\n        input_shape=(in_dim,),\n    )\n    return layer\n# larq.layers.QuantDense(units=2)\n# dim = 1024\n# model = tf.keras.Sequential()\nseqlen = 20\n# (AB * BA) * (BA * AB)\n# random_x_in = [[random.randint(0, 1) for _ in range(seqlen)]]\nrandom_x_in = [[random.randint(0, 1) for _ in range(seqlen)]]\nx_in = tf.convert_to_tensor(random_x_in, dtype=tf.float32)  # [1, 20]\n# x_in = tf.r"
+        },
+        {
+            "comment": "This code generates a random tensor, applies embedding and quantization layers to it, performs matrix multiplication and softmax operation for attention, and finally outputs binary values from the quantized results. The code also prints these intermediate outputs for debugging purposes.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/binary_program_synthesis_cpu_assembly_execution/bnn_data_ingest.py\":36-64",
+            "content": "andom.uniform(shape=(1, dim), minval=0, maxval=2, dtype=tf.float32)\nl_emb = tf.keras.layers.Embedding(2, dim)\nt_emb = l_emb(x_in)\nl_q = makeQuant(dim, dim)\nl_k = makeQuant(dim, dim)\nl_v = makeQuant(dim, dim)\nt_q = l_q(t_emb)\nt_k = l_k(t_emb)\nt_v = l_v(t_emb)\nt_att_pre = tf.matmul(t_k, t_q, transpose_a=True)\nt_att = tf.nn.softmax(t_att_pre, axis=2) / (dim**0.5)\nt_feat = tf.matmul(t_v, t_att)\nl_out = makeQuant(dim, 2)\nt_out = l_out(t_feat)\nprint(x_in)\nprint()\nprint(t_out)  # not within 1 and 0\nbinary = tf.argmax(t_out, axis=2)\nprint()\nprint(binary)\nprint(binary.shape, t_out.shape)\n# breakpoint()"
+        }
+    ]
+}

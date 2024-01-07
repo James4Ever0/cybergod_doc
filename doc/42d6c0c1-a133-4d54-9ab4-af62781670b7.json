@@ -1,0 +1,10 @@
+{
+    "summary": "This code provides instructions on how to train and use a bot for various tasks. It emphasizes the importance of allowing the bot to explore and learn, as meaning will arise from groups and communications.",
+    "details": [
+        {
+            "comment": "This code provides instructions on how to train and use a bot for various tasks. It emphasizes the importance of allowing the bot to explore and learn, as meaning will arise from groups and communications.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/README.md\":0-12",
+            "content": "as long as you know how to train the bot, you are fine.\nfirst, the coordination training. you may want thee bot to track and click specific location. \nnext, the typing training. you create a dataset of typing against your random typing program.\nyou may also illustrate the action of browsing website, downloading software, playing games, coding and more.\nnevermind. performing actions is critical to the bot, since that is the only way to resolve repetition, do reproduction and become autonomous.\nyou can always let the bot to do (relatively) meaningless things like random clicking. and it always works. meaning will arise from groups and communications.\nlet the bot to explore and learn."
+        }
+    ]
+}

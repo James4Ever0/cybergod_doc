@@ -1,0 +1,10 @@
+{
+    "summary": "This script stops a VirtualBox virtual machine named \"12c0e77b-5f4a-4d30-b19b-1b105d2042cf\" running Ubuntu 16.04 and powers it off. If the poweroff fails, it kills related processes to free up resources and prints an error message. The script also notes that it can start the VM in headless mode and mentions using VRDE and ffmpeg for live streaming if needed.",
+    "details": [
+        {
+            "comment": "This script stops a VirtualBox virtual machine named \"12c0e77b-5f4a-4d30-b19b-1b105d2042cf\" running Ubuntu 16.04 and powers it off. If the poweroff fails, it kills related processes to free up resources and prints an error message. The script also notes that it can start the VM in headless mode and mentions using VRDE and ffmpeg for live streaming if needed.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/stop_vm.sh\":0-13",
+            "content": "timeout 10 vboxmanage controlvm \"12c0e77b-5f4a-4d30-b19b-1b105d2042cf\" poweroff # Ubuntu 16.04\n# FIXME: \u6389\u76d8\u4e86 \u4e00\u822c\u662f\n# \u5c31\u6ca1\u6709\u66f4\u597d\u7684\u56fa\u6001\u786c\u76d8\u76d2\u4e48\n# \u5237\u56fa\u4ef6\u9700\u8981\u62ff\u51fa\u6765\u786c\u76d8\nif [ \"$?\" -ne 0 ]; then\necho \"ERROR: Failed to stop vm.\"\nps aux | grep -i /usr/lib/virtualbox | grep -v grep | awk '{print $2}' | xargs -iabc kill -s TERM abc\nfi\n# start in headless mode\n# you may not live stream this one! but vrde is available! and you can use ffmpeg for bridging!\n# vboxmanage startvm \"Ubuntu 16.04\" --type headless"
+        }
+    ]
+}

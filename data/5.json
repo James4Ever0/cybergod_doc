@@ -1,0 +1,540 @@
+{
+    "500": {
+        "file_id": 59,
+        "content": "           print(\"cannot suicide\")\n                continue\n            dead_clients.append((client_uuid, client_pid, client_role))\n    for client_uuid, client_pid, client_role in dead_clients:\n        print(\"killing client:\", client_uuid)\n        try:\n            kill_by_pid(client_pid)\n        except ProcessLookupError:\n            print(f'client {client_uuid} (pid: {client_pid}) is already killed')\n        except:\n            log_and_print_unknown_exception()\n        # remove from history.\n        commit_kill(client_uuid, client_pid, client_role)\ndef kill_server_beat(action = 'heartbeat'):\n    atime = heartbeat_base(killer_uuid, action, killer_pid, 'killer')\n    print(f\"killer {killer_uuid} beat at:\", atime)\nimport time\nif __name__ == \"__main__\":\n    print(f\"killer {killer_uuid} started (pid: {killer_pid})\")\n    kill_server_beat('hello')\n    while True:\n        kill_dead_process()\n        time.sleep(1)\n        kill_server_beat()",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/kill_server.py:30-57"
+    },
+    "501": {
+        "file_id": 59,
+        "content": "Code is for managing client processes and communicating with a server. It keeps track of dead clients, attempts to kill them using their PIDs, and logs the actions. The `kill_server_beat()` function sends heartbeats to the server and the main loop continuously kills dead processes and sends heartbeats.",
+        "type": "comment"
+    },
+    "502": {
+        "file_id": 60,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/log_common.py",
+        "type": "filepath"
+    },
+    "503": {
+        "file_id": 60,
+        "content": "Imports necessary libraries and sets up a logger with rotating file handler, debug level logging to a file and console in case of exceptions. Provides a function for logging and printing unknown exceptions.",
+        "type": "summary"
+    },
+    "504": {
+        "file_id": 60,
+        "content": "import sys\nimport logging\nfrom logging.handlers import RotatingFileHandler\nimport better_exceptions\nlog_filename = \"actors.log\"\nrthandler = RotatingFileHandler(\n    log_filename, maxBytes=1024 * 1024 * 15, backupCount=3, encoding=\"utf-8\"\n)\nlogger = logging.getLogger(\"actors\")\nlogger.setLevel(logging.DEBUG)\nlogger.addHandler(rthandler)\nlogger.addHandler(logging.StreamHandler(sys.stderr))\nbetter_exceptions.SUPPORTS_COLOR = False\ndef log_and_print_unknown_exception():\n    exc_type, exc_info, exc_tb = sys.exc_info()\n    # traceback.print_exc()\n    if exc_type is not None:\n        exc_str = \"\\n\".join(\n            better_exceptions.format_exception(exc_type, exc_info, exc_tb)\n        )\n        logger.debug(exc_str)\n        print(exc_str)",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/log_common.py:2-30"
+    },
+    "505": {
+        "file_id": 60,
+        "content": "Imports necessary libraries and sets up a logger with rotating file handler, debug level logging to a file and console in case of exceptions. Provides a function for logging and printing unknown exceptions.",
+        "type": "comment"
+    },
+    "506": {
+        "file_id": 61,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/loop_forever.py",
+        "type": "filepath"
+    },
+    "507": {
+        "file_id": 61,
+        "content": "Infinite loop, continuously adds 1 to 'a'.",
+        "type": "summary"
+    },
+    "508": {
+        "file_id": 61,
+        "content": "while True:\n    a = 1 + 1",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/loop_forever.py:1-2"
+    },
+    "509": {
+        "file_id": 61,
+        "content": "Infinite loop, continuously adds 1 to 'a'.",
+        "type": "comment"
+    },
+    "510": {
+        "file_id": 62,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py",
+        "type": "filepath"
+    },
+    "511": {
+        "file_id": 62,
+        "content": "The code introduces a metaheuristic predictive actor class, incorporates kernel weight updates and average performance refreshes, but the scoring criteria remain unclear. The score is calculated using loop count and MetaheuristicPredictiveWrapper to generate an actor for predictive_alpine_actor module, running it forever with run_actor_forever function.",
+        "type": "summary"
+    },
+    "512": {
+        "file_id": 62,
+        "content": "import math\n# TODO: rerun the same kernel for several times and get average performance (to eliminate residual errors)\n# extract the kernel from the dead ones.\n# the new kernel will be added to the random kernel.\n# import copy\nimport weakref\nfrom typing import Callable, List\nimport numpy as np\nfrom typing_extensions import Literal\nfrom alpine_actor import run_actor_forever\nfrom naive_actor import ActorStats\nfrom sequence_learner import PredictorWrapper\nACTIVATION_FUNCMAP = {\n    \"atan\": lambda n: math.atan(n) / math.pi * 2,\n    \"tanh\": math.tanh,\n}  # input: -oo, oo; output: -1, 1\nclass MetaheuristicActorStats(ActorStats):\n    ...\nimport copy\nclass MetaheuristicPredictiveWrapper:\n    top_k = 100\n    def __init__(\n        self,\n        ksize: int,\n        predictiveActorClass,\n        # predictorClass,\n        activation: Literal[\"atan\", \"tanh\"],\n        eps=1e-5,\n        trials_on_same_kernel=3,\n    ):\n        class MetaheuristicPredictiveActor(predictiveActorClass):\n            actorStatsClass = MetaheuristicActorS",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py:1-44"
+    },
+    "513": {
+        "file_id": 62,
+        "content": "This code defines a class `MetaheuristicPredictiveWrapper` that extends an existing predictive actor with additional metaheuristics. It takes in parameters such as kernel size, predictive actor class, activation function (\"atan\" or \"tanh\"), and other settings. It also creates a new class `MetaheuristicPredictiveActor` that inherits from the specified predictive actor class and uses the defined metaheuristics.",
+        "type": "comment"
+    },
+    "514": {
+        "file_id": 62,
+        "content": "tats\n            def __init__(\n                self,\n                *args,\n                metaWrapperWeakref: Callable[[], MetaheuristicPredictiveWrapper] = ...,\n                # metaInfo: List[List[str]] = ...,\n                **kwargs,\n            ):\n                self.metaWrapperWeakref = metaWrapperWeakref\n                super().__init__(*args, **kwargs)\n            def setMetaInfo(self, metaInfo):\n                setattr(self, \"metaInfo\", metaInfo)\n            def __del__(self):\n                metaWrapper = self.metaWrapperWeakref()\n                trial_count = metaWrapper.trial_count\n                average_performance = metaWrapper.average_performance\n                metaInfo = copy.deepcopy(getattr(self, \"metaInfo\", []))\n                try:\n                    super().__del__()\n                finally:\n                    print(\"metaheuristic\".center(50, \"=\"))\n                    print(\"trial count:\", trial_count)\n                    print(\"average performance:\", average_performance)\n       ",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py:44-70"
+    },
+    "515": {
+        "file_id": 62,
+        "content": "The code defines a class with an optional metaWrapperWeakref, sets metaInfo using setMetaInfo method and deletes the instance by calling its parent's del method after logging trial count and average performance.",
+        "type": "comment"
+    },
+    "516": {
+        "file_id": 62,
+        "content": "             for print_params in metaInfo:\n                        if len(print_params) > 1:\n                            print(print_params[0] + \":\", *print_params[1:])\n                        elif len(print_params) == 1:\n                            print(print_params[0])\n                        else:\n                            print()\n            def getStatsDict(self):\n                statsDict = super().getStatsDict()\n                statsDict.update(dict())\n                return statsDict\n        self.predictiveActorClass = MetaheuristicPredictiveActor\n        # self.predictorClass = predictorClass\n        self.ksize = ksize\n        self.trial_count = 0\n        self.trials_on_same_kernel = trials_on_same_kernel\n        self.average_performance = 0\n        self.activation = ACTIVATION_FUNCMAP[activation]\n        self.eps = eps\n        self.new()\n    def __next__(self):\n        # use inheritance instead of this!\n        # use weakref of self\n        self.remix()\n        return self.actor\n        # actor_in",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py:70-98"
+    },
+    "517": {
+        "file_id": 62,
+        "content": "This code is defining a class with methods to create and manage a predictive actor. It has methods for getting statistics, updating the actor, and remixing the actor. It also initializes class variables such as trial count and average performance.",
+        "type": "comment"
+    },
+    "518": {
+        "file_id": 62,
+        "content": "stance = self.actorClass()\n        # actor_instance.metaWrapperWeakref = weakref.ref(self)\n        # return actor_instance\n    def new(self):\n        if hasattr(self, \"actor\"):\n            delattr(self, \"actor\")\n        actor = self.predictiveActorClass(\n            metaWrapperWeakref=weakref.ref(self), ksize=self.ksize\n        )\n        setattr(self, \"actor\", actor)\n    def get_kernel(self) -> np.ndarray:\n        return self.actor.predictorWrapper.predictor.kernel.copy()\n    def set_kernel(self, kernel: np.ndarray):\n        kernel_shape = kernel.shape\n        desired_shape = (self.ksize,)\n        assert (\n            kernel_shape == desired_shape\n        ), f\"kernel shape mismatch: {kernel_shape} != {desired_shape}\"\n        self.actor.predictorWrapper.predictor.kernel = kernel\n    kernel = property(fget=get_kernel, fset=set_kernel)\n    def remix(self):\n        old_kernel = self.kernel\n        old_score = self.score()\n        avg_performance = self.refresh_average_performance(\n            old_score\n        )  ",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py:98-128"
+    },
+    "519": {
+        "file_id": 62,
+        "content": "This code is related to an actor class in a metaheuristic predictive model. The \"new\" function initializes the actor, the \"get_kernel\" and \"set_kernel\" functions retrieve or update the kernel, and the \"remix\" function keeps track of performance while refreshing the average performance.",
+        "type": "comment"
+    },
+    "520": {
+        "file_id": 62,
+        "content": "# warning! base shall never be 1\n        # log (avg performance as base) & tanh/atan\n        old_add_weight = math.log(old_score / avg_performance, avg_performance)\n        old_add_weight = self.activation(old_add_weight) / 2\n        # old_add_weight = self.activation(old_add_weight*self.trial_count) / 2\n        # old_add_weight = self.activation(old_add_weight*(1+math.log(self.trial_count)) / 2\n        new_kernel_weight = 0.5 - old_add_weight\n        old_kernel_weight = 0.5 + old_add_weight\n        self.actor.setMetaInfo(\n            [\n                (\"score\", old_score),\n                (\"old kernel weight\", old_kernel_weight),\n                (\"new kernel weight\", new_kernel_weight),\n            ]\n        )\n        self.new()\n        new_kernel = self.kernel\n        # emit noise if not doing well?\n        # harmony vice versa?\n        if (repeat_times := self.trial_count % self.trials_on_same_kernel) == 0:\n            print(f\"refreshing kernel (every {self.trials_on_same_kernel} time(s))\")\n            ",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py:128-151"
+    },
+    "521": {
+        "file_id": 62,
+        "content": "Updating kernel weights and setting meta information.\n\nThis code snippet updates the old and new kernel weights based on the old_score, activates them using a specific activation function, and sets the actor's meta information with the updated scores. If the trial count is a multiple of trials_on_same_kernel, it prints a message indicating that the kernel is being refreshed.",
+        "type": "comment"
+    },
+    "522": {
+        "file_id": 62,
+        "content": "self.kernel = (\n                new_kernel * new_kernel_weight + old_kernel * old_kernel_weight\n            )\n        else:\n            print(f\"using old kernel (repeat: {repeat_times} time(s))\")\n            self.kernel = old_kernel\n    def refresh_average_performance(self, score: float):\n        self.average_performance = (\n            self.average_performance * self.trial_count + score\n        ) / (self.trial_count + 1)\n        self.trial_count += 1\n        if self.average_performance == 1:\n            self.average_performance += self.eps\n        return self.average_performance\n    def score(self):\n        stats: ActorStats = self.actor.stats\n        # score by what?\n        # example:\n        \"\"\"\n        =====================summary======================\n        start time:     2023-09-01T09:54:11.270057+08:00\n        end time:       2023-09-01T09:54:43.327770+08:00\n        up time:        32.05771350860596\n        loop count:     290\n        total bytes read:       237\n        total bytes write:      2476\n ",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py:151-179"
+    },
+    "523": {
+        "file_id": 62,
+        "content": "Code is initializing the kernel value based on new and old kernel weights.\nIt refreshes the average performance by adding the current score to the previous average and updates trial count.\nThe score function calculates the score based on actor's stats, but it's not clear what the scoring criteria are.",
+        "type": "comment"
+    },
+    "524": {
+        "file_id": 62,
+        "content": "       r/w ratio: 0.09571890145395799\n        w/r ratio: 10.447257383966244\n        read bytes entropy: 4.946365138818157\n        write bytes entropy: 6.148352516530523\n        r/w entropy ratio: 0.8045025273875089\n        w/r entropy ratio: 1.2430041745764768\n        \"\"\"\n        # for now, just take the up time\n        # uptime seems to be less universal.\n        # let's use loop count for now.\n        score = stats.loop_count + self.eps\n        # score = stats.up_time + self.eps\n        return score\nif __name__ == \"__main__\":\n    # from alpine_actor import AlpineActor\n    from predictive_alpine_actor import PredictiveAlpineActor  # PredictorWrapper\n    actor_generator = MetaheuristicPredictiveWrapper(\n        ksize=256,  # too small!\n        # ksize=100,\n        predictiveActorClass=PredictiveAlpineActor,\n        # predictorClass=PredictorWrapper,\n        activation=\"tanh\",\n    )\n    # breakpoint()\n    run_actor_forever(actor_generator)",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py:179-206"
+    },
+    "525": {
+        "file_id": 62,
+        "content": "This code calculates the score based on loop count and uses MetaheuristicPredictiveWrapper to generate an actor for the predictive_alpine_actor module. It then runs the actor forever using run_actor_forever function.",
+        "type": "comment"
+    },
+    "526": {
+        "file_id": 63,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py",
+        "type": "filepath"
+    },
+    "527": {
+        "file_id": 63,
+        "content": "The code performs performance benchmarking on actor processes using non-blocking socket readers, measures execution time, and outputs results in tabular format. It also defines a class-based actor running until a condition is met and serves as the main program.",
+        "type": "summary"
+    },
+    "528": {
+        "file_id": 63,
+        "content": "# import twisted\n# this could be used as test case.\n# TODO: survive reopening the laptop lid\n# TODO: improve task execution logic, eliminate long running blocking tasks.\n# TODO: use celery to schedule tasks\nimport datetime\nfrom beat_common import heartbeat_base\nimport os\nimport sys\nimport time\nimport copy\nimport traceback\nfrom cmath import nan\nfrom log_common import *\nimport uuid\ncurrent_pid = os.getpid()\nprint(\"current_pid:\", current_pid)\nactor_uuid = str(uuid.uuid4())\nstrtime = heartbeat_base(uuid=actor_uuid, action = 'hello', pid=current_pid, role='client')\nprint('beat server hello: %s' % strtime)\nclass InteractiveChallengeFailed(Exception):\n    \"\"\"\n    If \"expect\" like challenge failed for some reason, raise this exception.\n    \"\"\"\n    ...\n# https://code.activestate.com/recipes/440554/\n# wxpython, wexpect/winpexpect, pexpect\n# https://peps.python.org/pep-3145/\n# https://peps.python.org/pep-3156/\nfrom collections import deque\nimport func_timeout\nimport pytz\nfrom pydantic import BaseModel\nfrom entropy_utils import C",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:1-40"
+    },
+    "529": {
+        "file_id": 63,
+        "content": "The code is importing various libraries and modules such as Twisted, beat_common, log_common, entropy_utils, and pydantic. It also defines a class InteractiveChallengeFailed for handling failed challenges. The code sets up variables and imports other collections and functions. It seems to be related to interactive programs, challenges, and time-related tasks.",
+        "type": "comment"
+    },
+    "530": {
+        "file_id": 63,
+        "content": "ontentEntropyCalculator\nfrom type_utils import *\nfrom vocabulary import NaiveVocab\ndef unicodebytes(string: str):\n    return bytes(string, encoding=\"utf8\")\nclass ActorStats(BaseModel):\n    start_time: float\n    end_time: float\n    up_time: float\n    loop_count: int\n    read_bytes: int\n    write_bytes: int\n    read_ent: float\n    write_ent: float\n    rw_ratio: float\n    wr_ratio: float\n    rw_ent_ratio: float\n    wr_ent_ratio: float\ndef safeDiv(a, b):\n    \"\"\"\n    Return a/b if no exception is raised, otherwise nan.\n    \"\"\"\n    ret = nan\n    try:\n        ret = a / b\n    except ZeroDivisionError:\n        pass\n    return ret\ndef leftAndRightSafeDiv(a, b):\n    \"\"\"\n    Return a/b and b/a, in safe division manner.\n    \"\"\"\n    left_div = safeDiv(a, b)\n    right_div = safeDiv(b, a)\n    return left_div, right_div\nREAD_KNOWN_EXCEPTIONS = []\n# SOCKET_TIMEOUT = .2\n# SOCKET_TIMEOUT = .01\nSOCKET_TIMEOUT = 0.001\nfrom contextlib import contextmanager\nif os.name == \"nt\":\n    NT_CONTEXT = dict(NT_READ_NONBLOCKING_DECODE=False, NT_ENCODING=\"utf-",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:40-92"
+    },
+    "531": {
+        "file_id": 63,
+        "content": "The code is defining an ActorStats class that stores various statistics about the actor's performance, such as start and end times, up-time, loop count, read/write bytes, entropy of read/write data, and ratios between these values. The code also includes a safeDiv function for safe division operations, and a context manager that sets specific properties when running on Windows (NT_READ_NONBLOCKING_DECODE and NT_ENCODING).",
+        "type": "comment"
+    },
+    "532": {
+        "file_id": 63,
+        "content": "8\")\n    @contextmanager\n    def nt_read_nonblocking_decode_context():\n        NT_CONTEXT[\"NT_READ_NONBLOCKING_DECODE\"] = True\n        try:\n            yield\n        finally:\n            NT_CONTEXT[\"NT_READ_NONBLOCKING_DECODE\"] = False\n    import wexpect as pexpect\n    expected_wexpect_version = \"4.0.0\"\n    wexp_version = pexpect.__version__\n    assert (\n        wexp_version == expected_wexpect_version\n    ), \"wexpected version should be: {}\\ncurrently: {}\".format(\n        expected_wexpect_version, wexp_version\n    )\n    import wexpect.host as host\n    import socket\n    def spawnsocket_connect_to_child(self):\n        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n        self.sock.connect((self.host, self.port))\n        self.sock.settimeout(SOCKET_TIMEOUT)\n    def spawnsocket_read_nonblocking(self, size=1):\n        \"\"\"This reads at most size characters from the child application. If\n        the end of file is read then an EOF exception will be raised.\n        This is not effected by the 'size' pa",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:92-123"
+    },
+    "533": {
+        "file_id": 63,
+        "content": "This code defines a context manager for non-blocking reading and a function to connect to a child application via socket, checking the wexpect version.",
+        "type": "comment"
+    },
+    "534": {
+        "file_id": 63,
+        "content": "rameter, so if you call\n        read_nonblocking(size=100, timeout=30) and only one character is\n        available right away then one character will be returned immediately.\n        It will not wait for 30 seconds for another 99 characters to come in.\n        This is a wrapper around Wtty.read().\"\"\"\n        logger = host.logger\n        EOF_CHAR = host.EOF_CHAR\n        EOF = host.EOF\n        if self.closed:\n            logger.info(\"I/O operation on closed file in read_nonblocking().\")\n            raise ValueError(\"I/O operation on closed file in read_nonblocking().\")\n        try:\n            s = self.sock.recv(size)\n            if s:\n                logger.debug(f\"Readed: {s}\")\n            else:\n                logger.spam(f\"Readed: {s}\")\n            if EOF_CHAR in s:\n                self.flag_eof = True\n                logger.info(\"EOF: EOF character has been arrived\")\n                s = s.split(EOF_CHAR)[0]\n        except ConnectionResetError:\n            self.flag_eof = True\n            logger.info(\"EOF(",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:123-153"
+    },
+    "535": {
+        "file_id": 63,
+        "content": "This code snippet is a part of the `naive_actor.py` file and it's a function called `read_nonblocking()`. It reads data from a socket in non-blocking mode, returns one character immediately if available, and doesn't wait for additional characters to reach the timeout limit. If an EOF (End of File) character is detected, it sets the `flag_eof` flag and removes the EOF character from the received data before returning it.",
+        "type": "comment"
+    },
+    "536": {
+        "file_id": 63,
+        "content": "'ConnectionResetError')\")\n            raise EOF(\"ConnectionResetError\")\n        except socket.timeout:\n            return \"\" if NT_CONTEXT[\"NT_READ_NONBLOCKING_DECODE\"] else b\"\"\n        return (\n            s.decode(NT_CONTEXT[\"NT_ENCODING\"])\n            if NT_CONTEXT[\"NT_READ_NONBLOCKING_DECODE\"]\n            else s\n        )\n    def spawnpipe_read_nonblocking(self, size=1):\n        \"\"\"This reads at most size characters from the child application. If\n        the end of file is read then an EOF exception will be raised.\n        This is not effected by the 'size' parameter, so if you call\n        read_nonblocking(size=100, timeout=30) and only one character is\n        available right away then one character will be returned immediately.\n        It will not wait for 30 seconds for another 99 characters to come in.\n        This is a wrapper around Wtty.read().\"\"\"\n        logger = host.logger\n        EOF_CHAR = host.EOF_CHAR\n        EOF = host.EOF\n        if self.closed:\n            logger.warning(\"I/O operatio",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:153-180"
+    },
+    "537": {
+        "file_id": 63,
+        "content": "This function reads at most \"size\" characters from the child application. If it reaches the end of file, an EOF exception is raised. The function does not wait for more characters based on the specified timeout. This uses the Wtty.read() method as a wrapper.",
+        "type": "comment"
+    },
+    "538": {
+        "file_id": 63,
+        "content": "n on closed file in read_nonblocking().\")\n            raise ValueError(\"I/O operation on closed file in read_nonblocking().\")\n        try:\n            s = host.win32file.ReadFile(self.pipe, size)[1]\n            if s:\n                logger.debug(f\"Readed: {s}\")\n            else:\n                logger.spam(f\"Readed: {s}\")\n            if EOF_CHAR in s:\n                self.flag_eof = True\n                logger.info(\"EOF: EOF character has been arrived\")\n                s = s.split(EOF_CHAR)[0]\n            # return s\n            return (\n                s.decode(NT_CONTEXT[\"NT_ENCODING\"])\n                if NT_CONTEXT[\"NT_READ_NONBLOCKING_DECODE\"]\n                else s\n            )\n            # return s.decode()\n        except host.pywintypes.error as e:\n            if e.args[0] == host.winerror.ERROR_BROKEN_PIPE:  # 109\n                self.flag_eof = True\n                logger.info(\"EOF('broken pipe, bye bye')\")\n                raise EOF(\"broken pipe, bye bye\")\n            elif e.args[0] == host.winerror",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:180-208"
+    },
+    "539": {
+        "file_id": 63,
+        "content": "Reading non-blocking data from a pipe, handling EOF and error cases.",
+        "type": "comment"
+    },
+    "540": {
+        "file_id": 63,
+        "content": ".ERROR_NO_DATA:\n                \"\"\"232 (0xE8): The pipe is being closed.\"\"\"\n                self.flag_eof = True\n                logger.info(\"EOF('The pipe is being closed.')\")\n                raise EOF(\"The pipe is being closed.\")\n            else:\n                raise\n    host.SpawnSocket.connect_to_child = spawnsocket_connect_to_child\n    host.SpawnSocket.read_nonblocking = spawnsocket_read_nonblocking\n    host.SpawnPipe.read_nonblocking = spawnpipe_read_nonblocking\n    def spawnbase_sendline(self, s=b\"\"):\n        s = enforce_bytes(s)\n        n = self.send(s + b\"\\r\\n\")\n        return n\n    host.SpawnBase.sendline = spawnbase_sendline\nelse:\n    import pexpect\n    # let's skip version check, for kail.\n    # expected_pexpect_version = \"4.6.0\"\n    # pexp_version = pexpect.__version__\n    # assert (\n    #     pexp_version == expected_pexpect_version\n    # ), \"pexpected version should be: {}\\ncurrently: {}\".format(\n    #     expected_pexpect_version, pexp_version\n    # )\n    READ_KNOWN_EXCEPTIONS.append(pexpect.",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:208-239"
+    },
+    "541": {
+        "file_id": 63,
+        "content": "Raises EOF error when pipe is closed and defines functions for sending data.",
+        "type": "comment"
+    },
+    "542": {
+        "file_id": 63,
+        "content": "pty_spawn.TIMEOUT)\n    READ_KNOWN_EXCEPTIONS.append(pexpect.spawnbase.EOF)  # are you sure?\n    def spawn_sendline(self, s=b\"\"):\n        s = enforce_bytes(s)\n        return self.send(s + unicodebytes(os.linesep))\n    pexpect.spawn.sendline = spawn_sendline\n    def spawnbase_read_nonblocking(self, size=1, timeout=None):\n        \"\"\"This reads data from the file descriptor.\n        This is a simple implementation suitable for a regular file. Subclasses using ptys or pipes should override it.\n        The timeout parameter is ignored.\n        \"\"\"\n        try:\n            s = os.read(self.child_fd, size)\n        except OSError as err:\n            if err.args[0] == pexpect.spawnbase.errno.EIO:\n                # Linux-style EOF\n                self.flag_eof = True\n                raise pexpect.spawnbase.EOF(\n                    \"End Of File (EOF). Exception style platform.\"\n                )\n            raise\n        if s == b\"\":\n            # BSD-style EOF\n            self.flag_eof = True\n            raise pexpect.s",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:239-269"
+    },
+    "543": {
+        "file_id": 63,
+        "content": "This code modifies the `spawnbase_read_nonblocking` function to handle different types of EOF. It also adds a new function `spawn_sendline` that sends data with OS line separator and overrides `spawn_sendline` in `pexpect.spawn`. The code also includes an exception handling block for OSError.",
+        "type": "comment"
+    },
+    "544": {
+        "file_id": 63,
+        "content": "pawnbase.EOF(\n                \"End Of File (EOF). Empty string style platform.\"\n            )\n        # s = self._decoder.decode(s, final=False)\n        self._log(s, \"read\")\n        return s\n    pexpect.spawnbase.SpawnBase.read_nonblocking = spawnbase_read_nonblocking\ndef get_repr(content):\n    if isinstance(content, str):\n        content = content.encode()\n    repr_content = content.hex()\n    len_content = len(repr_content) / 2\n    assert (\n        len_content % 1 == 0.0\n    ), f\"possible counting mechanism failure\\nnon-integral content length detected: {len_content}\"\n    len_content = int(len_content)\n    cut_len = 10\n    return f\"[{len_content}\\tbyte{'s' if len_content != 0 else ''}] {repr_content[:cut_len*2]}{'...' if len_content > cut_len else ''}\"\ntimezone_str = \"Asia/Shanghai\"\ntimezone = pytz.timezone(timezone_str)\ndef formatTimeAtShanghai(timestamp):\n    dt = datetime.datetime.fromtimestamp(timestamp, tz=timezone)\n    return dt.isoformat()\nclass NaiveActor:\n    write_method = lambda proc: proc.sendlin",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:269-303"
+    },
+    "545": {
+        "file_id": 63,
+        "content": "- EOF: End Of File, empty string style platform\n- read_nonblocking: function to read from a spawned process non-blockingly\n- get_repr: convert content to hex representation with byte count and truncation if needed\n- formatTimeAtShanghai: convert Unix timestamp to ISO format with Shanghai timezone\n- NaiveActor: class with write_method as proc.sendline lambda function",
+        "type": "comment"
+    },
+    "546": {
+        "file_id": 63,
+        "content": "e\n    actorStatsClass = ActorStats\n    @staticmethod\n    def timeit(func):\n        def inner_func(self):\n            start_time = time.time()\n            # func(self)\n            try:\n                ret = func_timeout.func_timeout(self.max_loop_time, func, args=(self,))\n            except func_timeout.FunctionTimedOut:\n                print(\"Loop timeout %d exceeded.\" % self.max_loop_time)\n                return\n            finally:\n                end_time = time.time()\n                rw_time = end_time - start_time\n                print(\"rw time:\", rw_time, sep=\"\\t\")\n                if rw_time > self.max_rwtime:\n                    print(\n                        \"exit because of long rw time.\\nmax rw time:\", self.max_rwtime\n                    )\n                    return\n            return ret\n        return inner_func\n    def __init__(self, cmd, encoding=\"utf-8\"):\n        self.process = self.spawn(cmd)\n        self.encoding = encoding\n        if os.name == 'nt':\n            NT_CONTEXT['NT_ENCODING'] = enco",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:303-334"
+    },
+    "547": {
+        "file_id": 63,
+        "content": "This code defines a class with a method called \"timeit\" that measures the execution time of another function. It also initializes an instance variable \"process\" by spawning a new process using the provided command and encoding. If running on Windows (os.name == 'nt'), it sets NT_CONTEXT['NT_ENCODING'] to enco.",
+        "type": "comment"
+    },
+    "548": {
+        "file_id": 63,
+        "content": "ding\n            win_expect_old = copy.copy(self.process.expect)\n            def win_expect_new(*args, **kwargs):\n                with nt_read_nonblocking_decode_context():\n                    return win_expect_old(*args, **kwargs)\n            self.process.expect = win_expect_new\n        self.timeout = SOCKET_TIMEOUT\n        self.max_loop_time = 3\n        self.max_init_time = 12\n        self.max_rwtime = 0.5\n        # self.timeout = 0.2 # equivalent to wexpect\n        # self.timeout = 0.001\n        # self.timeout = 1 # will cause havoc if set it too long\n        self.read_bytes = 0\n        self.write_bytes = 0\n        self.loop_count = 0\n        self.start_time = time.time()\n        self.read_head_bytes = 200\n        self.read_tail_bytes = 200\n        self.read_entropy_calc = ContentEntropyCalculator()\n        self.write_entropy_calc = ContentEntropyCalculator()\n        self._stats = ...\n        self.recent_loop_threshold = 300\n        \"\"\"\n        To limiting history data size for calculating recent statistic",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:334-358"
+    },
+    "549": {
+        "file_id": 63,
+        "content": "The code sets various attributes for managing timeouts, byte counts, and entropy calculations for an actor process. It also includes a comment explaining the purpose of one attribute to limit history data size for calculating recent statistics.",
+        "type": "comment"
+    },
+    "550": {
+        "file_id": 63,
+        "content": "s.\n        \"\"\"\n    def spawn(self, cmd):\n        return pexpect.spawn(cmd)\n        # return pexpect.spawn(cmd, interact=True)  # will display\n    def write(self, content):\n        # if isinstance(content, bytes):\n        #     content = content.decode()\n        content = enforce_bytes(content)\n        print(\"write:\", get_repr(content), sep=\"\\t\")\n        self.write_bytes += len(content)\n        write_method = self.__class__.write_method(self.process)\n        write_method(content)\n        self.write_entropy_calc.count(content)\n        return content\n    def read(self):\n        # cannot read.\n        head_content = b\"\"\n        tail_content = deque([], maxlen=self.read_tail_bytes)\n        read_byte_len = 0\n        while True:\n            try:\n                kwargs = {}\n                if os.name == \"posix\":\n                    kwargs[\"timeout\"] = self.timeout\n                char = self.process.read_nonblocking(1, **kwargs)\n                # print('char:', char)\n                if isinstance(char, str):\n            ",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:358-391"
+    },
+    "551": {
+        "file_id": 63,
+        "content": "This code defines a class with three methods: spawn, write, and read. The spawn method starts a new process using pexpect's spawn function with the given command. The write method writes content to the process' stdin, keeping track of the total bytes written, updating entropy calculation, and displaying the content being written. The read method attempts to continuously read nonblocking bytes from the process' stdout until a timeout or EOF is reached.",
+        "type": "comment"
+    },
+    "552": {
+        "file_id": 63,
+        "content": "        char = char.encode()\n                if char == b\"\":\n                    break\n                read_byte_len += 1\n                self.read_entropy_calc.count(char)\n                if len(head_content) < self.read_head_bytes:\n                    head_content += char\n                else:\n                    tail_content.append(char)\n            except Exception as e:\n                if type(e) not in READ_KNOWN_EXCEPTIONS:\n                    traceback.print_exc()\n                break\n        tail_content = b\"\".join(list(tail_content))\n        if read_byte_len <= self.read_head_bytes + self.read_tail_bytes:\n            sep = b\"\"\n        else:\n            sep = b\"\\n...\\n\"\n        content = sep.join([head_content, tail_content])\n        print(\"read:\", get_repr(content), sep=\"\\t\")\n        self.read_bytes += read_byte_len\n        return content\n    def __del__(self):\n        # TODO: separate calculation logic from here, to be used in metaheuristics\n        stats = self.stats\n        print(\"summary\".center",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:391-418"
+    },
+    "553": {
+        "file_id": 63,
+        "content": "Iteratively reads input, splits content into head and tail based on length, handles exceptions, and returns joined content with optional separator.",
+        "type": "comment"
+    },
+    "554": {
+        "file_id": 63,
+        "content": "(50, \"=\"))\n        print(\"start time:\", formatTimeAtShanghai(stats.start_time), sep=\"\\t\")\n        print(\"end time:\", formatTimeAtShanghai(stats.end_time), sep=\"\\t\")\n        print(\"up time:\", stats.up_time, sep=\"\\t\")\n        print(\"loop count:\", stats.loop_count, sep=\"\\t\")\n        print(\"total bytes read:\", stats.read_bytes, sep=\"\\t\")\n        print(\"total bytes write:\", stats.write_bytes, sep=\"\\t\")\n        print(\"r/w ratio:\", stats.rw_ratio)\n        print(\"w/r ratio:\", stats.wr_ratio)\n        print(\"read bytes entropy:\", stats.read_ent)\n        print(\"write bytes entropy:\", stats.write_ent)\n        print(\"r/w entropy ratio:\", stats.rw_ent_ratio)\n        print(\"w/r entropy ratio:\", stats.wr_ent_ratio)\n    def getStatsDict(self):\n        start_time = self.start_time\n        end_time = time.time()\n        up_time = end_time - self.start_time\n        read_ent = self.read_entropy_calc.entropy\n        write_ent = self.write_entropy_calc.entropy\n        loop_count = self.loop_count\n        rw_ratio, wr_ratio = le",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:418-439"
+    },
+    "555": {
+        "file_id": 63,
+        "content": "Displays statistics in a tabular format, including start and end times, uptime, loop count, bytes read/written, and entropy ratios.\nCreates a dictionary containing up_time, read_ent, write_ent, and loop_count.",
+        "type": "comment"
+    },
+    "556": {
+        "file_id": 63,
+        "content": "ftAndRightSafeDiv(self.read_bytes, self.write_bytes)\n        rw_ent_ratio, wr_ent_ratio = leftAndRightSafeDiv(read_ent, write_ent)\n        statsDict = dict(\n            start_time=start_time,\n            end_time=end_time,\n            up_time=up_time,\n            loop_count=loop_count,\n            read_ent=read_ent,\n            read_bytes=self.read_bytes,\n            write_bytes=self.write_bytes,\n            write_ent=write_ent,\n            rw_ratio=rw_ratio,\n            wr_ratio=wr_ratio,\n            rw_ent_ratio=rw_ent_ratio,\n            wr_ent_ratio=wr_ent_ratio,\n        )\n        return statsDict\n    @property\n    def stats(self):\n        # TODO: calculate recent statistics, not just full statistics\n        # somehow cached.\n        if not (\n            isinstance(self._stats, self.actorStatsClass)\n            and self._stats.loop_count == self.loop_count\n        ):\n            statsDict = self.getStatsDict()\n            self._stats = self.actorStatsClass(**statsDict)\n        return self._stats\n    def loop(s",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:439-469"
+    },
+    "557": {
+        "file_id": 63,
+        "content": "This code calculates and stores statistics for an actor's performance. It employs safe division functions to calculate ratios and creates a dictionary of statistics (e.g., start/end times, up time, loop count) before returning or storing them in the `_stats` attribute for later use.",
+        "type": "comment"
+    },
+    "558": {
+        "file_id": 63,
+        "content": "elf):\n        self.read()\n        self.write(NaiveVocab.generate())\n        return True\n    def init_check(self):\n        \"\"\"\n        Check or wait until the interactive program emits expected output.\n        \"\"\"\n        ret = func_timeout.func_timeout(self.max_init_time, self._init_check)\n        print(\"init check passed\")\n        return ret\n    def _init_check(self):\n        \"\"\"\n        Implementation of init checks.\n        \"\"\"\n        ...\n    def heartbeat(self):\n        # to prove the program as if still running.\n        # do not override this method, unless you know what you are doing.\n        access_time = heartbeat_base(uuid = actor_uuid, action = 'heartbeat', pid=current_pid, role='client')\n        print('beat at:', access_time)\n        return True\n    def run(self):\n        loop = True\n        try:\n            self.init_check()\n        except:\n            print(\"init check failed\")\n            log_and_print_unknown_exception()\n            raise InteractiveChallengeFailed(\n                f\"Failed to pass ",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:469-504"
+    },
+    "559": {
+        "file_id": 63,
+        "content": "468-503: This code segment defines methods for interacting with an actor, including reading and writing data, initializing the check, performing init checks, emitting heartbeat, and running the program. The code also handles exceptions and failure cases, such as failed init checks, by logging and raising InteractiveChallengeFailed.",
+        "type": "comment"
+    },
+    "560": {
+        "file_id": 63,
+        "content": "init challenge of: {self.__class__.__name__}\"\n            )\n        while self.heartbeat():\n            loop = self.loop()\n            if loop is True:\n                print(f\"[loop\\t{str(self.loop_count)}]\".center(60, \"-\"))\n                self.loop_count += 1\n            else:\n                break\n        print(\n            f\"{'heartbeat' if loop else 'loop'} failed.\\nexiting at #{self.loop_count}.\"\n        )\ndef run_naive(cls):\n    actor = cls(f\"{sys.executable} naive_interactive.py\")\n    actor.run()\nif __name__ == \"__main__\":\n    run_naive(NaiveActor)",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:504-524"
+    },
+    "561": {
+        "file_id": 63,
+        "content": "The code defines a class-based actor that runs a loop until a condition is met, then exits. It also includes a function to run an instance of the class as the main program.",
+        "type": "comment"
+    },
+    "562": {
+        "file_id": 64,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_interactive.py",
+        "type": "filepath"
+    },
+    "563": {
+        "file_id": 64,
+        "content": "Imports time module and NaiveVocab, creates a class for interactive loop with random sleep and word generation.",
+        "type": "summary"
+    },
+    "564": {
+        "file_id": 64,
+        "content": "# import time\nfrom vocabulary import NaiveVocab\n# will sleep for random time and respond.\nclass NaiveInteractive:\n    def __init__(self):\n        self.sleep = 1\n    def loop(self):\n        input()\n        print(NaiveVocab.generate())\n        return True\n    def run(self):\n        while self.loop():\n            ...\nif __name__ == \"__main__\":\n    interactive = NaiveInteractive()\n    interactive.run()",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_interactive.py:1-23"
+    },
+    "565": {
+        "file_id": 64,
+        "content": "Imports time module and NaiveVocab, creates a class for interactive loop with random sleep and word generation.",
+        "type": "comment"
+    },
+    "566": {
+        "file_id": 65,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/predictive_alpine_actor.py",
+        "type": "filepath"
+    },
+    "567": {
+        "file_id": 65,
+        "content": "Code imports necessary modules, defines a class for a predictive AlpineActor, sets up the predictor wrapper with a specified ksize and naive predictor. The loop method reads content, enqueues it to the predictor wrapper, gets predicted content based on the write_len, writes the content, and returns True.",
+        "type": "summary"
+    },
+    "568": {
+        "file_id": 65,
+        "content": "import random\nfrom alpine_actor import AlpineActor, run_actor_forever\nfrom sequence_learner import NaivePredictor, PredictorWrapper\n# from vocabulary import AsciiVocab\nfrom vocabulary import BytesVocab\nclass PredictiveAlpineActor(AlpineActor):\n    def __init__(self, ksize = 256):\n        self.predictorWrapper = PredictorWrapper(ksize, NaivePredictor)\n        self.predictorWrapper.seq.extend(list(BytesVocab.generate()))\n        # self.predictorWrapper.seq.extend([ord(c) for c in AsciiVocab.generate()])\n        super().__init__()\n    @property\n    def write_len(self):\n        return random.randint(10, 30)\n    @AlpineActor.timeit\n    def loop(self):\n        read_content = self.read()\n        self.predictorWrapper.enqueue(list(read_content))\n        predicted_content = self.predictorWrapper.predict(self.write_len)\n        write_content = bytes(predicted_content)\n        self.write(write_content)\n        return True\nif __name__ == \"__main__\":\n    run_actor_forever(PredictiveAlpineActor)",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/predictive_alpine_actor.py:1-32"
+    },
+    "569": {
+        "file_id": 65,
+        "content": "Code imports necessary modules, defines a class for a predictive AlpineActor, sets up the predictor wrapper with a specified ksize and naive predictor. The loop method reads content, enqueues it to the predictor wrapper, gets predicted content based on the write_len, writes the content, and returns True.",
+        "type": "comment"
+    },
+    "570": {
+        "file_id": 66,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/predictive_bytes_alpine_actor.py",
+        "type": "filepath"
+    },
+    "571": {
+        "file_id": 66,
+        "content": "Creates a PredictiveAlpineBytesActor class that inherits from BytesActor and PredictiveAlpineActor, then runs the actor forever if this script is the main one.",
+        "type": "summary"
+    },
+    "572": {
+        "file_id": 66,
+        "content": "from bytes_actor import BytesActor\nfrom predictive_alpine_actor import PredictiveAlpineActor, run_actor_forever\nclass PredictiveAlpineBytesActor(BytesActor, PredictiveAlpineActor):\n    ...\nif __name__ == \"__main__\":\n    run_actor_forever(PredictiveAlpineBytesActor)",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/predictive_bytes_alpine_actor.py:1-10"
+    },
+    "573": {
+        "file_id": 66,
+        "content": "Creates a PredictiveAlpineBytesActor class that inherits from BytesActor and PredictiveAlpineActor, then runs the actor forever if this script is the main one.",
+        "type": "comment"
+    },
+    "574": {
+        "file_id": 67,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/profile_vis.py",
+        "type": "filepath"
+    },
+    "575": {
+        "file_id": 67,
+        "content": "Importing pstats module and creating a Stats object for analyzing the profiling data.\n\nStorage location: \"basic_interactive_program_emulation_and_image_with_docker_support/profile_vis.py\":6-10\nCode:\n```\n# from pstats import SortKey\np = pstats.Stats(\"alpine_actor.profile\", SortBy=\"calls\")\n```\nComment for code:\nSorting the stats by number of calls.",
+        "type": "summary"
+    },
+    "576": {
+        "file_id": 67,
+        "content": "import pstats\n# from pstats import SortKey\np = pstats.Stats(\"alpine_actor.profile\")\nstats = p.strip_dirs().sort_stats(2)\nstats.print_stats()",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/profile_vis.py:1-6"
+    },
+    "577": {
+        "file_id": 67,
+        "content": "Importing pstats module and creating a Stats object for analyzing the profiling data.\n\nStorage location: \"basic_interactive_program_emulation_and_image_with_docker_support/profile_vis.py\":6-10\nCode:\n```\n# from pstats import SortKey\np = pstats.Stats(\"alpine_actor.profile\", SortBy=\"calls\")\n```\nComment for code:\nSorting the stats by number of calls.",
+        "type": "comment"
+    },
+    "578": {
+        "file_id": 68,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/pull_alpine_with_different_arch.py",
+        "type": "filepath"
+    },
+    "579": {
+        "file_id": 68,
+        "content": "This code downloads and saves Docker images of Alpine Linux with different architectures in separate directories. It ensures the target directory is created if it doesn't exist and handles platform-specific architecture pulls for \"amd64\", \"arm64\", \"arm/v7\", and \"i386\".",
+        "type": "summary"
+    },
+    "580": {
+        "file_id": 68,
+        "content": "arch_list = [\"amd64\", \"arm64\", \"arm/v7\", \"i386\"]\ntarget_image = \"alpine:3.7\"\ntarget_fname_prefix = target_image.replace(\":\", \"_\")\nimport os\ndirpath = \"docker_images\"\nif os.path.exists(dirpath):\n    raise Exception(f\"target directory '{dirpath}' already exists.\")\nos.mkdir(dirpath)\nfor arch in arch_list:\n    fpath = f\"{target_fname_prefix}_{arch.replace('/','')}.tar\"\n    cmds = [\n        f'docker pull --platform \"linux/{arch}\" {target_image}',\n        f\"docker save {target_image} -o {dirpath}/{fpath}\",\n        f\"docker rmi {target_image}\",\n    ]\n    for cmd in cmds:\n        print(\"executing:\", cmd)\n        os.system(cmd)",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/pull_alpine_with_different_arch.py:1-19"
+    },
+    "581": {
+        "file_id": 68,
+        "content": "This code downloads and saves Docker images of Alpine Linux with different architectures in separate directories. It ensures the target directory is created if it doesn't exist and handles platform-specific architecture pulls for \"amd64\", \"arm64\", \"arm/v7\", and \"i386\".",
+        "type": "comment"
+    },
+    "582": {
+        "file_id": 69,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/pyinstrument_profile.py",
+        "type": "filepath"
+    },
+    "583": {
+        "file_id": 69,
+        "content": "Profiling long-running program using PyInstrument.",
+        "type": "summary"
+    },
+    "584": {
+        "file_id": 69,
+        "content": "import pyinstrument\nprof = pyinstrument.Profiler()\nprof.start()\n...  # long running program. remember to timeout\nprof.stop()\nprof.print()",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/pyinstrument_profile.py:1-7"
+    },
+    "585": {
+        "file_id": 69,
+        "content": "Profiling long-running program using PyInstrument.",
+        "type": "comment"
+    },
+    "586": {
+        "file_id": 70,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/requirements.txt",
+        "type": "filepath"
+    },
+    "587": {
+        "file_id": 70,
+        "content": "This is a list of dependencies required for the project. The code checks the operating system and adds specific packages accordingly, such as pexpect and whexpect for POSIX and Windows systems respectively, py-applescript for MacOS, pygetwindow for both Windows and MacOS, docker, func-timeout, progressbar2, better-exceptions, easyprocess, requests, and frozendict. The # comment indicates that frozendict may be optional.",
+        "type": "summary"
+    },
+    "588": {
+        "file_id": 70,
+        "content": "pexpect==4.6.0; os_name == 'posix'\nwexpect==4.0.0; os_name == 'nt'\npy-applescript; platform_system == 'Darwin'\npygetwindow; platform_system == 'Windows'\npygetwindow; platform_system == 'Darwin'\ndocker\nfunc-timeout\nprogressbar2\nbetter-exceptions\neasyprocess\nelevate\nrequests\n# frozendict",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/requirements.txt:1-13"
+    },
+    "589": {
+        "file_id": 70,
+        "content": "This is a list of dependencies required for the project. The code checks the operating system and adds specific packages accordingly, such as pexpect and whexpect for POSIX and Windows systems respectively, py-applescript for MacOS, pygetwindow for both Windows and MacOS, docker, func-timeout, progressbar2, better-exceptions, easyprocess, requests, and frozendict. The # comment indicates that frozendict may be optional.",
+        "type": "comment"
+    },
+    "590": {
+        "file_id": 71,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/rerun_docker_daemon.py",
+        "type": "filepath"
+    },
+    "591": {
+        "file_id": 71,
+        "content": "This code handles Docker service management across different OS, including stopping, restarting, and killing. It uses platform-specific commands but experiences hanging issues on Win11. The code ensures successful launch through multiple trials with a wait period on Windows or macOS.",
+        "type": "summary"
+    },
+    "592": {
+        "file_id": 71,
+        "content": "# TODO: eliminate stale containers by restarting docker every 10 sessions.\nMACOS_DOCKER_APP_BINARY = \"/Applications/Docker.app/Contents/MacOS/Docker\"\n# killall Docker && open -j -a Docker\n# ps aux | grep Docker.app | grep -v grep | awk '{print $2}' | xargs -Iabc kill abc\nHIDE_DOCKER_ASCRIPT = \"\"\"\ntell application \"System Events\"\n    set visible of processes where name is \"Docker Desktop\" to false\nend tell\n\"\"\"\nWINDOW_TITLE_KW = \"Docker Desktop\"\n# killall docker\n# MACOS_TERM_DOCKER_APP = \"\"\" bash -c 'ps aux | grep Docker.app | grep -v grep | awk \"{print \\\\$2}\" | xargs -I abc kill abc' \"\"\"\nMACOS_KILL_DOCKER_APP = \"\"\" bash -c 'ps aux | grep Docker.app | grep -v grep | awk \"{print \\\\$2}\" | xargs -I abc kill -s KILL abc' \"\"\"\nimport subprocess\nLINUX_CONTROL_DOCKER_SERVICE_CMDGEN = lambda action: f\"sudo systemctl {action} docker\"\nLINUX_RESTART_DOCKER_COMMAND = LINUX_CONTROL_DOCKER_SERVICE_CMDGEN(\"restart\")\nLINUX_STOP_DOCKER_COMMAND = LINUX_CONTROL_DOCKER_SERVICE_CMDGEN(\"stop\")\nLINUX_START_DOCKER_COMMAND = LINU",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/rerun_docker_daemon.py:1-19"
+    },
+    "593": {
+        "file_id": 71,
+        "content": "Code snippet is related to controlling and restarting the Docker daemon on different operating systems. It provides different methods for MacOS and Linux systems to stop, start or kill the Docker application or service respectively.",
+        "type": "comment"
+    },
+    "594": {
+        "file_id": 71,
+        "content": "X_CONTROL_DOCKER_SERVICE_CMDGEN(\"start\")\n# DOES NOT WORK ON WIN11\n# kill com.docker.backend.exe? seems to be hanging\n# WINDOWS_TERM_DOCKER_COMMAND = 'taskkill /FI \"IMAGENAME eq Docker*\"'\nWINDOWS_KILL_DOCKER_COMMAND = 'taskkill /FI \"IMAGENAME eq Docker*\" /F'\n# start program minimized? instead use pygetwindow to hide the window once found.\n# find 'Docker Desktop.exe'\n# which docker -> ../../ -> 'Docker Desktop.exe'\n# WINDOWS_RESTART_DOCKER_COMMAND = 'powershell -Command \"Restart-Service -Name *docker*\"' # need elevated permissions\n# Stop-Service & Start-Service\n# net stop com.docker.service/docker & net start com.docker.service/docker\nimport platform\nimport elevate\nimport shutil\nimport os\nkill_safe_codes = [0]\nstart_safe_codes = [0]\nsysname = platform.system()\nREQUIRED_BINARIES = [\"docker\"]\nelevate_needed = False\nDOCKER_DESKTOP_EXE = \"Docker Desktop.exe\"\nfrom typing import List\ndef execute_os_command_and_assert_safe_exit(cmd: str, safe_codes: List[int] = [0]):\n    ret = os.system(cmd)  # use cmd.exe on windows",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/rerun_docker_daemon.py:19-49"
+    },
+    "595": {
+        "file_id": 71,
+        "content": "This code aims to stop, restart, or kill the Docker service on Windows systems. It first checks the operating system, then defines a command to kill the Docker process, and lists the required binary \"docker\". The function `execute_os_command_and_assert_safe_exit` is used to execute operating system commands while asserting safe exit codes. However, it mentions that the code does not work on Win11, as the command for killing Docker seems to be hanging.",
+        "type": "comment"
+    },
+    "596": {
+        "file_id": 71,
+        "content": ".\n    assert (\n        ret in safe_codes\n    ), f\"Abnormal exit code {ret} while executing following command:\\n{cmd}\"\nkill_docker_cmds = []\nstart_docker_cmds = []\nif sysname in [\"Windows\", \"Darwin\"]:\n    import pygetwindow\nelse:\n    def check_if_docker_window_exists():\n        return False\nif sysname == \"Windows\":\n    REQUIRED_BINARIES.append(\"taskkill\")\n    docker_path = shutil.which(\"docker\")\n    docker_bin_path = os.path.dirname(docker_path)\n    docker_desktop_dir_path = os.path.split(os.path.split(docker_bin_path)[0])[0]\n    docker_desktop_exe_path = os.path.join(docker_desktop_dir_path, DOCKER_DESKTOP_EXE)\n    assert os.path.exists(\n        docker_desktop_exe_path\n    ), f'Failed to find docker desktop executable at: \"{docker_desktop_exe_path}\"'\n    # kill_docker_cmds.append(WINDOWS_TERM_DOCKER_COMMAND)\n    kill_docker_cmds.append(WINDOWS_KILL_DOCKER_COMMAND)\n    start_docker_cmds.append(f'start \"\" \"{docker_desktop_exe_path}\"')  # bloody chatgpt.\n    def hide_docker():\n        for win in pygetwindow.getW",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/rerun_docker_daemon.py:49-83"
+    },
+    "597": {
+        "file_id": 71,
+        "content": "Checking if Docker window exists and handling Windows specific commands for killing and starting Docker.",
+        "type": "comment"
+    },
+    "598": {
+        "file_id": 71,
+        "content": "indowsWithTitle(WINDOW_TITLE_KW):\n            win: pygetwindow.Win32Window\n            win.hide()\n    def check_if_docker_window_exists():\n        wins = pygetwindow.getWindowsWithTitle(WINDOW_TITLE_KW)\n        exist = len(wins) > 0\n        return exist\nelif sysname == \"Linux\":\n    REQUIRED_BINARIES.append(\"systemctl\")\n    elevate_needed = True\n    kill_docker_cmds.append(LINUX_STOP_DOCKER_COMMAND)\n    start_docker_cmds.append(LINUX_START_DOCKER_COMMAND)\n    def hide_docker():\n        ...\nelif sysname == \"Darwin\":\n    import applescript\n    HIDE_DOCKER_ASCRIPT_OBJ = applescript.AppleScript(HIDE_DOCKER_ASCRIPT)\n    kill_safe_codes.append(256)\n    REQUIRED_BINARIES.extend([\"killall\", \"open\", MACOS_DOCKER_APP_BINARY])\n    kill_docker_cmds.extend(\n        [\n            \"killall Docker\",\n            \"killall docker\",\n            #  MACOS_TERM_DOCKER_APP,\n            MACOS_KILL_DOCKER_APP,\n        ]\n    )\n    # start_docker_cmds.append(MACOS_DOCKER_APP_BINARY)\n    start_docker_cmds.append(\"open -j -a Docker\")\n    start_",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/rerun_docker_daemon.py:83-120"
+    },
+    "599": {
+        "file_id": 71,
+        "content": "The code is checking if the Docker window exists and hiding it based on the operating system. It also defines commands for starting and stopping Docker, depending on the system (Windows, Linux, or macOS).",
+        "type": "comment"
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Testing the beat server using unittest. Can also test killing server or normal clients. Imports from beat_common module.",
+    "details": [
+        {
+            "comment": "Testing the beat server using unittest. Can also test killing server or normal clients. Imports from beat_common module.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/test_beat_server.py\":0-2",
+            "content": "# unittest for our damn beat server. so damn error prone.\n# you can also do unittest for kill server or normal clients.\nfrom beat_common import *"
+        }
+    ]
+}

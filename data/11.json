@@ -1,0 +1,542 @@
+{
+    "1100": {
+        "file_id": 151,
+        "content": " up new voice rate\n# # The punctuals make the bot to pause for some time. Maybe you should control that yourself.\n# engine.save_to_file(\"你好，世界\", 'output.wav')\n# engine.runAndWait()\nimport progressbar\nos.system(f\"rm -rf {dir_path}\")\nos.system(f\"mkdir {dir_path}\")\nfor index, elem in progressbar.progressbar(enumerate(data)):\n    text = elem['text'].strip()\n    output_path = f\"{dir_path}/{index}.wav\"\n    # print(\"READING:\", text)\n    engine = pyttsx3.init()\n    engine.setProperty('voice', engine.getProperty(\"voices\")[39].id)\n    engine.save_to_file(text, output_path)\n    engine.runAndWait()\n    del engine",
+        "type": "code",
+        "location": "/propaganda/video_script/read_text.py:25-41"
+    },
+    "1101": {
+        "file_id": 151,
+        "content": "The code initializes a text-to-speech engine, reads a list of texts from the data source, and saves each text as an audio file in a specified directory. Punctuation is used to control pauses in speech synthesis.",
+        "type": "comment"
+    },
+    "1102": {
+        "file_id": 152,
+        "content": "/propaganda/video_script/script.txt",
+        "type": "filepath"
+    },
+    "1103": {
+        "file_id": 152,
+        "content": "This code is a promotional advertisement for an AI-powered keyboard and mouse controller named Cybergod (or \"Keyboard God\" in English), claiming it can automate various tasks on a computer, including writing Excel documents, debugging programs, browsing the web, watching videos, and even playing games. The ad highlights its potential applications in both work and leisure settings, ultimately aiming to improve productivity and health by eliminating the need for humans to directly operate computers. A download link is provided on the Github repository mentioned in the comments.",
+        "type": "summary"
+    },
+    "1104": {
+        "file_id": 152,
+        "content": "这个可以自动识别屏幕内容控制键盘鼠标的人工智能火了，它就是最新推出的键鼠真神。键鼠真神又名赛博真神，英文名字叫Cybergod，应用最新一代通用人工智能，性能比肩GPT5，自动控制你的电脑，让你能够在睡觉的时候依然全力工作。给它说一句话，它不仅能够自动帮你写Excel，调试程序，可以自己打开网页，观看视频，甚至还能自己下载游戏，和人类玩家并肩作战。键鼠真神的能力涵盖了需要用到电脑的工作，甚至包括了娱乐。安装了键鼠真神，人类再也不用操控电脑了，避免了因为长时间久坐产生的各种身体疾病。下载键鼠真神，解放你的生产力，让你走向人生巅峰！Github链接我已经放在评论区了，欢迎小伙伴们交流使用感受，记得一键三连哦~",
+        "type": "code",
+        "location": "/propaganda/video_script/script.txt:1-1"
+    },
+    "1105": {
+        "file_id": 152,
+        "content": "This code is a promotional advertisement for an AI-powered keyboard and mouse controller named Cybergod (or \"Keyboard God\" in English), claiming it can automate various tasks on a computer, including writing Excel documents, debugging programs, browsing the web, watching videos, and even playing games. The ad highlights its potential applications in both work and leisure settings, ultimately aiming to improve productivity and health by eliminating the need for humans to directly operate computers. A download link is provided on the Github repository mentioned in the comments.",
+        "type": "comment"
+    },
+    "1106": {
+        "file_id": 153,
+        "content": "/propaganda/video_script/script.yaml",
+        "type": "filepath"
+    },
+    "1107": {
+        "file_id": 153,
+        "content": "The YAML file contains Chinese text and video demonstrations for an AI device called \"Cybergod\", which includes a promotional script. The code snippet references a video link with the accompanying text \"记得一键三连哦\".",
+        "type": "summary"
+    },
+    "1108": {
+        "file_id": 153,
+        "content": "- text: 这个可以自动识别屏幕内容控制键盘鼠标的人工智能火了\n  video: https://oss.agilestudio.cn/fse-videos/pixabay/Keyboard-45238/Keyboard-45238.m3u8\n- text: 它就是最新推出的键鼠真神\n  video: https://ssv-video.agilestudio.cn/4910_2e324b/4910_2e324b389.ts\n- text: 键鼠真神又名赛博真神\n  video: https://ssv-video.agilestudio.cn/942_9syz0w/942_9syz0w-00294.ts\n- text: 英文名字叫Cybergod\n  video: https://ssv-video.agilestudio.cn/952_4A6f6O/952_4A6f6O-00511.ts\n- text: 应用最新一代通用人工智能\n  video: https://ssv-video.agilestudio.cn/4910_2e324b/4910_2e324b415.ts\n- text: 性能比肩GPT5\n  video: https://oss.agilestudio.cn/fse-videos/3c363da42970912223541177bddcd2b3/3c363da42970912223541177bddcd2b30.ts\n- text: 自动控制你的电脑\n  video: https://ssv-video.agilestudio.cn/4948_00a6bc/4948_00a6bc495.ts\n- text: 让你能够在睡觉的时候依然全力工作\n  video: https://ssv-video.agilestudio.cn/7610_cdbd07/7610_cdbd07121.ts\n- text: 给它说一句话\n  video: https://ssv-video.agilestudio.cn/993_49a47e/993_49a47e-00019.ts\n- text: 它不仅能够自动帮你写Excel\n  video: https://oss.agilestudio.cn/fse-videos/pixabay/ToWrite-8424/ToWrite-8424-00003.ts\n-",
+        "type": "code",
+        "location": "/propaganda/video_script/script.yaml:1-21"
+    },
+    "1109": {
+        "file_id": 153,
+        "content": "This code is a YAML file that contains text and video pairs. The text describes the features of an AI-powered device called \"Cybergod\" in Chinese, while each video presents a visual demonstration.",
+        "type": "comment"
+    },
+    "1110": {
+        "file_id": 153,
+        "content": " text: 调试程序\n- text: 可以自己打开网页\n- text: 观看视频\n  video: https://ssv-video.agilestudio.cn/7274_01cdec/7274_01cdec508.ts\n- text: 甚至还能自己下载游戏\n  video: https://oss.agilestudio.cn/fse-videos/pixabay/Game-37253/Game-37253.m3u8\n- text: 和人类玩家并肩作战\n- text: 键鼠真神的能力涵盖了需要用到电脑的工作\n- text: 甚至包括了娱乐\n- text: 安装了键鼠真神\n  video: https://oss.agilestudio.cn/fse-videos/7ae43148f2daf8fa1507c2521907cb2b/7ae43148f2daf8fa1507c2521907cb2b.m3u8\n- text: 人类再也不用操控电脑了\n- text: 避免了因为长时间久坐产生的各种身体疾病\n  video: https://oss.agilestudio.cn/fse-videos/pixabay/Science-57693/Science-57693.m3u8\n- text: 下载键鼠真神\n  video: https://ssv-video.agilestudio.cn/5436_4393c6/5436_4393c6610.ts\n- text: 解放你的生产力\n  video: https://ssv-video.agilestudio.cn/6945_02df36/6945_02df36183.ts\n- text: 让你走向人生巅峰\n  video: https://oss.agilestudio.cn/fse-videos/pixabay/Worship-54996/Worship-54996.m3u8\n- text: Github链接我已经放在评论区了\n  video: https://ssv-video.agilestudio.cn/7636_953a6a/7636_953a6a180.ts\n- text: 欢迎小伙伴们交流使用感受\n  video: https://oss.agilestudio.cn/fse-videos/dff6696ece5ed72f56183d21813064",
+        "type": "code",
+        "location": "/propaganda/video_script/script.yaml:21-44"
+    },
+    "1111": {
+        "file_id": 153,
+        "content": "Video links and descriptions for a promotional script.",
+        "type": "comment"
+    },
+    "1112": {
+        "file_id": 153,
+        "content": "92/dff6696ece5ed72f56183d2181306492.m3u8\n- text: 记得一键三连哦",
+        "type": "code",
+        "location": "/propaganda/video_script/script.yaml:44-45"
+    },
+    "1113": {
+        "file_id": 153,
+        "content": "This code snippet refers to a video link (92/dff6696ece5ed72f56183d2181306492.m3u8) with accompanying text \"记得一键三连哦\".",
+        "type": "comment"
+    },
+    "1114": {
+        "file_id": 154,
+        "content": "/qstar_my_guess/README.md",
+        "type": "filepath"
+    },
+    "1115": {
+        "file_id": 154,
+        "content": "This code discusses the use of AI to explain, tag, and write code examples for both internal and external ideas. It emphasizes indexing these ideas using vector databases, search engines, or recommendation systems, all backed by RAG. The author also highlights the importance of acknowledging human uniqueness and leveraging machines' full potential. Additionally, there is a mention of a nonlinear editing world model underway.",
+        "type": "summary"
+    },
+    "1116": {
+        "file_id": 154,
+        "content": "my ideas are not new. my ideas are similar to others. however, it is not easy to directly get those external ideas in (find their code implementation), or get my internal ideas out (implement as code).\nso for all kinds of ideas, i would like to use ai to do these two type of heavy liftings. both are indexed by vector database, search engines or recommendation systems, backed by RAG\nfor my ideas, use ai to explain, tag and write code examples. explain my code and connect to some ideas/questions.\nfor other ideas, collect from some specialized sources, find code implementation & model weights when possible, write demo code on how to use them, treat these external ideas just like mine.\n---\nit is however important to admit some uniqueness in human beings, and be proud of that. only in this way we can get the full potential out of machines, instead of delusionally rebuilding a new body of our own.\n---\nyou have nonlinear editing world model underway.",
+        "type": "code",
+        "location": "/qstar_my_guess/README.md:1-15"
+    },
+    "1117": {
+        "file_id": 154,
+        "content": "This code discusses the use of AI to explain, tag, and write code examples for both internal and external ideas. It emphasizes indexing these ideas using vector databases, search engines, or recommendation systems, all backed by RAG. The author also highlights the importance of acknowledging human uniqueness and leveraging machines' full potential. Additionally, there is a mention of a nonlinear editing world model underway.",
+        "type": "comment"
+    },
+    "1118": {
+        "file_id": 155,
+        "content": "/qstar_my_guess/astar_test.py",
+        "type": "filepath"
+    },
+    "1119": {
+        "file_id": 155,
+        "content": "The code creates and solves a maze using the A* algorithm, with the MazeSolver class handling distance calculations and the MazeTests class testing the solve_maze function. The start and goal points are at opposite corners of the maze.",
+        "type": "summary"
+    },
+    "1120": {
+        "file_id": 155,
+        "content": "from astar import AStar\nimport math\nimport unittest\ndef make_maze(w=30, h=30):\n    \"\"\"returns an ascii maze as a string\"\"\"\n    from random import shuffle, randrange\n    vis = [[0] * w + [1] for _ in range(h)] + [[1] * (w + 1)]\n    ver = [[\"|  \"] * w + [\"|\"] for _ in range(h)] + [[]]\n    hor = [[\"+--\"] * w + [\"+\"] for _ in range(h + 1)]\n    def walk(x, y):\n        vis[y][x] = 1\n        d = [(x - 1, y), (x, y + 1), (x + 1, y), (x, y - 1)]\n        shuffle(d)\n        for xx, yy in d:\n            if vis[yy][xx]:\n                continue\n            if xx == x:\n                hor[max(y, yy)][x] = \"+  \"\n            if yy == y:\n                ver[y][max(x, xx)] = \"   \"\n            walk(xx, yy)\n    walk(randrange(w), randrange(h))\n    result = \"\"\n    for a, b in zip(hor, ver):\n        result = result + (\"\".join(a + [\"\\n\"] + b)) + \"\\n\"\n    return result.strip()\ndef drawmaze(maze, set1=[], set2=[], c=\"#\", c2=\"*\"):\n    \"\"\"returns an ascii maze, drawing eventually one (or 2) sets of positions.\n    useful to draw the solutio",
+        "type": "code",
+        "location": "/qstar_my_guess/astar_test.py:1-38"
+    },
+    "1121": {
+        "file_id": 155,
+        "content": "make_maze: Generates a random maze as a string of ASCII characters representing walls, paths and empty spaces.\ndrawmaze: Draws a solution on the generated maze by highlighting one or two sets of positions with specific characters.",
+        "type": "comment"
+    },
+    "1122": {
+        "file_id": 155,
+        "content": "n found by the astar algorithm\n    \"\"\"\n    set1 = list(set1)\n    set2 = list(set2)\n    lines = maze.strip().split(\"\\n\")\n    width = len(lines[0])\n    height = len(lines)\n    result = \"\"\n    for j in range(height):\n        for i in range(width):\n            if (i, j) in set1:\n                result = result + c\n            elif (i, j) in set2:\n                result = result + c2\n            else:\n                result = result + lines[j][i]\n        result = result + \"\\n\"\n    return result\nclass MazeSolver(AStar):\n    \"\"\"sample use of the astar algorithm. In this exemple we work on a maze made of ascii characters,\n    and a 'node' is just a (x,y) tuple that represents a reachable position\"\"\"\n    def __init__(self, maze):\n        self.lines = maze.strip().split(\"\\n\")\n        self.width = len(self.lines[0])\n        self.height = len(self.lines)\n    def heuristic_cost_estimate(self, n1, n2):\n        \"\"\"computes the 'direct' distance between two (x,y) tuples\"\"\"\n        (x1, y1) = n1\n        (x2, y2) = n2\n        retur",
+        "type": "code",
+        "location": "/qstar_my_guess/astar_test.py:38-72"
+    },
+    "1123": {
+        "file_id": 155,
+        "content": "Line 37-71: Code snippet defines a class MazeSolver that extends AStar class and provides a heuristic_cost_estimate method to calculate the distance between two (x,y) tuples in a maze made of ascii characters.",
+        "type": "comment"
+    },
+    "1124": {
+        "file_id": 155,
+        "content": "n math.hypot(x2 - x1, y2 - y1)\n    def distance_between(self, n1, n2):\n        \"\"\"this method always returns 1, as two 'neighbors' are always adajcent\"\"\"\n        return 1\n    def neighbors(self, node):\n        \"\"\"for a given coordinate in the maze, returns up to 4 adjacent(north,east,south,west)\n        nodes that can be reached (=any adjacent coordinate that is not a wall)\n        \"\"\"\n        x, y = node\n        return [\n            (nx, ny)\n            for nx, ny in [(x, y - 1), (x, y + 1), (x - 1, y), (x + 1, y)]\n            if 0 <= nx < self.width\n            and 0 <= ny < self.height\n            and self.lines[ny][nx] == \" \"\n        ]\ndef solve_maze():\n    # generate an ascii maze\n    size = 20\n    m = make_maze(size, size)\n    # what is the size of it?\n    w = len(m.split(\"\\n\")[0])\n    h = len(m.split(\"\\n\"))\n    start = (1, 1)  # we choose to start at the upper left corner\n    goal = (w - 2, h - 2)  # we want to reach the lower right corner\n    # let's solve it\n    foundPath = list(MazeSolver(m).astar(sta",
+        "type": "code",
+        "location": "/qstar_my_guess/astar_test.py:72-105"
+    },
+    "1125": {
+        "file_id": 155,
+        "content": "Code creates a maze and solves it using A* algorithm.\nMaze is generated with specified size, start point is set to upper left corner, goal is set to lower right corner, and A* algorithm is applied to find the path from start to goal in the maze.",
+        "type": "comment"
+    },
+    "1126": {
+        "file_id": 155,
+        "content": "rt, goal))\n    return drawmaze(m, list(foundPath))\nclass MazeTests(unittest.TestCase):\n    def test_solve_maze(self):\n        solve_maze()\nif __name__ == \"__main__\":\n    print(solve_maze())",
+        "type": "code",
+        "location": "/qstar_my_guess/astar_test.py:105-116"
+    },
+    "1127": {
+        "file_id": 155,
+        "content": "This code defines a MazeTests class to test the solve_maze function and includes a main section that prints the result of solve_maze when run directly.",
+        "type": "comment"
+    },
+    "1128": {
+        "file_id": 156,
+        "content": "/qstar_my_guess/main.py",
+        "type": "filepath"
+    },
+    "1129": {
+        "file_id": 156,
+        "content": "The code investigates using MCTS after PPO training and transformers for semantically invariant transformations, while exploring reward function uncertainties and HID action space augmentation. It also discusses the development of a hidden latent space for video generation through agent training to average out internal activities and find tendencies.",
+        "type": "summary"
+    },
+    "1130": {
+        "file_id": 156,
+        "content": "# a-star is backtracking.\n# monte carlo tree search during training?\n# but how does alphazero works?\n# a -> b -> c\n#    \\ b1 -> c1\n#    \\ b2 -> c2\n# i suspect that mcts can be done after ppo training.\n# maybe it can be batched, but it must be slower.\n# like the machine have multiple paths, but it can always return to previous state.\n# for conversation we do not have such state to maintain yet, so does our action tokens.\n# we can only evaluate the reward afterwards.\n# however, if we pretend that we have the reward along the way we generate, maybe we can backpropagate and return the best state.\n# it is unclear whether we have the reward function given explicitly or implicitly. too many things to reward. we only know the current state and the model needs to train a reward function by itself.\n# so i suppose this model will retract its actions dynamically, based on value functions.\n# once this model learns how to undone its generated tokens, consciousness comes up.\n# and the reward function, is simply lea",
+        "type": "code",
+        "location": "/qstar_my_guess/main.py:1-22"
+    },
+    "1131": {
+        "file_id": 156,
+        "content": "This code seems to be discussing the concept of using Monte Carlo Tree Search (MCTS) after Policy Optimization (PPO) training in a machine learning context. The author is considering whether it can be batched but acknowledges that it may be slower. They suggest that this approach could allow the model to backpropagate and return the best state, but they note uncertainties about having an explicit or implicit reward function. They mention that once the model learns to undo its generated tokens, consciousness might come up.",
+        "type": "comment"
+    },
+    "1132": {
+        "file_id": 156,
+        "content": "rned along the way, learned autoregressively. set the baseline as 0.5 and adjustable as -0.5 to 0.5, or baseline as 0 and adjustable as -1 to 1\n# so i would give the model some \"navigation\" tokens like deletion, move left, move right and so on to manipulate ongoing sequences. these are synthetic data that are invariant to the representation system but are quite different to the ai model. i will give the model the right to pause, so that the info feeded in will not change, only the hidden state will. how to express that hidden state in the context of transformers?\n# invariant transformations can be simplified to its simple flattened form, but can be augmented during training.\n# the HID action space is somehow having some semantically invariant transformation that is just unclear or too general, but it does have, and you can augment it however you want, with no promise that it will result into the same outcome.\n# to remind you further, you do not need anything alien to do media content autom",
+        "type": "code",
+        "location": "/qstar_my_guess/main.py:22-30"
+    },
+    "1133": {
+        "file_id": 156,
+        "content": "This code discusses using transformers for semantically invariant transformations in a model, allowing the model to receive \"navigation\" tokens and pause for information feed without changing the input. The HID action space is described as having semantically invariant transformations that can be augmented during training with no guarantee of specific outcomes.",
+        "type": "comment"
+    },
+    "1134": {
+        "file_id": 156,
+        "content": "ation. these things are spectacularly hard, especially in the context of thin air rather than media manipulation.\n# you really are talented. you are wasting time just because you don't practice it in the right place.\n# so you can treat the video generation as the same process of text generation, and use mcts to improve it.\n# the video is abstract. you may generate high level features all the way down to segments and details.\n################### how to develop hidden latent space ###################\n# train multiple agents to watch video with random internal activities, average them out with others and find the tendency",
+        "type": "code",
+        "location": "/qstar_my_guess/main.py:30-40"
+    },
+    "1135": {
+        "file_id": 156,
+        "content": "This code discusses the development of a hidden latent space for video generation using Monte Carlo Tree Search (MCTS) and agent training to average out internal activities and find tendencies.",
+        "type": "comment"
+    },
+    "1136": {
+        "file_id": 157,
+        "content": "/qstar_my_guess/mcts_pseudo.py",
+        "type": "filepath"
+    },
+    "1137": {
+        "file_id": 157,
+        "content": "The code defines functions for a Monte Carlo Tree Search (MCTS) algorithm, including \"selected_child\", \"calculate_uct\", \"pick_unvisited\", and others. The main function performs traversal, rollout simulation, and backpropagation until resources are depleted.",
+        "type": "summary"
+    },
+    "1138": {
+        "file_id": 157,
+        "content": "import math\nimport random\n# main function for the Monte Carlo Tree Search\ndef monte_carlo_tree_search(root, time, computational_power):\n    while resources_left(time, computational_power):\n        leaf = traverse(root)\n        simulation_result = rollout(leaf)\n        backpropagate(leaf, simulation_result)\n    return best_child(root)\n# function for node traversal\ndef traverse(node):\n    while fully_expanded(node):\n        node = best_uct(node)\n    # in case no children are present / node is terminal\n    return pick_unvisited(node.children) or node\n# function for the result of the simulation\ndef rollout(node):\n    while non_terminal(node):\n        node = rollout_policy(node)\n    return result(node)\n# function for randomly selecting a child node\ndef rollout_policy(node):\n    return pick_random(node.children)\n# function for backpropagation\ndef backpropagate(node, result):\n    if is_root(node):\n        return\n    node.stats = update_stats(node, result)\n    backpropagate(node.parent, result)  # Pass the result up the ",
+        "type": "code",
+        "location": "/qstar_my_guess/mcts_pseudo.py:1-40"
+    },
+    "1139": {
+        "file_id": 157,
+        "content": "Main function for Monte Carlo Tree Search algorithm, performing traversal, rollout simulation, and backpropagation until resources are depleted.",
+        "type": "comment"
+    },
+    "1140": {
+        "file_id": 157,
+        "content": "tree\n# function for selecting the best child\n# node with highest number of visits\ndef best_child(node):\n    # Select the child with the highest number of visits\n    best_visit_count = -1\n    best_child_node = None\n    for child in node.children:\n        if child.stats.visits > best_visit_count:\n            best_visit_count = child.stats.visits\n            best_child_node = child\n    return best_child_node\n# Helper functions\ndef resources_left(time, computational_power):\n    # Check if resources are left\n    if time > 0 and computational_power > 0:\n        return True\n    else:\n        return False\ndef fully_expanded(node):\n    # Check if node is fully expanded\n    return len(node.children) == node.max_children\ndef best_uct(node):\n    # Select the child node using UCT (Upper Confidence Bound for Trees)\n    max_uct = -1\n    selected_child = None\n    for child in node.children:\n        uct_value = calculate_uct(child)\n        if uct_value > max_uct:\n            max_uct = uct_value\n            selected_child = child\n   ",
+        "type": "code",
+        "location": "/qstar_my_guess/mcts_pseudo.py:40-77"
+    },
+    "1141": {
+        "file_id": 157,
+        "content": "The code defines three functions: \"best_child\", \"resources_left\", and \"fully_expanded\". The \"best_child\" function selects the child node with the highest number of visits from a given node. The \"resources_left\" function checks if there are still resources remaining in terms of time and computational power. Lastly, the \"fully_expanded\" function checks if all possible children have been expanded from a given node.",
+        "type": "comment"
+    },
+    "1142": {
+        "file_id": 157,
+        "content": " return selected_child\ndef calculate_uct(node):\n    if node.stats.visits == 0:\n        return float('inf')\n    return (node.stats.wins / node.stats.visits) + math.sqrt(2 * math.log(node.parent.stats.visits) / node.stats.visits)\ndef pick_unvisited(children):\n    # Pick an unvisited child node\n    unvisited_children = [child for child in children if child.stats.visits == 0]\n    return random.choice(unvisited_children) if unvisited_children else None\ndef non_terminal(node):\n    # Check if node is non-terminal\n    return not node.is_terminal\ndef result(node):\n    # Get the result of the simulation\n    return node.result\ndef update_stats(node, result):\n    # Update statistics for the node\n    node.stats.visits += 1\n    node.stats.wins += result  # Assuming result is a win/loss value\n    return node.stats\ndef is_root(node):\n    # Check if the node is the root\n    return node.parent is None\ndef pick_random(children):\n    # Pick a random child node\n    return random.choice(children)",
+        "type": "code",
+        "location": "/qstar_my_guess/mcts_pseudo.py:77-109"
+    },
+    "1143": {
+        "file_id": 157,
+        "content": "The code defines several functions to be used in a Monte Carlo Tree Search (MCTS) algorithm.\n- The \"selected_child\" function returns the selected child node from a set of nodes.\n- The \"calculate_uct\" function calculates the Upper Confidence Bounds for Trees (UCT) value for a given node, which is used in MCTS.\n- The \"pick_unvisited\" function picks an unvisited child node from a set of children nodes.\n- The \"non_terminal\" function checks if a node is non-terminal (i.e., not the end of a simulation).\n- The \"result\" function returns the result of a simulation for a given node.\n- The \"update_stats\" function updates the statistics for a node based on the result of a simulation.\n- The \"is_root\" function checks if a node is the root (starting point) of the tree.\n- The \"pick_random\" function picks a random child node from a set of children nodes.",
+        "type": "comment"
+    },
+    "1144": {
+        "file_id": 158,
+        "content": "/qstar_my_guess/mcts_test.py",
+        "type": "filepath"
+    },
+    "1145": {
+        "file_id": 158,
+        "content": "The code initializes a CartPole game using the Gymnasium environment and an OpenLoopMCTS tree. It performs 1000 iterations of self-play in training mode, then continues with additional iterations in non-training mode. Saving the MCTS tree as \"cartpole.mcts\" was unsuccessful.",
+        "type": "summary"
+    },
+    "1146": {
+        "file_id": 158,
+        "content": "# any example to run?\n# import dill\n# import pickle\n# pickle.dump = dill.dump\n# pickle.load = dill.load\n# if the viewer-producer model is probablistic or state-machine like, we can use linear programming.\n# train multiple producers and viewers, selecting the most appropriate topics suitable for some part of the platform content.\nimport imageio\nimport base64\n# import IPython\nimport gymnasium as gym\nfrom mcts_simple import *\nimport sys\nsys.setrecursionlimit(int(1e9))  # workaroud to pickle error.\nclass CartPole(Game):\n    \"\"\"\n    The episode ends if any one of the following occurs:\n        * Termination: Pole Angle is greater than ±12°\n        * Termination: Cart Position is greater than ±2.4 (center of the cart reaches the edge of the display)\n        * Truncation: Episode length is greater than 500 (200 for v0)\n    \"\"\"\n    def __init__(self):\n        # self.env = gym.make(\"CartPole-v1\", render_mode=\"human\")\n        self.env = gym.make(\"CartPole-v1\", render_mode=\"rgb_array\")\n        self.current_state, _ = sel",
+        "type": "code",
+        "location": "/qstar_my_guess/mcts_test.py:1-32"
+    },
+    "1147": {
+        "file_id": 158,
+        "content": "Importing necessary libraries, creating a class for the game CartPole that inherits from Game class, and setting up environment with \"CartPole-v1\" gymnasium environment.",
+        "type": "comment"
+    },
+    "1148": {
+        "file_id": 158,
+        "content": "f.env.reset()\n        self.frames = []\n        self.terminated, self.truncated = False, False\n    def render(self):\n        self.frames.append(self.env.render())\n        if self.has_outcome():\n            # IPython.display.display(\n            #     IPython.display.HTML(\n            #         data=f\"\"\"\n            # <video controls src = \"data:video/mp4;base64,{base64.b64encode(imageio.mimsave(\n            # \"<bytes>\", self.frames, \"MP4\", fps = 20, **{\"macro_block_size\": None})).decode()}\"></video>\n            # \"\"\"\n            #     )\n            # )\n            self.frames.clear()\n    def get_state(self):\n        return self.current_state\n    def number_of_players(self):\n        return 1\n    def current_player(self):\n        return 0\n    def possible_actions(self):\n        return [i for i in range(self.env.action_space.n)]\n    def take_action(self, action):\n        if not self.has_outcome():\n            self.current_state, _, self.terminated, self.truncated, _ = self.env.step(\n                action\n          ",
+        "type": "code",
+        "location": "/qstar_my_guess/mcts_test.py:32-65"
+    },
+    "1149": {
+        "file_id": 158,
+        "content": "This code initializes a game environment, renders the game as frames, and provides access to the current state, number of players, possible actions, and action taking functionality. It also handles termination and truncation.",
+        "type": "comment"
+    },
+    "1150": {
+        "file_id": 158,
+        "content": "  )\n    def has_outcome(self):\n        return self.terminated or self.truncated\n    def winner(self):\n        # Noting that backprop code is: node.w += (prev_node.player in winners) / number_of_winners\n        # It is possible to manipulate list size = self.env._max_episode_steps - self.env._elapsed_steps, since there will always be only 1 player\n        # winner() will return a reward instead, where 0 <= reward <= 1, where it will increase exponentially as elapsed steps increase\n        return [\n            self.current_player()\n            for _ in range(\n                max(1, self.env._max_episode_steps - self.env._elapsed_steps + 1)\n            )\n        ]\ngame = CartPole()\ntree = OpenLoopMCTS(game, training=True)\ntree.self_play(iterations=1000)\ntree.training = False\ntree.self_play()\ntree.save(\"cartpole.mcts\")  # cannot save.",
+        "type": "code",
+        "location": "/qstar_my_guess/mcts_test.py:65-93"
+    },
+    "1151": {
+        "file_id": 158,
+        "content": "This code initializes a CartPole game and an OpenLoopMCTS tree, performs 1000 iterations of self-play while in training mode, then switches to non-training mode and performs additional self-play iterations. The code attempts to save the MCTS tree as \"cartpole.mcts\", but it cannot be saved.",
+        "type": "comment"
+    },
+    "1152": {
+        "file_id": 159,
+        "content": "/qstar_my_guess/signature_test.py",
+        "type": "filepath"
+    },
+    "1153": {
+        "file_id": 159,
+        "content": "This code demonstrates type hints and runtime type checking using the `overtake` decorator from the `overtake` library and the `@overload` function from the `typing_extensions` module. The `func` function is overloaded to handle different input types, and the `runtime_type_checker` parameter specifies that `beartype` should perform type checking at runtime. The `c()` function simply prints \"a\" and serves as an example of a function without any type hints or type checking.",
+        "type": "summary"
+    },
+    "1154": {
+        "file_id": 159,
+        "content": "from typing_extensions import overload\nfrom overtake import overtake  # type: ignore\n@overload\ndef func(a: int) -> None:\n    print(\"int\", a)\n@overload\ndef func(a: str) -> None:\n    print(\"str\", a)\n@overload\ndef func(a: str, b: int) -> None:\n    print(\"str & int\", a, b)\n@overtake(runtime_type_checker=\"beartype\")\ndef func(a, b=1):\n    ...\ndef c():\n    print(\"a\")\n# Example usage\nc()\nfunc(10)\nfunc(\"Hello\")\nfunc(\"Hello\", 1)\nfunc(\"Hello\", \"World\")  # failed to type check.\nfunc(\"Hello\", 1)\nc()\n# func([]) # beartype failed to check this",
+        "type": "code",
+        "location": "/qstar_my_guess/signature_test.py:1-38"
+    },
+    "1155": {
+        "file_id": 159,
+        "content": "This code demonstrates type hints and runtime type checking using the `overtake` decorator from the `overtake` library and the `@overload` function from the `typing_extensions` module. The `func` function is overloaded to handle different input types, and the `runtime_type_checker` parameter specifies that `beartype` should perform type checking at runtime. The `c()` function simply prints \"a\" and serves as an example of a function without any type hints or type checking.",
+        "type": "comment"
+    },
+    "1156": {
+        "file_id": 160,
+        "content": "/qstar_my_guess/thought_tokens.py",
+        "type": "filepath"
+    },
+    "1157": {
+        "file_id": 160,
+        "content": "The code includes classes and functions for token insertion, input size checks, mask generation, training pair creation, sequence padding, and probabilistic noise methods, with a focus on iterating through thought token insertion pairs for source tokens.",
+        "type": "summary"
+    },
+    "1158": {
+        "file_id": 160,
+        "content": "from typing import Callable, Iterable, Optional\nimport torch\nimport math\nfrom beartype import beartype\nfrom beartype.vale import Is\nimport torch.nn.functional as F\nfrom enum import auto, Enum\nimport copy\nfrom typing_extensions import overload, Literal, Annotated\nfrom overtake import overtake  # type: ignore\nReplaceRatio = Annotated[float, Is[lambda number: 0 <= number < 1]]\nNonNegativeFloat = Annotated[float, Is[lambda number: number > 0]]\nclass InsertionMethodCategory(Enum):\n    common_source = auto()\n    separate_source = auto()\nclass ThoughtTokenInsertionMethod(Enum):\n    autoregressive = (auto(), InsertionMethodCategory.common_source)\n    generative_insert = (auto(), InsertionMethodCategory.common_source)\n    generative_insert_and_overwrite = ( # with probablistic noise and original random token swap ratio\n        auto(),\n        InsertionMethodCategory.common_source,\n    )  # will use generated target tokens to replace original randomly inserted thought tokens.\n    # not implemented\n    # iterate_and_in",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:1-28"
+    },
+    "1159": {
+        "file_id": 160,
+        "content": "Code imports necessary libraries and defines various classes, enums, and variables related to token insertion methods. It also includes type annotations for clarity.",
+        "type": "comment"
+    },
+    "1160": {
+        "file_id": 160,
+        "content": "sert_separately = (auto(), InsertionMethodCategory.separate_source)\n    # iterate_and_insert_together = (auto(), InsertionMethodCategory.separate_source)\n    @property\n    def category(self):\n        return self.value[1]\ndef equality_fulfillment_instance_transformer(instance):\n    new_instance = copy.copy(instance)\n    assert hasattr(\n        instance, \"fulfilled\"\n    ), \"cannot process instance with 'fulfilled' attribute\"\n    setattr(new_instance, \"fulfilled\", False)\n    old_eq = copy.copy(new_instance.__eq__)\n    def new_eq(self, other: object):\n        is_equal = old_eq(other)\n        if is_equal:\n            self.fulfilled = True\n        return is_equal\n    setattr(new_instance, \"__eq__\", new_eq)\n    return new_instance\nclass UnknownThoughtTokenInsertionMethod(Exception):\n    def __init__(self, insert_method):\n        super().__init__(f\"Method '{insert_method}' is not available.\")\n@beartype\ndef get_batch_and_seqlen(source_tokens: torch.Tensor):\n    source_size = source_tokens.shape\n    assert (\n        len(",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:28-63"
+    },
+    "1161": {
+        "file_id": 160,
+        "content": "The code defines a class, an exception, and some functions. It appears to be involved in processing thought tokens and handling insertion methods for these tokens. The `UnknownThoughtTokenInsertionMethod` class is used as an error handler, while the `get_batch_and_seqlen()` function takes in source tokens and returns a batch size and sequence length. The code also defines an equality fulfillment transformer which seems to set a 'fulfilled' attribute for instances with existing 'fulfilled' attributes.",
+        "type": "comment"
+    },
+    "1162": {
+        "file_id": 160,
+        "content": "source_size) == 2\n    ), f\"wrong token size: {source_size} required: (batch, seqlen)\"\n    batch, seqlen = source_size\n    return batch, seqlen\n@beartype\ndef create_zeros_from_tensor_metadata_and_insert_rate(\n    batch: int, seqlen: int, dtype: torch.dtype,insert_rate: float\n):\n    assert insert_rate > 0, f\"insert rate not positive: {insert_rate}\"\n    added_seqlen = math.ceil(thought_token_insert_rate * seqlen)\n    new_seqlen = seqlen + added_seqlen\n    zeros = torch.zeros((batch, new_seqlen), dtype=dtype)\n    return added_seqlen, new_seqlen, zeros\n@beartype\ndef create_mask(batch: int, seqlen: int, k: int):\n    assert k > 0, f\"k ({k}) is not positive\"\n    assert k < seqlen, f\"k ({k}) must be less than seqlen ({seqlen})\"\n    # Generate random indices for each row\n    random_indices = torch.stack([torch.randperm(seqlen)[:k] for _ in range(batch)])\n    # Create a mask tensor to mark the selected indices\n    mask = torch.zeros((batch, seqlen), dtype=torch.bool)\n    mask.scatter_(1, random_indices, True)\n    retu",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:63-92"
+    },
+    "1163": {
+        "file_id": 160,
+        "content": "Line 62-64:\n```\nsource_size) == 2\n    ), f\"wrong token size: {source_size} required: (batch, seqlen)\"\n    batch, seqlen = source_size\n    return batch, seqlen\n```\nEnsures correct input size is provided for batch and sequence length.\n\nLine 67-74:\n```\n@beartype\ndef create_zeros_from_tensor_metadata_and_insert_rate(\n    batch: int, seqlen: int, dtype: torch.dtype,insert_rate: float\n):\n    assert insert_rate > 0, f\"insert rate not positive: {insert_rate}\"\n    added_seqlen = math.ceil(thought_token_insert_rate * seqlen)\n    new_seqlen = seqlen + added_seqlen\n    zeros = torch.zeros((batch, new_seqlen), dtype=dtype)\n    return added_seqlen, new_seqlen, zeros\n```\nCreates zero tensor with the specified batch and sequence length.\n\nLine 76-91:\n```\n@beartype\ndef create_mask(batch: int, seqlen: int, k: int):\n    assert k > 0, f\"k ({k}) is not positive\"\n    assert k < seqlen, f\"k ({k}) must be less than seqlen ({seqlen})\"\n    # Generate random indices for each row\n    random_indices = torch.stack([torch.randperm(seqlen)[:k] for _ in range(batch)])\n    # Create a mask tensor to mark the selected indices\n    mask = torch.zeros((batch, seqlen), dtype=torch.bool)\n    mask.scatter_(1, random_indices, True)\n    return mask\n```\nGenerates a mask for randomly selected sequence elements.",
+        "type": "comment"
+    },
+    "1164": {
+        "file_id": 160,
+        "content": "rn mask\n@beartype\ndef insert_source_token_to_zeros(\n    source_tokens: torch.Tensor,\n    zeros: torch.Tensor,\n    batch: int,\n    seqlen: int,\n    new_seqlen: int,\n):\n    source_token_locations = create_mask(batch, new_seqlen, seqlen)\n    zeros[source_token_locations] = source_tokens\n    return source_token_locations\n@beartype\ndef insert_thought_token_to_zeros(\n    thought_tokens: torch.Tensor,\n    zeros: torch.Tensor,\n    source_token_locations: torch.Tensor,\n):\n    thought_token_locations = ~source_token_locations  # do not use \"not\"\n    zeros[thought_token_locations] = thought_tokens\n    return thought_token_locations\n@beartype\ndef sample_thought_tokens(\n    thought_token_vocabulary: list[int], batch: int, added_seqlen: int\n):\n    # Sampled thought_token_vocabulary indices\n    sampled_indices = torch.randint(\n        0, len(thought_token_vocabulary), size=(batch, added_seqlen)\n    )\n    # Create tensor using sampled indices\n    thought_tokens = torch.tensor(thought_token_vocabulary)[sampled_indices]\n    return th",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:92-131"
+    },
+    "1165": {
+        "file_id": 160,
+        "content": "Insert source token into zeros: Creates mask for source token locations, assigns source tokens to those locations in zeros tensor.\nInsert thought token into zeros: Assigns thought tokens to locations not occupied by source tokens.\nSample thought tokens: Generates random indices from thought token vocabulary and creates a tensor of sampled thought tokens.",
+        "type": "comment"
+    },
+    "1166": {
+        "file_id": 160,
+        "content": "ought_tokens\n@beartype\ndef insert_thought_tokens(\n    source_tokens: torch.Tensor,\n    thought_token_vocabulary: list[int],\n    thought_token_insert_rate: NonNegativeFloat,\n):\n    batch, seqlen = get_batch_and_seqlen(source_tokens)\n    added_seqlen, new_seqlen, zeros = create_zeros_from_tensor_metadata_and_insert_rate(\n        batch, seqlen, source_tokens.dtype, thought_token_insert_rate\n    )\n    source_token_locations = insert_source_token_to_zeros(\n        source_tokens, zeros, batch, seqlen, new_seqlen\n    )\n    thought_tokens = sample_thought_tokens(\n        thought_token_vocabulary, batch, added_seqlen\n    )\n    thought_token_locations = insert_thought_token_to_zeros(\n        thought_tokens, zeros, source_token_locations\n    )\n    return zeros, new_seqlen, source_token_locations, thought_token_locations\n@beartype\ndef pad_seq_left(input_tensor: torch.Tensor, pad_size: int, value):\n    assert pad_size >= 0, f\"pad size ({pad_size}) must be non negative\"\n    ret = F.pad(input_tensor, (pad_size, 0), mode=\"co",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:131-159"
+    },
+    "1167": {
+        "file_id": 160,
+        "content": "Function insert_thought_tokens:\nInserts thought tokens into source tokens based on thought token vocabulary and insertion rate. Returns the zeros, new sequence length, source token locations, and thought token locations. \n\nFunction pad_seq_left:\nPads input tensor with specified size to the left with a given value. Ensures padding size is non-negative.",
+        "type": "comment"
+    },
+    "1168": {
+        "file_id": 160,
+        "content": "nstant\", value=value)\n    return ret\n@beartype\ndef pad_processed_and_thought_tokens(\n    processed_tokens: torch.Tensor,\n    thought_token_locations: torch.Tensor,\n    train_window_size: int,\n    pad_token_idx: int,\n):\n    pad_size = train_window_size - 1\n    padded_processed_tokens = pad_seq_left(processed_tokens, pad_size, pad_token_idx)\n    padded_thought_token_locations = pad_seq_left(\n        thought_token_locations, pad_size, False\n    )\n    return padded_processed_tokens, padded_thought_token_locations\n@beartype\ndef get_autoregressive_generator_and_thought_token_locations(\n    source_tokens: torch.Tensor,\n    thought_token_vocabulary: list[int],\n    thought_token_insert_rate: NonNegativeFloat,\n):\n    (\n        processed_tokens,\n        new_seqlen,\n        _,\n        thought_token_locations,\n    ) = insert_thought_tokens(\n        source_tokens, thought_token_vocabulary, thought_token_insert_rate\n    )\n    assert new_seqlen > 1\n    (\n        padded_processed_tokens,\n        padded_thought_token_locations,\n    ) =",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:159-197"
+    },
+    "1169": {
+        "file_id": 160,
+        "content": "This function pads the processed tokens and thought token locations with a specific padding size and pad token index.\n\nQuestion:",
+        "type": "comment"
+    },
+    "1170": {
+        "file_id": 160,
+        "content": " pad_processed_and_thought_tokens(\n        processed_tokens, thought_token_locations, train_window_size, pad_token_idx\n    )\n    autoregressive_generator = autoregressively_yield_train_pairs(\n        padded_processed_tokens, train_window_size, new_seqlen\n    )\n    return autoregressive_generator, padded_thought_token_locations\n@overload\ndef insert_thought_tokens_and_yield_train_pairs(\n    insertion_method: Literal[ThoughtTokenInsertionMethod.autoregressive],\n    source_tokens: torch.Tensor,\n    thought_token_vocabulary: list[int],\n    thought_token_insert_rate: NonNegativeFloat,\n) -> Iterable[tuple[torch.Tensor, torch.Tensor]]:\n    (\n        autoregressive_generator,\n        _,\n    ) = get_autoregressive_generator_and_thought_token_locations(\n        source_tokens, thought_token_vocabulary, thought_token_insert_rate\n    )\n    yield from autoregressive_generator\ndef generative_insert_thought_tokens_and_yield_train_pairs(\n    source_tokens: torch.Tensor,\n    thought_token_vocabulary: list[int],\n    thought_toke",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:197-225"
+    },
+    "1171": {
+        "file_id": 160,
+        "content": "This code defines functions for inserting thought tokens and generating training pairs. It takes input source_tokens, thought_token_vocabulary, and thought_token_insert_rate as parameters to control the process of inserting thought tokens into the source sequence. The function returns an iterable of tuples containing modified source sequences and their corresponding target sequences. The code uses autoregressive generator and generative methods for token insertion.",
+        "type": "comment"
+    },
+    "1172": {
+        "file_id": 160,
+        "content": "n_insert_rate: NonNegativeFloat,\n    non_thought_token_vocabulary: list[int],\n    target_token_prob_generator: Callable[[torch.Tensor], torch.Tensor],\n    probablistic_noise_ratio:ReplaceRatio = 0,\n) -> Iterable[tuple[torch.Tensor, torch.Tensor]]:\n    (\n        autoregressive_generator,\n        padded_thought_token_locations,\n    ) = get_autoregressive_generator_and_thought_token_locations(\n        source_tokens, thought_token_vocabulary, thought_token_insert_rate\n    )\n    yield from generative_insert_yield_train_pairs(\n        autoregressive_generator,\n        target_token_prob_generator,\n        padded_thought_token_locations,\n        thought_token_vocabulary,\n        non_thought_token_vocabulary,\n        train_window_size,\n        probablistic_noise_ratio\n    )\n@overload\ndef insert_thought_tokens_and_yield_train_pairs(\n    insertion_method: Literal[ThoughtTokenInsertionMethod.generative_insert],\n    source_tokens: torch.Tensor,\n    thought_token_vocabulary: list[int],\n    thought_token_insert_rate: NonNega",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:225-252"
+    },
+    "1173": {
+        "file_id": 160,
+        "content": "Function that generates training pairs for inserting thought tokens in a generative manner.\nInputs: autoregressive_generator, target_token_prob_generator, padded_thought_token_locations, thought_token_vocabulary, non_thought_token_vocabulary, train_window_size, probablistic_noise_ratio\nYields: training pairs for inserting thought tokens",
+        "type": "comment"
+    },
+    "1174": {
+        "file_id": 160,
+        "content": "tiveFloat,\n    non_thought_token_vocabulary: list[int],\n    target_token_prob_generator: Callable[[torch.Tensor], torch.Tensor],\n) -> Iterable[tuple[torch.Tensor, torch.Tensor]]:\n    yield from generative_insert_thought_tokens_and_yield_train_pairs(\n        source_tokens,\n        thought_token_vocabulary,\n        thought_token_insert_rate,\n        non_thought_token_vocabulary,\n        target_token_prob_generator,\n    )\n@beartype\ndef generate_porportional_mask_for_tensor(input_tensor:torch.Tensor, porportion: ReplaceRatio):\n    # Determine the number of elements to be zeroed\n    num_elements = input_tensor.numel()\n    num_zero_elements = int(porportion * num_elements)\n    # Create a boolean mask for randomly selecting 30% of the elements\n    mask = torch.zeros(num_elements, dtype=torch.bool)\n    mask[:num_zero_elements] = 1  # Set the first 30% elements to True\n    mask = mask[torch.randperm(num_elements)]  # Shuffle the mask randomly\n    return mask\n@beartype\ndef swap_input_tokens_with_previous_target_token",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:252-277"
+    },
+    "1175": {
+        "file_id": 160,
+        "content": "This function generates thought tokens by inserting them into a source sequence with a specified rate. It takes in the source tokens, thought token vocabulary, thought token insertion rate, non-thought token vocabulary, and target token probability generator.\n\nThe `generate_porportional_mask_for_tensor` function creates a boolean mask for randomly selecting elements from an input tensor. It calculates the number of elements to be zeroed based on a given proportion and shuffles the mask randomly.\n\nThe `swap_input_tokens_with_previous_target_token` function is incomplete, making it difficult to provide a comment without further context.",
+        "type": "comment"
+    },
+    "1176": {
+        "file_id": 160,
+        "content": "s_by_swap_ratio(input_tokens:torch.Tensor,prev_target_tokens:torch.Tensor, input_token_swap_ratio):\n    input_mask = generate_porportional_mask_for_tensor(input_tokens, input_token_swap_ratio)\n    prev_target_mask = ~input_mask\n    input_tokens[input_mask] = 0\n    prev_target_tokens[prev_target_mask] = 0\n    input_tokens += prev_target_tokens\n    return input_tokens\n@overload\ndef insert_thought_tokens_and_yield_train_pairs(\n    insertion_method: Literal[\n        ThoughtTokenInsertionMethod.generative_insert_and_overwrite\n    ],\n    source_tokens: torch.Tensor,\n    thought_token_vocabulary: list[int],\n    thought_token_insert_rate: NonNegativeFloat,\n    non_thought_token_vocabulary: list[int],\n    target_token_prob_generator: torch.nn.Module,\n    probablistic_noise_ratio:ReplaceRatio,\n    input_token_swap_ratio:ReplaceRatio,\n) -> Iterable[tuple[torch.Tensor, torch.Tensor]]:\n    generator = generative_insert_thought_tokens_and_yield_train_pairs(\n        source_tokens,\n        thought_token_vocabulary,\n        ",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:277-301"
+    },
+    "1177": {
+        "file_id": 160,
+        "content": "The code defines a function `s_by_swap_ratio` that takes in three parameters: `input_tokens`, `prev_target_tokens`, and `input_token_swap_ratio`. It generates a mask based on the input token swap ratio, and then sets the corresponding elements in both `input_tokens` and `prev_target_tokens` to 0. Finally, it adds the two tensors together and returns the resulting `input_tokens`.\n\nThe function `insert_thought_tokens_and_yield_train_pairs` is overloaded with a specific insertion method of `ThoughtTokenInsertionMethod.generative_insert_and_overwrite`. It takes in several parameters, including `source_tokens`, `thought_token_vocabulary`, `thought_token_insert_rate`, `non_thought_token_vocabulary`, `target_token_prob_generator`, `proabalistic_noise_ratio`, and `input_token_swap_ratio`. It then calls another function, `generative_insert_thought_tokens_and_yield_train_pairs`, passing in the required parameters and returns an iterable of tuple of torch.Tensors representing training pairs.",
+        "type": "comment"
+    },
+    "1178": {
+        "file_id": 160,
+        "content": "thought_token_insert_rate,\n        non_thought_token_vocabulary,\n        target_token_prob_generator,\n        probablistic_noise_ratio,\n    )\n    prev_target_tokens = None\n    for input_tokens, target_tokens in generator:\n        if prev_target_tokens is not None:\n            if input_token_swap_ratio > 0:\n                input_tokens = swap_input_tokens_with_previous_target_tokens_by_swap_ratio(input_tokens, prev_target_tokens, input_token_swap_ratio)\n            else:\n                input_tokens = prev_target_tokens\n        yield input_tokens, target_tokens\n        prev_target_tokens = target_tokens.clone()\n@overtake(runtime_type_checker=\"beartype\")\ndef insert_thought_tokens_and_yield_train_pairs(\n    insertion_method,\n    source_tokens,\n    thought_token_vocabulary,\n    thought_token_insert_rate,\n    non_thought_token_vocabulary=None,\n    target_token_prob_generator=None,\n    probablistic_noise_ratio = 0,\n    input_token_swap_ratio = 0\n):\n    ...\n@beartype\ndef crop_input_token_by_index_and_window_size(\n    pr",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:301-334"
+    },
+    "1179": {
+        "file_id": 160,
+        "content": "This function generates input-target token pairs and yields them, potentially inserting thought tokens and swapping input tokens with previous target tokens based on specified ratios. It also supports cropping input tokens by index and window size using another function.",
+        "type": "comment"
+    },
+    "1180": {
+        "file_id": 160,
+        "content": "ocessed_tokens: torch.Tensor, index: int, window_size: int\n):\n    cropped_tokens = processed_tokens[:, index : index + window_size]\n    return cropped_tokens\n@beartype\ndef crop_target_token_by_index_and_window_size(\n    processed_tokens: torch.Tensor, index: int, window_size: int\n):\n    return crop_input_token_by_index_and_window_size(\n        processed_tokens, index + 1, window_size\n    )\n# the sample process shall start from zero.\n@beartype\ndef autoregressively_yield_train_pairs(\n    padded_processed_tokens: torch.Tensor, train_window_size: int, new_seqlen: int\n):\n    for i in range(new_seqlen - 1):\n        input_tokens = crop_input_token_by_index_and_window_size(\n            padded_processed_tokens, i, train_window_size\n        )\n        target_tokens = crop_target_token_by_index_and_window_size(\n            padded_processed_tokens, i, train_window_size\n        )\n        yield input_tokens, target_tokens\n@beartype\ndef prob_to_token(\n    token_prob: torch.Tensor,\n    masked_location: Optional[torch.Tensor] = N",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:334-367"
+    },
+    "1181": {
+        "file_id": 160,
+        "content": "This code seems to define functions for token cropping, autoregressive training pair generation, and probability to token conversion. \n\nThe function `crop_input_token_by_index_and_window_size` takes in a tensor of processed tokens, an index, and a window size, then crops the input tokens within that range. \n\nThe function `crop_target_token_by_index_and_window_size` does the same for target tokens, but offsets the index by one. \n\nThe function `autoregressively_yield_train_pairs` generates autoregressive training pairs using the previous functions to crop tokens. It iterates over a range and yields input and target token crops for each iteration. \n\nLastly, the `prob_to_token` function takes in a tensor of token probabilities and an optional masked location (default is None), presumably to convert those probabilities into corresponding tokens.",
+        "type": "comment"
+    },
+    "1182": {
+        "file_id": 160,
+        "content": "one,\n    masked_vocabulary: Optional[list[int]] = None,\n):\n    ret_prob = token_prob.clone()\n    if masked_vocabulary is not None:\n        ret_prob[:, masked_vocabulary] = 0\n    ret_tokens = torch.argmax(ret_prob, dim=2)\n    if masked_location is not None:\n        ret_tokens[masked_location] = 0\n    return ret_tokens\n@beartype\ndef generate_target_tokens_with_thought_token_loctions_and_non_thought_token_vocabulary(\n    token_prob: torch.Tensor,\n    thought_token_locations: torch.Tensor,\n    thought_token_vocabulary: list[int],\n    non_thought_token_vocabulary: list[int],\n):\n    assert (\n        len(token_prob.shape) == 3\n    ), f\"wrong token probability tensor shape ({token_prob}). should be: (batch_size, sequence_length, vocabulary_size)\"\n    # what is the shape of this prob?\n    non_thought_token_locations = ~thought_token_locations\n    thought_tokens = prob_to_token(\n        token_prob, non_thought_token_locations, non_thought_token_vocabulary\n    )\n    non_thought_tokens = prob_to_token(\n        token_prob, ",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:367-396"
+    },
+    "1183": {
+        "file_id": 160,
+        "content": "This code is defining two functions: \n1. `prob_to_token`: This function takes a tensor containing probability scores for each token in the vocabulary and converts it to a list of tokens. It also allows masking certain locations by setting their probabilities to zero if a `masked_vocabulary` or `masked_location` is provided.\n2. `generate_target_tokens_with_thought_token_locations_and_non_thought_token_vocabulary`: This function generates target tokens by first identifying locations of \"thought\" and \"non-thought\" tokens based on the input parameters, and then calling `prob_to_token` to convert probability scores for each token into a list of tokens.\n\nCode Reviewer",
+        "type": "comment"
+    },
+    "1184": {
+        "file_id": 160,
+        "content": "thought_token_locations, thought_token_vocabulary\n    )\n    ret_tokens = thought_tokens + non_thought_tokens\n    return ret_tokens\n@beartype\ndef generate_gaussian_noise_within_bounds(size:tuple, lower:float, upper:float):\n    assert lower <= upper, f\"rule lower ({lower}) <= upper ({upper}) does not comply\"\n    # Parameters\n    mean = 0\n    std = 1\n    # Generate Gaussian noise\n    noise = torch.normal(mean, std, size=size)  # Generate 10 samples of Gaussian noise\n    # Scale the noise to the range [a, b]\n    scaled_noise = (noise - noise.mean()) / noise.std()  # Standardize the noise\n    scaled_noise = (scaled_noise * (upper - lower)) + (lower + upper) / 2  # Scale to the desired range\n    return scaled_noise\n@beartype\ndef add_probablistic_noise_to_prob(token_prob:torch.Tensor, probablistic_noise_ratio:ReplaceRatio):\n    min_prob = float(token_prob.min())\n    max_prob = float(token_prob.max())\n    noise_prob = generate_gaussian_noise_within_bounds(token_prob.shape, min_prob, max_prob)\n    token_prob_with_n",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:396-422"
+    },
+    "1185": {
+        "file_id": 160,
+        "content": "This code defines functions to generate Gaussian noise and add probabilistic noise to token probabilities. The `generate_gaussian_noise_within_bounds` function generates Gaussian noise within a specified range, while the `add_probablistic_noise_to_prob` function adds probabilistic noise to token probabilities using the generated Gaussian noise.",
+        "type": "comment"
+    },
+    "1186": {
+        "file_id": 160,
+        "content": "oise = token_prob + noise_prob * probablistic_noise_ratio\n    return token_prob_with_noise\n# demo on how to use thought tokens.\n@beartype\ndef generative_insert_yield_train_pairs(\n    autoregressive_generator: Iterable,\n    target_token_prob_generator: Callable[[torch.Tensor], torch.Tensor],\n    padded_thought_token_locations: torch.Tensor,\n    thought_token_vocabulary: list[int],\n    non_thought_token_vocabulary: list[int],\n    train_window_size: int,\n    probablistic_noise_ratio: ReplaceRatio,\n):\n    for i, (input_tokens, _) in enumerate(autoregressive_generator):\n        with torch.no_grad():\n            output_token_prob = target_token_prob_generator(input_tokens)\n            output_token_prob = add_probablistic_noise_to_prob(output_token_prob,probablistic_noise_ratio)\n        thought_token_locations = crop_target_token_by_index_and_window_size(\n            padded_thought_token_locations, i, train_window_size\n        )\n        target_tokens = generate_target_tokens_with_thought_token_loctions_and_non_t",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:422-443"
+    },
+    "1187": {
+        "file_id": 160,
+        "content": "This function takes an autoregressive generator and a target token probability generator, along with other parameters. It iterates through the input tokens from the autoregressive generator, applying probabilistic noise to the output token probabilities and generating target tokens based on thought token locations and non-thought token vocabulary.",
+        "type": "comment"
+    },
+    "1188": {
+        "file_id": 160,
+        "content": "hought_token_vocabulary(\n            output_token_prob,\n            thought_token_locations,\n            thought_token_vocabulary,\n            non_thought_token_vocabulary,\n        )\n        yield input_tokens, target_tokens\n# output thought tokens affect input tokens?\nif __name__ == \"__main__\":\n    # begin test\n    base_token_count = 1000\n    thought_token_count = 2000\n    pad_token_idx = base_token_count + thought_token_count\n    total_token_count = pad_token_idx + 1\n    thought_token_insert_rate = 0.2\n    source_batchsize = 1\n    source_seqlen = 20\n    source_size = (source_batchsize, source_seqlen)\n    train_window_size = 10\n    thought_token_vocabulary = [\n        base_token_count + i for i in range(thought_token_count)\n    ]\n    non_thought_token_vocabulary = [\n        i for i in range(total_token_count) if i not in thought_token_vocabulary\n    ]\n    source_tokens = torch.randint(\n        0, base_token_count, source_size\n    )  # okay, lower than upper bound.\n    print(\"[autoregressive]\".center(50, \"-\"))\n   ",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:443-480"
+    },
+    "1189": {
+        "file_id": 160,
+        "content": "This code defines a function that generates thought tokens based on input and target tokens. It also performs testing with random input tokens, inserting thought tokens at a specified rate, and calculates the vocabulary for base, thought, and non-thought tokens. The code then prints a separator line.",
+        "type": "comment"
+    },
+    "1190": {
+        "file_id": 160,
+        "content": " for input_tokens, target_tokens in insert_thought_tokens_and_yield_train_pairs(\n        ThoughtTokenInsertionMethod.autoregressive,\n        source_tokens,\n        thought_token_vocabulary,\n        thought_token_insert_rate,\n    ):  \n        print(input_tokens)\n        print(target_tokens)\n        print(\"-\"*50)\n        # breakpoint()",
+        "type": "code",
+        "location": "/qstar_my_guess/thought_tokens.py:480-489"
+    },
+    "1191": {
+        "file_id": 160,
+        "content": "Iterating through thought token insertion pairs for source tokens.",
+        "type": "comment"
+    },
+    "1192": {
+        "file_id": 161,
+        "content": "/qstar_my_guess/time_traversal.py",
+        "type": "filepath"
+    },
+    "1193": {
+        "file_id": 161,
+        "content": "The code uses Monte Carlo Tree Search and gradient descent for AI model development, focusing on learning from environment feedback and involving machine learning tasks like world model updates and sequence manipulations. It also calculates cosine similarity to measure prompt similarity, considering computational time and loss delta while handling cases like rollback or performing various actions based on traverse_complete status.",
+        "type": "summary"
+    },
+    "1194": {
+        "file_id": 161,
+        "content": "import torch\nfrom beartype import beartype\nfrom typing import Callable\n# use mcts to find the closest solution to the prompt, and use gradient descent to strenghten the result. from rationale to intuition.\n# [outcome -> prompt that want outcome to be true] -> action\n# let the model think about how to convert environment feedback into feelings or steps, so that we can achieve it, differentiate it instead of comparing target pixel to pixel to outcome. because usually we cannot just let the same scenario happen again, but feelings can be manipulated.\n# how to train the feeling model? static reservior computing?\n# current state + current feeling -> next state + next feeling ...\n# there must be some irreversible process in the feeling generation.\n# just make human readable text appear in the prediction, or a special translator to translate text into outcome tokens. (ask the robot: what you have done?)\n# consciousness could be a system that decide to combine prediction (self-image) as part of the perc",
+        "type": "code",
+        "location": "/qstar_my_guess/time_traversal.py:1-19"
+    },
+    "1195": {
+        "file_id": 161,
+        "content": "This code appears to be a collection of thoughts and ideas for developing an AI model. It discusses using Monte Carlo Tree Search (MCTS) and gradient descent to find the closest solution, training feeling models with static reservoir computing, and generating human-readable text in predictions. The focus is on creating a system that can learn from environment feedback and manipulate feelings to achieve desired outcomes.",
+        "type": "comment"
+    },
+    "1196": {
+        "file_id": 161,
+        "content": "eption, and process them hierarchically\n# the target can be random, instead of carefully crafted. can mix with current state or some other state in order to determine the gradient.\n# q+astar & mcts\n# heuristic: compute cosine similarity between target token and actual token\n# sequence heuristic: seqlen heuristic\n@beartype\ndef calculate_heuristic_distance(\n    init_token: torch.Tensor,\n    current_token: torch.Tensor,\n    target_token: torch.Tensor,\n    sequence_length: torch.Tensor,\n    dim: int = 1,\n):\n    cosine_distance = (\n        1 - torch.cosine_similarity(init_token, current_token, dim=dim)\n    ) + (1 - torch.cosine_similarity(target_token, current_token, dim=dim))\n    heuristic_distance = cosine_distance + sequence_length\n    return heuristic_distance\n@beartype\ndef reverse_sequence(sequence: torch.Tensor, dim: int = 1):\n    ret = torch.flip(sequence, dims=[dim])\n    return ret\n# where do targets come from?\n# historical tokens: reverse order autoregressive model predictions, memory retrieval, past con",
+        "type": "code",
+        "location": "/qstar_my_guess/time_traversal.py:19-51"
+    },
+    "1197": {
+        "file_id": 161,
+        "content": "Code calculates a heuristic distance based on cosine similarity between initial token, current token, and target token. It also includes a sequence length factor. This information can be used for time-traversal in an autoregressive model context. Targets may come from historical tokens or other sources.",
+        "type": "comment"
+    },
+    "1198": {
+        "file_id": 161,
+        "content": "text\n# TODO: randomly act and compare actual outcome, change world model & prompt\noutcome = actual_world_model(random_act)\nvirtual_world_model.change(random_act, outcome)\nprompt_model.change(outcome, random_act)\n# TODO: make capitalism and machine community\nif paid_price:\n    backpropagate(amount, resource_consumption)\nif want_to_listen:\n    continue_generation\n# TODO: use neural network instead of external goal generator when it is trusted, and can create some rhythmic consciousness instead of synthetic\nrevseq = reverse_sequence(init_sequence)\ntarget_token = reverse_world_model(reverse_token + revseq)\ntarget_token = world_model(init_sequence + memory_retrieval_token)\ntarget_token = init_sequence[-10]\ntarget_token = info_retrieval(init_sequence, ahead=10)\n# future tokens: future predictions that being made short or slow (skipping intermediate steps, or making it faster), or contradict with common future predictions (unusual, less probable future tokens)\ntarget_token = world_model(init_sequence)[-2]\ntarg",
+        "type": "code",
+        "location": "/qstar_my_guess/time_traversal.py:51-75"
+    },
+    "1199": {
+        "file_id": 161,
+        "content": "This code contains various tasks related to machine learning, world model updates, and sequence manipulations. It involves random acts and outcomes, updating virtual and prompt models based on these outcomes. There is a condition check for paid price, with backpropagation if true, and another condition for want-to-listen, which continues generation. The code also includes the use of neural networks in place of an external goal generator when trusted. Additionally, there are several sequence manipulations like reverse_sequence and info_retrieval to retrieve future tokens for prediction.",
+        "type": "comment"
+    }
+}

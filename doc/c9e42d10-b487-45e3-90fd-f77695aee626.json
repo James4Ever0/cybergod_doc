@@ -1,0 +1,10 @@
+{
+    "summary": "This code creates a canvas element, draws the viewport screenshot onto it, converts the canvas content to a data URL representing the screenshot, and then opens the data URL in a new tab to display the screenshot.",
+    "details": [
+        {
+            "comment": "This code creates a canvas element, draws the viewport screenshot onto it, converts the canvas content to a data URL representing the screenshot, and then opens the data URL in a new tab to display the screenshot.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/the_frozen_forest_intro/take_viewport_screenshot.js\":0-17",
+            "content": "// Create a canvas element to draw the screenshot\nvar canvas = document.createElement('canvas');\ncanvas.width = window.innerWidth;\ncanvas.height = window.innerHeight;\nvar ctx = canvas.getContext('2d');\n// Draw the screenshot of the viewport onto the canvas\n// does not work at all.\nctx.drawImage(window, 0, 0, window.innerWidth, window.innerHeight);\n// ctx.drawImage(window, 0, 0, window.innerWidth, window.innerHeight);\n// Convert the canvas content to a data URL representing the screenshot\nvar screenshotDataUrl = canvas.toDataURL('image/png');\ncanvas.remove()\n// Open the data URL in a new tab to display the screenshot\nconst newTab = window.open();\nnewTab.document.write('<img src=\"' + screenshotDataUrl + '\" />');"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Code is using Playwright library to automate interactions with a web page. It opens the Paint.js website, moves and clicks the mouse within the viewport, takes a screenshot, and compares the image size with the viewport size.",
+    "details": [
+        {
+            "comment": "Code is using Playwright library to automate interactions with a web page. It opens the Paint.js website, moves and clicks the mouse within the viewport, takes a screenshot, and compares the image size with the viewport size.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/the_frozen_forest_intro/playwright_locate_mouse_viewport.py\":0-27",
+            "content": "from playwright.sync_api import Playwright, sync_playwright\npaint_url = \"https://paint.js.org/\"\nscreenshot_path = \"paint.png\"\nfrom PIL import Image\ndef run(playwright: Playwright) -> None:\n    browser = playwright.chromium.launch(headless=False)\n    context = browser.new_context()\n    page = context.new_page()\n    page.goto(paint_url)\n    print(f'viewport: {page.viewport_size[\"width\"]}x{page.viewport_size[\"height\"]}')\n    page.mouse.move(200, 200)\n    page.mouse.down()\n    page.mouse.move(400, 400) # working.\n    page.mouse.up()\n    page.screenshot(path=screenshot_path) # will not create new file, same size as saved file\n    img = Image.open(screenshot_path)\n    print(f'image size: {img.size[0]}x{img.size[1]}') # 1280x720\n    # ---------------------\n    context.close()\n    browser.close()\nwith sync_playwright() as playwright:\n    run(playwright)"
+        }
+    ]
+}

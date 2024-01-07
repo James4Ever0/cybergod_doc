@@ -1,0 +1,10 @@
+{
+    "summary": "This code downloads videos specified in the 'script.yaml' file and saves them to a directory named \"video\". It then creates an output JSON file containing the mapping of video links to their respective saved file paths.",
+    "details": [
+        {
+            "comment": "This code downloads videos specified in the 'script.yaml' file and saves them to a directory named \"video\". It then creates an output JSON file containing the mapping of video links to their respective saved file paths.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/propaganda/video_script/download_video.py\":0-27",
+            "content": "import os\nimport yaml\nscript_path = \"script.yaml\"\ndir_path = \"video\"\nwith open(script_path,'r') as f:\n    data = yaml.load(f, Loader=yaml.BaseLoader)\n# os.system\noutput_path= \"output.json\"\nimport json\nimport rich\nrich.print(data)\noutput_data = {}\nindex = 0\nfor d in data:\n    vlink = d.get('video', None)\n    if vlink:\n        index+=1\n        vpath = f\"{index}.mp4\"\n        video_output = os.path.join(dir_path, vpath)\n        os.system(f'ffmpeg -y -i \"{vlink}\" {video_output}')\n        output_data.update({vlink:video_output})\nwith open(output_path,'w+') as f:\n    f.write(json.dumps(output_data, indent=4, ensure_ascii=False))"
+        }
+    ]
+}

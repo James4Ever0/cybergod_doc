@@ -1,0 +1,10 @@
+{
+    "summary": "Executing WebDAV command with provided credentials and path.",
+    "details": [
+        {
+            "comment": "Executing WebDAV command with provided credentials and path.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/webdav_macos_start.sh\":0-0",
+            "content": "webdav-cli --host=192.168.64.1 --port=8081 --username=root --password=root --path=/Volumes/Toshiba\\ XG3/works/agi_computer_control/ubuntu_qemu_utm_arm_record/"
+        }
+    ]
+}

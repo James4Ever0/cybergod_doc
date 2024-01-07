@@ -1,0 +1,10 @@
+{
+    "summary": "Configuring webpack with production mode, entry point at \"./src/index.js\", and output filename as \"main.js\" in the \"dist\" folder.",
+    "details": [
+        {
+            "comment": "Configuring webpack with production mode, entry point at \"./src/index.js\", and output filename as \"main.js\" in the \"dist\" folder.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/webpack.config.js\":0-9",
+            "content": "const path = require(\"path\");\nmodule.exports = {\n  mode: \"production\",\n  entry: \"./src/index.js\",\n  output: {\n    path: path.resolve(__dirname, \"dist\"),\n    filename: \"main.js\",\n  },\n};"
+        }
+    ]
+}

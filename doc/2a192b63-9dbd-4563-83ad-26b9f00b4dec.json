@@ -1,0 +1,10 @@
+{
+    "summary": "This code sets up automatic login, executes a program on startup, takes screenshots for staleness check, and restores the machine's initial state. It also creates `the_random_forest.service` under `/etc/systemd/system/`.",
+    "details": [
+        {
+            "comment": "This code sets up automatic login, executes a program on startup, takes screenshots for staleness check, and restores the machine's initial state. It also creates `the_random_forest.service` under `/etc/systemd/system/`.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/README.md\":0-4",
+            "content": "automatic login -> execute program on start -> screenshot to check if stale -> restore init state\nbefore we going too technical, we just restart & restore the machine every 5 minutes.\nput `the_random_forest.service` under `/etc/systemd/system/`"
+        }
+    ]
+}

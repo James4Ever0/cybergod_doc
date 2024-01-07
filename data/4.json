@@ -1,0 +1,537 @@
+{
+    "400": {
+        "file_id": 45,
+        "content": "/try_better_exceptions.sh",
+        "type": "filepath"
+    },
+    "401": {
+        "file_id": 45,
+        "content": "Running script with environment variable set for better exceptions handling.",
+        "type": "summary"
+    },
+    "402": {
+        "file_id": 45,
+        "content": "env BETTER_EXCEPTIONS=1 python3 try_better_exceptions.py",
+        "type": "code",
+        "location": "/try_better_exceptions.sh:1-1"
+    },
+    "403": {
+        "file_id": 45,
+        "content": "Running script with environment variable set for better exceptions handling.",
+        "type": "comment"
+    },
+    "404": {
+        "file_id": 46,
+        "content": "/tsalib_test.py",
+        "type": "filepath"
+    },
+    "405": {
+        "file_id": 46,
+        "content": "Code comments:\n1. Declare dimension variables (e.g., 'Batch(b):32') and use the shorthand ('b') in the rest of the code.\n2. Create tensors using dimension variables as integers.\n3. Perform tensor transformations, keeping track of named shapes ('b,c,h//2,w//2').\n4. Check assertions: compare dynamic shapes with declared shapes (symbolic).\n5. Use size_assert to check selected dimensions.\n6. Torch tensor is created but not statically checked for correct shape due to names attribute.",
+        "type": "summary"
+    },
+    "406": {
+        "file_id": 46,
+        "content": "from tsalib import dim_vars as dvs, size_assert\nimport tensorflow as tf\nimport torch\n# declare dimension variables. e.g., full name 'Batch', shorthand 'b', length 32.\n# Simply use the shorthand 'b' in rest of the code.\nB, C, H, W = dvs('Batch(b):32 Channels(c):3 Height(h):256 Width(w):256') \n...\n# create tensors using dimension variables (interpret dim vars as integers)\nx: 'bchw' = torch.randn(B, C, H, W)\nx: 'bchw' = tf.get_variable(\"x\", shape=(B, C, H, W), initializer=tf.random_normal_initializer())\n# perform tensor transformations, keep track of named shapes\nx: 'b,c,h//2,w//2' = maxpool(x) \n# check assertions: compare dynamic shapes with declared shapes\n# assertions are 'symbolic': don't change even if declared shapes change\nassert x.size() == (B, C, H // 2, W // 2)\n#or, check selected dimensions\nsize_assert(x.size(), (B,C,H//2,W//2), dims=[1,2,3])\nmytensor = torch.randn(1, 2, 2, 3 , names=('N', 'C', 'H', 'W')) # still, not annotated. cannot check statically?",
+        "type": "code",
+        "location": "/tsalib_test.py:1-21"
+    },
+    "407": {
+        "file_id": 46,
+        "content": "Code comments:\n1. Declare dimension variables (e.g., 'Batch(b):32') and use the shorthand ('b') in the rest of the code.\n2. Create tensors using dimension variables as integers.\n3. Perform tensor transformations, keeping track of named shapes ('b,c,h//2,w//2').\n4. Check assertions: compare dynamic shapes with declared shapes (symbolic).\n5. Use size_assert to check selected dimensions.\n6. Torch tensor is created but not statically checked for correct shape due to names attribute.",
+        "type": "comment"
+    },
+    "408": {
+        "file_id": 47,
+        "content": "/use_logging.py",
+        "type": "filepath"
+    },
+    "409": {
+        "file_id": 47,
+        "content": "The code demonstrates various logging implementations using Python libraries, including forced logging with optional overriding, executing an illegal debug log statement, and examples of using structlog and loguru for logging information.",
+        "type": "summary"
+    },
+    "410": {
+        "file_id": 47,
+        "content": "# test 1\nimport logging\nimport sys\n# can format arbitrary object into string.\ndef get_logging_level():\n    logger = logging.getLogger(\"mylogger\")  # not root?\n    logging_level = logger.getEffectiveLevel()\n    level_name = logging.getLevelName(logging_level)\n    # logging_level = logging.getLogger().getEffectiveLevel()\n    logger.critical(\"LOGGING LEVEL: %s (%d)\", level_name, logging_level)\n    return logging_level\nget_logging_level()\nlogging.warning(\"abc %s\", (1, 2))  # default level: warning.\n# can only set once, unless using \"force\" to override.\nlogging.basicConfig(\n    level=logging.INFO,\n    stream=sys.stdout,\n    format=\"%(asctime)s %(levelname)s:%(message)s\",\n    force=True,\n)\n# logging.basicConfig(level=logging.INFO, stream=sys.stdout) # suppress debug output.\n# level priority: DEBUG < INFO < WARNING < ERROR < CRITICAL\n# logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)\nprint(\"def\")\nlogging.debug(\"abc\")\nprint(\"2 abc\")\n# cannot override?\n# logging.basicConfig(level=logging.DEBUG, stream=sys.stdo",
+        "type": "code",
+        "location": "/use_logging.py:1-36"
+    },
+    "411": {
+        "file_id": 47,
+        "content": "The code is setting up logging configuration and testing the logging level. It starts by importing necessary libraries, then defines a function to get the effective logging level. The logger object is created with the name \"mylogger\". The script outputs the current logging level and sets the basic configuration for logging. The default level is warning, and the format of the log messages is set. Finally, it prints some debug and normal level logs.",
+        "type": "comment"
+    },
+    "412": {
+        "file_id": 47,
+        "content": "ut, force=True) # force overriding. you can set it somewhere.\nlogging.debug(\"abc\", (1, 2))  # though illegal, will be executed as well.\nlogging.info(\"abc %s\", {1: []})\n# test 2\nimport structlog\nslogger: structlog.stdlib.BoundLogger = structlog.get_logger()\nlog = slogger.bind(val = 1)\nlog.bind(bar = 1)\nlog.info(\"anything %s\", (1,2))\n# test 3\nimport loguru\nulogger = loguru.logger\nmylogger = ulogger.bind(foo = 1)\nmylogger.info(\"anything {}\", (1,)) # use {} instead of %\nulogger.critical(\"something wrong {}\", (1,2))",
+        "type": "code",
+        "location": "/use_logging.py:36-60"
+    },
+    "413": {
+        "file_id": 47,
+        "content": "This code demonstrates various logging implementations using Python libraries. It includes forced logging with optional overriding, executing an illegal debug log statement, and examples of using structlog and loguru for logging information.",
+        "type": "comment"
+    },
+    "414": {
+        "file_id": 48,
+        "content": "/action_state_machine/example.txt",
+        "type": "filepath"
+    },
+    "415": {
+        "file_id": 48,
+        "content": "The code is showing a terminal session where a user is inputting and receiving responses. It displays commands, system prompts, and cursor movements.",
+        "type": "summary"
+    },
+    "416": {
+        "file_id": 48,
+        "content": "<human>are you doing just fine?<self>i am fine.<terminal_read>100</terminal_read>root@localhost ~/<type>hello world/n<reply>i am doing just fine. are you ok?<terminal_cursor_back>100</terminal_cursor_back><type>hello world</type><terminal_read>100</terminal_read>root@localhost ~/hello world\\nno such command\\nhello world\\nno such command\\nroot@localhost ~/</terminal_read><read_around_cursor>root@localhost ~/<cursor><move_cursor_forward>10</move_cursor_forward><read_around_cursor>root@localhost ~/<cursor><move_cursor_back>10</move_cursor_back>10<read_around_cursor>root@localhost ~/<cursor><type>hello world<read_around_cursor>root@localhost ~/hello world<cursor>",
+        "type": "code",
+        "location": "/action_state_machine/example.txt:1-1"
+    },
+    "417": {
+        "file_id": 48,
+        "content": "The code is showing a terminal session where a user is inputting and receiving responses. It displays commands, system prompts, and cursor movements.",
+        "type": "comment"
+    },
+    "418": {
+        "file_id": 49,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/Dockerfile",
+        "type": "filepath"
+    },
+    "419": {
+        "file_id": 49,
+        "content": "Installs Docker.io from Alpine Linux package manager (APT).",
+        "type": "summary"
+    },
+    "420": {
+        "file_id": 49,
+        "content": "# just install 'docker.io' from apt\n# remember to use sudo.\n# no official support on i386 now!\nFROM alpine:3.7",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/Dockerfile:1-4"
+    },
+    "421": {
+        "file_id": 49,
+        "content": "Installs Docker.io from Alpine Linux package manager (APT).",
+        "type": "comment"
+    },
+    "422": {
+        "file_id": 50,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/README.md",
+        "type": "filepath"
+    },
+    "423": {
+        "file_id": 50,
+        "content": "This code provides instructions on how to train and use a bot for various tasks. It emphasizes the importance of allowing the bot to explore and learn, as meaning will arise from groups and communications.",
+        "type": "summary"
+    },
+    "424": {
+        "file_id": 50,
+        "content": "as long as you know how to train the bot, you are fine.\nfirst, the coordination training. you may want thee bot to track and click specific location. \nnext, the typing training. you create a dataset of typing against your random typing program.\nyou may also illustrate the action of browsing website, downloading software, playing games, coding and more.\nnevermind. performing actions is critical to the bot, since that is the only way to resolve repetition, do reproduction and become autonomous.\nyou can always let the bot to do (relatively) meaningless things like random clicking. and it always works. meaning will arise from groups and communications.\nlet the bot to explore and learn.",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/README.md:1-13"
+    },
+    "425": {
+        "file_id": 50,
+        "content": "This code provides instructions on how to train and use a bot for various tasks. It emphasizes the importance of allowing the bot to explore and learn, as meaning will arise from groups and communications.",
+        "type": "comment"
+    },
+    "426": {
+        "file_id": 51,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py",
+        "type": "filepath"
+    },
+    "427": {
+        "file_id": 51,
+        "content": "The code is a Python script for Docker emulation, providing functions to manage containers and an interactive program. It also includes exception handling with predefined safe types and logging functionality.",
+        "type": "summary"
+    },
+    "428": {
+        "file_id": 51,
+        "content": "# this will freeze the terminal. what the heck is going wrong?\n# maybe we need to profile this program.\n# you should wait longer while doing init check.\n# maybe you can do some system responsiveness check.\n# check if the system is performing as quick as it should.\nimport gc\n# import getpass\n# TODO: container & process profiler\nimport os\nimport sys\nimport traceback\nimport shutil\nimport easyprocess\nimport elevate\n# timeout this function.\n# from functools import partial\nimport func_timeout\n# import docker  # pip3 install docker\nimport progressbar\nfrom naive_actor import NaiveActor\nfrom vocabulary import AsciiVocab\nREQUIRED_BINARIES = [\"docker\"]\nfor name in REQUIRED_BINARIES:\n    assert shutil.which(\n        name\n    ), f\"{name} is not available in PATH.\"  # you can specify absolute path here\nLEGACY_DOCKER = False\nif sys.maxsize < 2**32:\n    print(\"Your system is 32bit or lower.\")\n    print(\"Assume using legacy docker.\")\n    LEGACY_DOCKER = True\n    if os.name == \"posix\":\n        # check if is sudo\n        print(\"*nix sys",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:1-46"
+    },
+    "429": {
+        "file_id": 51,
+        "content": "This code appears to be a Python script for emulating an interactive program and working with Docker containers. It imports several modules, performs system checks, and asserts that required binary files like \"docker\" are available in the PATH. The script also checks if the system is running 32-bit or lower and assumes legacy docker support in such cases. It mentions a TODO for profiling the program and includes comments suggesting potential improvements.",
+        "type": "comment"
+    },
+    "430": {
+        "file_id": 51,
+        "content": "tem detected.\")\n        # you don't need to do root checking\n        # username = os.environ.get(\"USER\", os.environ.get(\"USERNAME\", \"unknown\"))\n        # username = getpass.getuser()\n        # # ref: https://www.geeksforgeeks.org/how-to-get-the-current-username-in-python/\n        # is_sudo = username == \"root\"\n        # if not is_sudo:\n        #     msg = f\"You ({username}) are not sudo. Docker may malfunction.\"\n        #     # raise Exception(msg)\n        #     print(msg)\n        #     print(\"Elevating now.\")\n        elevate.elevate(graphical=False)\nclass _AutoSeparatedString(str):\n    __slots__ = [\"sep\"]\n    # def __init__(self, *args, **kwargs):\n    #     self.sep = kwargs.pop('sep')\n    def __add__(self, other):\n        s_self, s_other = str(self), str(other)\n        val = s_self.__add__(self.sep + s_other)\n        return self.__class__(val)\n    def __radd__(self, other):\n        s_self, s_other = str(self), str(other)\n        val = s_other.__add__(self.sep + s_self)\n        return self.__class__(val)\ncla",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:46-76"
+    },
+    "431": {
+        "file_id": 51,
+        "content": "Code checks if the current user is root and prints a message if not. If not root, it elevates privileges using the \"elevate\" function. It also defines an auto-separated string class for adding strings separated by a specific delimiter.",
+        "type": "comment"
+    },
+    "432": {
+        "file_id": 51,
+        "content": "ss AutoSpacedString(_AutoSeparatedString):\n    sep = \" \"\n    # def __init__(self, *args, **kwargs):\n    #     kwargs['sep'] = ' '\n    #     super().__init__(*args, **kwargs)\n# a = AutoSpacedString('a')\n# # a = AutoSeparatedString('a')\n# print(a)\n# print(a+a)\n# print(a+a+a)\n# you had better adopt async/await syntax.\n# import time\nfrom log_common import *\ndef docker_cmd(*args):\n    return \" \".join([\"docker\", *args])\ndef docker_container_cmd(*args):\n    return docker_cmd(\"container\", *args)\nif LEGACY_DOCKER:\n    LIST_CONTAINER = docker_cmd(\"ps -a\")\n    KILL_CONTAINER = docker_cmd(\"rm -f\")\n    # KILL_CONTAINER = docker_cmd(\"kill\")\nelse:\n    LIST_CONTAINER = docker_container_cmd(\"ls\")\n    KILL_CONTAINER = docker_container_cmd(\"kill\")\n# this error has been recorded.\n# we cannot just leave it like this.\n# we need some watchdog thread.\n# DOCKER CLI ON MACOS IS NOT RESPONSIVE!\n# WHAT TO DO WITH THIS?\n# DO NOT FOOL ME INTO BUYING E5-2650V2 OR REGECC RAMS!\n# suggestion: use ssh-based interaction with containers.\n# suggestion: ",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:76-116"
+    },
+    "433": {
+        "file_id": 51,
+        "content": "This code seems to define a class called AutoSpacedString that separates strings by space. It also defines functions for interacting with Docker, such as listing and killing containers. However, there are warnings about potential issues with the Docker CLI on MacOS and suggestions to use SSH-based interaction with containers instead.",
+        "type": "comment"
+    },
+    "434": {
+        "file_id": 51,
+        "content": "restart docker service on macos.\n# TODO: make unittests for failsafe protocols and watchdogs\n# TODO: check docker binary if it is in PATH\n# TODO: count failures of microtasks like this method and create remedy routines which trying to repair and continue execution\nfrom rerun_docker_daemon import restart_and_verify\ndef killAndPruneAllContainers(trial_count=2):\n    fail_counter = 0\n    for i in range(trial_count):\n        print(f\"try to kill docker containers ({i+1} time(s))\")\n        try:\n            success = _killAndPruneAllContainers()\n            assert success, \"Failed to execute docker kill and prune\"\n            print(\"successfully killed all containers\")\n            return success\n        except:\n            fail_counter += 1\n    if fail_counter >= trial_count:  # in fact, it can only equal to the count.\n        print(\"relaunching docker\")\n        restart_and_verify()\n        return killAndPruneAllContainers(trial_count)\n@func_timeout.func_set_timeout(timeout=10)\ndef _killAndPruneAllContainers():  #",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:116-142"
+    },
+    "435": {
+        "file_id": 51,
+        "content": "This code attempts to kill and prune all Docker containers on macOS. If it fails, it retries twice before relaunching the Docker service.",
+        "type": "comment"
+    },
+    "436": {
+        "file_id": 51,
+        "content": " not working for legacy docker.\n    success = False\n    proc = easyprocess.EasyProcess(LIST_CONTAINER).call(timeout=4)\n    if proc.return_code == 0:\n        success = True  # usually this is the challange.\n    # proc = easyprocess.EasyProcess(\"docker container ls -a\").call()\n    if proc.stdout:\n        lines = proc.stdout.split(\"\\n\")[1:]\n        container_ids = [line.split(\" \")[0] for line in lines]\n        for cid in progressbar.progressbar(container_ids):\n            cmd = f\"{KILL_CONTAINER} {cid}\"\n            try:\n                func_timeout.func_timeout(3, os.system, args=(cmd,))\n            except func_timeout.FunctionTimedOut:\n                print(\n                    f'timeout while killing container \"{cid}\".\\nmaybe the container is not running.'\n                )\n            # os.system(f\"docker container kill -s SIGKILL {cid}\")\n        if not LEGACY_DOCKER:\n            os.system(\"docker container prune -f\")\n    return success\n# BUG: deprecated! may not connect to docker socket on windows.\n# @part",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:142-166"
+    },
+    "437": {
+        "file_id": 51,
+        "content": "This code is used to clean up stopped Docker containers. It checks for running containers and attempts to stop them using either `os.system` or `docker container kill -s SIGKILL`. If a container takes too long to shut down, it will print a warning message indicating that the container might not be running. Additionally, if the LEGACY_DOCKER flag is False (non-legacy Docker), it will forcefully remove all stopped containers using `docker container prune -f`. However, this code is deprecated and may have compatibility issues with Windows systems as it doesn't connect to the Docker socket properly.",
+        "type": "comment"
+    },
+    "438": {
+        "file_id": 51,
+        "content": "ial(func_timeout.func_timeout, 10)\n# def killAndPruneAllContainers():\n#     # def stopAndPruneAllContainers():\n#     all_containers = client.containers.list(all=True)\n#     print(\"killing running containers...\")\n#     for container in progressbar.progressbar(all_containers):\n#         try:\n#             container.kill()\n#         except:\n#             log_and_print_unknown_exception()\n#             # container not running. can be pruned.\n#             # usually.\n#         # container.stop()\n#     print(\"pruning stopped containers...\")\n#     client.containers.prune()\nclass AlpineActor(NaiveActor):\n    def __init__(self):\n        killAndPruneAllContainers()\n        super().__init__(\"docker run --rm -it alpine:3.7\")\n        # TODO: detect if the container is down by heartbeat-like mechanism\n        # TODO: retrieve created container id\n        # TODO: detect if we have the real container instead of fake container (do we have a real container session? or just dummy session with no docker behind), using pexpect",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:166-190"
+    },
+    "439": {
+        "file_id": 51,
+        "content": "The code defines a class `AlpineActor` that extends `NaiveActor`. It initializes the actor by calling `killAndPruneAllContainers()`, which stops and prunes all Docker containers, and then sets up an Alpine container using the command `\"docker run --rm -it alpine:3.7\"`. The class also contains TODOs for detecting if the container is down, retrieving the container ID, and checking if a real container session exists.",
+        "type": "comment"
+    },
+    "440": {
+        "file_id": 51,
+        "content": "'s default capability.\n    def __del__(self):\n        killAndPruneAllContainers()\n        super().__del__()\n    def _init_check(self):\n        print(\"checking container\")\n        steps = [\n            lambda: self.process.expect(\"/ # \"),\n            lambda: self.process.write(f\"whoami{os.linesep}\"),\n            lambda: self.process.expect(\"root\"),\n        ]\n        for step in progressbar.progressbar(steps):\n            step()\n    @NaiveActor.timeit\n    def loop(self):\n        _ = self.read()\n        write_content = AsciiVocab.generate()\n        write_content = write_content.encode()\n        self.write(write_content)\n        return True\nSAFE_EXCEPTION_TYPES = [OSError]  # are you sure? this can be many. not just io errors\n# SAFE_EXCEPTION_TYPES = []\nif os.name == \"nt\":\n    import wexpect\n    SAFE_EXCEPTION_TYPES.append(wexpect.wexpect_util.EOF)  # you can try to ignore this.\n# from typing import Generator\ndef run_actor_forever(actor_class):\n    # killAndPruneAllContainers()\n    if hasattr(actor_class, \"__next__\")",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:190-226"
+    },
+    "441": {
+        "file_id": 51,
+        "content": "This code defines a class representing an actor in an interactive program. It includes methods to check the container state, loop over reading and writing content, and safely handle certain exceptions. The function run_actor_forever can be used to run the actor's loop forever.\n\nThe class has a destructor (__del__) that kills and prunes all containers when the object is deleted. It also has an _init_check method that checks the container's state, expecting a prompt, and ensuring that the user running inside the container is root. The loop method repeatedly reads content from the actor and writes new content.\n\nThe SAFE_EXCEPTION_TYPES variable lists specific types of exceptions that should be considered safe and not interrupt the program's execution. There are comments suggesting that OSError might not be the only type to include, and that for Windows systems, weexpect.wexpect_util.EOF should also be included in SAFE_EXCEPTION_TYPES.\n\nThe run_actor_forever function can be used to run the actor's loop forever, continuously interacting with the container. However, there is a comment suggesting that this function might not be used or needed anymore.",
+        "type": "comment"
+    },
+    "442": {
+        "file_id": 51,
+        "content": ":\n        # if isinstance(actor_class, Generator):\n        make_actor = lambda: next(actor_class)\n    else:\n        make_actor = lambda: actor_class()\n    # breakpoint()\n    # we just cannot use such long timeout limit.\n    # need watchdog alternative.\n    @func_timeout.func_set_timeout(timeout=131)\n    def internal_loop():\n        ret = None\n        # actor = actor_class()\n        actor = make_actor()\n        @func_timeout.func_set_timeout(timeout=100)\n        def run_actor():\n            try:\n                actor.run()\n            except KeyboardInterrupt:\n                print(\"exit on user demand\")\n                return \"INTERRUPTED\"\n            except Exception as e:\n                safe = check_if_is_safe_exception(e)\n        ret = run_actor()\n        del actor\n        if ret is None:\n            print()\n            print(\"restarting actor\")\n        gc.collect()\n        return ret\n    while True:\n        ret = None\n        try:\n            ret = internal_loop()\n            if ret == \"INTERRUPTED\":\n             ",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:226-264"
+    },
+    "443": {
+        "file_id": 51,
+        "content": "This code defines a function `internal_loop` that runs an actor. It creates an instance of the given `actor_class`, sets timeouts for the inner functions, and executes it within a while loop. If interrupted or if an exception occurs during execution, it will return \"INTERRUPTED\" or print \"restarting actor\", respectively.",
+        "type": "comment"
+    },
+    "444": {
+        "file_id": 51,
+        "content": "   break\n        except Exception as e:\n            safe = check_if_is_safe_exception(e)\ndef check_if_is_safe_exception(e):\n    safe = False\n    # for exc_type in SAFE_EXCEPTION_TYPES:\n    #     if isinstance(e, exc_type):\n    if type(e) in SAFE_EXCEPTION_TYPES:\n        safe = True\n    if safe:\n        traceback.print_exc()\n        print(\"safe exception:\", e)\n    else:\n        log_and_print_unknown_exception()\n    return safe\nif __name__ == \"__main__\":\n    run_actor_forever(AlpineActor)\n#     import cProfile\n#     fpath = \"alpine_actor.profile\"\n#     # # print(\"running\")\n#     prof = cProfile.run(\"AlpineActor()\", filename=fpath)\n#     # print(\"hello world\")",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:264-289"
+    },
+    "445": {
+        "file_id": 51,
+        "content": "The code is part of a larger function that handles exceptions during program execution. It checks if the exception thrown belongs to a predefined list of safe exception types, and if so, it prints the traceback and message before continuing. If the exception is not on the list, it calls log_and_print_unknown_exception().",
+        "type": "comment"
+    },
+    "446": {
+        "file_id": 52,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_bytes_actor.py",
+        "type": "filepath"
+    },
+    "447": {
+        "file_id": 52,
+        "content": "This code defines an AlpineBytesActor class that inherits from BytesActor and AlpineActor. It has a loop method that reads, generates new content using BytesVocab, and writes it. The main function runs the actor forever.",
+        "type": "summary"
+    },
+    "448": {
+        "file_id": 52,
+        "content": "from alpine_actor import AlpineActor, run_actor_forever\nfrom bytes_actor import BytesActor\nfrom vocabulary import BytesVocab\nclass AlpineBytesActor(BytesActor, AlpineActor):\n    @AlpineActor.timeit\n    def loop(self):\n        _ = self.read()\n        write_content = BytesVocab.generate()\n        self.write(write_content)\n        return True\nif __name__ == \"__main__\":\n    run_actor_forever(AlpineBytesActor)",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_bytes_actor.py:1-16"
+    },
+    "449": {
+        "file_id": 52,
+        "content": "This code defines an AlpineBytesActor class that inherits from BytesActor and AlpineActor. It has a loop method that reads, generates new content using BytesVocab, and writes it. The main function runs the actor forever.",
+        "type": "comment"
+    },
+    "450": {
+        "file_id": 53,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_common.py",
+        "type": "filepath"
+    },
+    "451": {
+        "file_id": 53,
+        "content": "The code defines a decorator function for caching with expiration time, includes functions for caching, querying server info, and handling GET requests with timeout management and exception handling. In case of fatal errors or unknown exceptions, it attempts to kill the process.",
+        "type": "summary"
+    },
+    "452": {
+        "file_id": 53,
+        "content": "beat_server_address = dict(\n    host=\"0.0.0.0\",\n    port=(server_port := 8771),\n    beat_url=\"/beat_request\",\n    info_url=\"/info\",\n    url_prefix=f\"http://localhost:{server_port}\",\n)\nbeat_client_data = dict(\n    url=(f\"{beat_server_address['url_prefix']}{beat_server_address['beat_url']}\"),\n    info_url=f\"{beat_server_address['url_prefix']}{beat_server_address['info_url']}\",\n    timeout=2,\n    access_time_key=\"access_time\",\n)\n# BEAT_FAILED = 255\nfrom functools import lru_cache, wraps\nfrom time import monotonic_ns\n# use cacheout instead.\n# ref: https://github.com/dgilland/cacheout\ndef timed_lru_cache(\n    _func=None, *, seconds: int = 7000, maxsize: int = 128, typed: bool = False\n):\n    \"\"\"Extension over existing lru_cache with timeout\n    :param seconds: timeout value\n    :param maxsize: maximum size of the cache\n    :param typed: whether different keys for different types of cache keys\n    \"\"\"\n    def wrapper_cache(f):\n        # create a function wrapped with traditional lru_cache\n        f = lru_cache(maxsize=m",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_common.py:1-32"
+    },
+    "453": {
+        "file_id": 53,
+        "content": "beat_server_address is defined with host, port, beat_url, info_url, and url_prefix.\nbeat_client_data contains the URL for beat_server_address and other parameters like timeout and access_time_key.\ntimed_lru_cache is a function that extends lru_cache with timeout, maxsize, and typed parameters.",
+        "type": "comment"
+    },
+    "454": {
+        "file_id": 53,
+        "content": "axsize, typed=typed)(f)\n        # convert seconds to nanoseconds to set the expiry time in nanoseconds\n        f.delta = seconds * 10**9\n        f.expiration = monotonic_ns() + f.delta\n        @wraps(f)  # wraps is used to access the decorated function attributes\n        def wrapped_f(*args, **kwargs):\n            if monotonic_ns() >= f.expiration:\n                # if the current cache expired of the decorated function then\n                # clear cache for that function and set a new cache value with new expiration time\n                f.cache_clear()\n                f.expiration = monotonic_ns() + f.delta\n            return f(*args, **kwargs)\n        wrapped_f.cache_info = f.cache_info\n        wrapped_f.cache_clear = f.cache_clear\n        return wrapped_f\n    # To allow decorator to be used without arguments\n    if _func is None:\n        return wrapper_cache\n    else:\n        return wrapper_cache(_func)\nimport requests\n# from frozendict import frozendict\n# create a session object\nsession = requests.Sessio",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_common.py:32-61"
+    },
+    "455": {
+        "file_id": 53,
+        "content": "This code defines a function decorator that adds caching functionality to the decorated function, with expiration time in nanoseconds. If the cache has expired, it clears the cache and sets a new expiration time.",
+        "type": "comment"
+    },
+    "456": {
+        "file_id": 53,
+        "content": "n()  # effectively faster. really?\n@timed_lru_cache(seconds=1, maxsize=1)\ndef heartbeat_base(uuid: str, action: str, pid: int, role: str):\n    return heartbeat_base_nocache(uuid, action, pid, role)\ndef heartbeat_base_nocache(uuid: str, action: str, pid: int, role: str):\n    params = dict(uuid=uuid, action=action, pid=pid, role=role)\n    url = beat_client_data[\"url\"]\n    data = request_with_timeout_and_get_json_data(params, url)\n    access_time = data[beat_client_data[\"access_time_key\"]]\n    return access_time\ndef query_info():\n    return request_with_timeout_and_get_json_data(dict(), beat_client_data[\"info_url\"])\nfrom log_common import log_and_print_unknown_exception\nimport os\nimport signal\nimport func_timeout\ndef request_with_timeout_and_get_json_data(params: dict, url: str, success_code=200):\n    try:\n        r = session.get(url, params=params, timeout=beat_client_data[\"timeout\"])\n        assert r.status_code == success_code\n        data = r.json()\n    except func_timeout.dafunc.FunctionTimedOut as exc:\n ",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_common.py:61-90"
+    },
+    "457": {
+        "file_id": 53,
+        "content": "The code contains a function heartbeat_base that caches the result for 1 second and retrieves it from a server. It also has a query_info function to get information from the server, and request_with_timeout_and_get_json_data function that handles HTTP GET requests with timeout handling.",
+        "type": "comment"
+    },
+    "458": {
+        "file_id": 53,
+        "content": "       print(exc)\n        print(\"timed out by external wrapper\")\n    except:\n        log_and_print_unknown_exception()\n        print(\"fatal error. cannot beat.\")\n        self_pid = os.getpid()\n        print(f'suicide now. (pid: {self_pid})')\n        kill_by_pid(self_pid)\n    return data\ndef kill_by_pid(pid):\n    kill_signal = getattr(signal, 'SIGKILL', signal.SIGTERM) # adaption for windows\n    os.kill(pid, kill_signal)",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_common.py:90-102"
+    },
+    "459": {
+        "file_id": 53,
+        "content": "This code handles exceptions and potential timeouts in a program. It prints the exception, indicates a fatal error, logs an unknown exception, and then attempts to kill the process with `os.kill()` function.",
+        "type": "comment"
+    },
+    "460": {
+        "file_id": 54,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_server.py",
+        "type": "filepath"
+    },
+    "461": {
+        "file_id": 54,
+        "content": "The code initializes a FastAPI app with timezone, roles, and PIDs, manages UUIDs, handles HTTP requests, updates statuses, raises exceptions for mismatches, calculates client status in a network, tracks alive/dead counts, schedules tasks to monitor status, and runs the app using uvicorn.",
+        "type": "summary"
+    },
+    "462": {
+        "file_id": 54,
+        "content": "import fastapi\n# TODO: replace this with gui-attached panel & advanced rescue/countermeasures\napp = fastapi.FastAPI()\nimport datetime\nfrom beat_common import beat_server_address, beat_client_data\nimport pytz\n# with respect to our dearly Py3.6\ntimezone_str = \"Asia/Shanghai\"\n# timezone = pytz.timezone(timezone_str:='Asia/Shanghai')\ntimezone = pytz.timezone(timezone_str)\nimport schedule\n# import threading\nfrom typing import Literal\ndef get_now_and_timestamp():\n    now = get_now()\n    timestamp = now.timestamp()\n    return now, timestamp\nUUID_TO_TIMESTAMP = {}\nUUID_TO_REGISTERED_TIMESTAMP = {}\nUUID_TO_STATUS = {}  # alive -> True; dead -> False\nUUID_TO_PID = {}\nUUID_TO_ROLE = {}\nALIVE_THRESHOLD = 30 * 2  # 30 is a bit of low.\n@app.get(beat_server_address[\"info_url\"])\ndef get_info():\n    schedule.run_pending()\n    _, timestamp = get_now_and_timestamp()\n    return {\n        \"info\": {\n            k: {\n                \"status\": v,\n                \"pid\": UUID_TO_PID[k],\n                \"role\": UUID_TO_ROLE[k],\n                ",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_server.py:1-45"
+    },
+    "463": {
+        "file_id": 54,
+        "content": "Imports necessary packages and initializes a FastAPI application with timezone and scheduling functionalities.",
+        "type": "comment"
+    },
+    "464": {
+        "file_id": 54,
+        "content": "\"timestamp\": UUID_TO_TIMESTAMP[k],\n            }\n            for k, v in UUID_TO_STATUS.items()\n        },\n        \"timestamp\": timestamp,\n    }\n# TODO: delegate this kill signal to other process\n# TODO: pass pid with uuid\n# TODO: get unassigned uuid from here, instead of anywhere else\n# TODO: distributed watchdog & recursive keep alive signal mechanism\n# TODO: count revive time & frequencies\n@app.get(beat_server_address[\"beat_url\"])\ndef beat_request(\n    uuid: str,\n    action: Literal[\"hello\", \"heartbeat\", \"kill\"],\n    role: Literal[\"killer\", \"client\", \"server\"],  # can also be server?\n    pid: int,\n):\n    # start = time.time()\n    strtime, timestamp = get_strtime_and_timestamp()\n    if action != \"kill\":\n        for data_dict, it, it_name in [\n            (UUID_TO_PID, pid, \"PID\"),\n            (UUID_TO_ROLE, role, \"ROLE\"),\n        ]:\n            if uuid not in data_dict.keys():\n                data_dict[uuid] = it\n            elif (old_it := data_dict[uuid]) != it:\n                raise Exception(f\"{it_name} mis",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_server.py:45-75"
+    },
+    "465": {
+        "file_id": 54,
+        "content": "This code handles HTTP requests for a beat server, which seems to involve managing UUIDs, roles, and PIDs. It receives requests with specific actions (hello, heartbeat, or kill) and from certain roles (killer, client, or possibly server). It updates the status of the UUID accordingly and raises an exception if there's a mismatch in PID or role values.",
+        "type": "comment"
+    },
+    "466": {
+        "file_id": 54,
+        "content": "match! (old: {old_it}, new: {it})\")\n    if action == \"hello\":\n        print(f\"client {uuid} hello at:\", strtime)\n        UUID_TO_REGISTERED_TIMESTAMP[uuid] = timestamp\n    elif action == \"kill\":\n        print(f\"client {uuid} killed at:\", strtime)\n        for data_dict in [\n            UUID_TO_TIMESTAMP,\n            UUID_TO_REGISTERED_TIMESTAMP,\n            UUID_TO_STATUS,\n            UUID_TO_PID,\n            UUID_TO_ROLE,\n        ]:\n            if uuid in data_dict.keys():\n                del data_dict[uuid]\n    elif action == \"heartbeat\":\n        print(f\"received heartbeat from {uuid} at time {strtime}\")\n    else:\n        raise Exception(f\"client {uuid} with unknown action:\" + action)\n    # end = time.time()\n    if action != \"kill\":\n        if uuid not in UUID_TO_REGISTERED_TIMESTAMP.keys():\n            print(f\"client {uuid} not registered. registering.\")\n            UUID_TO_REGISTERED_TIMESTAMP[uuid] = timestamp\n            # raise Exception(f\"client {uuid} not registered.\")\n        UUID_TO_TIMESTAMP[uuid] =",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_server.py:75-100"
+    },
+    "467": {
+        "file_id": 54,
+        "content": "Code handles client actions (\"hello\", \"kill\", \"heartbeat\") and performs corresponding operations on the dictionaries. If an unknown action is received, it raises an exception.",
+        "type": "comment"
+    },
+    "468": {
+        "file_id": 54,
+        "content": " timestamp\n    # print(f'request processing time: {end-start} secs', )\n    return {beat_client_data[\"access_time_key\"]: strtime}\ndef get_strtime_and_timestamp():\n    now, timestamp = get_now_and_timestamp()\n    strtime = now.strftime(r\"%Y-%m-%d %H:%M:%S\")\n    return strtime, timestamp\ndef get_now():\n    now = datetime.datetime.now(tz=timezone)\n    return now\ndef check_alive():\n    now_strtime, now_timestamp = get_strtime_and_timestamp()\n    alive_roles = []\n    dead_roles = []\n    print(f\"checking clients at {now_strtime}\")\n    for uuid, registered_timestamp in UUID_TO_REGISTERED_TIMESTAMP.items():\n        timestamp = UUID_TO_TIMESTAMP.get(uuid, registered_timestamp)\n        role = UUID_TO_ROLE.get(uuid, \"unknown\")\n        pid = UUID_TO_PID.get(uuid, -1)\n        uptime = now_timestamp - registered_timestamp\n        alive = True\n        life = ALIVE_THRESHOLD - (now_timestamp - timestamp)\n        if life < 0:\n            alive = False\n        UUID_TO_STATUS[uuid] = alive\n        up_status = f\"up: {uptime:.3f} s",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_server.py:100-131"
+    },
+    "469": {
+        "file_id": 54,
+        "content": "Function get_strtime_and_timestamp():\n- Returns current date and time as a string and timestamp.\n\nFunction get_now():\n- Returns the current datetime object with the correct timezone.\n\nFunction check_alive():\n- Checks clients' statuses based on their uptime and remaining lifetimes.",
+        "type": "comment"
+    },
+    "470": {
+        "file_id": 54,
+        "content": "ecs\"\n        pid_info = f\"pid: {pid}\"\n        if alive:\n            print(\n                f\"client {uuid} alive ({pid_info}, {life:.3f} secs to death, {up_status})\"\n            )\n            alive_roles.append(role)\n        else:\n            print(\n                f\"client {uuid} ({pid_info}, {up_status}) dead for {-life:.3f} seconds\"\n            )\n            dead_roles.append(role)\n    status_list = UUID_TO_STATUS.values()\n    print(\"summary\".center(60, \"=\"))\n    print(\"total clients:\", len(status_list))\n    print(\"alive clients:\", *role_statistics(alive_roles))\n    print(\"dead clients:\", *role_statistics(dead_roles))\nfrom typing import List\ndef role_statistics(roles: List[str]):\n    details = \", \".join([f\"{r}: {roles.count(r)}\" for r in set(roles)])\n    return len(roles), f\"({details})\" if details else \"\"\n# import time\nschedule.every(int(ALIVE_THRESHOLD / 3)).seconds.do(check_alive)\n# def check_alive_thread():\n#     while True:\n#         time.sleep(1)\n#         schedule.run_pending()\nif __name__ == \"__main__",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_server.py:131-169"
+    },
+    "471": {
+        "file_id": 54,
+        "content": "Code snippet is checking the status of clients in a network and providing summary statistics. It tracks the client's uuid, role, pid (Process ID), if it's alive or dead, and how many seconds remaining/dead for. The code also calculates and prints the total number of alive and dead clients. It schedules tasks to check alive status every 1/3 of ALIVE_THRESHOLD time interval.",
+        "type": "comment"
+    },
+    "472": {
+        "file_id": 54,
+        "content": "\":\n    import uvicorn\n    # thread = threading.Thread(target=check_alive_thread, daemon=True)\n    # thread.start()\n    uvicorn.run(app, **{k: beat_server_address[k] for k in [\"host\", \"port\"]})",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_server.py:169-174"
+    },
+    "473": {
+        "file_id": 54,
+        "content": "Importing uvicorn and running the app with specific host and port values.",
+        "type": "comment"
+    },
+    "474": {
+        "file_id": 55,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/bytes_actor.py",
+        "type": "filepath"
+    },
+    "475": {
+        "file_id": 55,
+        "content": "Imports NaiveActor and defines BytesActor, using write_method to send messages. Runs the main loop with run_naive.",
+        "type": "summary"
+    },
+    "476": {
+        "file_id": 55,
+        "content": "from naive_actor import NaiveActor, run_naive\nclass BytesActor(NaiveActor):\n    write_method = lambda proc: proc.send\nif __name__ == \"__main__\":\n    run_naive(BytesActor)",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/bytes_actor.py:1-9"
+    },
+    "477": {
+        "file_id": 55,
+        "content": "Imports NaiveActor and defines BytesActor, using write_method to send messages. Runs the main loop with run_naive.",
+        "type": "comment"
+    },
+    "478": {
+        "file_id": 56,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/dependent_task_timeout_exec.py",
+        "type": "filepath"
+    },
+    "479": {
+        "file_id": 56,
+        "content": "This code sets a future with \"hello\" after 1 second, waits for the result (expected \"hello world\"), and if the timeout expires before setting, prints \"unset future\".",
+        "type": "summary"
+    },
+    "480": {
+        "file_id": 56,
+        "content": "import asyncio\nimport os\n# import multitasking\n# after all, we are single threaded\nimport time\nfrom timeout_utils import *\n@retrying_timeout_func(1, 11)  # passed\ndef os_sleep():\n    print(\"running os sleep\")\n    os.system(\"sleep 10\")\n    os.system(\"echo hello world\")\n    print(\"exit os sleep\")\n@retrying_timeout_func(3, 2)  # not pass, fail attempts count: 3\ndef time_sleep():\n    print(\"running time sleep\")\n    time.sleep(3)\n    print(\"exit time sleep\")\nasync def set_after(fut, delay, value):\n    # Sleep for *delay* seconds.\n    await asyncio.sleep(delay)\n    # Set *value* as a result of *fut* Future.\n    fut.set_result(value)\nasync def main():\n    # Get the current event loop.\n    loop = asyncio.get_running_loop()\n    # Create a new Future object.\n    fut = loop.create_future()\n    # Run \"set_after()\" coroutine in a parallel Task.\n    # We are using the low-level \"loop.create_task()\" API here because\n    # we already have a reference to the event loop at hand.\n    # Otherwise we could have just used \"asyncio.creat",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/dependent_task_timeout_exec.py:1-44"
+    },
+    "481": {
+        "file_id": 56,
+        "content": "Code snippet imports necessary libraries, defines a function for OS sleep, a function for time sleep, and two async functions. The async main function creates a new Future object and runs a set_after coroutine in parallel Task using the event loop.",
+        "type": "comment"
+    },
+    "482": {
+        "file_id": 56,
+        "content": "e_task()\".\n    loop.create_task(set_after(fut, 1, \"... world\"))\n    print(\"hello ...\")\n    # Wait until *fut* has a result (1 second) and print it.\n    # print(await asyncio.wait_for(fut, timeout=1.5))\n    print(await asyncio.wait_for(fut, timeout=0.5))\nif __name__ == \"__main__\":\n    os_sleep()\n    time_sleep()\n    # asyncio.run(main())",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/dependent_task_timeout_exec.py:44-57"
+    },
+    "483": {
+        "file_id": 56,
+        "content": "This code is creating a task that sets a future with the string \"hello\" after 1 second, and then waits for the result of the future (expected to be \"hello world\") before printing it. If the timeout of 0.5 seconds expires before the future is set, it will print \"unset future\".",
+        "type": "comment"
+    },
+    "484": {
+        "file_id": 57,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/entropy_utils.py",
+        "type": "filepath"
+    },
+    "485": {
+        "file_id": 57,
+        "content": "The code defines classes `EntropyCalculator` and `ContentEntropyCalculator` to calculate entropy of categorical data using context managers, histograms, and compares results for different test cases.",
+        "type": "summary"
+    },
+    "486": {
+        "file_id": 57,
+        "content": "from contextlib import contextmanager\nimport numpy as np\nfrom scipy.stats import entropy\nclass EntropyCalculator:\n    def __init__(self, base=2):\n        self.cats_to_count = {}\n        self.base = base\n    def count(self, elem):\n        self._count(elem)\n    def _count(self, elem):\n        self.cats_to_count[elem] = self.cats_to_count.get(elem, 0) + 1\n    @property\n    def entropy(self):\n        vals = list(self.cats_to_count.values())\n        if vals != []:\n            hist = np.array(vals)\n            total_count = sum(hist)\n            hist = hist / total_count\n        else:\n            hist = []\n        ent = entropy(hist, base=self.base)\n        return ent\nclass ContentEntropyCalculator(EntropyCalculator):\n    def count(self, content):\n        if isinstance(content, str):\n            content = content.encode()\n        if not isinstance(content, bytes):\n            raise Exception(\"unknown content type:\", type(content))\n        content_int_arr = list(content)\n        for i in content_int_arr:\n            self.",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/entropy_utils.py:1-39"
+    },
+    "487": {
+        "file_id": 57,
+        "content": "The code defines a class `EntropyCalculator` that calculates the entropy of categorical data and a subclass `ContentEntropyCalculator` for calculating content entropy. The `EntropyCalculator` has methods to count categories, and the `ContentEntropyCalculator` extends this by counting bytes in content data. Both classes use numpy and scipy for efficient calculations.",
+        "type": "comment"
+    },
+    "488": {
+        "file_id": 57,
+        "content": "_count(i)\n@contextmanager\ndef entropyContext(is_content=False):\n    if is_content:\n        calc = ContentEntropyCalculator()\n    else:\n        calc = EntropyCalculator()\n    try:\n        yield calc\n    finally:\n        del calc\ndef calculate_content_entropy(content):\n    with entropyContext(is_content=True) as calc:\n        calc.count(content)\n        return calc.entropy\n# def calculate_content_entropy(content, full=False):\n# if isinstance(content, str):\n#     content = content.encode()\n# if not isinstance(content,bytes):\n#     raise Exception(\"unknown content type:\", type(content))\n# content_int_arr = list(content)\n# if full:\n#     # use 256-1 bins\n#     hist, _ = np.histogram(content_int_arr, bins=255, range=(0,255))\n# else:\n#     cats = list(set(content_int_arr))\n#     cat_to_index = {cat:i for i, cat in enumerate(cats)}\n#     hist = np.zeros(len(cats))\n#     for elem in content_int_arr:\n#         index = cat_to_index[elem]\n#         hist[index] += 1\n# # normalize histogram.\n# hist = hist.astype(float)\n# norm_hist ",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/entropy_utils.py:39-78"
+    },
+    "489": {
+        "file_id": 57,
+        "content": "This code defines a function `calculate_content_entropy` that calculates the entropy of content data. It uses a context manager `entropyContext` to create an instance of either `ContentEntropyCalculator` or `EntropyCalculator` based on whether the input is content or not. The function then counts the occurrences of different values in the content using histograms and returns the entropy value.",
+        "type": "comment"
+    },
+    "490": {
+        "file_id": 57,
+        "content": "= hist/len(content_int_arr)\n# # print('normalized histogram:', norm_hist)\n# ent = entropy(norm_hist, base=2)\n# return ent\nif __name__ == \"__main__\":\n    testcases = [\"aa\", \"ab\", \"abcdesd\", \"def\", \"hijklmn\", bytes(range(256))]\n    # the more chars the more entropy.\n    for case in testcases:\n        ent = calculate_content_entropy(case)\n        # ent_full = calculate_content_entropy(case, full=True)\n        print(\"testcase:\", case)\n        # identical!\n        print(\"entropy:\", ent)\n        # print(\"local entropy:\", ent)\n        # print(\"global entropy:\", ent_full)\n        print()",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/entropy_utils.py:78-97"
+    },
+    "491": {
+        "file_id": 57,
+        "content": "This code calculates the entropy of different test cases and prints the results. The more characters in the test case, the higher the entropy.",
+        "type": "comment"
+    },
+    "492": {
+        "file_id": 58,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/get_pid_of_self.py",
+        "type": "filepath"
+    },
+    "493": {
+        "file_id": 58,
+        "content": "Gets the PID of the current interpreter.",
+        "type": "summary"
+    },
+    "494": {
+        "file_id": 58,
+        "content": "import os\npid = os.getpid()\nprint(\"PID of the current interpreter is: \", pid)",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/get_pid_of_self.py:1-4"
+    },
+    "495": {
+        "file_id": 58,
+        "content": "Gets the PID of the current interpreter.",
+        "type": "comment"
+    },
+    "496": {
+        "file_id": 59,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/kill_server.py",
+        "type": "filepath"
+    },
+    "497": {
+        "file_id": 59,
+        "content": "The code manages client processes and communicates with a server, monitoring their status, killing dead clients, logging actions, and sending heartbeats.",
+        "type": "summary"
+    },
+    "498": {
+        "file_id": 59,
+        "content": "# kill dead process by pid and remove them from beat server\n# the kill server must emit beat signals, and can kill other processes to prove its effectiveness\n# maybe we need to elevate\n# import elevate\nfrom beat_common import *\nimport os\nimport signal\nimport uuid\nfrom log_common import *\nkiller_pid = os.getpid()\nkiller_uuid = str(uuid.uuid4())\ndef commit_kill(client_uuid: str, client_pid: int, client_role:str):\n    kill_time = heartbeat_base_nocache(client_uuid, \"kill\", client_pid, client_role)\n    print(f\"commit kill for client {client_uuid} (pid: {client_pid}) at {kill_time}\")\ndef kill_dead_process():\n    dead_clients = []\n    info = query_info()\n    client_info= info['info']\n    for client_uuid, client_info_dict in client_info.items():\n        client_status = client_info_dict['status']\n        client_pid = client_info_dict['pid']\n        client_role = client_info_dict['role']\n        if client_status is False:\n            print(f\"client {client_uuid} is dead.\")\n            if client_pid == killer_pid:\n     ",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/kill_server.py:1-30"
+    },
+    "499": {
+        "file_id": 59,
+        "content": "This code is a part of a kill server that monitors running processes and can terminate them if necessary. It checks the status of clients, their PIDs, and roles, and kills any dead clients. It also logs relevant information for each client.",
+        "type": "comment"
+    }
+}

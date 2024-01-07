@@ -1,0 +1,10 @@
+{
+    "summary": "This code provides a link to search for videos on fse.agilestudio.cn and an API endpoint for the same, suggesting using ffmpeg to convert m3u8 links into videos.",
+    "details": [
+        {
+            "comment": "This code provides a link to search for videos on fse.agilestudio.cn and an API endpoint for the same, suggesting using ffmpeg to convert m3u8 links into videos.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/propaganda/video_script/README.md\":0-6",
+            "content": "access: https://fse.agilestudio.cn/search?keyword=%E9%94%AE%E7%9B%98%E5%92%8C%E9%BC%A0%E6%A0%87\napi access: fse-api.agilestudio.cn/api/search (may not work!)\nuse ffmpeg to convert m3u8 links into video."
+        }
+    ]
+}

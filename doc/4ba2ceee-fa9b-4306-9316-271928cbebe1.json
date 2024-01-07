@@ -1,0 +1,15 @@
+{
+    "summary": "The code imports libraries, loads data from a YAML file, configures a text-to-speech engine, and saves each text as an audio file in a specified directory using voice settings and punctuation for pauses.",
+    "details": [
+        {
+            "comment": "This code imports necessary libraries, loads data from a YAML file, and configures a text-to-speech engine. It then saves a speech to an audio file in the specified directory using the configured voice settings. The rate of speech can be set using the 'rate' property.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/propaganda/video_script/read_text.py\":0-24",
+            "content": "# import pyttsx3\n# import os\ndir_path = \"audio\"\nimport os\nimport yaml\nscript_path = \"script.yaml\"\nwith open(script_path,'r') as f:\n    data = yaml.load(f, Loader=yaml.BaseLoader)\nimport pyttsx3\n# dir(engine.getProperty(\"voices\")[0]) -> ['age', 'gender', 'id', 'languages', 'name']\n# The voices are related to languages. Set it properly.\n# you want \"en_US\" and \"zh_CN\"\n# [['en_US'], ['it_IT'], ['sv_SE'], ['fr_CA'], ['de_DE'], ['he_IL'], ['id_ID'], ['en_GB'], ['es_AR'], ['nl_BE'], ['en-scotland'], ['en_US'], ['ro_RO'], ['pt_PT'], ['es_ES'], ['es_MX'], ['th_TH'], ['en_AU'], ['ja_JP'], ['sk_SK'], ['hi_IN'], ['it_IT'], ['pt_BR'], ['ar_SA'], ['hu_HU'], ['zh_TW'], ['el_GR'], ['ru_RU'], ['en_IE'], ['es_ES'], ['nb_NO'], ['es_MX'], ['en_IN'], ['en_US'], ['da_DK'], ['fi_FI'], ['zh_HK'], ['en_ZA'], ['fr_FR'], ['zh_CN'], ['en_IN'], ['en_US'], ['nl_NL'], ['tr_TR'], ['ko_KR'], ['ru_RU'], ['pl_PL'], ['cs_CZ']]\n# engine.save_to_file(\"\u4f60\u597d \u4e16\u754c\", 'output.wav')\n# engine.runAndWait()\n# engine.setProperty('rate', 125) # setting"
+        },
+        {
+            "comment": "The code initializes a text-to-speech engine, reads a list of texts from the data source, and saves each text as an audio file in a specified directory. Punctuation is used to control pauses in speech synthesis.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/propaganda/video_script/read_text.py\":24-40",
+            "content": " up new voice rate\n# # The punctuals make the bot to pause for some time. Maybe you should control that yourself.\n# engine.save_to_file(\"\u4f60\u597d\uff0c\u4e16\u754c\", 'output.wav')\n# engine.runAndWait()\nimport progressbar\nos.system(f\"rm -rf {dir_path}\")\nos.system(f\"mkdir {dir_path}\")\nfor index, elem in progressbar.progressbar(enumerate(data)):\n    text = elem['text'].strip()\n    output_path = f\"{dir_path}/{index}.wav\"\n    # print(\"READING:\", text)\n    engine = pyttsx3.init()\n    engine.setProperty('voice', engine.getProperty(\"voices\")[39].id)\n    engine.save_to_file(text, output_path)\n    engine.runAndWait()\n    del engine"
+        }
+    ]
+}

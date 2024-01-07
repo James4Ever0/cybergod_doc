@@ -1,0 +1,10 @@
+{
+    "summary": "Reads binary program from file, converts to integer list, and writes to output file.",
+    "details": [
+        {
+            "comment": "Reads binary program from file, converts to integer list, and writes to output file.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/binary_program_synthesis_cpu_assembly_execution/interpret_and_save_binary_program.py\":0-19",
+            "content": "# filepath = \"binary_program_windows_bin.txt\"\nfilepath = \"binary_program.txt\"\n# output_path = \"program.bin\"\n# output_path = \"program.exe\"\noutput_path = \"program\" # linux program?\nbyte_int_list = []\nwith open(filepath, 'r') as f:\n    content = f.read()\n    byte_list = content.replace(\"\\n\", ' ').split()\n    for byte_str in byte_list:\n        byte_int = int(byte_str, 2)\n        byte_int_list.append(byte_int)\nbinary_bytes = bytes(byte_int_list)\nwith open(output_path, 'wb') as f:\n    f.write(binary_bytes)\n# import os\n# os.system(output_path)"
+        }
+    ]
+}

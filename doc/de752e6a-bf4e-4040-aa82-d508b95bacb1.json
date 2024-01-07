@@ -1,0 +1,10 @@
+{
+    "summary": "Takes a screenshot of the virtual machine, checks if the lock indicator image is present in it, and prints \"FIND IMAGE AT\" if found or \"IMAGE NOT FOUND\" if not.",
+    "details": [
+        {
+            "comment": "Takes a screenshot of the virtual machine, checks if the lock indicator image is present in it, and prints \"FIND IMAGE AT\" if found or \"IMAGE NOT FOUND\" if not.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/duplicate_frame_detector.py\":0-17",
+            "content": "import os\nscreenshot_vm = \"screenshot_vm.sh\"\nimage_path = \"output.png\"\nexit_code = os.system(screenshot_vm)\nlock_indicator_path = \"lock_indicator.png\"\n# right now just check the login screen. if it hits the login screen we reboot.\n# or you execute command to find out the state of gnome on display :0\nimport pyscreeze\nresult = pyscreeze.locate(needleImage=lock_indicator_path,haystackImage=image_path)\nif result:\n    print(\"FIND IMAGE AT:\", result)\nelse:\n    print(\"IMAGE NOT FOUND.\")"
+        }
+    ]
+}

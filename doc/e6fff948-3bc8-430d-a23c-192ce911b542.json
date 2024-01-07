@@ -1,0 +1,10 @@
+{
+    "summary": "Copying necessary files and updating file names.",
+    "details": [
+        {
+            "comment": "Copying necessary files and updating file names.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/sync_utils.sh\":0-8",
+            "content": "# cp ../jubilant-adventure2/microgrid_base/log_utils.py .\n# cp ../jubilant-adventure2/microgrid_base/jinja_utils.py .\n# sed -i \"s/microgrid/agi_computer_control/g\" log_utils.py\ncp $2$1 .\n# echo $1\nif [[ \"$1\" == \"log_utils.py\" ]]; then\n    sed -i \"s/microgrid/agi_computer_control/g\" $1\nfi"
+        }
+    ]
+}

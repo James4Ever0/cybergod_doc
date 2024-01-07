@@ -1,0 +1,10 @@
+{
+    "summary": "This Dockerfile uses x11docker/xserver as the base image and sets up a development server. It may be used with docker-compose.",
+    "details": [
+        {
+            "comment": "This Dockerfile uses x11docker/xserver as the base image and sets up a development server. It may be used with docker-compose.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/Dockerfile\":0-4",
+            "content": "# FROM ubuntu:22.04\n# ref: https://gitlab.com/mviereck/x11docker#docker-desktop-or-docker-engine\nFROM x11docker/xserver:latest\n####### LAZERO DEVELOPMENT SERVER #######\n# docker compose?"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Installs v4l2-python3 and v4l2py for Linux, suggests using OBS for cross-platform integration, provides macOS alternative (uvc-util), sets video format with v4l2-ctl, gets/sets fps with v4l2-ctl, and provides general help with v4l2-ctl.",
+    "details": [
+        {
+            "comment": "Installs v4l2-python3 and v4l2py for Linux, suggests using OBS for cross-platform integration, provides macOS alternative (uvc-util), sets video format with v4l2-ctl, gets/sets fps with v4l2-ctl, and provides general help with v4l2-ctl.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/hardware_capture_hid_power_control/set_capture_card_properties.sh\":0-20",
+            "content": "# maybe you shall install python bindings\n# pip3 install v4l2-python3\n# pip3 install v4l2py\n# fuck windows. how can i change capture device specs without using obs?\n# maybe you should spin up obs for cross-platform integration.\n# for macos (maybe?): https://github.com/jtfrey/uvc-util\n# you could find alternatives to v4l2 on other platforms.\n# busy! cannot share same device (when using obs).\nv4l2-ctl -d 2 --set-fmt-video=width=1920,height=1080,pixelformat=MJPG\n# get fps\n# v4l2-ctl -P -d 2\n# set fps\n# v4l2-ctl -p 60 -d 2\n# get all help\n# v4l2-ctl --help-all"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Capturing screenshots, saving as raw video with BGR format, size 1280x737 pixels, and frame rate of 30 fps into output.mp4 file using FFmpeg and Python script.",
+    "details": [
+        {
+            "comment": "Capturing screenshots, saving as raw video with BGR format, size 1280x737 pixels, and frame rate of 30 fps into output.mp4 file using FFmpeg and Python script.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/utm_test_video_record.sh\":0-5",
+            "content": "pix_fmt=bgr0\nvideo_size=1280x737\nframe_rate=30\noutput_path=output.mp4\npython3 pyscreenshot_output.py | ffmpeg -y -f rawvideo -pix_fmt $pix_fmt -s $video_size -i - -r $frame_rate -c:v libx264 $output_path"
+        }
+    ]
+}

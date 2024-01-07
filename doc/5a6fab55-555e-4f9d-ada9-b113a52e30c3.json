@@ -1,0 +1,10 @@
+{
+    "summary": "This code sets a setting to suppress the logout, restart, and shutdown buttons.",
+    "details": [
+        {
+            "comment": "This code sets a setting to suppress the logout, restart, and shutdown buttons.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/disable_logout_poweroff_button.sh\":0-0",
+            "content": "gsettings set com.canonical.indicator.session suppress-logout-restart-shutdown"
+        }
+    ]
+}

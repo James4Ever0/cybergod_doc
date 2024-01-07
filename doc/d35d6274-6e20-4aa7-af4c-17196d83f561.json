@@ -1,0 +1,10 @@
+{
+    "summary": "This code opens an image of a cursor and an image representing a screen. It then resizes the screen image if necessary, creates a new image with the resized or original screen image, and pastes the cursor image onto it at a specified position. The final step is to display the new image with the cursor in its intended location.",
+    "details": [
+        {
+            "comment": "This code opens an image of a cursor and an image representing a screen. It then resizes the screen image if necessary, creates a new image with the resized or original screen image, and pastes the cursor image onto it at a specified position. The final step is to display the new image with the cursor in its intended location.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/the_frozen_forest_intro/render_cursor_on_image.py\":0-30",
+            "content": "from PIL import Image\n# cursor_image = \"mouse_cursor_white_16x16.png\"\n# now for the fun part. how do we record events in browser?\n# listen to keyboard and mouse events.\n# so, would you let me know where the cursur is at?\ncursor_image = \"cursor.png\"\ncur = Image.open(cursor_image)\npos = (400, 400)\npw = True\nif pw:\n    screen_image = \"paint.png\"\nelse:\n    screen_image = \"baidu_7.png\"\nimg = Image.open(screen_image)\n# client size: 992x647\n# size: 2232x1456\n# saved size: 2232x1456\nif pw:\n    new_img = img\nelse:\n    new_img = img.resize((992, 647))  # 992x647, without scrollbar.\n# problem with scrollbar.\nnew_img.paste(cur, pos, cur)  # misaligned.\nnew_img.show()"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Starts a cmd child process, waits for prompt, sends commands, prints output, and exits.",
+    "details": [
+        {
+            "comment": "Starts a cmd child process, waits for prompt, sends commands, prints output, and exits.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/wexpect_example.py\":0-26",
+            "content": "import wexpect\n# Start cmd as child process\nchild = wexpect.spawn(\"cmd.exe\")\n# Wait for prompt when cmd becomes ready.\nchild.expect(\">\")\n# Prints the cmd's start message\nprint(\"before\", child.before)\nprint(\"after\", child.after)\n# run list directory command\nchild.sendline(\"ls\")\n# Waiting for prompt\nchild.expect(\">\")\n# Prints content of the directory\nprint(child.before, end=\"\")\nprint(child.after, end=\"\")\n# Exit from cmd\nchild.sendline(\"exit\")\n# Waiting for cmd termination.\nchild.wait()"
+        }
+    ]
+}

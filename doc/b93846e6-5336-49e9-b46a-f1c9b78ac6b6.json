@@ -1,0 +1,15 @@
+{
+    "summary": "MyDecorator is a function decorator that executes code before and after the decorated function, while MyMeta adds code execution right after the 'def' block of the decorated function. A decorator function \"my_decorator\" is defined which executes code before and after the decorated function by using \"@\" syntax to decorate the function \"my_function\".",
+    "details": [
+        {
+            "comment": "MyDecorator class is a function decorator that executes code before and after the decorated function.\nMetaclass MyMeta adds code execution right after the 'def' block of the decorated function.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/decorator_method_registry.py\":0-37",
+            "content": "class MyDecorator:\n    def __init__(self, func):\n        self.func = func\n        self.invoke_decorated_function()\n    def invoke_decorated_function(self):\n        # Code to execute after the 'def' block of the decorated function\n        print(\"Executing code right after the 'def' block\")\n        self.func()\n# Decorate a function with the decorator\n@MyDecorator\ndef my_function():\n    print(\"Executing the decorated function\")\nprint(\"-\" * 40)\nclass MyMeta(type):\n    def __new__(cls, name, bases, attrs):\n        # Code to execute right after the 'def' block of the decorated function\n        print(\"Executing code right after the 'def' block\")\n        return super().__new__(cls, name, bases, attrs)\n# Define the metaclass for the decorator\nclass MyDecorator(metaclass=MyMeta):\n    def __call__(self, func):\n        print(\"Executing code before the function is invoked\")\n        def wrapper(*args, **kwargs):\n            # Code to execute before invoking the decorated function\n            # Invoke the decorated function\n"
+        },
+        {
+            "comment": "Defines a decorator function \"my_decorator\" that executes code before and after the decorated function. Uses the \"@\" syntax to decorate the function \"my_function\".",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/decorator_method_registry.py\":37-67",
+            "content": "            return func(*args, **kwargs)\n        return wrapper\n# Decorate a function with the decorator\n@MyDecorator()\ndef my_function():\n    print(\"Executing the decorated function\")\nprint(\"-\" * 20)\ndef my_decorator(func):\n    print(\"Executing code before the function is invoked.\")\n    print(\"Function name:\", func.__name__)\n    def wrapper(*args, **kwargs):\n        # Code to execute before the invocation of the decorated function\n        # Invoke the decorated function\n        return func(*args, **kwargs)\n    # Return the wrapper function\n    return wrapper\n# Decorate a function with the decorator\n@my_decorator\ndef my_function():\n    print(\"Executing the decorated function.\")"
+        }
+    ]
+}

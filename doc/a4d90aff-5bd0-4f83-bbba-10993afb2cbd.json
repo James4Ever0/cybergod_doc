@@ -1,0 +1,10 @@
+{
+    "summary": "Mount and configure two WebDAV directories, create script and recordings folders, and symlink the mounted WebDAV directories to the newly created folders.",
+    "details": [
+        {
+            "comment": "Mount and configure two WebDAV directories, create script and recordings folders, and symlink the mounted WebDAV directories to the newly created folders.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/mount_kali_webdav_dirs.sh\":0-22",
+            "content": "echo -e \"110110\\n\" | sudo -S echo \"enable sudo\"\nsudo apt install -y davfs2\nsudo umount /mnt/dav1\nsudo umount /mnt/dav2\nsudo rm -rf /mnt/dav1\nsudo rm -rf /mnt/dav2\nsudo mkdir /mnt/dav1\nsudo mkdir /mnt/dav2\necho -e \"root\\nroot\\n\" | sudo mount -t davfs -o noexec http://10.0.1.6:8110 /mnt/dav1\necho -e \"root\\nroot\\n\" | sudo mount -t davfs -o noexec http://10.0.1.6:8111 /mnt/dav2\nmkdir scripts\nmkdir recordings\nln -s /mnt/dav1 scripts\nln -s /mnt/dav2 recordings\n# just start stuff here.\n# sudo bash main_loop.sh"
+        }
+    ]
+}

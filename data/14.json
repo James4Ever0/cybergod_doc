@@ -1,0 +1,541 @@
+{
+    "1400": {
+        "file_id": 186,
+        "content": "from abc import ABC, abstractmethod, ABCMeta\n# class Example(ABC):\nclass Example(ABC):\n    @abstractmethod\n    def a(self):\n        print('a')\n    @abstractmethod\n    def b(self):\n        print('a')\ne = Example()",
+        "type": "code",
+        "location": "/software_capture_hid_control/abstract_class_test.py:1-13"
+    },
+    "1401": {
+        "file_id": 186,
+        "content": "Defining an abstract class Example with two abstract methods a and b.",
+        "type": "comment"
+    },
+    "1402": {
+        "file_id": 187,
+        "content": "/software_capture_hid_control/test_control.py",
+        "type": "filepath"
+    },
+    "1403": {
+        "file_id": 187,
+        "content": "The code utilizes multiple control methods, libxdoHID for keyboard & mouse events, and X11 protocol for live streaming, while struggling to save monitor images using mss and xvfb backend.",
+        "type": "summary"
+    },
+    "1404": {
+        "file_id": 187,
+        "content": "# TODO: more control methods (non-hardware) under way\n# vnc/rdp (rdpy3(py2), rdpy3, python3-aardwolf, rdesktop (rdp)) (docker-vnc image: dorowu/ubuntu-desktop-lxde-vnc:focal ; docker rdp image: scottyhardy/docker-remote-desktop)\n# ssh (terminal interface)\n# spice (remmina, remote-viewer (RHEL))\n# xvfb (with pyautogui?) (use vglrun (GPU)) (what alternatives to xvfb are for macOS and Windows?)\n# -----------[use remote control methods as self control methods]-----------\n# self control (pyautogui, pynput, (win)tty, tmux, subprocess, ttyd with electron/xvfb based browser client)\n# qtpy: PyQt5/5/6 abstraction layer\n# https://github.com/spyder-ide/qtpy\n# docker-wine image (in case running windows app on linux): scottyhardy/docker-wine\n# MineRL GPU rendering: https://minerl.readthedocs.io/en/latest/notes/performance-tips.html\n# rdpy3: https://github.com/massimiliano-dalcero/rdpy\n# ref: https://github.com/citronneur/rdpy/issues/91\n# shall you look over our previous project lazero/metalazero\n# unittest for xr",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:1-21"
+    },
+    "1405": {
+        "file_id": 187,
+        "content": "This code snippet appears to be a TODO list for adding more control methods to a software system. These methods include VNC/RDP, SSH, Spice, Xvfb with pyautogui and alternatives on macOS and Windows, remote control methods as self control methods using PyQt5, Docker Wine image, MineRL GPU rendering, rdpy3 library, and unittesting for xr.",
+        "type": "comment"
+    },
+    "1406": {
+        "file_id": 187,
+        "content": "dp:\n# 1. run docker in fullscreen mode, run background keylogger first, then accept inputs through rdp.\n# 2. run some full screen app on windows (virtualbox), along with keylogger.\nimport sys\nsys.path.append(\"../\")\nfrom beartype import beartype\nfrom conscious_struct import HIDActionTypes\nfrom typing import List, Tuple, Union, TYPE_CHECKING\nimport time\nif TYPE_CHECKING:\n    from ..hid_utils import *\nelse:\n    from hid_utils import *\nif sys.version_info >= (3, 11):\n    from enum import StrEnum\nelse:\n    from strenum import StrEnum\nfrom enum import auto\n# TODO: test this under py3.9/3.10\nclass ControlMethod(StrEnum):\n    xvfb = auto()\n# breakpoint()\nclass Xdotool(StrEnum):\n    libxdo = auto()\n    xdoctl = auto()\n    pyxdotool = auto()\n    xdotool_jordan = auto()\n    xdotool_tlaloc = auto()\n    xdotool_cli = auto()  # no external library, work by hand.\ncontrolMethod = ControlMethod.xvfb\nxdt = Xdotool.libxdo\nif controlMethod == ControlMethod.xvfb:\n    # instead use:\n    # [xdotool](https://github.com/jordansissel/xdotool)\n ",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:21-70"
+    },
+    "1407": {
+        "file_id": 187,
+        "content": "This code is setting up variables and enums for controlling a fullscreen application through xdotool or another control method. The chosen control method (Xvfb) will be used to interact with the fullscreen app, and the selected xdotool implementation (libxdo) will perform the actions.",
+        "type": "comment"
+    },
+    "1408": {
+        "file_id": 187,
+        "content": "   # [python-libxdo](https://pypi.org/project/python-libxdo/)\n    # [xdotool python wrapper](https://github.com/Tlaloc-Es/xdotool)\n    # [python-xdoctl](https://pypi.org/project/python-xdoctl/)\n    # [pyxdotool](https://github.com/cphyc/pyxdotool)\n    # -------------[AND NOW FOR SOMETHING COMPLETELY DIFFERENT]---------------\n    # [bezmouse](https://github.com/vincentbavitz/bezmouse) might help you evade bot checks, but it is up to you to **compress** user mouse coordinates. maybe just average out tracks per action frame? you name it.\n    # also compress key events?\n    # another story please...\n    # think of some abstract class, which all implementations follow.\n    # think of \"HIDBase\" instead of your imagination. just follow existing guidelines.\n    if xdt == Xdotool.libxdo:\n        import xdo\n        def xdo_del(self):\n            try:\n                xdo._libxdo.xdo_free(self._xdo)\n            except:  # python shutting down. just ignore this.\n                print(\"Unable to free xdo object. Li",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:70-89"
+    },
+    "1409": {
+        "file_id": 187,
+        "content": "The code is importing the libxdo library and creating a function to delete xdo objects when they are no longer needed. It also includes references to other related libraries and tools for interacting with mouse and keyboard events.",
+        "type": "comment"
+    },
+    "1410": {
+        "file_id": 187,
+        "content": "kely Python is shutting down.\")\n        xdo.Xdo.__del__ = xdo_del\n        @beartype\n        class LibxdoHID(HIDInterface):\n            def __init__(\n                self,\n            ):\n                self.xdo = xdo.Xdo()\n            def getButtonIdFromButtonLiteral(\n                self, button_literal: HIDActionTypes.mouse_buttons\n            ):\n                # Generally, 1 is left, 2 is middle, 3 is right, 4 is wheel up, 5 is wheel down.\n                translation_map = {\n                    \"Button.left\": 1,\n                    \"Button.middle\": 2,\n                    \"Button.right\": 3,\n                }\n                button_id = translation_map[button_literal]\n                return button_id\n            def getKeySequenceFromKeyLiteral(\n                self, key_literal: HIDActionTypes.keys\n            ) -> Union[None, str]:\n                keysequence = key_literal_to_xk_keysym(key_literal)\n                return keysequence  # not joined by \"+\"\n            def _key_release(self, key_literal: HIDA",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:89-118"
+    },
+    "1411": {
+        "file_id": 187,
+        "content": "This class, LibxdoHID, is a HID interface for interacting with the XDo library. It initializes an instance of Xdo and provides methods to get button IDs from mouse buttons and key sequences from key literals.",
+        "type": "comment"
+    },
+    "1412": {
+        "file_id": 187,
+        "content": "ctionTypes.keys):\n                keysequence = self.getKeySequenceFromKeyLiteral(key_literal)\n                if keysequence:\n                    self.xdo.send_keysequence_window_up(\n                        xdo.CURRENTWINDOW, keysequence.encode(\"utf8\")\n                    )\n            def _key_press(self, key_literal: HIDActionTypes.keys):\n                keysequence = self.getKeySequenceFromKeyLiteral(key_literal)\n                if keysequence:\n                    self.xdo.send_keysequence_window_down(\n                        xdo.CURRENTWINDOW, keysequence.encode(\"utf8\")\n                    )\n            def _mouse_move(self, x: Union[int, float], y: Union[int, float]):\n                self.xdo.move_mouse(x, y, screen=0)\n            def _mouse_click(\n                self,\n                x: Union[int, float],\n                y: Union[int, float],\n                button_literal: HIDActionTypes.mouse_buttons,\n                pressed: bool,\n            ):\n                self.mouse_move(x, y)\n             ",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:118-143"
+    },
+    "1413": {
+        "file_id": 187,
+        "content": "The code defines several functions for controlling the mouse and keyboard through X11 protocol. It includes _key_press, _key_release, and _mouse_click functions for sending key presses, releases, and mouse clicks respectively. The _mouse_move function is used to move the mouse pointer.",
+        "type": "comment"
+    },
+    "1414": {
+        "file_id": 187,
+        "content": "   button_id = self.getButtonIdFromButtonLiteral(button_literal)\n                if pressed:\n                    self.xdo.mouse_down(xdo.CURRENTWINDOW, button_id)\n                else:\n                    self.xdo.mouse_up(xdo.CURRENTWINDOW, button_id)\n            def _mouse_scroll(\n                self,\n                x: Union[int, float],\n                y: Union[int, float],\n                dx: Union[int, float],\n                dy: Union[int, float],\n            ):\n                self.mouse_move(x, y)\n                # send up/down/left/right keys instead.\n                if dx < 0:\n                    self.xdo.send_keysequence_window(xdo.CURRENTWINDOW, \"Left\")\n                else:\n                    self.xdo.send_keysequence_window(xdo.CURRENTWINDOW, \"Right\")\n                if dy < 0:\n                    self.xdo.send_keysequence_window(xdo.CURRENTWINDOW, \"Up\")\n                else:\n                    self.xdo.send_keysequence_window(xdo.CURRENTWINDOW, \"Down\")\n    # from pyvirtualdisplay import D",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:143-167"
+    },
+    "1415": {
+        "file_id": 187,
+        "content": "The code defines functions to simulate mouse events and scrolling. It uses the xdo module to send mouse clicks, moves, and key sequences to the current window.",
+        "type": "comment"
+    },
+    "1416": {
+        "file_id": 187,
+        "content": "isplay\n    from pyvirtualdisplay.smartdisplay import SmartDisplay\n    import easyprocess  # no support for stdin!\n    # import time\n    import os\n    import subprocess\n    def type_string(string: str):\n        input_bytes = string.encode()\n        p = subprocess.Popen(\"xdotool type --file -\".split(), stdin=subprocess.PIPE)\n        stdout_data = p.communicate(input=input_bytes)[0]\n        return stdout_data\n    os.system(\"rm *.png\")\n    # keyboard = Controller()\n    # virtual_display = \":3\"\n    # backend = 'xvnc'\n    backend = \"xephyr\"  # like visible xvfb, useful for live streaming (no need for ffmpeg hacks with xvfb)\n    # backend = 'xvfb'\n    # with Display(backend=backend) as disp:\n    # proc_cmd = [\"xterm\"]\n    proc_cmd = [\"leafpad\"]\n    # proc_cmd = [\"alacritty\"]\n    with SmartDisplay(\n        backend=backend, size=(1920, 1080), extra_args=[\"-fullscreen\", \"-softCursor\"]\n    ) as disp:\n        # with SmartDisplay(backend=backend, size=(1920, 1080)) as disp:\n        # with SmartDisplay(backend=backend, size",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:167-195"
+    },
+    "1417": {
+        "file_id": 187,
+        "content": "Creates a fullscreen display with SmartDisplay and sets the backend to \"xephyr\" for live streaming capability. It also defines a function to type out strings using xdotool, clears existing PNG files, and starts a leafpad application in fullscreen mode.",
+        "type": "comment"
+    },
+    "1418": {
+        "file_id": 187,
+        "content": "=(1920, 1080), extra_args=['-fullscreen']) as disp: # for unit testing purpose. maybe we should log events on that display.\n        # with SmartDisplay(backend=backend, extra_args=['-title', 'xephyr_test']) as disp: # get window location by title first, then limit all events to that window.\n        # with SmartDisplay(backend='xvfb') as disp:\n        # with Display(backend='xvfb') as disp:\n        # with Display(visible=False) as disp:\n        # not working in fullscreen mode!\n        import pyautogui\n        print(\"NEW DISPLAY AT\", disp.display)  # 0, INT\n        print(\"ENV DISPLAY?\", os.environ[\"DISPLAY\"])  # :0\n        # pynput controller not working.\n        # from pynput.keyboard import Controller\n        # from pynput.keyboard import Listener\n        # keyboardListener = Listener()\n        # keyboardController = Controller()\n        # with Display(backend='xvfb') as disp2:\n        #     print(\"NEW DISPLAY AT\", disp2.display) # 2\n        # working! do not use gnome-terminal.\n        # proc = easyp",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:195-216"
+    },
+    "1419": {
+        "file_id": 187,
+        "content": "This code is trying to set up a display for unit testing purposes using different backends. It is printing the display number and environment variable DISPLAY value. It also mentions issues with pynput keyboard controller.",
+        "type": "comment"
+    },
+    "1420": {
+        "file_id": 187,
+        "content": "rocess.EasyProcess([\"alacritty\"])\n        # proc = easyprocess.EasyProcess(['gnome-terminal', f\"--display={disp.display}\"])\n        # proc = easyprocess.EasyProcess(['gnome-terminal', f\"--display={disp.display}\"])\n        # no need for starting/stopping\n        import mss\n        with easyprocess.EasyProcess(proc_cmd) as proc:\n            # need this to \"wake\" the terminal when fullscreen.\n            # you click before starting the program, so the program will not be affected by the activation.\n            os.system(\"xdotool mousemove 0 0\")\n            os.system(\"xdotool click 1\")\n            # proc.start()\n            # proc.start().sleep(3)\n            # proc.sleep(5)\n            proc.sleep(3)\n            # time.sleep(3)\n            # from Xlib.display import Display\n            # Display(os.environ['DISPLAY']).get_input_focus()\n            # not working.\n            # pyautogui.write(\"echo hello world pyautogui\\n\")\n            # works.\n            type_string(\n                \"echo hello world\\r\"\n      ",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:216-243"
+    },
+    "1421": {
+        "file_id": 187,
+        "content": "Starting Gnome terminal process and executing a command using mss module.",
+        "type": "comment"
+    },
+    "1422": {
+        "file_id": 187,
+        "content": "      )  # return works in leafpad, but \"\\n\" does not.\n            # type_string('echo hello world\\n')\n            # p.wait()\n            # keyboardController.type(\"echo hello world pynput\\n\")\n            pyautogui.screenshot(\"terminal2.png\")  # full shot\n            # img = disp.grab()  # # partial shot, only on changes\n            # maybe we can use this as some sort of \"attention\" mechanism?\n            img = disp.grab(autocrop=False)  # full shot again.\n            if img:\n                img.save(\"terminal.png\")\n            else:\n                print(\"no image yet.\")\n            type_string(\"just some words.\")\n            # .save not working\n            # mss.mss().save(output=\"terminal4.png\")\n            # mon_shot = mss.mss().save(mon=1, output=\"terminal4.png\")\n            if backend == \"xvfb\":\n                mon_shot = mss.mss().shot(output=\"terminal4.png\")\n            # print(mon_shot)\n            # nope. no attention/diff mechanism.\n            xdo_hid = LibxdoHID()\n            xdo_hid.mouse_mo",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:243-265"
+    },
+    "1423": {
+        "file_id": 187,
+        "content": "Capturing screenshots of terminal and other applications, using different screen grabbing techniques.\n\nThe code is capturing the screenshot of a terminal window and storing it as \"terminal2.png\" in full shot mode. It then checks if an image was captured and saves it as \"terminal.png\" if available or prints \"no image yet.\" Next, it types some text on the screen. It attempts to capture another screenshot of a monitor (mon_shot) using xvfb backend but is unsure about its success due to possible lack of attention/diff mechanism. The code also mentions trying different save methods like mss().save() but they are not working. It uses LibxdoHID to control the mouse movement.",
+        "type": "comment"
+    },
+    "1424": {
+        "file_id": 187,
+        "content": "ve(300, 300)\n            xdo_hid.key_press(\"'q'\")\n            time.sleep(0.2)\n            xdo_hid.key_release(\"'q'\")\n            time.sleep(0.3)\n            disp.grab().save(\"terminal5.png\")\n            time.sleep(0.3)\n            # proc.stop()",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:265-273"
+    },
+    "1425": {
+        "file_id": 187,
+        "content": "Taking a screenshot of the terminal and pressing q to exit.",
+        "type": "comment"
+    },
+    "1426": {
+        "file_id": 188,
+        "content": "/software_capture_hid_control/test_xdo.py",
+        "type": "filepath"
+    },
+    "1427": {
+        "file_id": 188,
+        "content": "Sends key sequence down and up in current window.",
+        "type": "summary"
+    },
+    "1428": {
+        "file_id": 188,
+        "content": "import xdo\nxdt = xdo.Xdo()\nkey = b\"k\"\nwindow = xdo.CURRENTWINDOW\nxdt.send_keysequence_window_down(window, key)\nxdt.send_keysequence_window_up(window, key)\n# it needs binary encoding.",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_xdo.py:1-7"
+    },
+    "1429": {
+        "file_id": 188,
+        "content": "Sends key sequence down and up in current window.",
+        "type": "comment"
+    },
+    "1430": {
+        "file_id": 189,
+        "content": "/test/run_test.sh",
+        "type": "filepath"
+    },
+    "1431": {
+        "file_id": 189,
+        "content": "Change directory to parent folder and run pytest with various options to execute test_project.py.",
+        "type": "summary"
+    },
+    "1432": {
+        "file_id": 189,
+        "content": "# cd ..\n# pytest --lf --lfnf=all --capture=tee-sys test_project.py\npytest --lf --lfnf=all --capture=tee-sys --log-level=DEBUG test_project.py\n# no much difference.\n# env BETTER_EXCEPTIONS=1 pytest --lf --lfnf=all --capture=tee-sys --log-level=DEBUG test_project.py\n# pytest --lf --lfnf=all test_project.py\n# pytest --lf --lfnf=all --capture=tee-sys test_project.py",
+        "type": "code",
+        "location": "/test/run_test.sh:1-10"
+    },
+    "1433": {
+        "file_id": 189,
+        "content": "Change directory to parent folder and run pytest with various options to execute test_project.py.",
+        "type": "comment"
+    },
+    "1434": {
+        "file_id": 190,
+        "content": "/test/test_abstract_impl.py",
+        "type": "filepath"
+    },
+    "1435": {
+        "file_id": 190,
+        "content": "This code defines an abstract base class (ABC) with a method and an implementation class that overrides the method. It also shows how to get an error when trying to instantiate an abstract class or non-implementing class.",
+        "type": "summary"
+    },
+    "1436": {
+        "file_id": 190,
+        "content": "from abc import ABC, abstractmethod\nclass abs_class(ABC):\n    def method(self):\n        \"doc here\"\n        return self._method_impl()\n    @abstractmethod\n    def _method_impl(self):\n        ...\nclass impl_class(abs_class):\n    def _method_impl(self):\n        return 1\nclass impl_class2(abs_class):\n    def non_relevant(self):\n        ...\nprint(impl_class().method())\n# print(impl_class2()) # error\n# print(abs_class()) # error",
+        "type": "code",
+        "location": "/test/test_abstract_impl.py:1-26"
+    },
+    "1437": {
+        "file_id": 190,
+        "content": "This code defines an abstract base class (ABC) with a method and an implementation class that overrides the method. It also shows how to get an error when trying to instantiate an abstract class or non-implementing class.",
+        "type": "comment"
+    },
+    "1438": {
+        "file_id": 191,
+        "content": "/test/test_project.py",
+        "type": "filepath"
+    },
+    "1439": {
+        "file_id": 191,
+        "content": "The code imports necessary modules, sets up logging and functions for model training and data processing. It includes strategies from hypothesis library, tests data fetching and loading models, evaluates CustomModel using Adam optimizer and SequentialTrainingQueue, and converts tensor to ConsciousFlow object for real-world application.",
+        "type": "summary"
+    },
+    "1440": {
+        "file_id": 191,
+        "content": "# use \"--log-level\" in pytest.\n# with this limited model structure, you may not find it \"evolving\".\n# you must let the AI design itself, evolve on its own.\n# shall you use pydantic v1 (>=1.10) or be incompatible with hypothesis.\n# ref: https://github.com/explosion/spaCy/issues/12659\n# lower the version of typing_extensions\nimport sys\nimport numpy as np\nsys.path.append(\"../\")\nfrom log_utils import logger_print\nimport torch\nfrom conscious_struct import (\n    trainModelWithDataBasePath,\n    Trainer,\n    SequentialTrainingQueue,\n    CustomModel,\n    ConsciousFlow,  # consists of `ConsciousBlock`\n    ConsciousBlock,\n    ConsciousStream,  # newly created wrapper!\n    HIDAction,\n    ConsciousBase,\n    KeyPress, KeyRelease, MouseMove, MouseScroll, MouseClick\n)\nfrom recording_train_parse import getTrainingData\nimport datetime\nimport pytest\nimport os\nfrom pathlib import Path\nfrom torchvision.models import VisionTransformer\nfrom hypothesis import given, settings\nfrom hypothesis.strategies import integers\nimport stopit\nimport ei",
+        "type": "code",
+        "location": "/test/test_project.py:1-37"
+    },
+    "1441": {
+        "file_id": 191,
+        "content": "The code is importing various modules and classes from different files. It uses \"--log-level\" in pytest, references a link for potential compatibility issues, imports necessary libraries like torch and numpy, appends the path of a specific file to the system path, and imports functions and classes for model training and data processing. Finally, it imports strategies and settings from hypothesis library and stops the execution if needed using stopit.",
+        "type": "comment"
+    },
+    "1442": {
+        "file_id": 191,
+        "content": "nops\n# import logging\n# import log_utils\n# it is been commented out.\n# from typing import Generator, Union, AsyncGenerator\n# try:\n#     from typing import AwaitableGenerator\n# except:\n#     from typing_extensions import AwaitableGenerator\n# may log to other places.\n# infinite append.\n# from logging import StreamHandler\n# stdout_handler = StreamHandler(sys.stdout)\n# logging.basicConfig(\n#     # filename=filename,\n#     level=logging.getLogger().getEffectiveLevel(),\n#     # stream=sys.stderr,\n#     force=True,\n#     handlers=[myHandler, stdout_handler],\n# )\n# logging.basicConfig(level=logging.DEBUG, stream=sys.stdout, force=True)\n# logging.critical(\"\")\ncurrent_time = datetime.datetime.now().isoformat()\nlogger_print(f\"logging starts: {current_time}\".center(100, \"=\"))\n# logging.critical(\"\")\n# TODO: modify function at source code level, not here!\n# def auto_teardown(func):\n#     def inner_func(*args, **kwargs):\n#         val = func(*args, **kwargs)\n#         if not isinstance(val, Union[Generator, AsyncGenerator, Await",
+        "type": "code",
+        "location": "/test/test_project.py:37-78"
+    },
+    "1443": {
+        "file_id": 191,
+        "content": "This code appears to be a Python module that sets up logging for the test project. It imports necessary modules, configures the logging level and handlers, and starts logging with a timestamp and header. There is also a placeholder for a function called \"auto_teardown,\" but it does not appear to be implemented or used in this code snippet.",
+        "type": "comment"
+    },
+    "1444": {
+        "file_id": 191,
+        "content": "ableGenerator]):\n#             yield val\n#             del val\n#         return val\n#     return inner_func\n@pytest.fixture(scope=\"session\")\ndef basePath():\n    return \"../recordings/2023-06-02T07_59_45.711256/\"\ndef test_get_training_data(basePath: str):\n    for trainingDataFrame in getTrainingData(basePath):\n        logger_print(\"training data frame:\", trainingDataFrame)\n# test fetching training data.\ndef test_fetching_training_data(basePath: str):\n    from conscious_struct import trainModelWithDataBasePath, TestEnqueue\n    myQueue = TestEnqueue()\n    # fake sequentialqueue.\n    trainModelWithDataBasePath(basePath, myQueue)\n@pytest.fixture(scope=\"session\")\ndef vit_model_path():\n    path = Path(\n        os.path.abspath(\n            relpath := \"../../../model_cache/vit_b_16-c867db91.pth\")\n    )\n    if not path.exists():\n        raise Exception(\n            f\"Current directory: {os.curdir}\\nModel weight does not exist: {path}\"\n        )\n    # return \"/Volumes/Toshiba XG3/model_cache/vit_b_16-c867db91.pth\"\n    retur",
+        "type": "code",
+        "location": "/test/test_project.py:78-117"
+    },
+    "1445": {
+        "file_id": 191,
+        "content": "Code tests fetching training data and loading model path.\n\nThis code contains two test functions, `test_get_training_data` and `test_fetching_training_data`, which are used to verify the functionality of fetching training data and loading the model path, respectively. \n\nThe `test_get_training_data` function iterates over each training DataFrame obtained from the `getTrainingData` function and prints out a log message for each one. This is intended to test the correctness and completeness of the training DataFrames returned by `getTrainingData`.\n\nThe `test_fetching_training_data` function imports two other functions, `trainModelWithDataBasePath` and `TestEnqueue`, from the `conscious_struct` module. It then creates an instance of a fake sequential queue called `myQueue` using the `TestEnqueue` class. \n\nThe function calls the `trainModelWithDataBasePath` function, passing in the `basePath` and the `myQueue` object as arguments. This is to test the functionality of training a model with data from a specific base path and a fake queue. If the model weight file does not exist at the specified path, an exception will be raised.\n\nThe code also defines a fixture called `basePath` that returns a string representing the base path for tests to use. It also has another fixture called `vit_model_path` which returns the path to the pre-trained model weight file (`vit_b_16-c867db91.pth`). If the file does not exist, an exception will be raised.",
+        "type": "comment"
+    },
+    "1446": {
+        "file_id": 191,
+        "content": "n path\n@pytest.fixture(scope=\"session\")\ndef vit_model(vit_model_path: str):\n    import torchvision\n    # code from OA bot\n    # return torchvision.models.vit_b_16(pretrained=True)\n    vmodel = torchvision.models.vit_b_16()\n    # breakpoint()\n    mStateDict = torch.load(vit_model_path)\n    vmodel.load_state_dict(mStateDict)\n    yield vmodel\n    del vmodel\n@pytest.fixture(scope=\"session\")\ndef model(vit_model: VisionTransformer):\n    model = CustomModel(vit_model)\n    yield model\n    del model\n# def pretrained_model_path():\n#     path = ...\n#     return path\n# @pytest.fixture(scope='session')\n# def model_pretrained(model:CustomModel,pretrained_model_path:str):\n#     model.load_state_dict(torch.load(pretrained_model_path))\n#     yield model\n#     del model\n# you don't need the model to be trained at all to act.\n@pytest.fixture(scope=\"session\")\ndef loss_fn():\n    from torch.nn import CrossEntropyLoss\n    loss = CrossEntropyLoss(reduction=\"mean\")\n    yield loss\n    del loss\n@pytest.fixture(scope=\"session\")\ndef optimizer(mod",
+        "type": "code",
+        "location": "/test/test_project.py:117-164"
+    },
+    "1447": {
+        "file_id": 191,
+        "content": "Code snippet is defining several fixtures for use in tests.\n\n1. `vit_model` fixture loads a pre-trained VisionTransformer model and yields it for testing.\n2. `model` fixture instantiates a custom model based on the preloaded VisionTransformer model and yields it.\n3. `loss_fn` fixture sets up a CrossEntropyLoss object and yields it.\n\nThese fixtures can be used to test various aspects of the model, loss function, and other components in tests.",
+        "type": "comment"
+    },
+    "1448": {
+        "file_id": 191,
+        "content": "el: CustomModel):\n    from torch.optim import Adam\n    lr = 0.00001\n    opt = Adam(model.parameters(), lr=lr)\n    yield opt\n    del opt\n# from hypothesis import HealthCheck\n@given(random_seed=integers())\n# @settings(suppress_health_check=(HealthCheck.function_scoped_fixture,),max_examples = 10, deadline=None)\n@settings(deadline=None, max_examples=2)\ndef test_train_model_with_training_data(\n    model: CustomModel, loss_fn, optimizer, basePath: str, random_seed: int\n):\n    # TODO: annotate our code with \"nptyping\" & \"torchtyping\" | \"jaxtyping\"\n    # TODO: haskell? functional python?\n    # (variadic types) ref: https://peps.python.org/pep-0646/\n    # use sympy for symbolic checks?\n    context_length = 2\n    batch_size = 1\n    myTrainer = Trainer(model=model, loss_fn=loss_fn, optimizer=optimizer)\n    myQueue = SequentialTrainingQueue(\n        context_length=context_length, batch_size=batch_size, trainer=myTrainer\n    )\n    # TODO: allow timeout exception to be raised, disallow any other exceptions.\n    # you migh",
+        "type": "code",
+        "location": "/test/test_project.py:164-195"
+    },
+    "1449": {
+        "file_id": 191,
+        "content": "Code is defining a test function that trains a CustomModel with training data and uses an Adam optimizer. The test function takes in a model, loss function, optimizer, base path, and random seed as parameters. It creates a Trainer object with the given model, loss function, and optimizer. Then it creates a SequentialTrainingQueue object that passes data to the trainer for training. The timeout exception handling is not implemented yet.",
+        "type": "comment"
+    },
+    "1450": {
+        "file_id": 191,
+        "content": "t want to shuffle its order, for testing.\n    with stopit.ThreadingTimeout(5):  # timeout exception suppressed!\n        trainModelWithDataBasePath(\n            basePath, myQueue, shuffle_for_test=True, random_seed=random_seed\n        )\n    logger_print(\"SESSION TIMEOUT NOW\".center(60, \"_\"))\n@pytest.mark.parametrize(\n    \"HIDActionObj\",\n    [\n        MouseClick(x=993, y=659, button=\"Button.left\", pressed=True),\n        MouseMove(x=10, y=20),\n        MouseScroll(x=10, y=10, dx=10, dy=-10),\n        KeyPress(key=\"\"\"'9'\"\"\"),\n        KeyRelease(key=\"\"\"'8'\"\"\"),\n    ],\n)\ndef test_eval_with_model(model: CustomModel, HIDActionObj):\n    model.eval()\n    # it is been observed by video recording script.\n    max_x, max_y = 1280, 768\n    HIDActionJson = HIDActionObj.to_list()\n    # HIDActionJsonList = [HIDActionObj.to_list() for HIDActionObj in HIDActionObjList]\n    actionData = HIDAction.from_action_json(\n        HIDActionJson, max_x=max_x, max_y=max_y\n    ).to_ndarray()\n    # actionDataList = [HIDAction.from_action_json(\n  ",
+        "type": "code",
+        "location": "/test/test_project.py:195-224"
+    },
+    "1451": {
+        "file_id": 191,
+        "content": "The code snippet is testing the evaluation of a model by performing various HID (Human Input Device) actions, such as mouse clicks, mouse moves, and key presses/releases. It also includes threading timeout to shuffle the order of actions for testing purposes.",
+        "type": "comment"
+    },
+    "1452": {
+        "file_id": 191,
+        "content": "  #     HIDActionJson, max_x=max_x, max_y=max_y\n    # ).to_ndarray() for HIDActionJson in HIDActionJsonList]\n    randomImageData = np.random.random(\n        (ConsciousBase.image_channels, ConsciousBase.image_dim, ConsciousBase.image_dim)\n    )\n    # imageData = einops.pack(randomImageData, \"*\")  # just what shape shall this be?\n    imageData = einops.rearrange(randomImageData, \"c h w -> (c h w)\")\n    # actionConsciousBlocks = [ConsciousBlock(\n    #     data_type=\"HIDAction\", special_token=None, action_data=actionData\n    # ) for actionData in actionDataList]\n    actionConsciousBlock = ConsciousBlock(\n        data_type=\"HIDAction\", special_token=None, action_data=actionData\n    )\n    imageConsciousBlock = ConsciousBlock(\n        data_type=\"image\", special_token=None, image_data=imageData\n    )\n    # cs = ConsciousFlow(consciousBlocks=[*actionConsciousBlocks, imageConsciousBlock])\n    # cf = ConsciousFlow(consciousBlocks=[ # not here but inside.\n    #     actionConsciousBlock,\n    #     # imageConsciousBlo",
+        "type": "code",
+        "location": "/test/test_project.py:224-243"
+    },
+    "1453": {
+        "file_id": 191,
+        "content": "Creating random image data and ConsciousBlocks for a ConsciousFlow.",
+        "type": "comment"
+    },
+    "1454": {
+        "file_id": 191,
+        "content": "ck,\n    #     ]\n    # )\n    cf = ConsciousFlow(\n        consciousBlocks=[actionConsciousBlock, imageConsciousBlock])\n    # must be 3d, not 2d.\n    # print(actionConsciousBlock.to_tensor().shape) # torch.Size([154639]) ~ d\n    # print(imageConsciousBlock.to_tensor().shape) # torch.Size([154639]) ~ d\n    # print(cf.to_tensor().shape) # torch.Size([2, 154639]) ~ s d\n    # breakpoint()\n    # result = model.forward(conscious_stream = cf.to_tensor()) # instead of this.\n    # we do this:\n    cs = ConsciousStream(consciousFlows=[cf])\n    result = model.forward(conscious_stream=cs.to_tensor())\n    # result = model.forward(conscious_stream=einops.pack([cf.to_tensor()], \"* s d\")) # b s d\n    # do not load any weight yet. just use its random state.\n    # do not execute anything in this test! just get the predicted things out.\n    logger_print(\"printing result\")\n    # with gradient! shall be shape of (b (batch size), d (data length))\n    logger_print(result)\n    logger_print('result shape:', result.shape)  # torch.Siz",
+        "type": "code",
+        "location": "/test/test_project.py:243-265"
+    },
+    "1455": {
+        "file_id": 191,
+        "content": "Creating ConsciousFlow objects for action and image, then creating a ConsciousStream with both conscious flows. Finally, forward pass of the model using the new conscious stream. Printing the result and its shape.",
+        "type": "comment"
+    },
+    "1456": {
+        "file_id": 191,
+        "content": "e([1, 154639])\n    # now decode!\n    cf_result = ConsciousFlow.from_tensor(result.detach())\n    logger_print(\"decoded result:\", cf_result)\n    # consider running this stuff in real world.",
+        "type": "code",
+        "location": "/test/test_project.py:265-271"
+    },
+    "1457": {
+        "file_id": 191,
+        "content": "Converting tensor to ConsciousFlow object, storing in cf_result, and logging the result for potential real-world application.",
+        "type": "comment"
+    },
+    "1458": {
+        "file_id": 192,
+        "content": "/the_cage_dataset/README.md",
+        "type": "filepath"
+    },
+    "1459": {
+        "file_id": 192,
+        "content": "The code describes a method to control a bot by confining it within a virtual or physical \"cage\", allowing only controlled input from the keyboard and mouse. It ensures synchronization of timestamps for video, audio, and actions across multiple machines using either NTP (Network Time Protocol) if online or Chrony if offline.",
+        "type": "summary"
+    },
+    "1460": {
+        "file_id": 192,
+        "content": "To minimize side effects and increase controllability, we will put our fellow bot inside the cage (or pinned it down) and let it uses the keyboard and mouse inside, while looking at the screen.\nwe need to synchronize timestamps for video, audio and actions across different machines, using ntp against the same server if online, or using chrony if offline",
+        "type": "code",
+        "location": "/the_cage_dataset/README.md:1-3"
+    },
+    "1461": {
+        "file_id": 192,
+        "content": "The code describes a method to control a bot by confining it within a virtual or physical \"cage\", allowing only controlled input from the keyboard and mouse. It ensures synchronization of timestamps for video, audio, and actions across multiple machines using either NTP (Network Time Protocol) if online or Chrony if offline.",
+        "type": "comment"
+    },
+    "1462": {
+        "file_id": 193,
+        "content": "/the_frozen_forest_intro/README.md",
+        "type": "filepath"
+    },
+    "1463": {
+        "file_id": 193,
+        "content": "This code is an introduction to the \"The Frozen Forest\" dataset, which includes time-aligned keystrokes, mouse, and screen recordings. The author plans to expand the dataset with more modalities like text and audio for training their multimodal model, called \"cybergod\".",
+        "type": "summary"
+    },
+    "1464": {
+        "file_id": 193,
+        "content": "![icon of the frozen forest](../propaganda/logos/frozen_forest_1.png)\n*\"Can you hear it slowing? You're slowing it. You are in control. Calm. At peace.\"*\n<div style='text-align: right;'>— Corvus</div>\n# The Frozen Forest\nA dataset of time-aligned keystrokes, mouse and screen recordings.\n## Roadmap\nCurrently I only record these contents by running autostart scripts within our tiny little virtual machine, copy and rinse it before feeding into our model.\nTo train our mighty multimodal `cybergod`, I plan to add more modalities into this dataset, namely text, audio and more.",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/README.md:1-15"
+    },
+    "1465": {
+        "file_id": 193,
+        "content": "This code is an introduction to the \"The Frozen Forest\" dataset, which includes time-aligned keystrokes, mouse, and screen recordings. The author plans to expand the dataset with more modalities like text and audio for training their multimodal model, called \"cybergod\".",
+        "type": "comment"
+    },
+    "1466": {
+        "file_id": 194,
+        "content": "/the_frozen_forest_intro/drissionpage_common.py",
+        "type": "filepath"
+    },
+    "1467": {
+        "file_id": 194,
+        "content": "The code configures a Chromium-based browser with specific extensions and automation settings, importing a Greasy Fork script for ad management, and sets a page object timeout to 10 seconds.",
+        "type": "summary"
+    },
+    "1468": {
+        "file_id": 194,
+        "content": "# this thing has compatibility issue. the data is not always loaded when ported to a different device.\n# maybe you need docker. we can talk about that later.\nfrom DrissionPage.easy_set import set_paths\n# this thing is not chromium-compatible\n# CHROMIUM_PATH = r\"C:\\Users\\Administrator\\AppData\\Local\\ms-playwright\\chromium-1084\\chrome-win\\chrome.exe\"\nBROWSER_PATH = r\"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\"\n# DOWNLOAD_PATH = r\"\"\nUSER_DATA_PATH = r\"F:\\MicrosoftEdgeUserData\"\nCACHE_PATH = r\"F:\\MicrosoftEdgeCache\"\n# you may have to install extensions yourself.\nUSE_CHROME = False\n# USE_CHROME = True\nset_paths(\n    browser_path=BROWSER_PATH,\n    # browser_path=(CHROMIUM_PATH if USE_CHROME else BROWSER_PATH),\n    # download_path=DOWNLOAD_PATH,\n    # **(dict() if USE_CHROME else dict(\n    user_data_path=USER_DATA_PATH,\n    cache_path=CACHE_PATH #)),\n)\n# no sound!\n# 关闭静音开播\nfrom DrissionPage import ChromiumPage # , ChromiumOptions\n# that way we may have the extensions\n# co = ChromiumOptions()\nimport os\n",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/drissionpage_common.py:2-35"
+    },
+    "1469": {
+        "file_id": 194,
+        "content": "The code defines the path for the browser executable (Microsoft Edge), user data, and cache. It also sets the flag to use Chromium or not. The code imports necessary modules and may require installing extensions manually.",
+        "type": "comment"
+    },
+    "1470": {
+        "file_id": 194,
+        "content": "ext_path = \"keylogger_extension/virtual-keylogger\"\npathToExtension = os.path.abspath(ext_path)\npathToCORSExtension = os.path.abspath(\"ForceCORS\")\nextension_path = \",\".join([pathToExtension, pathToCORSExtension])\n# not very nice.\n# co.set_argument('load-extension', extension_path)\n# co.set_argument(\"disable-extensions-except\", extension_path)\n# co.set_argument(\"enable-automation\")\n# co.set_mute(True)\n# co.set_mute(False)\n# userscripts to fix bilibili ads, for babysitting\n# https://greasyfork.org/zh-CN/scripts/467511-bilibili-%E5%9C%A8%E6%9C%AA%E7%99%BB%E5%BD%95%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%E8%87%AA%E5%8A%A8%E5%B9%B6%E6%97%A0%E9%99%90%E8%AF%95%E7%94%A8%E6%9C%80%E9%AB%98%E7%94%BB%E8%B4%A8\n# https://greasyfork.org/zh-CN/scripts/467474-bilibili-%E9%98%B2%E6%AD%A2%E8%A7%86%E9%A2%91%E8%A2%AB%E8%87%AA%E5%8A%A8%E6%9A%82%E5%81%9C%E5%8F%8A%E5%BC%B9%E5%87%BA%E7%99%BB%E5%BD%95%E7%AA%97%E5%8F%A3\n# https://greasyfork.org/zh-CN/scripts/470714-bilibili-b%E7%AB%99-%E6%9C%AA%E7%99%BB%E5%BD%95%E8%B4%A6%E5%8F%B7",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/drissionpage_common.py:35-50"
+    },
+    "1471": {
+        "file_id": 194,
+        "content": "This code sets up a Chromium-based browser with extensions for the frozen forest intro. It loads the \"keylogger_extension/virtual-keylogger\" and \"ForceCORS\" extensions, disables all other extensions except these two, enables automation, mutes the browser, and adds user scripts to fix Bilibili ads.",
+        "type": "comment"
+    },
+    "1472": {
+        "file_id": 194,
+        "content": "%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E6%9C%80%E9%AB%98%E7%94%BB%E8%B4%A8\n# https://greasyfork.org/zh-CN/scripts/473498-bilibili-%E5%9C%A8%E6%9C%AA%E7%99%BB%E5%BD%95%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%E7%85%A7%E5%B8%B8%E5%8A%A0%E8%BD%BD%E8%AF%84%E8%AE%BA\n# 用 d 模式创建页面对象（默认模式）\n# page = ChromiumPage(co if USE_CHROME else None)\npage = ChromiumPage()\nDEFAULT_TIMEOUT = 10\npage.timeout = DEFAULT_TIMEOUT",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/drissionpage_common.py:50-57"
+    },
+    "1473": {
+        "file_id": 194,
+        "content": "This code imports a Greasy Fork script and sets the default timeout for a page object to 10 seconds.",
+        "type": "comment"
+    },
+    "1474": {
+        "file_id": 195,
+        "content": "/the_frozen_forest_intro/keylogger_server.py",
+        "type": "filepath"
+    },
+    "1475": {
+        "file_id": 195,
+        "content": "This code sets up a FastAPI server for event monitoring, handles HTTP events, logs validation errors and stores data in a JSON file upon reaching 5 keys, and runs an Uvicorn server on localhost at a specified port.",
+        "type": "summary"
+    },
+    "1476": {
+        "file_id": 195,
+        "content": "# you are expected to receive mouse/keyboard events\n#\nserverPort = 4471\nimport fastapi\nfrom fastapi.middleware.cors import CORSMiddleware\nfrom typing import Callable, Any, Dict, Union, Literal\norigins = [\"*\"]\napp = fastapi.FastAPI()\napp.add_middleware(\n    CORSMiddleware, allow_origins=origins, allow_methods=origins, allow_headers=origins\n)\nfrom pydantic import BaseModel\nclass MouseEventData(BaseModel):\n    screenX: int\n    screenY: int\n    clientX: int\n    clientY: int\n    ctrlKey: bool\n    shiftKey: bool\n    altKey: bool\n    metaKey: bool\n    button: int\n    buttons: int\n    relatedTarget: Any\n    pageX: int\n    pageY: int\n    x: int\n    y: int\n    offsetX: int\n    offsetY: int\n    movementX: int\n    movementY: int\n    fromElement: Any\n    toElement: Dict[str, Any]\n    layerX: int\n    layerY: int\nclass KeyboardEventData(BaseModel):\n    key: str\n    code: str\n    location: int\n    ctrlKey: bool\n    shiftKey: bool\n    altKey: bool\n    metaKey: bool\n    repeat: bool\n    isComposing: bool\n    charCode: int\n    keyCode: int\n    DOM_KEY",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_server.py:1-55"
+    },
+    "1477": {
+        "file_id": 195,
+        "content": "This code sets up a FastAPI server that listens for mouse and keyboard events. It uses the CORSMiddleware to allow requests from any origin, method, and header. The server also defines two Pydantic models, MouseEventData and KeyboardEventData, for handling event data.",
+        "type": "comment"
+    },
+    "1478": {
+        "file_id": 195,
+        "content": "_LOCATION_STANDARD: int\n    DOM_KEY_LOCATION_LEFT: int\n    DOM_KEY_LOCATION_RIGHT: int\n    DOM_KEY_LOCATION_NUMPAD: int\nclass EventPayload(BaseModel):\n    eventType: str\n    data: dict\nclass MouseEventPayload(BaseModel):\n    eventType: Literal[\"mousedown\", \"mouseup\", \"mousemove\"]\n    data: MouseEventData\nclass KeyboardEventPayload(BaseModel):\n    eventType: Literal[\"keydown\", \"keyup\"]\n    # eventType: Literal['keydown', 'keyup', 'keypress']\n    data: KeyboardEventData\n# tradeoff when using string types: you need to call update_forward_refs()\n# import uuid\nclass EventModel(BaseModel):\n    # eventType: str\n    timestamp: float\n    # timestamp: str\n    # data: str\n    client_id: str\nclass ScreenshotEvent(EventModel):\n    screenshot_data: str\n    # screenshot_data: str\nclass BrowserEvent(EventModel):\n    # client_id: uuid.UUID\n    # payload: Union[MouseEventPayload, KeyboardEventPayload]\n    payload: Union[MouseEventPayload, KeyboardEventPayload, EventPayload]\n    # payload: EventPayload\n# obviously not right.\n#    \"dat",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_server.py:55-99"
+    },
+    "1479": {
+        "file_id": 195,
+        "content": "Code defines various event types and their payload structures for a browser monitoring system.",
+        "type": "comment"
+    },
+    "1480": {
+        "file_id": 195,
+        "content": "a\": {\n#     \"isTrusted\": true\n# }\nfrom fastapi import Request, Response\nfrom fastapi.routing import APIRoute\n# from log_utils import terminal_column_size\nterminal_column_size = 80\nimport json\nclass ValidationErrorLoggingRoute(APIRoute):\n    def get_route_handler(self) -> Callable:\n        original_route_handler = super().get_route_handler()\n        async def custom_route_handler(request: Request) -> Response:\n            try:\n                return await original_route_handler(request)\n            # except RequestValidationError as exc:\n            except Exception as e:\n                is_json = False\n                try:\n                    body = await request.json()\n                    body = json.dumps(body, indent=4, ensure_ascii=False)\n                    is_json = True\n                except:\n                    body = await request.body()\n                print(\n                    \"request{}\".format(\"_json\" if is_json else \"\")\n                    .upper()\n                    .center(terminal_column_siz",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_server.py:99-130"
+    },
+    "1481": {
+        "file_id": 195,
+        "content": "This code defines a class called `ValidationErrorLoggingRoute` which extends the `APIRoute` class from FastAPI. It overrides the default route handler to log any exceptions that occur during the execution of the original route handler. If the request body is in JSON format, it will be formatted and printed along with the exception. The code also sets a variable `terminal_column_size` to 80.",
+        "type": "comment"
+    },
+    "1482": {
+        "file_id": 195,
+        "content": "e, \"_\"),\n                    body,\n                    sep=\"\\n\",\n                )\n                print(\n                    \"exception\".upper().center(terminal_column_size, \"_\"), e, sep=\"\\n\"\n                )\n                # detail = {\"errors\": exc.errors(), \"body\": body.decode()}\n                # raise HTTPException(status_code=422, detail=detail)\n                raise e\n        return custom_route_handler\napp.router.route_class = ValidationErrorLoggingRoute\n# sample_data_path = 'sample_event_data.json'\n# sample_data = {}\n# @app.get('/getIdentifier')\n# def get_identifier(client_id:str):\n#     return dict(client_id=client_id)\nSTATUS_OK_RESPONSE = {'status': 'ok'}\n@app.post(\"/submitScreenshot\")\ndef receiveScreenshotEvent(request_data: ScreenshotEvent):\n    return STATUS_OK_RESPONSE\n@app.post(\"/browserInputEvent\")\n# def receiveBrowserInputEvent(body:Dict[str, Any]):\n# def receiveBrowserInputEvent(\n#     eventType: str,\n#     timestamp: str,\n#     data: str,\n# ):\ndef receiveBrowserInputEvent(request_data: Brows",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_server.py:130-165"
+    },
+    "1483": {
+        "file_id": 195,
+        "content": "This code is for a FastAPI web application. It defines routes and handlers for submitting screenshot events and receiving browser input events. The app uses the ValidationErrorLoggingRoute class to log any validation errors that occur during request processing, and it returns an \"ok\" response for successful requests.",
+        "type": "comment"
+    },
+    "1484": {
+        "file_id": 195,
+        "content": "erEvent):\n    # print(\"received body:\", eventType, timestamp, data)\n    print(\"received body:\", request_data)\n    # eventType = request_data.payload.eventType\n    # data = request_data.payload.data\n    # sample_data[eventType] = data\n    # if len(sample_data.keys()) == 5:\n    #     with open(sample_data_path, 'w+') as f:\n    #         f.write(json.dumps(sample_data, ensure_ascii=False, indent=4))\n    #     print(\"sample data saved to\", sample_data_path)\n    #     exit(0)\n    return STATUS_OK_RESPONSE\nif __name__ == \"__main__\":\n    import uvicorn\n    print(\"server address: http://localhost:%d\" % serverPort)\n    uvicorn.run(app, host=\"0.0.0.0\", port=serverPort)",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_server.py:165-183"
+    },
+    "1485": {
+        "file_id": 195,
+        "content": "This code is handling HTTP events, printing received event data, and storing a sample of the data in a JSON file when the number of keys reaches 5. It also returns an OK response. The code runs an Uvicorn server on localhost at a specified port.",
+        "type": "comment"
+    },
+    "1486": {
+        "file_id": 196,
+        "content": "/the_frozen_forest_intro/playwright_locate_mouse_viewport.py",
+        "type": "filepath"
+    },
+    "1487": {
+        "file_id": 196,
+        "content": "Code is using Playwright library to automate interactions with a web page. It opens the Paint.js website, moves and clicks the mouse within the viewport, takes a screenshot, and compares the image size with the viewport size.",
+        "type": "summary"
+    },
+    "1488": {
+        "file_id": 196,
+        "content": "from playwright.sync_api import Playwright, sync_playwright\npaint_url = \"https://paint.js.org/\"\nscreenshot_path = \"paint.png\"\nfrom PIL import Image\ndef run(playwright: Playwright) -> None:\n    browser = playwright.chromium.launch(headless=False)\n    context = browser.new_context()\n    page = context.new_page()\n    page.goto(paint_url)\n    print(f'viewport: {page.viewport_size[\"width\"]}x{page.viewport_size[\"height\"]}')\n    page.mouse.move(200, 200)\n    page.mouse.down()\n    page.mouse.move(400, 400) # working.\n    page.mouse.up()\n    page.screenshot(path=screenshot_path) # will not create new file, same size as saved file\n    img = Image.open(screenshot_path)\n    print(f'image size: {img.size[0]}x{img.size[1]}') # 1280x720\n    # ---------------------\n    context.close()\n    browser.close()\nwith sync_playwright() as playwright:\n    run(playwright)",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/playwright_locate_mouse_viewport.py:1-28"
+    },
+    "1489": {
+        "file_id": 196,
+        "content": "Code is using Playwright library to automate interactions with a web page. It opens the Paint.js website, moves and clicks the mouse within the viewport, takes a screenshot, and compares the image size with the viewport size.",
+        "type": "comment"
+    },
+    "1490": {
+        "file_id": 197,
+        "content": "/the_frozen_forest_intro/pw_listen_to_events.py",
+        "type": "filepath"
+    },
+    "1491": {
+        "file_id": 197,
+        "content": "Both comments discuss using GUI options, event handling, and browser settings for bot development, including WebSocket messaging, Docker containers, metalearning, and headless browsers with extensions. However, the code faces challenges in browser extensions for input interception and listening to events, with no clear solution provided for VS Code test web and Playwright issues.",
+        "type": "summary"
+    },
+    "1492": {
+        "file_id": 197,
+        "content": "from playwright.sync_api import sync_playwright, Page\n# here comes the question: what is comparable to a browser for GUI than for a terminal\n# now, we need to visualize the interface. i think website (jpeg based) is better than obs. for training, we have to develop a protocol based on websocket to send messages with time aligned events. also you can send commands with websocket\n# but before that, we can just ditch the protocol and create demo.\n# shell environment and repl\n# bot says\n# why not just run this from the web? not quick enough?\n# https://hub.docker.com/r/replco/polygott\n# https://github.com/replit/prybar\n# https://github.com/replit/nixmodules\n# bad news: you cannot record/listen mouse events using playwright. very bad.\n# good news: you can record these events on your own device using os specific keylogger, if you know these events are fired to the browser, around the effective area.\n# bonus: use keylogger browser extensions\nimport uuid\n# import json\npage_url = \"https://www.baidu.com\"\nserverP",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_listen_to_events.py:1-24"
+    },
+    "1493": {
+        "file_id": 197,
+        "content": "This code is exploring different options for creating a GUI interface, possibly for training purposes. It considers using website visuals instead of OBS and discusses the use of WebSocket protocol to send messages with time-aligned events. The code also mentions using a shell environment, REPL, and Docker containers. Additionally, it highlights that playwright cannot record/listen to mouse events, so an OS-specific keylogger can be used instead if the events are fired within the browser's effective area.",
+        "type": "comment"
+    },
+    "1494": {
+        "file_id": 197,
+        "content": "ort = 4471\n# def handle_keyboard_event(event):\n#     print(\"Keyboard event:\", event)\n# def handle_mouse_event(event):\n#     print(\"Mouse event:\", event)\n# here comes the question: how to train this bot?\n# there is only one thing that you can do: metalearning.\ndef print_request_sent(request):\n    if \"getIdentifier\" in request.url:\n        print(\"Request sent: \" + request.url)\ndef handle_page_event(page: Page):\n    createAndExposePageIdentifierAsFunctionName(page)\n    print('new page at:', page.url)\npageIdentifierPrefix = \"pageIdentifier_\"\ndef createAndExposePageIdentifierAsFunctionName(page:Page):\n    pageIdentifier = str(uuid.uuid4())\n    page.expose_binding( # ugly but effective hack\n        f\"{pageIdentifierPrefix}{pageIdentifier.replace('-', '_')}\", lambda: None\n    )\n    print(\"page identifier:\", pageIdentifier)\n    setattr(page, 'pageIdentifier', pageIdentifier)\n    return pageIdentifier\n# def print_request_finished(request):\n#   print(\"Request finished: \" + request.url)\nwait_sec = 10\nimport os\next_path = ",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_listen_to_events.py:24-60"
+    },
+    "1495": {
+        "file_id": 197,
+        "content": "The code is setting up event handling and page tracking for a web browser. It defines functions to handle keyboard, mouse, and page events, as well as printing request information. It uses metalearning to train the bot by exposing page identifiers as function names and waiting for specific requests before taking action.",
+        "type": "comment"
+    },
+    "1496": {
+        "file_id": 197,
+        "content": "\"keylogger_extension/virtual-keylogger\"\npathToExtension = os.path.abspath(ext_path)\npathToCORSExtension = os.path.abspath(\"ForceCORS\")\npathToDarkReaderExtension = os.path.abspath(\n    \"darkreader-chrome\"\n)  # this will pop up window. make sure that you have persisted context\nprint(\"loading extension path:\", pathToExtension)\nimport tempfile\nextensionPaths = \",\".join([pathToExtension,pathToCORSExtension,pathToDarkReaderExtension])\nwith tempfile.TemporaryDirectory() as tmpdir:\n    with sync_playwright() as playwright:  # this is incognito. not so good.\n        browser = playwright.chromium.launch_persistent_context(\n            user_data_dir=tmpdir,\n            headless=False,\n            # https://www.chromium.org/developers/how-tos/run-chromium-with-flags/\n            # https://peter.sh/experiments/chromium-command-line-switches/\n            args=[\n                # browser = playwright.chromium.launch(headless=False,  args= [\n                # f\"--disable-extensions-except={pathToExtension}\",\n           ",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_listen_to_events.py:60-81"
+    },
+    "1497": {
+        "file_id": 197,
+        "content": "Loading and managing browser extensions.\n\nThe code is loading three different browser extensions (keylogger, CORS Force, Dark Reader) and running a Playwright test in an incognito mode with temporary directory. The extensions are provided as paths, and their paths are being joined together for later use.",
+        "type": "comment"
+    },
+    "1498": {
+        "file_id": 197,
+        "content": "     # \"--force-dark-mode\",\n                # \"--hide-scrollbars\", # so it won't bother\n                f\"--disable-extensions-except={extensionPaths}\",\n                # f\"--load-extension={pathToExtension}\",\n                f\"--load-extension={extensionPaths}\",\n                # f\"--load-extension={pathToCORSExtension}\",\n            ],\n        )\n        # browser.on('keydown', handle_keyboard_event)\n        # playwright.on('keydown', handle_keyboard_event)\n        browser.on('page', handle_page_event)\n        page = browser.new_page() # this thing is not emitted in the event listener.\n        # createAndExposePageIdentifierAsFunctionName(page)\n        # pageIdentifier = createAndExposePageIdentifierAsFunctionName(page)\n        # page.on('request', print_request_sent)\n        # def route_page_identifier(route):\n        #    print('routing') # routing, but not working.\n        #    return route.fulfill(status = 200, json = {\"client_id\": pageIdentifier})\n        # page.route(\n        #     f\"http://localh",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_listen_to_events.py:81-102"
+    },
+    "1499": {
+        "file_id": 197,
+        "content": "Setting up a headless browser with specified extensions to load and listen for page events.\n\nHandling keydown events is disabled, but listening to page events and potentially intercepting requests.",
+        "type": "comment"
+    }
+}

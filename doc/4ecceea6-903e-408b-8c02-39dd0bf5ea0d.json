@@ -1,0 +1,15 @@
+{
+    "summary": "The code defines a function that takes an argument which must be a literal string and includes another function call with a literal string argument. The code also tests lambda functions using pytest, serialize/deserialize them, and attempts to extract their source but currently prints the full source code instead of just the lambda expression.",
+    "details": [
+        {
+            "comment": "class LiteralOnly(CustomCheck):\n    can_assign: check if value is a literal, returns CanAssign or error\ndef func(arg: Annotated[str, LiteralOnly()]) -> None:\n    function with argument that must be a literal\ndef some_call():\n    call a function with a literal string argument\n\ndef anotherfunc():\n    call func with a literal string argument (ok)",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/pyanalyze_check.py\":0-39",
+            "content": "# from typing import TYPE_CHECKING\n# import typing\n# typing.TYPE_CHECKING = True\nimport dill\nimport pytest\nimport ast\nimport inspect\nfrom pyanalyze.value import Value, CanAssign, CanAssignContext\nfrom pyanalyze.extensions import CustomCheck\n# from pyanalyze.extensions import CustomCheck, Value, CanAssignContext, CanAssign\nimport pyanalyze\nfrom typing_extensions import Annotated\nimport rich\nclass LiteralOnly(CustomCheck):\n    def can_assign(self, value: Value, ctx: CanAssignContext) -> CanAssign:\n        rich.print(value.__dict__)\n        rich.print(ctx.__dict__)\n        breakpoint()\n        for subval in pyanalyze.value.flatten_values(value):\n            if not isinstance(subval, pyanalyze.value.KnownValue):\n                return pyanalyze.value.CanAssignError(\"Value must be a literal\")\n        return {}\ndef func(arg: Annotated[str, LiteralOnly()]) -> None:\n    ...\ndef some_call():\n    # it is actually running this. damn it!\n    print(\"CALLING FUNCTION\")\n    return \"abc\"\ndef anotherfunc():\n    func(\"x\")  # ok\n    "
+        },
+        {
+            "comment": "This code is defining a function that uses lambdas and then tests them using pytest. The lambdas are being serialized and deserialized to check if they are being correctly defined in the codebase. The code also tries to extract the source of the lambda functions, but it seems to be printing the full source code instead of just the lambda expression.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/pyanalyze_check.py\":39-56",
+            "content": "func(str(some_call()))  # error\n# actually will not run the code, only if putting in between definitions.\n# anotherfunc() # will run\nif __name__ == \"__main__\":\n    anotherfunc()  # will not run\n@pytest.mark.parametrize(\"mylambda\", [lambda x: x == 0, lambda x: x < 0])\ndef test_0(mylambda):\n    # a = lambda x: x<0\n    # print(dill.dumps(mylambda))\n    # print(dill.source.dumpsource(mylambda))\n    ...\n    # a_source = inspect.getsource(mylambda)  # full source being dumped. not the lambda expression alone.\n    # print(a_source)\n    # tree = ast.parse(a_source)"
+        }
+    ]
+}

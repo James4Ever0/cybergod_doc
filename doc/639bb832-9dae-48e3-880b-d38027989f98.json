@@ -1,0 +1,10 @@
+{
+    "summary": "Reading code and storing its content into a string variable. Parsing the code using ast and iterating through the body elements, printing their attributes and checking for annotations.",
+    "details": [
+        {
+            "comment": "Reading code and storing its content into a string variable. Parsing the code using ast and iterating through the body elements, printing their attributes and checking for annotations.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/array_check_ast_parsing.py\":0-13",
+            "content": "code_path = \"array_static_typecheck.py\"\nimport ast\nimport rich\nwith open(code_path, \"r\") as f:\n    content = f.read()\n    tree = ast.parse(content)\n    for el in tree.body:\n        rich.print(el.__dict__)\n        # rich.print(dir(el))\n        print(ann:=getattr(el, \"annotation\", None))\n        if ann:\n            print(ast.unparse(el), el) # ast.AnnAssign"
+        }
+    ]
+}

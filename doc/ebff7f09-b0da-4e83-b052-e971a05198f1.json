@@ -1,0 +1,10 @@
+{
+    "summary": "Starts a virtual machine named \"Ubuntu 16.04\" using VirtualBox, in headless mode with display forwarding disabled.",
+    "details": [
+        {
+            "comment": "Starts a virtual machine named \"Ubuntu 16.04\" using VirtualBox, in headless mode with display forwarding disabled.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/start_vm.sh\":0-4",
+            "content": "# vboxmanage startvm \"12c0e77b-5f4a-4d30-b19b-1b105d2042cf\" # Ubuntu 16.04\nnohup xvfb-run --server-num=10 --listen-tcp --server-args=\"-screen 0 1280x800x24\" -f /tmp/.Xauthority vboxsdl --startvm \"Ubuntu 16.04\" &\n# start in headless mode\n# you may not live stream this one! but vrde is available! and you can use ffmpeg for bridging!\n# vboxmanage startvm \"Ubuntu 16.04\" --type headless"
+        }
+    ]
+}

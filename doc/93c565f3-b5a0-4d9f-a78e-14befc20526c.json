@@ -1,0 +1,10 @@
+{
+    "summary": "Enabling VRDE, setting port and address for Ubuntu 16.04 VM.",
+    "details": [
+        {
+            "comment": "Enabling VRDE, setting port and address for Ubuntu 16.04 VM.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/modify_vm.sh\":0-0",
+            "content": "vboxmanage modifyvm \"Ubuntu 16.04\" --vrde on --vrdeport 8981 --vrdeaddress 127.0.0.1 --vrdeauthtype null --vrdemulticon on --audioout off"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Creating a timestamped context with name \"abc\" and committing it. Dividing by zero, likely causing an error.",
+    "details": [
+        {
+            "comment": "Creating a timestamped context with name \"abc\" and committing it. Dividing by zero, likely causing an error.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/test_util.py\":0-4",
+            "content": "from utils import TimestampedContext\nwith TimestampedContext(\"abc\") as f:\n    f.commit()\n    shit = 1 / 0"
+        }
+    ]
+}

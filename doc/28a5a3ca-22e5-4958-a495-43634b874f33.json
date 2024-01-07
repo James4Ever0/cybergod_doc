@@ -1,0 +1,10 @@
+{
+    "summary": "This code imports os and time modules, gets the process ID (pid), and continuously prints the pid every second until terminated by os.kill().",
+    "details": [
+        {
+            "comment": "This code imports os and time modules, gets the process ID (pid), and continuously prints the pid every second until terminated by os.kill().",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/to_be_killed.py\":0-8",
+            "content": "import os\nimport time\npid = os.getpid()\n# killed by os.kill!\nwhile True:\n    print(\"process pid:\", pid)\n    time.sleep(1)"
+        }
+    ]
+}

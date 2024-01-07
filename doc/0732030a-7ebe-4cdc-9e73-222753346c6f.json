@@ -1,0 +1,10 @@
+{
+    "summary": "This code sets up two WebDAV directories, one for reading and one for read-write access. It uses the \"webdav-cli\" tool to connect to a host (10.0.1.6) on ports 8110 and 8111 with root credentials. The first directory is for the \"ubuntu_qemu_utm_arm_record\" folder, while the second one is for the \"recordings\" folder within the same path. Different permissions are granted to each directory.",
+    "details": [
+        {
+            "comment": "This code sets up two WebDAV directories, one for reading and one for read-write access. It uses the \"webdav-cli\" tool to connect to a host (10.0.1.6) on ports 8110 and 8111 with root credentials. The first directory is for the \"ubuntu_qemu_utm_arm_record\" folder, while the second one is for the \"recordings\" folder within the same path. Different permissions are granted to each directory.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_prepare_two_webdav_dirs.yaml\":0-8",
+            "content": "session_name: kali_prepare_two_webdav_dirs\nwindows:\n  - window_name: dev window\n    layout: tiled\n    panes:\n      - shell_command:\n        - \"webdav-cli --host=10.0.1.6 --port=8110 --username=root --password=root --path=/media/root/Toshiba\\\\ XG3/works/agi_computer_control/ubuntu_qemu_utm_arm_record/ --rights=canRead,canGetMimeType,canGetSizecanGetChildren,canGetProperty,canGetProperties,canGetCreationDate,canGetLastModifiedDate,canGetWebName,canGetType\"\n      - shell_command:\n        - \"webdav-cli --host=10.0.1.6 --port=8111 --username=root --password=root --path=/media/root/Toshiba\\\\ XG3/works/agi_computer_control/recordings/ --rights=canCreate,canDelete,canMove,canRename,canAppend,canWrite,canRead,canSource,canGetMimeType,canGetSize,canAddChild,canRemoveChild,canGetChildren,canSetProperty,canGetProperty,canGetProperties,canRemoveProperty,canGetCreationDate,canGetLastModifiedDate,canGetWebName,canGetType\""
+        }
+    ]
+}

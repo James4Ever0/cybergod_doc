@@ -1,0 +1,10 @@
+{
+    "summary": "Lists all virtual machines on VirtualBox.",
+    "details": [
+        {
+            "comment": "Lists all virtual machines on VirtualBox.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/list_vm.sh\":0-0",
+            "content": "vboxmanage list vms"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Building and running a containerized Python agent with Docker. Stopping any existing container, cleaning up unused images, then running the main container (autoexec_container) with the environment file and two background processes (ptyproc.py and container_autoexec_example.py). Uncommented code shows an additional port mapping option.",
+    "details": [
+        {
+            "comment": "Building and running a containerized Python agent with Docker. Stopping any existing container, cleaning up unused images, then running the main container (autoexec_container) with the environment file and two background processes (ptyproc.py and container_autoexec_example.py). Uncommented code shows an additional port mapping option.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/run_autoexec.sh\":0-4",
+            "content": "docker build -t autoexec -f Dockerfile_autoexec .\ndocker kill autoexec_container\ndocker image prune -f\ndocker run --network host --name autoexec_container --env-file=.env_autoexec -it --rm autoexec bash -c \"python3 ptyproc.py & python3 container_autoexec_example.py\"\n# docker run -p 11434:11434 --env-file=.env_autoexec -it --rm autoexec bash -c \"python3 ptyproc.py & python3 container_autoexec_example.py\""
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "This code describes the goal of performing operations like copy, cut, and shuffle without relying on annotations while potentially reducing entropy.",
+    "details": [
+        {
+            "comment": "This code describes the goal of performing operations like copy, cut, and shuffle without relying on annotations while potentially reducing entropy.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/metalearning_random_shuffle/README.md\":0-6",
+            "content": "we want to learn the unspeakable. we want to be annotation free.\nso basically we can do following operations:\ncopy, cut, shuffle\nin which the entropy might be reduced."
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "The code imports the jinja_utils module and sys, gets the current working directory (but not actually used), and takes the input file path as a command-line argument. It checks if it ends with .py, extracts the base name without .py, uses jinja_utils to get the code and template paths based on the base name, asserts that the code path is the same as the target path, and then loads the renderer and formats the template using the specified parameters and banner.",
+    "details": [
+        {
+            "comment": "The code imports the jinja_utils module and sys, gets the current working directory (but not actually used), and takes the input file path as a command-line argument. It checks if it ends with .py, extracts the base name without .py, uses jinja_utils to get the code and template paths based on the base name, asserts that the code path is the same as the target path, and then loads the renderer and formats the template using the specified parameters and banner.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/render_python_code.py\":0-15",
+            "content": "import jinja_utils as ju\nimport sys\n# get current working direcory.\n# import os\n# curdir = os.curdir\ntarget = sys.argv[-1]\nprint(\"target output:\", target)\nassert target.endswith(\".py\")\nbasename = target.strip(\".py\")\ncode_path, template_path = ju.code_and_template_path(basename)\nassert code_path == target\nju.load_render_and_format(template_path, code_path, render_params = {}, banner = basename.replace(\"_\",\" \").upper()) # TODO: case by case. ensure we have the right render_params."
+        }
+    ]
+}

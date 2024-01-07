@@ -1,0 +1,10 @@
+{
+    "summary": "This is a simple keylogger for virtual keyboards on HDFC Bank's netbanking site, logging keys and sending data to a backend server.",
+    "details": [
+        {
+            "comment": "This is a simple keylogger for virtual keyboards on HDFC Bank's netbanking site, logging keys and sending data to a backend server.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/README.md\":0-11",
+            "content": "# Virtual Keylogger\nThis is a simple keylogger that logs all the keys pressed on the vitual keyboard on https://netbanking.hdfcbank.com and sends them to a backend server ([code available here](https://github.com/ayamdobhal/virtual-keylogger-backend)).\n## How to run\n- Build the index.js file\n```\nnpm run build\n```\n- Open Chrome and go to `chrome://extensions`\n- Enable developer mode\n- Click on `Load unpacked` and select the folder you cloned the repository in"
+        }
+    ]
+}

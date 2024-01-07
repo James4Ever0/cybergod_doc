@@ -1,0 +1,10 @@
+{
+    "summary": "This code is listing the required Python packages for a project: redis, jsonlines, pynput, pytweening (commented), pyautogui 0.9.50, mss, parse (commented), and pyaudio (commented).",
+    "details": [
+        {
+            "comment": "This code is listing the required Python packages for a project: redis, jsonlines, pynput, pytweening (commented), pyautogui 0.9.50, mss, parse (commented), and pyaudio (commented).",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/requirements.txt\":0-10",
+            "content": "redis\njsonlines\npynput\n# pytweening\npyautogui==0.9.50\n# pyautogui==0.9.8\nmss==3\nparse\n# pyaudio\n# install python3-pyaudio using apt\n# you'd probably want a different python executable on ubuntu 16.04"
+        }
+    ]
+}

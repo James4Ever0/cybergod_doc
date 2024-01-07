@@ -1,0 +1,10 @@
+{
+    "summary": "Sets terminal window dimensions to 80 columns and 25 rows.",
+    "details": [
+        {
+            "comment": "Sets terminal window dimensions to 80 columns and 25 rows.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/terminal_config.py\":0-0",
+            "content": "cols, rows = 80, 25"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Profiling long-running program using PyInstrument.",
+    "details": [
+        {
+            "comment": "Profiling long-running program using PyInstrument.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/pyinstrument_profile.py\":0-6",
+            "content": "import pyinstrument\nprof = pyinstrument.Profiler()\nprof.start()\n...  # long running program. remember to timeout\nprof.stop()\nprof.print()"
+        }
+    ]
+}

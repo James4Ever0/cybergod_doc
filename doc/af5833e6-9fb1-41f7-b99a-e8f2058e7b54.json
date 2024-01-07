@@ -1,0 +1,10 @@
+{
+    "summary": "Unlocking session \"c2\" and running /bin/loginctl for Ubuntu 16.04 guest with username hua and password 110110.",
+    "details": [
+        {
+            "comment": "Unlocking session \"c2\" and running /bin/loginctl for Ubuntu 16.04 guest with username hua and password 110110.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/exec_vm.sh\":0-9",
+            "content": "# vboxmanage guestcontrol \"Ubuntu 16.04\" --username hua --password 110110 run --exe /usr/bin/env\n# vboxmanage guestcontrol \"Ubuntu 16.04\" --username hua --password 110110 run --exe /bin/loginctl\n# vboxmanage guestcontrol \"Ubuntu 16.04\" --username hua --password 110110 run -- /bin/loginctl unlock-session c2\nvboxmanage guestcontrol \"Ubuntu 16.04\" --username hua --password 110110 run --timeout 100 -- /bin/loginctl\n# Class=user\n# Class=greeter\n# if current session is greeter -> reboot session\n# if is just screen lock -> unlock session"
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "summary": "Code utilizes Monkeypatch to replace numpy.array with custom marray class and sets environment variables for testing exceptions, creating an array in the process.",
+    "details": [
+        {
+            "comment": "Setting environment variable to enable better exceptions, running pytest with full capture and assertions as plain text.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/pytest_disable_assertion_inspection_use_better_exceptions.py\":0-32",
+            "content": "# commandline:\n# env BETTER_EXCEPTIONS=1 python3 -m pytest --full-capture --assert=plain pytest_disable_assertion_inspection_use_better_exceptions.py\n# env BETTER_EXCEPTIONS=1 python3 -m pytest pytest_disable_assertion_inspection_use_better_exceptions.py\nfrom pytest import MonkeyPatch\nimport numpy as np\nimport better_exceptions\n# # import unittest\nfrom pytest import ExceptionInfo\n# def max_traceback_limit(tb, max_limit = 3):\n#     if getattr(tb, 'tb_next',None):\n#         if max_limit == 0:\n#             tb.tb_next = None\n#         else:\n#             max_traceback_limit(tb.tb_next, max_limit = max_limit-1)\n# import rich\ndef patch(exc_info, exprinfo):\n    tb = exc_info[2]\n    # max_traceback_limit(tb)\n    # traceback is staring from the root cause. deal it in the end.\n    # rich.print(tb)\n    # breakpoint()\n    cls = ExceptionInfo\n    textlist = better_exceptions.format_exception(\n        exc=exc_info[0], value=exc_info[1], tb=tb\n    )\n    # textlist = better_exceptions.format_exception(*exc_info)\n    text = \"\""
+        },
+        {
+            "comment": "Creating a numpy array and testing it with Monkeypatch.\n\nThe code creates two numpy arrays (a and b) and adds them together to create another array (c). Then, it defines a class marray which should be used for creating numpy arrays instead of the original numpy.array function. The test_mytest function uses Monkeypatch to replace the numpy.array function with the marray class.\n\nMonkeypatch is being used to set attributes and environment variables in order to change how numpy's array function behaves during testing. This allows for inspection of exceptions thrown by this function, presumably using a different method than the original one. The code appears to be setting up an alternative way of handling numpy arrays specifically for testing purposes.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/pytest_disable_assertion_inspection_use_better_exceptions.py\":32-71",
+            "content": ".join(textlist)\n    keyword = \"in pytest_pyfunc_call\"\n    text = text.split(\"\\n\")\n    last_index = -20\n    for i, t in enumerate(text):\n        if keyword in t:\n            last_index = i\n            break\n    text = text[last_index:]\n    text = \"\\n\".join(text)\n    print()\n    print(text)  # great. this could be the hook.\n    return cls(exc_info, text, _ispytest=True)\nExceptionInfo.from_exc_info = patch\n# better_exceptions.hook()\ndef create_array():\n    a = np.array([1, 2, 3])\n    b = np.array([1, 2, 3, 4])\n    c = a + b\n    return c\nimport numpy\nclass marray:\n    def __init__(self, content):\n        print(\"CREATING ARRAY WITH CONTENT:\", content)\n        # how do you inspect that after patched the original method?\n        # shall you return \"None\"\n        # return \"CREATED_ARRAY\"\ndef test_mytest(monkeypatch: MonkeyPatch):\n    # monkeypatch.setitem(numpy.__dict__, \"array\", marray) # patched!\n    monkeypatch.setattr(numpy, \"array\", marray) # again, patched!\n    monkeypatch.setenv(\"BETTER_EXCEPTIONS\",\"1\") # still, no "
+        },
+        {
+            "comment": "Creates an array.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/pytest_disable_assertion_inspection_use_better_exceptions.py\":71-80",
+            "content": "\"better\" exception.\n    a = 1\n    b = {}\n    create_array()\n    # print(b[1])\n    # assert b[2] == a\n# if __name__ == \"__main__\":\n#     test_mytest()"
+        }
+    ]
+}

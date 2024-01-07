@@ -1,0 +1,10 @@
+{
+    "summary": "Code sets a default port number, parses command line arguments for a custom port value (between 0 and 65534), and asserts that the chosen port is valid.",
+    "details": [
+        {
+            "comment": "Code sets a default port number, parses command line arguments for a custom port value (between 0 and 65534), and asserts that the chosen port is valid.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/port_util.py\":1-7",
+            "content": "import argparse\nparser = argparse.ArgumentParser()\nparser.add_argument(\"-p\", \"--port\", type=int, default=8788, help=\"port number\")\nargs = parser.parse_args()\nport = args.port\nassert port > 0 and port < 65535"
+        }
+    ]
+}

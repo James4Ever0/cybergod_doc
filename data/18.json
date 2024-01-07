@@ -1,0 +1,529 @@
+{
+    "1800": {
+        "file_id": 241,
+        "content": "gsettings set com.canonical.indicator.session suppress-logout-restart-shutdown",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/disable_logout_poweroff_button.sh:1-1"
+    },
+    "1801": {
+        "file_id": 241,
+        "content": "This code sets a setting to suppress the logout, restart, and shutdown buttons.",
+        "type": "comment"
+    },
+    "1802": {
+        "file_id": 242,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/duplicate_frame_detector.py",
+        "type": "filepath"
+    },
+    "1803": {
+        "file_id": 242,
+        "content": "Takes a screenshot of the virtual machine, checks if the lock indicator image is present in it, and prints \"FIND IMAGE AT\" if found or \"IMAGE NOT FOUND\" if not.",
+        "type": "summary"
+    },
+    "1804": {
+        "file_id": 242,
+        "content": "import os\nscreenshot_vm = \"screenshot_vm.sh\"\nimage_path = \"output.png\"\nexit_code = os.system(screenshot_vm)\nlock_indicator_path = \"lock_indicator.png\"\n# right now just check the login screen. if it hits the login screen we reboot.\n# or you execute command to find out the state of gnome on display :0\nimport pyscreeze\nresult = pyscreeze.locate(needleImage=lock_indicator_path,haystackImage=image_path)\nif result:\n    print(\"FIND IMAGE AT:\", result)\nelse:\n    print(\"IMAGE NOT FOUND.\")",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/duplicate_frame_detector.py:1-18"
+    },
+    "1805": {
+        "file_id": 242,
+        "content": "Takes a screenshot of the virtual machine, checks if the lock indicator image is present in it, and prints \"FIND IMAGE AT\" if found or \"IMAGE NOT FOUND\" if not.",
+        "type": "comment"
+    },
+    "1806": {
+        "file_id": 243,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/exec_vm.sh",
+        "type": "filepath"
+    },
+    "1807": {
+        "file_id": 243,
+        "content": "Unlocking session \"c2\" and running /bin/loginctl for Ubuntu 16.04 guest with username hua and password 110110.",
+        "type": "summary"
+    },
+    "1808": {
+        "file_id": 243,
+        "content": "# vboxmanage guestcontrol \"Ubuntu 16.04\" --username hua --password 110110 run --exe /usr/bin/env\n# vboxmanage guestcontrol \"Ubuntu 16.04\" --username hua --password 110110 run --exe /bin/loginctl\n# vboxmanage guestcontrol \"Ubuntu 16.04\" --username hua --password 110110 run -- /bin/loginctl unlock-session c2\nvboxmanage guestcontrol \"Ubuntu 16.04\" --username hua --password 110110 run --timeout 100 -- /bin/loginctl\n# Class=user\n# Class=greeter\n# if current session is greeter -> reboot session\n# if is just screen lock -> unlock session",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/exec_vm.sh:1-10"
+    },
+    "1809": {
+        "file_id": 243,
+        "content": "Unlocking session \"c2\" and running /bin/loginctl for Ubuntu 16.04 guest with username hua and password 110110.",
+        "type": "comment"
+    },
+    "1810": {
+        "file_id": 244,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/exec_vm_if_locked.py",
+        "type": "filepath"
+    },
+    "1811": {
+        "file_id": 244,
+        "content": "The code imports libraries, defines functions for executing commands in a locked virtual machine, unlocking the session, parsing command output, and handling errors; it also determines if reboot is necessary based on certain conditions.",
+        "type": "summary"
+    },
+    "1812": {
+        "file_id": 244,
+        "content": "import rich\nimport re\nimport subprocess\nimport traceback\n# cmd = 'vboxmanage guestcontrol \"Ubuntu 16.04\" --username hua --password 110110 run --timeout 100 -- /bin/loginctl'\n# cmd = ['vboxmanage', 'guestcontrol', 'Ubuntu 16.04', '--username', 'hua', '--password', '110110', 'run', '--timeout', '100', '--', '/bin/loginctl','--help']\ndef exec_vm_if_locked(verbose=False,\n                      timeout=1  # seconds.\n                      ):\n    def getcmd(\n        args: list[str] = [],\n        machine=\"Ubuntu 16.04\",\n        username=\"hua\",\n        password=\"110110\",\n        timeout=\"100\",\n        bin=\"/bin/loginctl\",\n    ):\n        cmd = [\n            \"vboxmanage\",\n            \"guestcontrol\",\n            machine,\n            \"--username\",\n            username,\n            \"--password\",\n            password,\n            \"run\",\n            \"--timeout\",\n            timeout,\n            \"--\",\n            bin,\n        ]\n        return cmd + args\n    cmds = [\n        getcmd(e)\n        for e in [\n            [],  # main info.\n      ",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/exec_vm_if_locked.py:1-42"
+    },
+    "1813": {
+        "file_id": 244,
+        "content": "This code imports various libraries and defines a function to execute commands in a virtual machine if it is locked. The getcmd function creates the command string for executing specific operations in the VM, and the main loop calls this function with different arguments to perform multiple actions.",
+        "type": "comment"
+    },
+    "1814": {
+        "file_id": 244,
+        "content": "      [\n                \"show-seat\",\n                \"seat0\",  # get ActiveSession\n            ],\n        ]\n    ]\n    def cmd_unlock(session): return getcmd(['unlock-session', session])\n    def sess_parse(data):\n        lines = data.split(\"\\n\")\n        mlist = []\n        for l in lines:\n            if \"USER\" in l:\n                continue\n            else:\n                l = l.replace(\"=\", \" \")\n                list_l = re.findall(r\"\\w+\", l)\n                # print(list_l)\n                if list_l == []:\n                    break\n                mlist.append(list_l)\n        return mlist\n    # json is for journal formatting.\n    keys = ['session', 'seat']\n    datamap = {}\n    reboot = False\n    try:\n        for index, cmd in enumerate(cmds):\n            key = keys[index]\n            output = subprocess.check_output(cmd, timeout=timeout)\n            # if with error return code, it will raise exception.\n            # machine not started, service not running.\n            if verbose:\n                print(\"=============O",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/exec_vm_if_locked.py:42-79"
+    },
+    "1815": {
+        "file_id": 244,
+        "content": "The code snippet defines a function `cmd_unlock` that returns a command to unlock the session. It also contains a function `sess_parse` that parses output data from commands, and initializes variables for executing commands and handling errors.",
+        "type": "comment"
+    },
+    "1816": {
+        "file_id": 244,
+        "content": "UTPUT=============\")\n                print(output.decode())\n                print()\n            dec_output = output.decode()\n            mlist_output = sess_parse(dec_output)\n            if verbose:\n                rich.print(mlist_output)\n            mdict = {e[0]: e[1:] for e in mlist_output}\n            datamap[key] = mdict\n        if verbose:\n            print()\n            rich.print(datamap)\n        active_session = datamap['seat']['ActiveSession'][0]\n        user_active_session = datamap['session'][active_session][1]\n        if user_active_session != 'hua':\n            reboot = True\n        else:\n            cmd = cmd_unlock(active_session)\n            subprocess.call(cmd, timeout=timeout)\n    except:\n        traceback.print_exc()\n    return reboot\nif __name__ == '__main__':\n    reboot = exec_vm_if_locked(verbose=True)\n    print(\"NEED REBOOT?\", reboot)",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/exec_vm_if_locked.py:79-110"
+    },
+    "1817": {
+        "file_id": 244,
+        "content": "This code appears to execute a virtual machine if it is locked, decode and parse the output, store the results in a dictionary, and determine whether a reboot is necessary based on certain conditions. It also includes exception handling for potential errors.",
+        "type": "comment"
+    },
+    "1818": {
+        "file_id": 245,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/kali_vbox_main_loop.py",
+        "type": "filepath"
+    },
+    "1819": {
+        "file_id": 245,
+        "content": "The code automates VM management by running bash scripts to stop, prepare directories, restore and start the VM, checks for new recordings within a time threshold, ensures the VM is running or aborts if not, and reboots if necessary.",
+        "type": "summary"
+    },
+    "1820": {
+        "file_id": 245,
+        "content": "from exec_vm_if_locked import exec_vm_if_locked\nimport time\nimport os\nimport progressbar\nseconds = 60*5\nrestore_vm = \"restore_vm.sh\"\nstop_vm = \"stop_vm.sh\"\nstart_vm = \"start_vm.sh\"\nkali_prepare_two_webdav_dirs = \"../kali_prepare_two_webdav_dirs.sh\"\nABORT_THRESHOLD = 15\nQUIT_THRESHOLD = 60\ndef run_bash_script(script_path):\n    print(\"Excuting bash script: %s\" % script_path)\n    command = f\"bash {script_path}\"\n    return os.system(command)\n# scripts = [stop_vm, kali_prepare_two_webdav_dirs, restore_vm] # restoration will make vm start?\nscripts = [stop_vm, kali_prepare_two_webdav_dirs, restore_vm, start_vm]\nwhile True:\n    os.system(\"cd .\")\n    os.system(\"rm nohup.out\")\n    codes = []\n    for script in scripts:\n        while True:\n            code = run_bash_script(script)\n            time.sleep(1)\n            if script != start_vm:\n                break\n            else:\n                if code != 0:\n                    continue\n                else:\n                    break\n        codes.append(code)\n    print()\n    fo",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/kali_vbox_main_loop.py:1-41"
+    },
+    "1821": {
+        "file_id": 245,
+        "content": "This code is running multiple bash scripts in a loop. It first stops the VM, prepares two WebDAV directories, restores the VM, and starts the VM. If the script encounters an error, it will wait for 15 seconds before aborting or 60 seconds before quitting the process. Each script execution is recorded in the \"codes\" list.",
+        "type": "comment"
+    },
+    "1822": {
+        "file_id": 245,
+        "content": "r index, script in enumerate(scripts):\n        print(f'{script} EXIT CODE:', codes[index])\n    # if any(codes):\n    #     print()\n    #     print(\"HAS ERROR CODE!\")\n    #     for index, script in enumerate(scripts):\n    #         print(f'{script} EXIT CODE:', codes[index])\n    #     time.sleep(1)\n    #     continue\n    # CAN YOU DO THIS WITHOUT INTERRUPTING ME?\n    print(\"WAITING {} SECONDS...\".format(seconds))\n    abort = 0\n    quit = 0\n    old_rec_paths = os.listdir(\n        \"/media/root/Toshiba XG3/works/agi_computer_control/recordings\")\n    for _ in progressbar.progressbar(range(seconds)):\n        # you just don't wait...\n        paths = os.listdir(\"/tmp/.X11-unix\")\n        rec_paths = os.listdir(\n            \"/media/root/Toshiba XG3/works/agi_computer_control/recordings\")\n        if rec_paths == old_rec_paths:\n            quit += 1\n            if quit > QUIT_THRESHOLD:  # thirty secs.\n                print(\"ABORTING! NOT RECORDING.\")\n                break\n        else:\n            quit=0\n            old_rec",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/kali_vbox_main_loop.py:41-68"
+    },
+    "1823": {
+        "file_id": 245,
+        "content": "This code is checking if there are any error codes in the list of script exit codes. If there are, it prints a message and displays each script's exit code before waiting for a specified number of seconds. It also periodically checks for new recordings and aborts if no new recording appears within a certain time threshold.",
+        "type": "comment"
+    },
+    "1824": {
+        "file_id": 245,
+        "content": "_paths = rec_paths.copy()\n        target_path = \"X10\"  # where virtualbox runs.\n        vm_running = target_path in paths\n        if not vm_running:\n            abort += 1\n        else:\n            reboot = exec_vm_if_locked()\n            if reboot:\n                abort += 1\n            else:\n                abort = 0\n        if abort > ABORT_THRESHOLD:\n            print(\"ABORTING! VM IS NOT RUNNING.\")\n            break\n        time.sleep(1)\n    print()",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/kali_vbox_main_loop.py:68-84"
+    },
+    "1825": {
+        "file_id": 245,
+        "content": "This code checks if a virtual machine (VM) is running and aborts the script if it's not. If the VM is running, it checks if it needs to be rebooted or not before continuing. If the number of abort attempts exceeds a certain threshold, it prints \"ABORTING! VM IS NOT RUNNING.\" and breaks the loop.",
+        "type": "comment"
+    },
+    "1826": {
+        "file_id": 246,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/lightdm.conf",
+        "type": "filepath"
+    },
+    "1827": {
+        "file_id": 246,
+        "content": "This config file sets the default user for automatic login as \"hua\" with no timeout, and uses the \"ubuntu\" session.",
+        "type": "summary"
+    },
+    "1828": {
+        "file_id": 246,
+        "content": "[SeatDefaults]\nautologin-user=hua\nautologin-user-timeout=0\nuser-session=ubuntu",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/lightdm.conf:1-4"
+    },
+    "1829": {
+        "file_id": 246,
+        "content": "This config file sets the default user for automatic login as \"hua\" with no timeout, and uses the \"ubuntu\" session.",
+        "type": "comment"
+    },
+    "1830": {
+        "file_id": 247,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/list_vm.sh",
+        "type": "filepath"
+    },
+    "1831": {
+        "file_id": 247,
+        "content": "Lists all virtual machines on VirtualBox.",
+        "type": "summary"
+    },
+    "1832": {
+        "file_id": 247,
+        "content": "vboxmanage list vms",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/list_vm.sh:1-1"
+    },
+    "1833": {
+        "file_id": 247,
+        "content": "Lists all virtual machines on VirtualBox.",
+        "type": "comment"
+    },
+    "1834": {
+        "file_id": 248,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/modify_vm.sh",
+        "type": "filepath"
+    },
+    "1835": {
+        "file_id": 248,
+        "content": "Enabling VRDE, setting port and address for Ubuntu 16.04 VM.",
+        "type": "summary"
+    },
+    "1836": {
+        "file_id": 248,
+        "content": "vboxmanage modifyvm \"Ubuntu 16.04\" --vrde on --vrdeport 8981 --vrdeaddress 127.0.0.1 --vrdeauthtype null --vrdemulticon on --audioout off",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/modify_vm.sh:1-1"
+    },
+    "1837": {
+        "file_id": 248,
+        "content": "Enabling VRDE, setting port and address for Ubuntu 16.04 VM.",
+        "type": "comment"
+    },
+    "1838": {
+        "file_id": 249,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/restore_vm.sh",
+        "type": "filepath"
+    },
+    "1839": {
+        "file_id": 249,
+        "content": "The code is taking a snapshot of the virtual machine named \"Ubuntu 16.04\" and then restoring different snapshots (Snapshot 3, Snapshot 7, Snapshot 14) to various states. Note that Snapshot 12 has a bug and cannot be restored.",
+        "type": "summary"
+    },
+    "1840": {
+        "file_id": 249,
+        "content": "# take snapshot\n# vboxmanage snapshot \"Ubuntu 16.04\" take \"Snapshot 3\"\n# restore snapshot\nvboxmanage snapshot \"Ubuntu 16.04\" restore \"Snapshot 14\"\n# 12 has bug.\n# vboxmanage snapshot \"Ubuntu 16.04\" restore \"Snapshot 7\"\n# vboxmanage snapshot \"Ubuntu 16.04\" restore \"Snapshot 6\"\n# vboxmanage snapshot \"Ubuntu 16.04\" restore \"Snapshot 3\"",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/restore_vm.sh:1-8"
+    },
+    "1841": {
+        "file_id": 249,
+        "content": "The code is taking a snapshot of the virtual machine named \"Ubuntu 16.04\" and then restoring different snapshots (Snapshot 3, Snapshot 7, Snapshot 14) to various states. Note that Snapshot 12 has a bug and cannot be restored.",
+        "type": "comment"
+    },
+    "1842": {
+        "file_id": 250,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/screenshot_vm.sh",
+        "type": "filepath"
+    },
+    "1843": {
+        "file_id": 250,
+        "content": "Takes a screenshot of the \"Ubuntu 16.04\" virtual machine and saves it as output.png",
+        "type": "summary"
+    },
+    "1844": {
+        "file_id": 250,
+        "content": "vboxmanage controlvm \"Ubuntu 16.04\" screenshotpng output.png\n# raise error if not running.",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/screenshot_vm.sh:1-2"
+    },
+    "1845": {
+        "file_id": 250,
+        "content": "Takes a screenshot of the \"Ubuntu 16.04\" virtual machine and saves it as output.png",
+        "type": "comment"
+    },
+    "1846": {
+        "file_id": 251,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/start_vm.sh",
+        "type": "filepath"
+    },
+    "1847": {
+        "file_id": 251,
+        "content": "Starts a virtual machine named \"Ubuntu 16.04\" using VirtualBox, in headless mode with display forwarding disabled.",
+        "type": "summary"
+    },
+    "1848": {
+        "file_id": 251,
+        "content": "# vboxmanage startvm \"12c0e77b-5f4a-4d30-b19b-1b105d2042cf\" # Ubuntu 16.04\nnohup xvfb-run --server-num=10 --listen-tcp --server-args=\"-screen 0 1280x800x24\" -f /tmp/.Xauthority vboxsdl --startvm \"Ubuntu 16.04\" &\n# start in headless mode\n# you may not live stream this one! but vrde is available! and you can use ffmpeg for bridging!\n# vboxmanage startvm \"Ubuntu 16.04\" --type headless",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/start_vm.sh:1-5"
+    },
+    "1849": {
+        "file_id": 251,
+        "content": "Starts a virtual machine named \"Ubuntu 16.04\" using VirtualBox, in headless mode with display forwarding disabled.",
+        "type": "comment"
+    },
+    "1850": {
+        "file_id": 252,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/stop_on_ffmpeg_x11_error.py",
+        "type": "filepath"
+    },
+    "1851": {
+        "file_id": 252,
+        "content": "Checking for \"Failed to query xcb pointer\" error in input data and breaking loop upon detection.",
+        "type": "summary"
+    },
+    "1852": {
+        "file_id": 252,
+        "content": "error = \"Failed to query xcb pointer\"\nwhile True:\n    data = input()\n    print(data)\n    if error in data:\n        break",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/stop_on_ffmpeg_x11_error.py:1-6"
+    },
+    "1853": {
+        "file_id": 252,
+        "content": "Checking for \"Failed to query xcb pointer\" error in input data and breaking loop upon detection.",
+        "type": "comment"
+    },
+    "1854": {
+        "file_id": 253,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/stop_vm.sh",
+        "type": "filepath"
+    },
+    "1855": {
+        "file_id": 253,
+        "content": "This script stops a VirtualBox virtual machine named \"12c0e77b-5f4a-4d30-b19b-1b105d2042cf\" running Ubuntu 16.04 and powers it off. If the poweroff fails, it kills related processes to free up resources and prints an error message. The script also notes that it can start the VM in headless mode and mentions using VRDE and ffmpeg for live streaming if needed.",
+        "type": "summary"
+    },
+    "1856": {
+        "file_id": 253,
+        "content": "timeout 10 vboxmanage controlvm \"12c0e77b-5f4a-4d30-b19b-1b105d2042cf\" poweroff # Ubuntu 16.04\n# FIXME: 掉盘了 一般是\n# 就没有更好的固态硬盘盒么\n# 刷固件需要拿出来硬盘\nif [ \"$?\" -ne 0 ]; then\necho \"ERROR: Failed to stop vm.\"\nps aux | grep -i /usr/lib/virtualbox | grep -v grep | awk '{print $2}' | xargs -iabc kill -s TERM abc\nfi\n# start in headless mode\n# you may not live stream this one! but vrde is available! and you can use ffmpeg for bridging!\n# vboxmanage startvm \"Ubuntu 16.04\" --type headless",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/stop_vm.sh:1-14"
+    },
+    "1857": {
+        "file_id": 253,
+        "content": "This script stops a VirtualBox virtual machine named \"12c0e77b-5f4a-4d30-b19b-1b105d2042cf\" running Ubuntu 16.04 and powers it off. If the poweroff fails, it kills related processes to free up resources and prints an error message. The script also notes that it can start the VM in headless mode and mentions using VRDE and ffmpeg for live streaming if needed.",
+        "type": "comment"
+    },
+    "1858": {
+        "file_id": 254,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/the_frozen_forest.service",
+        "type": "filepath"
+    },
+    "1859": {
+        "file_id": 254,
+        "content": "This code is a service file for The Frozen Forest dataset, which is a data creation service. It requires the network to be online and depends on syslog.target. It sets environment variables for DISPLAY, XAUTHORITY, PATH, and HOME. The user is \"hua\" and the ExecStart command runs mount_kali_webdav_dirs.sh script. The WorkingDirectory is /home/hua/agi_workspace and it is wanted by graphical.target.",
+        "type": "summary"
+    },
+    "1860": {
+        "file_id": 254,
+        "content": "[Unit]\nDescription=Data creation service for The Frozen Forest dataset.\nWants=network.target\nAfter=syslog.target network-online.target\n[Service]\nEnvironment=\"DISPLAY=:0\"\nEnvironment=\"XAUTHORITY=/home/hua/.Xauthority\"\nEnvironment=\"PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin\"\nEnvironment=\"HOME=/home/hua\"\nUser=hua\nExecStart=/usr/bin/env /bin/bash mount_kali_webdav_dirs.sh\nWorkingDirectory=/home/hua/agi_workspace\n[Install]\nWantedBy=graphical.target",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/the_frozen_forest.service:1-16"
+    },
+    "1861": {
+        "file_id": 254,
+        "content": "This code is a service file for The Frozen Forest dataset, which is a data creation service. It requires the network to be online and depends on syslog.target. It sets environment variables for DISPLAY, XAUTHORITY, PATH, and HOME. The user is \"hua\" and the ExecStart command runs mount_kali_webdav_dirs.sh script. The WorkingDirectory is /home/hua/agi_workspace and it is wanted by graphical.target.",
+        "type": "comment"
+    },
+    "1862": {
+        "file_id": 255,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab.py",
+        "type": "filepath"
+    },
+    "1863": {
+        "file_id": 255,
+        "content": "Starts an X11 grabber, capturing screen from display 10 and piping the output.",
+        "type": "summary"
+    },
+    "1864": {
+        "file_id": 255,
+        "content": "cmd = \"env XAUTHORITY=/tmp/.Xauthority ffmpeg -f x11grab -i :10 -f image2pipe pipe:1\"\nimport subprocess\np = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)\nwhile True:\n    print(len(p.stdout.readline()))",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab.py:1-8"
+    },
+    "1865": {
+        "file_id": 255,
+        "content": "Starts an X11 grabber, capturing screen from display 10 and piping the output.",
+        "type": "comment"
+    },
+    "1866": {
+        "file_id": 256,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab.sh",
+        "type": "filepath"
+    },
+    "1867": {
+        "file_id": 256,
+        "content": "The code captures X11 window content from a remote server, saves images to a pipe and plays them in real-time.",
+        "type": "summary"
+    },
+    "1868": {
+        "file_id": 256,
+        "content": "cd .\nwhile true; do\n    env XAUTHORITY=/tmp/.Xauthority ffmpeg -f x11grab -r 10 -i :10 -f image2pipe pipe:1 | ffplay -f image2pipe -i - -autoexit\n    sleep 1\ndone;\n# still with some lag! need improvement.\n# env XAUTHORITY=/tmp/.Xauthority ffmpeg -f x11grab -i :10 -f image2pipe pipe:1\n# env XAUTHORITY=/tmp/.Xauthority ffplay -f x11grab -i :10 2>&1",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab.sh:1-9"
+    },
+    "1869": {
+        "file_id": 256,
+        "content": "The code captures X11 window content from a remote server, saves images to a pipe and plays them in real-time.",
+        "type": "comment"
+    },
+    "1870": {
+        "file_id": 257,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab_loop.sh",
+        "type": "filepath"
+    },
+    "1871": {
+        "file_id": 257,
+        "content": "The code is starting X virtual framebuffer (Xvfb) server with a specified resolution, running x11grab.sh in it, and also providing an option to monitor for X11 errors using stop_on_ffmpeg_x11_error.py script.",
+        "type": "summary"
+    },
+    "1872": {
+        "file_id": 257,
+        "content": "cd . # FIX: input/output error\nps aux | grep -i xvfb | grep 11 | grep -v grep | awk '{print $2}' | xargs -iabc kill -s TERM abc\nxvfb-run --server-num=11 --listen-tcp --server-args=\"-screen 0 1280x800x24\" -f /tmp/.Xauthority1 bash x11grab.sh\n# xvfb-run --server-num=11 --listen-tcp --server-args=\"-screen 0 1280x800x24\" -f /tmp/.Xauthority1 bash x11grab.sh | python3 stop_on_ffmpeg_x11_error.py",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab_loop.sh:1-4"
+    },
+    "1873": {
+        "file_id": 257,
+        "content": "The code is starting X virtual framebuffer (Xvfb) server with a specified resolution, running x11grab.sh in it, and also providing an option to monitor for X11 errors using stop_on_ffmpeg_x11_error.py script.",
+        "type": "comment"
+    },
+    "1874": {
+        "file_id": 258,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab_loop_viewer.sh",
+        "type": "filepath"
+    },
+    "1875": {
+        "file_id": 258,
+        "content": "Starts FFplay with X11 grabbing from display 11 and exits when done.",
+        "type": "summary"
+    },
+    "1876": {
+        "file_id": 258,
+        "content": "env XAUTHORITY=/tmp/.Xauthority1 ffplay -f x11grab -i :11 -autoexit",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab_loop_viewer.sh:1-1"
+    },
+    "1877": {
+        "file_id": 258,
+        "content": "Starts FFplay with X11 grabbing from display 11 and exits when done.",
+        "type": "comment"
+    },
+    "1878": {
+        "file_id": 259,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/xvfb_test_loop_double_display.py",
+        "type": "filepath"
+    },
+    "1879": {
+        "file_id": 259,
+        "content": "This script is attempting to run a series of commands using xvfb (X virtual framebuffer) for displaying graphics in a virtual environment. It repeatedly executes the script \"x11grab_loop.sh\" every second until stopped. The commented out section suggests an alternative approach using subprocess and progressbar modules for running commands sequentially with a progress bar.",
+        "type": "summary"
+    },
+    "1880": {
+        "file_id": 259,
+        "content": "# import subprocess\n# # run this using xvfb.\nimport os\n# script_1 = 'xvfb-run --server-num=10 --listen-tcp --server-args=\"-screen 0 1280x800x24\" -f /tmp/.Xauthority vboxsdl --startvm \"Ubuntu 16.04\"'\n# script_2 = 'env XAUTHORITY=/tmp/.Xauthority ffplay -f x11grab -i :10'\n# script_3 = 'vboxmanage controlvm \"Ubuntu 16.04\" poweroff'\nscript_4 = \"bash x11grab_loop.sh\"\nimport time\n# import progressbar\nwhile True:\n    time.sleep(1)\n    os.system(\"cd .\") # FIX: input/output error\n    os.system(script_4)\n# while True:\n#     p1 = subprocess.run(script_1)\n#     p2 = subprocess.run(script_2)\n#     for _ in progressbar.progressbar(range(100)):\n#         time.sleep(1)\n#     os.system(script_3)",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/xvfb_test_loop_double_display.py:1-28"
+    },
+    "1881": {
+        "file_id": 259,
+        "content": "This script is attempting to run a series of commands using xvfb (X virtual framebuffer) for displaying graphics in a virtual environment. It repeatedly executes the script \"x11grab_loop.sh\" every second until stopped. The commented out section suggests an alternative approach using subprocess and progressbar modules for running commands sequentially with a progress bar.",
+        "type": "comment"
+    },
+    "1882": {
+        "file_id": 260,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/xvfb_test_loop_double_display.sh",
+        "type": "filepath"
+    },
+    "1883": {
+        "file_id": 260,
+        "content": "Launching Python script for double-display testing with XVFB.",
+        "type": "summary"
+    },
+    "1884": {
+        "file_id": 260,
+        "content": "python3 xvfb_test_loop_double_display.py",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/xvfb_test_loop_double_display.sh:1-1"
+    },
+    "1885": {
+        "file_id": 260,
+        "content": "Launching Python script for double-display testing with XVFB.",
+        "type": "comment"
+    },
+    "1886": {
+        "file_id": 261,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/xvfbwrapper_vboxmanager_test.py",
+        "type": "filepath"
+    },
+    "1887": {
+        "file_id": 261,
+        "content": "Code is attempting to run a virtual display (Xvfb) and then launch a virtual machine (Ubuntu 16.04) using VBoxSDL commands within the Xvfb display context. The code also includes a progress bar for a simulated long-running task, but it doesn't seem to be functioning properly.",
+        "type": "summary"
+    },
+    "1888": {
+        "file_id": 261,
+        "content": "from xvfbwrapper import Xvfb\n# it sucks!\n# vdisplay = Xvfb(display=3)\n# vdisplay.start()\nimport os\ncmd = 'vboxsdl --startvm \"Ubuntu 16.04\"' \nwith Xvfb(display=3) as vdisplay: # not working...\n    os.system(cmd)\n# try:\n#     # launch stuff inside virtual display here.\n#     # os.system('bash start_vm.sh')\n#     import time\n#     import progressbar\n#     for _ in progressbar.progressbar(range(1000)):\n#         time.sleep(1)\n# finally:\n#     vdisplay.stop()",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/xvfbwrapper_vboxmanager_test.py:2-23"
+    },
+    "1889": {
+        "file_id": 261,
+        "content": "Code is attempting to run a virtual display (Xvfb) and then launch a virtual machine (Ubuntu 16.04) using VBoxSDL commands within the Xvfb display context. The code also includes a progress bar for a simulated long-running task, but it doesn't seem to be functioning properly.",
+        "type": "comment"
+    },
+    "1890": {
+        "file_id": 262,
+        "content": "/ubuntu_qemu_utm_arm_record/test_record/video_record_script.sh",
+        "type": "filepath"
+    },
+    "1891": {
+        "file_id": 262,
+        "content": "Executing script to record screen with 1920x1080 resolution at 30fps, using ffmpeg and python's pyscreenshot_output.py. Saving the video as 'video_record.mp4'.",
+        "type": "summary"
+    },
+    "1892": {
+        "file_id": 262,
+        "content": "/usr/bin/python3 pyscreenshot_output.py | ffmpeg -y -f rawvideo -pix_fmt bgr0 -s 1920x1080 -i - -r 30 -c:v libx264 ./test_record/video_record.mp4",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/test_record/video_record_script.sh:1-1"
+    },
+    "1893": {
+        "file_id": 262,
+        "content": "Executing script to record screen with 1920x1080 resolution at 30fps, using ffmpeg and python's pyscreenshot_output.py. Saving the video as 'video_record.mp4'.",
+        "type": "comment"
+    },
+    "1894": {
+        "file_id": 263,
+        "content": "/usb_power_management/README.md",
+        "type": "filepath"
+    },
+    "1895": {
+        "file_id": 263,
+        "content": "This code discusses strategies to keep storage drives and USB devices alive, mentioning potential causes of disconnection like idle state, using NAS for a more robust solution, and considering platform independence.",
+        "type": "summary"
+    },
+    "1896": {
+        "file_id": 263,
+        "content": "it would be a joke if we use randomly self-detaching drives to run our precious projects.\nthis directory focus on how to get our storage drives and usb devices alive.\n----\nthe primary cause of disk disconnection could be idle state. check for removable drives and run file operations like `touch` and `rm` in short intervals on them.\n----\ndifferent OSes have different ways to keep devices alive. however, using NAS can be more robust and platform independent. but that only applies to storage devices.\nalthough there have been some \"netusb\" or \"serial over tcp\" stuff, first we need to make sure the actual physical devices is online. blame me if these \"netusb\" related libraries handle device suspension.",
+        "type": "code",
+        "location": "/usb_power_management/README.md:1-13"
+    },
+    "1897": {
+        "file_id": 263,
+        "content": "This code discusses strategies to keep storage drives and USB devices alive, mentioning potential causes of disconnection like idle state, using NAS for a more robust solution, and considering platform independence.",
+        "type": "comment"
+    },
+    "1898": {
+        "file_id": 264,
+        "content": "/usb_power_management/linux/README.md",
+        "type": "filepath"
+    },
+    "1899": {
+        "file_id": 264,
+        "content": "This code addresses UAS issues and proposes solutions for controlling programs, handling events, safely removing mountpoints, and blacklisting or disabling unsupported devices. Additionally, it configures automatic mounting of external/removable drives in Linux USB power management and provides instructions for device resetting using specific IDs.",
+        "type": "summary"
+    }
+}

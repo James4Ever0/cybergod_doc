@@ -1,0 +1,10 @@
+{
+    "summary": "Creating two services, Xorg-VNC-Client and VNC-Server with specified images.",
+    "details": [
+        {
+            "comment": "Creating two services, Xorg-VNC-Client and VNC-Server with specified images.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/compose.yaml\":0-4",
+            "content": "services:\n  xorg-vnc-client:\n    build: .\n  vnc-server:\n    image: \"dorowu/ubuntu-desktop-lxde-vnc:focal\""
+        }
+    ]
+}

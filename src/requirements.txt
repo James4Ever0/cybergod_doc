@@ -1,0 +1,12 @@
+easyprocess
+jsonlines
+pynput
+einops
+datetime
+parse
+mss
+opencv-python
+pydantic-numpy
+hypothesis
+stopit
+keysymdef

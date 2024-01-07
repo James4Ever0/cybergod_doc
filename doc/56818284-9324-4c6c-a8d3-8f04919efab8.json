@@ -1,0 +1,10 @@
+{
+    "summary": "This code is discussing various storage options for Docker, specifically focusing on the `--storage-opt` flag and how it interacts with different file systems. It mentions that `--storage-opt` is supported only for overlay over xfs with 'pquota' mount option, and provides examples of using different sizes and file systems like devmapper, LVM, ZFS, and vfs.",
+    "details": [
+        {
+            "comment": "This code is discussing various storage options for Docker, specifically focusing on the `--storage-opt` flag and how it interacts with different file systems. It mentions that `--storage-opt` is supported only for overlay over xfs with 'pquota' mount option, and provides examples of using different sizes and file systems like devmapper, LVM, ZFS, and vfs.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/launch_docker_devicemapper_limit_storage.sh\":0-9",
+            "content": "# --storage-opt is supported only for overlay over xfs with 'pquota' mount option.\n# change \"data-root\" to somewhere else in /etc/docker/daemon.json.\n# edit /etc/fstab and add our xfs block on new line (find uuid using blkid)\ndocker run  --storage-opt size=10M --rm -it alpine\n# when using devmapper, make sure size is greater than 10G (default)\n# https://docs.docker.com/storage/storagedriver/device-mapper-driver/#configure-direct-lvm-mode-for-production\n# docker run --storage-opt size=11G --rm -it alpine\n# zfs, vfs (not a unionfs, but for testing) supports disk quota."
+        }
+    ]
+}

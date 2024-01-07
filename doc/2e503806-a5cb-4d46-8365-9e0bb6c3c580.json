@@ -1,0 +1,10 @@
+{
+    "summary": "Creating HDF5 file named \"mytestfile.hdf5\", with a dataset \"myset\" of size 100 with boolean dtype.",
+    "details": [
+        {
+            "comment": "Creating HDF5 file named \"mytestfile.hdf5\", with a dataset \"myset\" of size 100 with boolean dtype.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/hdf5_test.py\":0-6",
+            "content": "import h5py\n# import numpy as np\nwith h5py.File(\"mytestfile.hdf5\", \"w\") as f:\n    # dset = f.create_dataset(\"mydataset\", (100,), dtype='i')\n    f.create_dataset(\"myset\", (100,), dtype=\"b\")"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Generating and printing all possible combinations of letters and digits, copying the dataset twice, cutting the dataset to create a new one, shuffling the dataset.",
+    "details": [
+        {
+            "comment": "Generating and printing all possible combinations of letters and digits, copying the dataset twice, cutting the dataset to create a new one, shuffling the dataset.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/metalearning_random_shuffle/main.py\":0-17",
+            "content": "import string\ndataset = list(string.ascii_letters + string.digits)\nprint(dataset)\n# copy\nprint(dataset * 2)\n# cut\nprint(dataset[0:5] + dataset[10:])\n# shuffle\nimport random\nrandom.shuffle(dataset)\nprint(dataset)\n# and this is what you must learn"
+        }
+    ]
+}

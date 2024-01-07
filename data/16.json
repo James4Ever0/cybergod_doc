@@ -1,0 +1,536 @@
+{
+    "1600": {
+        "file_id": 208,
+        "content": "le.log(`posted ${event} event`, res);\n    // console.log(`posted ${event} event`, res.json());\n  }).catch((err) => {\n    console.log(`error posting ${event} event`, err);\n  });\n}\nconst pageIdentifierPrefix = \"pageIdentifier_\";\nfunction getPageIdentifierFromExposedFunctionName() {\n  let wk = Object.keys(window)\n  let candidate_keys = [];\n  for (let k of wk) {\n    if (k.startsWith(pageIdentifierPrefix)) {\n      let myIdentifier = k.replace(pageIdentifierPrefix, \"\").replace(/\\_/g, \"-\");\n      candidate_keys.push(myIdentifier);\n    }\n  }\n  if (candidate_keys.length == 1) {\n    return candidate_keys[0];\n  } else {\n    console.error('Invalid page identifier candidates:', candidate_keys)\n  }\n  return 'unknown'\n}\nconst pageIdentifier = getPageIdentifierFromExposedFunctionName();\nconsole.log(`pageIdentifier: ${pageIdentifier}`)\nconst screenshotInterval = 2 * 1000;\n// usually we take screenshot on demand, not like this.\n// setInterval(() => submitScreenshot(pageIdentifier), screenshotInterval)\n// console.log(`taking screen",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/index.js:115-144"
+    },
+    "1601": {
+        "file_id": 208,
+        "content": "Sending event and handling errors\nExtracting page identifier from exposed function names\nSetting screenshot interval",
+        "type": "comment"
+    },
+    "1602": {
+        "file_id": 208,
+        "content": "shot every ${screenshotInterval} ms`)\nfunction addSpecificEventListener(event) {\n  document.addEventListener(event, (e) => {\n    // console.log('event', event, e);\n    // debugger\n    // if (isVariableEmpty(pageIdentifier)) {\n    //   pageIdentifier = getPageIdentifierFromExposedFunctionName()\n    // not working for content script\n    // fetch(identifierUrl, {\n    //   method: \"GET\"\n    // }).then(response => {\n    //   pageIdentifier = response.json()['client_id'];\n    //   sendHIDEvent(event, e);\n    // })\n    // window.generateUUID(JSON.stringify({})).then(r => {\n    //   pageIdentifier = r;\n    //   sendHIDEvent(event, e);\n    // });\n    // } \n    // else {\n    sendHIDEvent(event, e);\n    // }\n  });\n}\n// window.generateUUID().then(pageIdentifier => {\nfor (const event of eventTypes) {\n  addSpecificEventListener(event, pageIdentifier);\n}\n// }); // this can be expected from playwright.\nfunction setElementAttributeAsCursorReady(element, elementId) {\n  element.style.position = \"absolute\";\n  element.style.pointerEvent",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/index.js:144-180"
+    },
+    "1603": {
+        "file_id": 208,
+        "content": "Sets up event listeners for specified events to send HID (Hardware Input Device) events. The page identifier is retrieved based on the conditions specified in the function, and the listeners are added for each event type.",
+        "type": "comment"
+    },
+    "1604": {
+        "file_id": 208,
+        "content": "s = \"none\";\n  element.id = elementId;\n}\nfunction createOmniscentPointerElement(elementId) {\n  // var divElement = document.createElement(\"div\");\n  // divElement.style.width = \"10px\";\n  // divElement.style.height = \"10px\";\n  // divElement.style.backgroundColor = \"red\";\n  // divElement.style.borderRadius = \"50%\";\n  // setElementAttributeAsCursorReady(divElement, elementId)\n  // Create the img element\n  var imgElement = document.createElement(\"img\");\n  imgElement.src = \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAUCAQAAAD8O3+kAAAA+ElEQVR4nHXOsSsEcBjG8S/nkOIGk+EyXHGuDIazyMRikbKgLC4ZZGAysPEnmC9lvOnKZjJcWQyUOqWQYpS7zrnjvpa7Y/jdO71Pn3qfFw7oOD/sd5C407IXpEmfnWmwE6CkNd9M/7AVoLL64lSdjSDpk5M11oOkD6aqrARJ7x2rsBwkvTNRZjFIeuPoBwtB0qLj78xBz19riSM+gSgjsWKetSZ9cck811ycUKALiABJKzbcdNiS53L27/mUVXclS/bUuskSiTZNuC05oqRnv/VYDtvULXkGgEi0cOurg4/EWpZjqLlllly1t0C8Rf3tAyNckaGvFX8Bxhaqb4UTp4MAAAAASUVORK5CYII=\";\n  setElementAttributeAsCursorReady(imgElement, elementId);\n  // Append the img element to the div element\n  //",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/index.js:180-201"
+    },
+    "1605": {
+        "file_id": 208,
+        "content": "Creates an omniscent pointer element with a red dot cursor and sets it as ready for the given element ID.",
+        "type": "comment"
+    },
+    "1606": {
+        "file_id": 208,
+        "content": " divElement.appendChild(imgElement);\n  // Insert the div element into the document body\n  document.body.appendChild(imgElement);\n  // document.body.appendChild(divElement);\n  return imgElement;\n  // return divElement;\n}\nconst pointerElementId = 'omniscent_pointer';\nfunction isVariableEmpty(v) {\n  return v === undefined | v == null\n}\nfunction getOmniscentPointer() {\n  // while (isVariableEmpty(vpointer)) {\n  var pointer = document.getElementById(pointerElementId);\n  if (isVariableEmpty(pointer)) {\n    console.log('pointer is undefined');\n    console.log('creating pointer element');\n    pointer = createOmniscentPointerElement(pointerElementId);\n    // pointer = createOmniscentPointerElement(pointerElementId);\n  }\n  // }\n  return pointer;\n}\n// sometimes this pointer is misaligned.\nfunction addMouseEventTracer(eventName) {\n  document.addEventListener(eventName, function (event) {\n    const x = event.clientX;\n    const y = event.clientY;\n    // const x = event.layerX;\n    // const y = event.layerY;\n    // const x = even",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/index.js:201-233"
+    },
+    "1607": {
+        "file_id": 208,
+        "content": "The code is responsible for managing the 'omniscent_pointer' element on the webpage. It checks if the pointer element is already present, creates it if not, and returns the pointer element. Additionally, an event listener is added to track mouse movements by capturing the clientX and clientY properties of the event object.",
+        "type": "comment"
+    },
+    "1608": {
+        "file_id": 208,
+        "content": "t.x;\n    // const y = event.y;\n    // var pointer = getOmniscentPointer();\n    const pointer = getOmniscentPointer();\n    // debugger;\n    // Set the position of the pointer element\n    pointer.style.left = x + 'px';\n    pointer.style.top = y + 'px';\n    // pointer.style.marginLeft = x + 'px';\n    // pointer.style.marginTop = y + 'px';\n  });\n}\n// it is this page creating havoc.\n// https://darkreader.org/help/zh-CN/\n// a little bit of fucked up.\n// let's not do this.\n// instead, render the mouse cursor later. could be more accurate and precise.\n// document.addEventListener('DOMContentLoaded', function () {\n// const mouseEvents = ['mousedown', 'mouseup', 'mousemove'];\n// for (let e of mouseEvents) {\n//   // Event listener for mouse movement\n//   addMouseEventTracer(e)\n// }\n// });",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/index.js:233-264"
+    },
+    "1609": {
+        "file_id": 208,
+        "content": "This code is setting up event listeners for mouse events (mousedown, mouseup, and mousemove) to track the position of the cursor. It initially attempted to use a getOmniscentPointer function, but has been modified to set the position of the pointer element directly using CSS styles. The code will run after the DOM content is loaded, and it appears that there was some prior attempt to create a separate function for each event listener, which has now been simplified into a single loop over all events.",
+        "type": "comment"
+    },
+    "1610": {
+        "file_id": 209,
+        "content": "/ubuntu_qemu_utm_arm_record/README.md",
+        "type": "filepath"
+    },
+    "1611": {
+        "file_id": 209,
+        "content": "The code provides instructions for setting up a recording environment, installing software packages, and ensuring display settings. However, it seems incomplete as it only briefly mentions preventing deadlocks without further explanation or detail.",
+        "type": "summary"
+    },
+    "1612": {
+        "file_id": 209,
+        "content": "you need to make all scripts under this folder read-only.\nmount folder related to recordings separately.\nso you need to mount two webdav folders, one is read-only, one is writable.\nname your dataset as \"the frozen forest\". name this model as \"cybergod\".\ndesign logo for both of them.\nwhere is the damn mouse cursor? shall we use obs instead of mss?\ncreate exception hooks for all recorders. if any exception is thrown just set redis flag to disable/false/off.\non ubuntu 16.04 we only have python3.5, however we can install up-to-date python via snap. will it work? (nope. network sucks.)\nyou can also consider conda?\nsudo snap install core snapd\nsudo apt install snapd ubuntu-core-snapd-units\nxrandr --output Virtual1 --mode 1280x800\npip3 install pip==18.0\npip3 install --user -r requirements.txt\nsudo apt install python3-tk python3-dev\nsudo apt install ffmpeg\nsudo python3 main_recorder.py\n----\nthe wallpaper can change. better execute some command to check if screen is locked.\n----\nuse temp dir to store recordings, p",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/README.md:1-41"
+    },
+    "1613": {
+        "file_id": 209,
+        "content": "This code contains instructions for setting up a recording environment with specific folder and file configurations, mounting webdav folders, naming datasets and models, designing logos, considering alternative software options, installing required software packages, adjusting display settings, running the main recorder script, checking wallpaper, and monitoring screen lock status.",
+        "type": "comment"
+    },
+    "1614": {
+        "file_id": 209,
+        "content": "reventing deadlocks. (pending!)",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/README.md:41-41"
+    },
+    "1615": {
+        "file_id": 209,
+        "content": "This code mentions preventing deadlocks but seems incomplete or unfinished.",
+        "type": "comment"
+    },
+    "1616": {
+        "file_id": 210,
+        "content": "/ubuntu_qemu_utm_arm_record/audio_record.py",
+        "type": "filepath"
+    },
+    "1617": {
+        "file_id": 210,
+        "content": "This code imports audio processing and error handling libraries, sets recording parameters, checks input devices, initializes a PyAudio stream for recording, reads audio data from the stream and writes to WAV file with timestamps, periodically commits, handles errors, prints warning if Redis is off, stops, closes resources upon completion or failure.",
+        "type": "summary"
+    },
+    "1618": {
+        "file_id": 210,
+        "content": "import parse\nfrom pyaudio_get_device_info import get_audio_input_device_list\nimport platform\nfrom utils import (\n    filepaths,\n    check_redis_on,\n    check_redis_off,\n    TimestampedContext,\n    set_redis_off_on_exception,\n)\nimport pyaudio\nimport wave\nset_redis_off_on_exception()\nchunk = 1024  # Record in chunks of 1024 samples\nsample_format = pyaudio.paInt16  # 16 bits per sample\nchannels = 2\nfs = 44100  # Record at 44100 samples per second\n# seconds = 3\n# no seconds limit.\n# filename = \"output.wav\"\np = pyaudio.PyAudio()  # Create an interface to PortAudio\n# sudo modprobe snd-aloop\n# use loopback device 0?\nsystem = platform.system()\ninput_device_list = get_audio_input_device_list(p)\ndef get_input_device_index(input_device_list, pattern):\n    for index, device_name in input_device_list:\n        if parse.parse(pattern, device_name):\n            print(\"SELECT AUDIO INPUT DEVICE: %s\" % device_name)\n            return index\n    raise Exception(\"Cannot find audio input device index with pattern:\", pattern)\nif system ==",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/audio_record.py:1-43"
+    },
+    "1619": {
+        "file_id": 210,
+        "content": "Imports libraries for audio processing and error handling, sets recording parameters, checks the audio input device list, and defines a function to get the index of an input device based on a pattern.",
+        "type": "comment"
+    },
+    "1620": {
+        "file_id": 210,
+        "content": " \"Windows\":\n    raise Exception(\"Windows is currently not supported.\")\nelif system == \"Darwin\":\n    input_device_index = get_input_device_index(input_device_list, \"BlackHole {}\")\nelif system == \"Linux\":\n    input_device_index = get_input_device_index(\n        input_device_list, \"Loopback: PCM (hw:{},1)\"\n    )\n# input_device_index = 2 # shall you automate this?\n#\n# Loopback: PCM (hw:{},1)\nprint(\"Recording\")\nstream = p.open(\n    format=sample_format,\n    channels=channels,  # this is microphone. how to record internal audio?\n    rate=fs,\n    frames_per_buffer=chunk,  # this is the chunk.\n    # macos: 0 for blackhole. but you must set blackhole as output.\n    input_device_index=input_device_index,\n    input=True,\n)\n# frames = []  # Initialize array to store frames\nwf = wave.open(filepaths.audio_record, \"wb\")\nwf.setnchannels(channels)\nwf.setsampwidth(p.get_sample_size(sample_format))\nwf.setframerate(fs)\n# Store data in chunks for 3 seconds\n# for i in range(0, int(fs / chunk * seconds)):\nif check_redis_on():\n    with T",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/audio_record.py:43-78"
+    },
+    "1621": {
+        "file_id": 210,
+        "content": "Code is checking the system type and selecting the appropriate input device for audio recording. It then initializes a PyAudio stream for recording and creates a Wave file object to store the recorded data. The code is written in such a way that it can handle different operating systems, with specific input devices and configurations for each platform (Windows, macOS, Linux).",
+        "type": "comment"
+    },
+    "1622": {
+        "file_id": 210,
+        "content": "imestampedContext(filepaths.audio_timestamps) as t:\n        while check_redis_off() is False:\n            data = stream.read(chunk)\n            wf.writeframes(data)\n            # wf.writeframes(b\"\".join(frames))\n            # frames.append(data)\n            t.commit()\n        # Stop and close the stream\n        stream.stop_stream()\n        stream.close()\n        # Terminate the PortAudio interface\n        p.terminate()\n        print(\"Finished recording\")\n        # Save the recorded data as a WAV file\n        wf.close()\n        print(\"Saved audio recording to: {}\".format(filepaths.audio_record))\nelse:\n    print(\"AudioRecorder: Can't start. Redis signal is off.\".upper())",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/audio_record.py:78-98"
+    },
+    "1623": {
+        "file_id": 210,
+        "content": "Reading audio data from stream, writing to WAV file, and committing timestamps periodically. If Redis is off, print a warning message. Stop, close, and terminate resources upon completion or failure.",
+        "type": "comment"
+    },
+    "1624": {
+        "file_id": 211,
+        "content": "/ubuntu_qemu_utm_arm_record/enable_audio_loopback.sh",
+        "type": "filepath"
+    },
+    "1625": {
+        "file_id": 211,
+        "content": "Enables audio loopback module for Ubuntu QEMU/UTM ARM system.",
+        "type": "summary"
+    },
+    "1626": {
+        "file_id": 211,
+        "content": "sudo modprobe snd-aloop",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/enable_audio_loopback.sh:1-1"
+    },
+    "1627": {
+        "file_id": 211,
+        "content": "Enables audio loopback module for Ubuntu QEMU/UTM ARM system.",
+        "type": "comment"
+    },
+    "1628": {
+        "file_id": 212,
+        "content": "/ubuntu_qemu_utm_arm_record/hdf5_test.py",
+        "type": "filepath"
+    },
+    "1629": {
+        "file_id": 212,
+        "content": "Creating HDF5 file named \"mytestfile.hdf5\", with a dataset \"myset\" of size 100 with boolean dtype.",
+        "type": "summary"
+    },
+    "1630": {
+        "file_id": 212,
+        "content": "import h5py\n# import numpy as np\nwith h5py.File(\"mytestfile.hdf5\", \"w\") as f:\n    # dset = f.create_dataset(\"mydataset\", (100,), dtype='i')\n    f.create_dataset(\"myset\", (100,), dtype=\"b\")",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/hdf5_test.py:1-7"
+    },
+    "1631": {
+        "file_id": 212,
+        "content": "Creating HDF5 file named \"mytestfile.hdf5\", with a dataset \"myset\" of size 100 with boolean dtype.",
+        "type": "comment"
+    },
+    "1632": {
+        "file_id": 213,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_prepare_dirs_loop.sh",
+        "type": "filepath"
+    },
+    "1633": {
+        "file_id": 213,
+        "content": "Moves to directory and loops through loading a WebDAV configuration file.",
+        "type": "summary"
+    },
+    "1634": {
+        "file_id": 213,
+        "content": "cd '/media/root/Toshiba XG3/works/agi_computer_control'\nwhile true; do\n    cd .\n    tmuxp load \"/media/root/Toshiba XG3/works/agi_computer_control/ubuntu_qemu_utm_arm_record/kali_prepare_two_webdav_dirs.yaml\"\ndone",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_prepare_dirs_loop.sh:1-5"
+    },
+    "1635": {
+        "file_id": 213,
+        "content": "Moves to directory and loops through loading a WebDAV configuration file.",
+        "type": "comment"
+    },
+    "1636": {
+        "file_id": 214,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_prepare_two_webdav_dirs.sh",
+        "type": "filepath"
+    },
+    "1637": {
+        "file_id": 214,
+        "content": "This code is killing a tmux session, loading a YAML configuration file into tmuxp to create multiple windows, and running the same command again with different methods in case one fails. It uses Xvfb and gnome-terminal for display purposes.",
+        "type": "summary"
+    },
+    "1638": {
+        "file_id": 214,
+        "content": "# create some room for tmux.\n# use tmux automation tool, reading yaml config and create multiple windows.\ntmux kill-session -t kali_prepare_two_webdav_dirs\n# tmuxp load kali_prepare_two_webdav_dirs.yaml\n# use absolute path.\n# nohup xvfb-run --server-num=12 --listen-tcp --server-args=\"-screen 0 1280x800x24\" -f /tmp/.Xauthority2 gnome-terminal --display=12 -- tmuxp load \"/media/root/Toshiba XG3/works/agi_computer_control/ubuntu_qemu_utm_arm_record/kali_prepare_two_webdav_dirs.yaml\" & \n# nohup xvfb-run --server-num=12 --listen-tcp --server-args=\"-screen 0 1280x800x24\" -f /tmp/.Xauthority2 gnome-terminal --display=12 -- tmuxp load \"/media/root/Toshiba XG3/works/agi_computer_control/ubuntu_qemu_utm_arm_record/kali_prepare_two_webdav_dirs.yaml\" & \n# gnome-terminal -- tmuxp load \"/media/root/Toshiba XG3/works/agi_computer_control/ubuntu_qemu_utm_arm_record/kali_prepare_two_webdav_dirs.yaml\"",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_prepare_two_webdav_dirs.sh:1-10"
+    },
+    "1639": {
+        "file_id": 214,
+        "content": "This code is killing a tmux session, loading a YAML configuration file into tmuxp to create multiple windows, and running the same command again with different methods in case one fails. It uses Xvfb and gnome-terminal for display purposes.",
+        "type": "comment"
+    },
+    "1640": {
+        "file_id": 215,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_prepare_two_webdav_dirs.yaml",
+        "type": "filepath"
+    },
+    "1641": {
+        "file_id": 215,
+        "content": "This code sets up two WebDAV directories, one for reading and one for read-write access. It uses the \"webdav-cli\" tool to connect to a host (10.0.1.6) on ports 8110 and 8111 with root credentials. The first directory is for the \"ubuntu_qemu_utm_arm_record\" folder, while the second one is for the \"recordings\" folder within the same path. Different permissions are granted to each directory.",
+        "type": "summary"
+    },
+    "1642": {
+        "file_id": 215,
+        "content": "session_name: kali_prepare_two_webdav_dirs\nwindows:\n  - window_name: dev window\n    layout: tiled\n    panes:\n      - shell_command:\n        - \"webdav-cli --host=10.0.1.6 --port=8110 --username=root --password=root --path=/media/root/Toshiba\\\\ XG3/works/agi_computer_control/ubuntu_qemu_utm_arm_record/ --rights=canRead,canGetMimeType,canGetSizecanGetChildren,canGetProperty,canGetProperties,canGetCreationDate,canGetLastModifiedDate,canGetWebName,canGetType\"\n      - shell_command:\n        - \"webdav-cli --host=10.0.1.6 --port=8111 --username=root --password=root --path=/media/root/Toshiba\\\\ XG3/works/agi_computer_control/recordings/ --rights=canCreate,canDelete,canMove,canRename,canAppend,canWrite,canRead,canSource,canGetMimeType,canGetSize,canAddChild,canRemoveChild,canGetChildren,canSetProperty,canGetProperty,canGetProperties,canRemoveProperty,canGetCreationDate,canGetLastModifiedDate,canGetWebName,canGetType\"",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_prepare_two_webdav_dirs.yaml:1-9"
+    },
+    "1643": {
+        "file_id": 215,
+        "content": "This code sets up two WebDAV directories, one for reading and one for read-write access. It uses the \"webdav-cli\" tool to connect to a host (10.0.1.6) on ports 8110 and 8111 with root credentials. The first directory is for the \"ubuntu_qemu_utm_arm_record\" folder, while the second one is for the \"recordings\" folder within the same path. Different permissions are granted to each directory.",
+        "type": "comment"
+    },
+    "1644": {
+        "file_id": 216,
+        "content": "/ubuntu_qemu_utm_arm_record/launch_server.cmd",
+        "type": "filepath"
+    },
+    "1645": {
+        "file_id": 216,
+        "content": "Executes WebDAV command to connect to host, port, and path for recordings.",
+        "type": "summary"
+    },
+    "1646": {
+        "file_id": 216,
+        "content": "webdav-cli --host 192.168.56.1 --port 8111 --username root --password root --path=D:\\works\\agi_computer_recordings\\recordings ",
+        "type": "code",
+        "location": "/propaganda/agi_computer_recordings/launch_server.cmd:1-1"
+    },
+    "1647": {
+        "file_id": 216,
+        "content": "Executes WebDAV command to connect to host, port, and path for recordings.",
+        "type": "comment"
+    },
+    "1648": {
+        "file_id": 217,
+        "content": "/ubuntu_qemu_utm_arm_record/macos_iterate_windows.sh",
+        "type": "filepath"
+    },
+    "1649": {
+        "file_id": 217,
+        "content": "This script calls the `get_window_id` function from the `screenshot` module and prints its output after filtering for \"Name\" using grep and displays it with less. Alternatively, OBS and OBS-websocket can be used for screen recording with iTerm enabling the capability.",
+        "type": "summary"
+    },
+    "1650": {
+        "file_id": 217,
+        "content": "python3 -c \"from screenshot import get_window_id; print(get_window_id.get_window_info(options=get_window_id.build_option_bitmask()))\" | grep Name | less\n# or use obs, then use obs-websocket to take screeenshots.\n# enable screen recording capability with iterm.",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_iterate_windows.sh:1-5"
+    },
+    "1651": {
+        "file_id": 217,
+        "content": "This script calls the `get_window_id` function from the `screenshot` module and prints its output after filtering for \"Name\" using grep and displays it with less. Alternatively, OBS and OBS-websocket can be used for screen recording with iTerm enabling the capability.",
+        "type": "comment"
+    },
+    "1652": {
+        "file_id": 218,
+        "content": "/ubuntu_qemu_utm_arm_record/macos_take_screenshot.py",
+        "type": "filepath"
+    },
+    "1653": {
+        "file_id": 218,
+        "content": "Taking a screenshot of window with ID 9859 and saving it as \"output.png\".",
+        "type": "summary"
+    },
+    "1654": {
+        "file_id": 218,
+        "content": "from screenshot import screencapture\nwindow_id = 9859\nscreencapture.take_screenshot(window_id, filename=\"output.png\")",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_take_screenshot.py:1-5"
+    },
+    "1655": {
+        "file_id": 218,
+        "content": "Taking a screenshot of window with ID 9859 and saving it as \"output.png\".",
+        "type": "comment"
+    },
+    "1656": {
+        "file_id": 219,
+        "content": "/ubuntu_qemu_utm_arm_record/macos_utm_run_qemu.sh",
+        "type": "filepath"
+    },
+    "1657": {
+        "file_id": 219,
+        "content": "Both comments describe setting up a QEMU virtual machine with ARM architecture using Ubuntu ARM image, configuring hardware settings and network, and utilizing Spice protocol for display and serial communication.",
+        "type": "summary"
+    },
+    "1658": {
+        "file_id": 219,
+        "content": "# https://vaibhavkaushal.com/posts/ubuntu-focal-on-apple-silicon-m1/#step-4---launch-acvm\n# EFI_PATH=\"/Volumes/Toshiba XG3/QEMU/EFI/QEMU_EFI.fd\"\nEFI_PATH=\"/Volumes/Toshiba XG3/QEMU/EFI/edk2-aarch64-code.fd\"\nIMAGE_PATH=\"/Volumes/Toshiba XG3/QEMU/Images/335D6651-2B4B-47A7-99B4-CBFB1EFDEFF8.qcow2\"\nqemu-system-aarch64 \\\n  -serial stdio \\\n  -M virt,highmem=off \\\n  -accel hvf \\\n  -cpu cortex-a72 \\\n  -smp 4,cores=4 \\\n  -m 2048 \\\n  -bios \"$EFI_PATH\" \\\n  -device virtio-gpu-pci \\\n  -display default,show-cursor=on \\\n  -device qemu-xhci \\\n  -device usb-kbd \\\n  -device usb-tablet \\\n  -device intel-hda \\\n  -device hda-duplex \\\n  -drive file=\"$IMAGE_PATH\",if=virtio,cache=writethrough \n  # -vnc unix:$HOME/.qemu_vnc\n  # -vnc :1,password=off # 5901\n  # -vnc :1,password=on # 5901\n# no visual?\n# https://www.jianshu.com/p/ccde2786ebf8\n##################\n# make snapshots #\n##################\n# CREATE: qemu-img snapshot -c <SNAPSHOT_NAME> <QCOW2_PATH>\n# LIST: qemu-img snapshot -l <QCOW2_PATH>\n# APPLY: qemu-img snapshot -a <SNAPSHOT_NAME>",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_utm_run_qemu.sh:1-35"
+    },
+    "1659": {
+        "file_id": 219,
+        "content": "Launching Ubuntu on Apple M1 using QEMU with EFI boot, virtual devices and a virtio image drive.",
+        "type": "comment"
+    },
+    "1660": {
+        "file_id": 219,
+        "content": " <QCOW2_PATH>\n# DELETE: qemu-img snapshot -d <SNAPSHOT_NAME> <QCOW2_PATH>\n# https://blog.csdn.net/liu_xing_hui/article/details/32718839\n# refer to: https://qemu.readthedocs.io/en/latest/system/vnc-security.html\n# /Applications/UTM.app/Contents/XPCServices/QEMUHelper.xpc/Contents/MacOS/QEMULauncher.app/Contents/MacOS/QEMULauncher /Applications/UTM.app/Contents/Frameworks/qemu-aarch64-softmmu.framework/Versions/A/qemu-aarch64-softmmu -L /Applications/UTM.app/Contents/Resources/qemu -S -spice unix=on,addr=/Users/jamesbrown/Library/Group Containers/WDNLXAD4W8.com.utmapp.UTM/B54F0831-B34F-404D-B600-5E2886D8AC53.spice,disable-ticketing=on,image-compression=off,playback-compression=off,streaming-video=off,gl=off -chardev spiceport,id=org.qemu.monitor.qmp,name=org.qemu.monitor.qmp.0 -mon chardev=org.qemu.monitor.qmp,mode=control -nodefaults -vga none -device virtio-net-pci,mac=9A:B7:7D:21:25:67,netdev=net0 -netdev vmnet-shared,id=net0 -device virtio-ramfb -cpu host -smp cpus=4,sockets=1,cores=4,th",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_utm_run_qemu.sh:35-42"
+    },
+    "1661": {
+        "file_id": 219,
+        "content": "Creates a snapshot of the QCOW2 image with no discard.\nRefers to resources for qemu VNC security and UTM app files.\nLaunches qemu-aarch64-softmmu with specific options and settings.",
+        "type": "comment"
+    },
+    "1662": {
+        "file_id": 219,
+        "content": "reads=1 -machine virt -accel hvf -drive if=pflash,format=raw,unit=0,file=/Applications/UTM.app/Contents/Resources/qemu/edk2-aarch64-code.fd,readonly=on -drive if=pflash,unit=1,file=/Volumes/Toshiba XG3/UTM VMs/Ubuntu ARM.utm/Data/efi_vars.fd -m 2048 -device intel-hda -device hda-duplex -device nec-usb-xhci,id=usb-bus -device usb-tablet,bus=usb-bus.0 -device usb-mouse,bus=usb-bus.0 -device usb-kbd,bus=usb-bus.0 -device qemu-xhci,id=usb-controller-0 -chardev spicevmc,name=usbredir,id=usbredirchardev0 -device usb-redir,chardev=usbredirchardev0,id=usbredirdev0,bus=usb-controller-0.0 -chardev spicevmc,name=usbredir,id=usbredirchardev1 -device usb-redir,chardev=usbredirchardev1,id=usbredirdev1,bus=usb-controller-0.0 -chardev spicevmc,name=usbredir,id=usbredirchardev2 -device usb-redir,chardev=usbredirchardev2,id=usbredirdev2,bus=usb-controller-0.0 -device usb-storage,drive=drive18D1A7CE-50FE-4567-B033-B2AB9F811108,removable=true,bootindex=0,bus=usb-bus.0 -drive if=none,media=cdrom,id=drive18",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_utm_run_qemu.sh:42-42"
+    },
+    "1663": {
+        "file_id": 219,
+        "content": "Creates a QEMU virtual machine with ARM architecture, specifying hardware settings and drive configurations.",
+        "type": "comment"
+    },
+    "1664": {
+        "file_id": 219,
+        "content": "D1A7CE-50FE-4567-B033-B2AB9F811108,readonly=on -device virtio-blk-pci,drive=drive335D6651-2B4B-47A7-99B4-CBFB1EFDEFF8,bootindex=1 -drive if=none,media=disk,id=drive335D6651-2B4B-47A7-99B4-CBFB1EFDEFF8,file=/Volumes/Toshiba XG3/UTM VMs/Ubuntu ARM.utm/Data/335D6651-2B4B-47A7-99B4-CBFB1EFDEFF8.qcow2,discard=unmap,detect-zeroes=unmap -device virtio-serial -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 -chardev spicevmc,id=vdagent,debug=0,name=vdagent -name Linux -uuid B54F0831-B34F-404D-B600-5E2886D8AC53 -device virtio-rng-pci\n# qemu-system-aarch64 -L /Applications/UTM.app/Contents/Resources/qemu -S -spice unix=on,addr='/Users/jamesbrown/Library/Group Containers/WDNLXAD4W8.com.utmapp.UTM/B54F0831-B34F-404D-B600-5E2886D8AC53.spice',disable-ticketing=on,image-compression=off,playback-compression=off,streaming-video=off,gl=off -chardev spiceport,id=org.qemu.monitor.qmp,name=org.qemu.monitor.qmp.0 -mon chardev=org.qemu.monitor.qmp,mode=control -nodefaults -vga none -device virti",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_utm_run_qemu.sh:42-44"
+    },
+    "1665": {
+        "file_id": 219,
+        "content": "Creating a virtual machine with Ubuntu ARM image, using virtio devices and enabling Spice protocol for display and serial communication.",
+        "type": "comment"
+    },
+    "1666": {
+        "file_id": 219,
+        "content": "o-net-pci,mac=9A:B7:7D:21:25:67,netdev=net0 -netdev vmnet-shared,id=net0 -device virtio-ramfb -cpu host -smp cpus=4,sockets=1,cores=4,threads=1 -machine virt -accel hvf -drive if=pflash,format=raw,unit=0,file='/Applications/UTM.app/Contents/Resources/qemu/edk2-aarch64-code.fd',readonly=on -drive if=pflash,unit=1,file='/Volumes/Toshiba XG3/UTM VMs/Ubuntu ARM.utm/Data/efi_vars.fd' -m 2048 -device intel-hda -device hda-duplex -device nec-usb-xhci,id=usb-bus -device usb-tablet,bus=usb-bus.0 -device usb-mouse,bus=usb-bus.0 -device usb-kbd,bus=usb-bus.0 -device qemu-xhci,id=usb-controller-0 -chardev spicevmc,name=usbredir,id=usbredirchardev0 -device usb-redir,chardev=usbredirchardev0,id=usbredirdev0,bus=usb-controller-0.0 -chardev spicevmc,name=usbredir,id=usbredirchardev1 -device usb-redir,chardev=usbredirchardev1,id=usbredirdev1,bus=usb-controller-0.0 -chardev spicevmc,name=usbredir,id=usbredirchardev2 -device usb-redir,chardev=usbredirchardev2,id=usbredirdev2,bus=usb-controller-0.0 -devic",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_utm_run_qemu.sh:44-44"
+    },
+    "1667": {
+        "file_id": 219,
+        "content": "Setting up a virtual machine for UTM, using QEMU, with ARM architecture, PCI device, network configuration, virtio-ramfb display, host CPU, SMP configuration, 2048MB memory, Intel HDA sound, USB devices, XHCI controller and SPICE redirection.",
+        "type": "comment"
+    },
+    "1668": {
+        "file_id": 219,
+        "content": "e usb-storage,drive=drive18D1A7CE-50FE-4567-B033-B2AB9F811108,removable=true,bootindex=0,bus=usb-bus.0 -drive if=none,media=cdrom,id=drive18D1A7CE-50FE-4567-B033-B2AB9F811108,readonly=on -device virtio-blk-pci,drive=drive335D6651-2B4B-47A7-99B4-CBFB1EFDEFF8,bootindex=1 -drive if=none,media=disk,id=drive335D6651-2B4B-47A7-99B4-CBFB1EFDEFF8,file='/Volumes/Toshiba XG3/UTM VMs/Ubuntu ARM.utm/Data/335D6651-2B4B-47A7-99B4-CBFB1EFDEFF8.qcow2',discard=unmap,detect-zeroes=unmap -device virtio-serial -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 -chardev spicevmc,id=vdagent,debug=0,name=vdagent -name Linux -uuid B54F0831-B34F-404D-B600-5E2886D8AC53 -device virtio-rng-pci",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_utm_run_qemu.sh:44-44"
+    },
+    "1669": {
+        "file_id": 219,
+        "content": "Attaching USB storage, defining CD-ROM and primary disk for Ubuntu ARM VM on macOS using QEMU with virtio-serial and Spice support.",
+        "type": "comment"
+    },
+    "1670": {
+        "file_id": 220,
+        "content": "/ubuntu_qemu_utm_arm_record/main_loop.sh",
+        "type": "filepath"
+    },
+    "1671": {
+        "file_id": 220,
+        "content": "This script runs an infinite loop that kills all running python3 processes, then restarts the main_recorder.py script. It requires sudo privileges to run as root.",
+        "type": "summary"
+    },
+    "1672": {
+        "file_id": 220,
+        "content": "while true; do ps aux | grep python3 | awk '{print $2}' | xargs -iabc kill -s TERM abc ; python3 main_recorder.py; done;\n# use sudo!\n# sudo -u root bash",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_loop.sh:1-3"
+    },
+    "1673": {
+        "file_id": 220,
+        "content": "This script runs an infinite loop that kills all running python3 processes, then restarts the main_recorder.py script. It requires sudo privileges to run as root.",
+        "type": "comment"
+    },
+    "1674": {
+        "file_id": 221,
+        "content": "/ubuntu_qemu_utm_arm_record/main_recorder.py",
+        "type": "filepath"
+    },
+    "1675": {
+        "file_id": 221,
+        "content": "The code handles audio, video, and HID recording with Redis signaling, manages folders, starts processes based on preferences, checks statuses, and ensures proper locking and error handling.",
+        "type": "summary"
+    },
+    "1676": {
+        "file_id": 221,
+        "content": "import time\nimport subprocess\nimport datetime\nimport os\nfrom utils import (\n    set_redis_on,\n    set_redis_off,\n    set_prefix,\n    get_prefix,\n    check_redis_on,\n    check_redis_off,\n    PYTHON_EXECUTABLE,\n    set_redis_off_on_exception,\n    filepaths,\n    MAX_RECORDING_COUNT,\n)\nset_prefix()\nset_redis_off_on_exception(main=True)\nMINIBREAK_SECONDS = 1\nRECORD_SECONDS = 10\nWAIT_TIMEOUT = 1\n# how to signal multiple threads at once? use redis.\nset_redis_off()\ntime.sleep(MINIBREAK_SECONDS)\nRECORDERS = {\"Audio\": False, \"Video\": True, \"HID\": True}\n# RECORDERS = {\"Audio\": False, \"Video\": False, \"HID\": True}\n# RECORDERS = {\"Audio\": True, \"Video\": False, \"HID\": False}\n# RECORDERS = {\"Audio\": True, \"Video\": True, \"HID\": True}\nRANDOM_ACTOR = True\n# keep last 30 recordings.\n# will remove anything more than that.\nrec_folders = [\n    \"{}{}\".format(filepaths.target_prefix, p)\n    for p in os.listdir(filepaths.target_prefix)\n    if os.path.isdir(\"{}{}\".format(filepaths.target_prefix, p))\n]\nrec_folders.sort(key=lambda p: -os.path.getmti",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_recorder.py:1-44"
+    },
+    "1677": {
+        "file_id": 221,
+        "content": "The code is setting up various configurations and variables for recording audio, video, and HID events. It uses Redis for thread signaling and keeps the last 30 recordings.",
+        "type": "comment"
+    },
+    "1678": {
+        "file_id": 221,
+        "content": "me(p))\nexpired_rec_folders = rec_folders[MAX_RECORDING_COUNT:]\nprint(\"EXPIRED RECORDING FOLDER COUNT:\", len(expired_rec_folders))\nfor p in expired_rec_folders:\n    print(\"REMOVING EXPIRED RECORDING FOLDER:\", p)\n    os.system(\"rm -rf {}\".format(p))\nif all([signal is not True for _, signal in RECORDERS.items()]):\n    raise Exception(\"Should at least use one recorder.\")\nelse:\n    for key, value in RECORDERS.items():\n        if value:\n            print(\"Recording: %s\" % key)\nif check_redis_off():\n    set_redis_on()\n    time.sleep(MINIBREAK_SECONDS)\n    if check_redis_on():\n        print(\"EXECUTING MAIN PROCESSES\")\n        print(\"RECORD LENGTH: {} secs\".format(RECORD_SECONDS))\n        # execute subcommands. (subprocess)\n        if RECORDERS[\"HID\"]:\n            HIDRecorderProcess = subprocess.Popen(\n                [PYTHON_EXECUTABLE, \"mouse_keyboard_record.py\"]\n            )\n        if RECORDERS[\"Video\"]:\n            VideoRecorderProcess = subprocess.Popen(\n                [PYTHON_EXECUTABLE, \"video_record.py\"]\n    ",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_recorder.py:44-71"
+    },
+    "1679": {
+        "file_id": 221,
+        "content": "Code is removing expired recording folders and starting main processes based on user's preferences.",
+        "type": "comment"
+    },
+    "1680": {
+        "file_id": 221,
+        "content": "        )\n        if RECORDERS[\"Audio\"]:\n            AudioRecorderProcess = subprocess.Popen(\n                [PYTHON_EXECUTABLE, \"audio_record.py\"]\n            )\n        if RANDOM_ACTOR:\n            RandomActorProcess = subprocess.Popen(\n                [PYTHON_EXECUTABLE, \"random_actor_redis.py\"]\n            )\n        # time.sleep(RECORD_SECONDS)\n        for _ in range(RECORD_SECONDS):\n            time.sleep(1)\n            if check_redis_off():\n                print(\"Abnormal recorder exit detected.\")\n                print(\"Abort main recorder.\")\n                break\n        print(\"EXITING.\")\n        print(\"SET LOCK AS OFF.\")\n        set_redis_off()\n        time.sleep(MINIBREAK_SECONDS)\n        if check_redis_off():\n            exit_codes = []\n            if RECORDERS[\"HID\"]:\n                hid_exit_code = HIDRecorderProcess.wait(timeout=WAIT_TIMEOUT)\n                exit_codes.append(hid_exit_code)\n            if RECORDERS[\"Video\"]:\n                video_exit_code = VideoRecorderProcess.wait(\n              ",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_recorder.py:71-99"
+    },
+    "1681": {
+        "file_id": 221,
+        "content": "Checks if audio and random actor recorders should run, then starts them. Waits for RECORD_SECONDS before checking if any recorder abnormally exited. If so, aborts main recorder and sets redis lock as off. After a MINIBREAK_SECONDS delay, checks if the redis lock is still off and exits if it is.",
+        "type": "comment"
+    },
+    "1682": {
+        "file_id": 221,
+        "content": "      timeout=WAIT_TIMEOUT)\n                exit_codes.append(video_exit_code)\n            if RECORDERS[\"Audio\"]:\n                audio_exit_code = AudioRecorderProcess.wait(\n                    timeout=WAIT_TIMEOUT)\n                exit_codes.append(audio_exit_code)\n            if RANDOM_ACTOR:\n                random_actor_exit_code = RandomActorProcess.wait(\n                    timeout=WAIT_TIMEOUT*3)\n                exit_codes.append(random_actor_exit_code)\n            print()\n            print(\"EXIT CODES:\")\n            if RECORDERS[\"Audio\"]:\n                print(\"AUDIO - {}\".format(audio_exit_code))\n            if RECORDERS[\"Video\"]:\n                print(\"VIDEO - {}\".format(video_exit_code))\n            if RECORDERS[\"HID\"]:\n                print(\"HID - {}\".format(hid_exit_code))\n            if RANDOM_ACTOR:\n                print(\"RANDOM_ACTOR - {}\".format(random_actor_exit_code))\n            print()\n            if any([code != 0 for code in exit_codes]):\n                # you may remove all temp file",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_recorder.py:99-121"
+    },
+    "1683": {
+        "file_id": 221,
+        "content": "This code checks for the exit codes of various processes (Audio, Video, HID, and RandomActor) using wait() function. It then appends these exit codes to a list called exit_codes. If any of the exit codes are not 0, it prints the exit codes and removes all temporary files.",
+        "type": "comment"
+    },
+    "1684": {
+        "file_id": 221,
+        "content": "s under recorder folder.\n                prefix = get_prefix()\n                hid_record = \"{}hid_record.jsonl\".format(prefix)\n                audio_record = \"{}audio_record.wav\".format(prefix)\n                video_record = \"{}video_record.mp4\".format(prefix)\n                video_record_script = \"{}video_record_script.sh\".format(prefix)\n                video_timestamps = \"{}video_timestamps.json\".format(prefix)\n                hid_timestamps = \"{}hid_timestamps.json\".format(prefix)\n                audio_timestamps = \"{}audio_timestamps.json\".format(prefix)\n                for fpath in [\n                    hid_record,\n                    audio_record,\n                    video_record,\n                    video_record_script,\n                    video_timestamps,\n                    hid_timestamps,\n                    audio_timestamps,\n                ]:\n                    try:\n                        os.remove(fpath)\n                    except:\n                        pass\n                raise Exceptio",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_recorder.py:121-144"
+    },
+    "1685": {
+        "file_id": 221,
+        "content": "This code is deleting specific recorded files (hid_record, audio_record, video_record, etc.) in the recorder folder.",
+        "type": "comment"
+    },
+    "1686": {
+        "file_id": 221,
+        "content": "n(\"COMPUTER RECORDER HAS ABNORMAL EXIT CODE.\")\n            else:\n                print(\"COMPUTER RECORDER EXIT NORMALLY\")\n                # required for ntfs.\n                current_timestamp = (\n                    datetime.datetime.now().isoformat().replace(\":\", \"_\")\n                )\n                records_folder = \"{}{}\".format(\n                    filepaths.target_prefix, current_timestamp)\n                # records_folder = \"{}{}\".format(filepaths.prefix, current_timestamp)\n                print(\"MOVING RECORDS TO: {}\".format(records_folder))\n                os.mkdir(records_folder)\n                for fpath in [\n                    filepaths.hid_record,\n                    filepaths.audio_record,\n                    filepaths.video_record,\n                    filepaths.video_record_script,\n                    filepaths.video_timestamps,\n                    filepaths.hid_timestamps,\n                    filepaths.audio_timestamps,\n                ]:\n                    os.system(\"mv {} {}\".format(fp",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_recorder.py:144-165"
+    },
+    "1687": {
+        "file_id": 221,
+        "content": "Code snippet checks if the computer recorder exited normally or not. If it exited abnormally, it displays a message indicating an abnormal exit code. If it exits normally, it creates a records folder with the current timestamp and moves recorded files to that folder for organization purposes.",
+        "type": "comment"
+    },
+    "1688": {
+        "file_id": 221,
+        "content": "ath, records_folder))\n                # print(\"MAKING FINISHED INDICATOR\")\n                # os.system(\"touch {}\".format(os.path.join(records_folder, \"finished\")))\n                # or this is not needed. because it is always hard to savage things from a running instance.\n        else:\n            print(\"FAILED TO SET LOCK AS OFF.\")\n            print(\"FAILED AT FINAL CHECK.\")\n    else:\n        print(\"FAILED TO SET LOCK AS ON.\")\n        print(\"FAILED AT INIT CHECK 2\")\nelse:\n    print(\"FAILED TO SET LOCK AS OFF.\")\n    print(\"FAILED AT INIT CHECK 1\")",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_recorder.py:165-177"
+    },
+    "1689": {
+        "file_id": 221,
+        "content": "Checks if the lock is set correctly and prints appropriate failure messages.",
+        "type": "comment"
+    },
+    "1690": {
+        "file_id": 222,
+        "content": "/ubuntu_qemu_utm_arm_record/mount_kali_webdav_dirs.sh",
+        "type": "filepath"
+    },
+    "1691": {
+        "file_id": 222,
+        "content": "Mount and configure two WebDAV directories, create script and recordings folders, and symlink the mounted WebDAV directories to the newly created folders.",
+        "type": "summary"
+    },
+    "1692": {
+        "file_id": 222,
+        "content": "echo -e \"110110\\n\" | sudo -S echo \"enable sudo\"\nsudo apt install -y davfs2\nsudo umount /mnt/dav1\nsudo umount /mnt/dav2\nsudo rm -rf /mnt/dav1\nsudo rm -rf /mnt/dav2\nsudo mkdir /mnt/dav1\nsudo mkdir /mnt/dav2\necho -e \"root\\nroot\\n\" | sudo mount -t davfs -o noexec http://10.0.1.6:8110 /mnt/dav1\necho -e \"root\\nroot\\n\" | sudo mount -t davfs -o noexec http://10.0.1.6:8111 /mnt/dav2\nmkdir scripts\nmkdir recordings\nln -s /mnt/dav1 scripts\nln -s /mnt/dav2 recordings\n# just start stuff here.\n# sudo bash main_loop.sh",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/mount_kali_webdav_dirs.sh:1-23"
+    },
+    "1693": {
+        "file_id": 222,
+        "content": "Mount and configure two WebDAV directories, create script and recordings folders, and symlink the mounted WebDAV directories to the newly created folders.",
+        "type": "comment"
+    },
+    "1694": {
+        "file_id": 223,
+        "content": "/ubuntu_qemu_utm_arm_record/mount_yoga_webdav_dir.sh",
+        "type": "filepath"
+    },
+    "1695": {
+        "file_id": 223,
+        "content": "Enabling sudo, installing necessary Python packages, removing DAVFS pid locks, installing davfs2, creating and preparing mount point directories, and setting up WebDAV shares for storing scripts and recordings.",
+        "type": "summary"
+    },
+    "1696": {
+        "file_id": 223,
+        "content": "cd agi_computer_control/ubuntu_qemu_utm_arm_record\n# enable sudo\necho -e \"KSDA37287522\\n\" | sudo -S echo \"enable sudo\"\nsudo apt-get install -y python3-tk python3-dev\n# remove davfs pid locks\nsudo rm /var/run/mount.davfs/mnt-dav1.pid\nsudo rm /var/run/mount.davfs/mnt-dav2.pid\nsudo apt install -y davfs2\n#sudo mkdir /mnt/dav1\nsudo mkdir /mnt/dav2\nsudo umount /mnt/dav1\nsudo umount /mnt/dav2\nsudo rm -rf scripts\nsudo rm -rf recordings\n#echo -e \"root\\nroot\\n\" | sudo mount -t davfs -o noexec http://192.168.56.1:8110 /mnt/dav1\necho -e \"root\\nroot\\n\" | sudo mount -t davfs -o noexec http://192.168.56.1:8111 /mnt/dav2\n#mkdir scripts\n#mkdir recordings\n#ln -s /mnt/dav1 scripts\nln -s /mnt/dav2 recordings",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/mount_yoga_webdav_dir.sh:1-28"
+    },
+    "1697": {
+        "file_id": 223,
+        "content": "Enabling sudo, installing necessary Python packages, removing DAVFS pid locks, installing davfs2, creating and preparing mount point directories, and setting up WebDAV shares for storing scripts and recordings.",
+        "type": "comment"
+    },
+    "1698": {
+        "file_id": 224,
+        "content": "/ubuntu_qemu_utm_arm_record/mouse_keyboard_record.py",
+        "type": "filepath"
+    },
+    "1699": {
+        "file_id": 224,
+        "content": "The code uses the `pyautogui` library to import essential modules, define functions for capturing keyboard and mouse events, and record HID events in a JSON lines file with timestamps. Recording begins when Redis is offline, or an exception is raised if the Redis connection fails or is off.",
+        "type": "summary"
+    }
+}

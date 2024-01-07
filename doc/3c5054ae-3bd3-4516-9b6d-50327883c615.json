@@ -1,0 +1,10 @@
+{
+    "summary": "Executing Llama 2 in Docker container 'ollama'.",
+    "details": [
+        {
+            "comment": "Executing Llama 2 in Docker container 'ollama'.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/run_llama2.sh\":0-0",
+            "content": "docker exec -it ollama ollama run llama2"
+        }
+    ]
+}

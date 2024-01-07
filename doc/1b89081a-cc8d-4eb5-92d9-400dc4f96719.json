@@ -1,0 +1,10 @@
+{
+    "summary": "Code is defining a function to get and set learning rates for an optimizer. It initializes a model, optimizer, and demonstrates using the get_optim_lrs and set_optim_lrs functions. The code also shows that setting learning rate to negative or zero can cause errors. Finally, it suggests that while scheduling is not necessary here, a recursive scheduler might be useful with the model's output.",
+    "details": [
+        {
+            "comment": "Code is defining a function to get and set learning rates for an optimizer. It initializes a model, optimizer, and demonstrates using the get_optim_lrs and set_optim_lrs functions. The code also shows that setting learning rate to negative or zero can cause errors. Finally, it suggests that while scheduling is not necessary here, a recursive scheduler might be useful with the model's output.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/rt_x_experiments/gradient_undescent/dynamic_learning_rate.py\":0-34",
+            "content": "import torch\n# you may witness the difference.\ndef get_optim_lrs(optim):\n    lr_list = []\n    for pg in optim.param_groups:\n        lr = pg['lr']\n        lr_list.append(lr)\n    return lr_list\ndef set_optim_lrs(optim, lr_list):\n    for index,pg in enumerate(optim.param_groups):\n        pg['lr'] = lr_list[index]\n# eliminate complex setup.\nlr = 0.001\nmodel = torch.nn.Sequential(torch.nn.Linear(10, 10), torch.nn.Linear(10, 1))\noptim = torch.optim.SGD(model.parameters(), lr=lr)\n# scheduler = torch.optim.lr_scheduler.StepLR(optim, step_size=10, gamma=0.1)\n# call `scheduler.step()` to schedule next learning rate\n# class MyScheduler(torch.optim.lr_scheduler.LRScheduler):\n#     ...\nlr_list = get_optim_lrs(optim)\nprint(lr_list) # [0.001]\n# set_optim_lrs(optim, [-0.001]) # seems ok, but...a\nset_optim_lrs(optim, [2])\nprint(get_optim_lrs(optim))\n# just do not set to negative.\n# you don't need the scheduler. or you might need the scheduler that can recurse with the model output."
+        }
+    ]
+}

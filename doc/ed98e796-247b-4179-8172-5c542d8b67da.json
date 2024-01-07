@@ -1,0 +1,10 @@
+{
+    "summary": "NaiveVocab class generates a random string of characters from a given list and AsciiVocab/BytesVocab inherit from NaiveVocab to handle both ASCII and bytes content respectively.",
+    "details": [
+        {
+            "comment": "NaiveVocab class generates a random string of characters from a given list and AsciiVocab/BytesVocab inherit from NaiveVocab to handle both ASCII and bytes content respectively.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/vocabulary.py\":0-35",
+            "content": "import random\nfrom type_utils import *\nclass NaiveVocab:\n    charlist = [\"a\"]\n    startpoint = \"\"\n    content_typeguard = enforce_str\n    @classmethod\n    def generate(cls):\n        content = cls.startpoint\n        for _ in range(random.randint(1, 10)):\n            char = random.choice(cls.charlist)\n            content += char\n        return content\n    @classmethod\n    def filter(cls, content):\n        content = cls.content_typeguard(content)\n        result = cls.startpoint\n        for char in content:\n            if char in cls.charlist:\n                result += char\n        return result\nclass AsciiVocab(NaiveVocab):\n    charlist = [chr(x) for x in range(256)]\nclass BytesVocab(NaiveVocab):\n    startpoint = b\"\"\n    charlist = [bytes([x]) for x in range(256)]\n    content_typeguard = enforce_bytes"
+        }
+    ]
+}

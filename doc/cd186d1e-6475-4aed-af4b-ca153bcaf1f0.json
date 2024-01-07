@@ -1,0 +1,10 @@
+{
+    "summary": "Takes a screenshot of the \"Ubuntu 16.04\" virtual machine and saves it as output.png",
+    "details": [
+        {
+            "comment": "Takes a screenshot of the \"Ubuntu 16.04\" virtual machine and saves it as output.png",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/screenshot_vm.sh\":0-1",
+            "content": "vboxmanage controlvm \"Ubuntu 16.04\" screenshotpng output.png\n# raise error if not running."
+        }
+    ]
+}

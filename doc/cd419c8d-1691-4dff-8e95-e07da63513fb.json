@@ -1,0 +1,10 @@
+{
+    "summary": "Enables USB devices to remain active and prevents Windows from automatically suspending them.",
+    "details": [
+        {
+            "comment": "Enables USB devices to remain active and prevents Windows from automatically suspending them.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/usb_power_management/windows/README.md\":0-4",
+            "content": "[disable usb selective suspend](https://www.tenforums.com/tutorials/73187-turn-off-usb-selective-suspend-windows-10-a.html)\nuninstall uas driver from device manager? (nope. it will block access)\n\u8bbe\u5907\u7ba1\u7406\u5668 -> \u901a\u7528\u4e32\u884c\u603b\u7ebf\u63a7\u5236\u5668 -> \u8bbe\u5907 -> \u7535\u6e90\u7ba1\u7406 -> \u53d6\u6d88\u590d\u9009\u6846"
+        }
+    ]
+}

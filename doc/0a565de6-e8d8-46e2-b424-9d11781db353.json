@@ -1,0 +1,10 @@
+{
+    "summary": "The code configures a set of windows, each with specific shell commands and start directories. The windows include \"dev window\", \"BongoCat\", \"virtualbox\", \"viewer_loop\", and \"viewer_final\".",
+    "details": [
+        {
+            "comment": "The code configures a set of windows, each with specific shell commands and start directories. The windows include \"dev window\", \"BongoCat\", \"virtualbox\", \"viewer_loop\", and \"viewer_final\".",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/streaming_utils.yaml\":0-30",
+            "content": "session_name: streaming_utils\nstart_directory: \"/media/root/Toshiba XG3/works/agi_computer_control\"\nwindows:\n  - window_name: dev window\n    layout: tiled\n    panes:\n######################[bongocats]\n      - shell_command:\n        - \"python3 cat.pyw\"\n        start_directory: \"BongoCat\"\n      - shell_command:\n        - \"python3 cat.pyw\"\n        start_directory: \"BongoCat\"\n######################[virtualbox]\n      - shell_command:\n        - \"python3 kali_vbox_main_loop.py\"\n        start_directory: \"ubuntu_qemu_utm_arm_record/kali_vbox_control\"\n######################[viewer_loop]\n      - shell_command:\n        - sleep 1\n        - \"python3 xvfb_test_loop_double_display.py\"\n        start_directory: \"ubuntu_qemu_utm_arm_record/kali_vbox_control\"\n######################[viewer_final]\n      - shell_command:\n        - sleep 3\n        - \"bash x11grab_loop_viewer.sh\"\n        start_directory: \"ubuntu_qemu_utm_arm_record/kali_vbox_control\""
+        }
+    ]
+}

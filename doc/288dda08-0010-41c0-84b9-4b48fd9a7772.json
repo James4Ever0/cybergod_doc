@@ -1,0 +1,10 @@
+{
+    "summary": "This code is importing the NEAT (Nature-Inspired Evolutionary Algorithms Toolkit) module from evotorch library, and creating a NEProblem object for neural evolution problem.",
+    "details": [
+        {
+            "comment": "This code is importing the NEAT (Nature-Inspired Evolutionary Algorithms Toolkit) module from evotorch library, and creating a NEProblem object for neural evolution problem.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/dynamic_plasticity_neural_networks/neural_evolution.py\":0-3",
+            "content": "# NEAT?\nimport evotorch\nevotorch.neuroevolution.NEProblem"
+        }
+    ]
+}

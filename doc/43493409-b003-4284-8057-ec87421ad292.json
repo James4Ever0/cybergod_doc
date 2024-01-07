@@ -1,0 +1,15 @@
+{
+    "summary": "This code sets a future with \"hello\" after 1 second, waits for the result (expected \"hello world\"), and if the timeout expires before setting, prints \"unset future\".",
+    "details": [
+        {
+            "comment": "Code snippet imports necessary libraries, defines a function for OS sleep, a function for time sleep, and two async functions. The async main function creates a new Future object and runs a set_after coroutine in parallel Task using the event loop.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/dependent_task_timeout_exec.py\":0-43",
+            "content": "import asyncio\nimport os\n# import multitasking\n# after all, we are single threaded\nimport time\nfrom timeout_utils import *\n@retrying_timeout_func(1, 11)  # passed\ndef os_sleep():\n    print(\"running os sleep\")\n    os.system(\"sleep 10\")\n    os.system(\"echo hello world\")\n    print(\"exit os sleep\")\n@retrying_timeout_func(3, 2)  # not pass, fail attempts count: 3\ndef time_sleep():\n    print(\"running time sleep\")\n    time.sleep(3)\n    print(\"exit time sleep\")\nasync def set_after(fut, delay, value):\n    # Sleep for *delay* seconds.\n    await asyncio.sleep(delay)\n    # Set *value* as a result of *fut* Future.\n    fut.set_result(value)\nasync def main():\n    # Get the current event loop.\n    loop = asyncio.get_running_loop()\n    # Create a new Future object.\n    fut = loop.create_future()\n    # Run \"set_after()\" coroutine in a parallel Task.\n    # We are using the low-level \"loop.create_task()\" API here because\n    # we already have a reference to the event loop at hand.\n    # Otherwise we could have just used \"asyncio.creat"
+        },
+        {
+            "comment": "This code is creating a task that sets a future with the string \"hello\" after 1 second, and then waits for the result of the future (expected to be \"hello world\") before printing it. If the timeout of 0.5 seconds expires before the future is set, it will print \"unset future\".",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/dependent_task_timeout_exec.py\":43-56",
+            "content": "e_task()\".\n    loop.create_task(set_after(fut, 1, \"... world\"))\n    print(\"hello ...\")\n    # Wait until *fut* has a result (1 second) and print it.\n    # print(await asyncio.wait_for(fut, timeout=1.5))\n    print(await asyncio.wait_for(fut, timeout=0.5))\nif __name__ == \"__main__\":\n    os_sleep()\n    time_sleep()\n    # asyncio.run(main())"
+        }
+    ]
+}

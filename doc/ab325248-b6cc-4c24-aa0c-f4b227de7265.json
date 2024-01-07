@@ -1,0 +1,10 @@
+{
+    "summary": "Creating a Twisted reactor instance, printing its attributes, and defining a Unix domain socket address.",
+    "details": [
+        {
+            "comment": "Creating a Twisted reactor instance, printing its attributes, and defining a Unix domain socket address.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/vnc_unix_domain_socket.py\":0-5",
+            "content": "from twisted.internet import reactor\nprint(dir(reactor))\n# reactor.connectTCP\nunix_addr = \"/Users/jamesbrown/.qemu_vnc\"\n# conn = reactor.connectUNIX(unix_addr)\n# print(conn)"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "The code is importing necessary libraries and initializing a YOLOv5 model using the \"ultralytics/yolov5\" module. It then warns about two issues: DirectML not working with torch.inference_mode and potential problems with torch.cat due to passing zero-size arrays. The code finally runs inference on an image, first without and then with DirectML device.",
+    "details": [
+        {
+            "comment": "The code is importing necessary libraries and initializing a YOLOv5 model using the \"ultralytics/yolov5\" module. It then warns about two issues: DirectML not working with torch.inference_mode and potential problems with torch.cat due to passing zero-size arrays. The code finally runs inference on an image, first without and then with DirectML device.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/directml_yolov5/test_nograd.py\":0-13",
+            "content": "import torch\nimport torch_directml\ndev = torch_directml.device()\nmodel = torch.hub.load(\"ultralytics/yolov5\", \"yolov5m\")\n# two issues:\n# 1. directml doesn't work with torch.inference_mode. you can nullify it.\n# 2. torch.cat is not working properly, because we are passing zero size arrays into it. however, the cpu executor supports it.\nwith torch.no_grad():\n    print(model(\"C:/Users/z98hu/Desktop/zidane.jpg\"))\nmodel.to(dev)\nwith torch.no_grad():\n    print(model(\"C:/Users/z98hu/Desktop/zidane.jpg\"))"
+        }
+    ]
+}

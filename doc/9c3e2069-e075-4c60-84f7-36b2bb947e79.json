@@ -1,0 +1,10 @@
+{
+    "summary": "Enables audio loopback module for Ubuntu QEMU/UTM ARM system.",
+    "details": [
+        {
+            "comment": "Enables audio loopback module for Ubuntu QEMU/UTM ARM system.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/enable_audio_loopback.sh\":0-0",
+            "content": "sudo modprobe snd-aloop"
+        }
+    ]
+}

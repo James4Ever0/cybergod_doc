@@ -1,0 +1,10 @@
+{
+    "summary": "Creating workspace and linking necessary directories",
+    "details": [
+        {
+            "comment": "Creating workspace and linking necessary directories",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/prepare_workspace.sh\":0-6",
+            "content": "cd\nmkdir agi_workspace\ncd agi_workspace\nln -s /mnt/dav1 ~/agi_workspace/scripts\nln -s /mnt/dav2 ~/agi_workspace/recordings\ncd agi_workspace\ncp scripts/* ."
+        }
+    ]
+}

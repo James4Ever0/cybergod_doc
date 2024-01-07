@@ -1,0 +1,10 @@
+{
+    "summary": "This Makefile is responsible for building and executing the Python script \"test_control.py\". It first compiles the script using a template, then runs the compiled version with Python interpreter.",
+    "details": [
+        {
+            "comment": "This Makefile is responsible for building and executing the Python script \"test_control.py\". It first compiles the script using a template, then runs the compiled version with Python interpreter.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/hardware_capture_hid_power_control/Makefile\":0-4",
+            "content": "main: test_control.py\n\t${PYTHON} test_control.py\ntest_control.py: test_control.py.j2 $(addprefix ../, ${RENDERED_CODE})\n\t${PYTHON} ../render_python_code.py test_control.py"
+        }
+    ]
+}

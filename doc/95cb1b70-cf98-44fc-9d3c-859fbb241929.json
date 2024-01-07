@@ -1,0 +1,10 @@
+{
+    "summary": "Sends key sequence down and up in current window.",
+    "details": [
+        {
+            "comment": "Sends key sequence down and up in current window.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/software_capture_hid_control/test_xdo.py\":0-6",
+            "content": "import xdo\nxdt = xdo.Xdo()\nkey = b\"k\"\nwindow = xdo.CURRENTWINDOW\nxdt.send_keysequence_window_down(window, key)\nxdt.send_keysequence_window_up(window, key)\n# it needs binary encoding."
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "This code demonstrates type hints and runtime type checking using the `overtake` decorator from the `overtake` library and the `@overload` function from the `typing_extensions` module. The `func` function is overloaded to handle different input types, and the `runtime_type_checker` parameter specifies that `beartype` should perform type checking at runtime. The `c()` function simply prints \"a\" and serves as an example of a function without any type hints or type checking.",
+    "details": [
+        {
+            "comment": "This code demonstrates type hints and runtime type checking using the `overtake` decorator from the `overtake` library and the `@overload` function from the `typing_extensions` module. The `func` function is overloaded to handle different input types, and the `runtime_type_checker` parameter specifies that `beartype` should perform type checking at runtime. The `c()` function simply prints \"a\" and serves as an example of a function without any type hints or type checking.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/qstar_my_guess/signature_test.py\":0-37",
+            "content": "from typing_extensions import overload\nfrom overtake import overtake  # type: ignore\n@overload\ndef func(a: int) -> None:\n    print(\"int\", a)\n@overload\ndef func(a: str) -> None:\n    print(\"str\", a)\n@overload\ndef func(a: str, b: int) -> None:\n    print(\"str & int\", a, b)\n@overtake(runtime_type_checker=\"beartype\")\ndef func(a, b=1):\n    ...\ndef c():\n    print(\"a\")\n# Example usage\nc()\nfunc(10)\nfunc(\"Hello\")\nfunc(\"Hello\", 1)\nfunc(\"Hello\", \"World\")  # failed to type check.\nfunc(\"Hello\", 1)\nc()\n# func([]) # beartype failed to check this"
+        }
+    ]
+}

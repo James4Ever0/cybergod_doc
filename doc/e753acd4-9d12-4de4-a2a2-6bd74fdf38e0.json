@@ -1,0 +1,10 @@
+{
+    "summary": "Removing file, changing directory, archiving files with 7-Zip, and moving file into place.",
+    "details": [
+        {
+            "comment": "Removing file, changing directory, archiving files with 7-Zip, and moving file into place.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/packup.sh\":0-4",
+            "content": "rm agi_computer_control.7z\ncd ..\n7z a -snl agi_computer_control.7z agi_computer_control\ncd agi_computer_control\nmv ../agi_computer_control.7z ."
+        }
+    ]
+}

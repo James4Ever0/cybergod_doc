@@ -1,0 +1,10 @@
+{
+    "summary": "Starts Xvfb with 99 display, launches Ubuntu visual server, and then runs an example script",
+    "details": [
+        {
+            "comment": "Starts Xvfb with 99 display, launches Ubuntu visual server, and then runs an example script",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/visual_autoexec_main.sh\":0-2",
+            "content": "xvfb-run -n 99 -f ~/.Xauthority xfce4-session &\nsleep 2 && env DISPLAY=:99 python3 visual_server_on_ubuntu.py &\nsleep 5 && python3 visual_autoexec_example.py"
+        }
+    ]
+}

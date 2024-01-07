@@ -1,0 +1,20 @@
+{
+    "summary": "The VKQAttention class implements attention mechanism using linear layers, while the code defines binary quantization configuration and converts model to binary format. The 'bout' array shape is stored but not printed.",
+    "details": [
+        {
+            "comment": "This code defines a VKQAttention class that implements an attention mechanism using linear layers for value, key, and query calculations. The input_dim parameter is used to specify the size of the input. The forward method performs the attention calculations by multiplying queries with keys transposed, then dividing by the square root of the input_dim. It then applies softmax along dimension 2 and returns the attention weights for further processing.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/binary_program_synthesis_cpu_assembly_execution/vkq_bin.py\":0-28",
+            "content": "import torch\nimport torch.nn as nn\nimport torch.nn.functional as F\nclass VKQAttention(nn.Module):\n    def __init__(self, input_dim):\n        super(VKQAttention, self).__init__()\n        self.input_dim = input_dim\n        self.value = nn.Linear(input_dim, input_dim)\n        self.key = nn.Linear(input_dim, input_dim)\n        self.query = nn.Linear(input_dim, input_dim)\n        self.softmax = nn.Softmax(dim=2)\n        self.dk = self.input_dim\n    def forward(self, x):\n        values = self.value(x)\n        keys = self.key(x)\n        queries = self.query(x)\n        # scores = torch.bmm(queries, keys.transpose(1, 2)) / (self.dk**0.5)\n        # scores = torch.bmm(keys.transpose(1, 2), queries) / (self.dk**0.3)  # not 2!\n        scores = torch.bmm(keys.transpose(1, 2), queries) / (self.dk**0.5)\n        attention = self.softmax(scores)\n        # print(attention)\n        # print(scores)\n        # breakpoint()\n        # weighted = torch.bmm(scores, values)\n        # weighted = torch.bmm(attention, values)\n        weight"
+        },
+        {
+            "comment": "28-47: Define binary quantization config and assign it to the model\n48-56: Convert the model to a binary one, propagating changes from parent to leaf nodes\n57-60: Pass input to the binary model and obtain output",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/binary_program_synthesis_cpu_assembly_execution/vkq_bin.py\":28-60",
+            "content": "ed = torch.bmm(values, attention)\n        return weighted\nimport torch\n# import torchvision.models as models\nfrom bnn import BConfig, prepare_binary_model\n# Import a few examples of quantizers\nfrom bnn.ops import BasicInputBinarizer, BasicScaleBinarizer, XNORWeightBinarizer\n# Define the binarization configuration and assign it to the model\nbconfig = BConfig(\n    activation_pre_process=BasicInputBinarizer,\n    activation_post_process=BasicScaleBinarizer,\n    # optionally, one can pass certain custom variables\n    weight_pre_process=XNORWeightBinarizer.with_args(center_weights=True),\n)\n# Convert the model appropiately, propagating the changes from parent node to leafs\n# The custom_config_layers_name syntax will perform a match based on the layer name, setting a custom quantization function.\nmodel = VKQAttention(input_dim=768)\nbmodel = prepare_binary_model(model, bconfig)\ninp = torch.randn(1, 12, 768)\n# out = model(inp)\n# print(out, out.shape)\n# print(inp)\n# print(out.shape)  # 1, 12, 768\nbout = bmodel(inp)\nprin"
+        },
+        {
+            "comment": "This code stores the shape of the 'bout' array, but it is not currently printed.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/binary_program_synthesis_cpu_assembly_execution/vkq_bin.py\":60-61",
+            "content": "t(bout)\n# print(bout.shape)"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "This script runs an infinite loop that kills all running python3 processes, then restarts the main_recorder.py script. It requires sudo privileges to run as root.",
+    "details": [
+        {
+            "comment": "This script runs an infinite loop that kills all running python3 processes, then restarts the main_recorder.py script. It requires sudo privileges to run as root.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/main_loop.sh\":0-2",
+            "content": "while true; do ps aux | grep python3 | awk '{print $2}' | xargs -iabc kill -s TERM abc ; python3 main_recorder.py; done;\n# use sudo!\n# sudo -u root bash"
+        }
+    ]
+}

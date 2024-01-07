@@ -1,0 +1,10 @@
+{
+    "summary": "This script calls the `get_window_id` function from the `screenshot` module and prints its output after filtering for \"Name\" using grep and displays it with less. Alternatively, OBS and OBS-websocket can be used for screen recording with iTerm enabling the capability.",
+    "details": [
+        {
+            "comment": "This script calls the `get_window_id` function from the `screenshot` module and prints its output after filtering for \"Name\" using grep and displays it with less. Alternatively, OBS and OBS-websocket can be used for screen recording with iTerm enabling the capability.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/macos_iterate_windows.sh\":0-4",
+            "content": "python3 -c \"from screenshot import get_window_id; print(get_window_id.get_window_info(options=get_window_id.build_option_bitmask()))\" | grep Name | less\n# or use obs, then use obs-websocket to take screeenshots.\n# enable screen recording capability with iterm."
+        }
+    ]
+}

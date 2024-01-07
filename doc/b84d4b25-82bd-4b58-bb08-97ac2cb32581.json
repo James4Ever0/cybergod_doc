@@ -1,0 +1,10 @@
+{
+    "summary": "Starts an X11 grabber, capturing screen from display 10 and piping the output.",
+    "details": [
+        {
+            "comment": "Starts an X11 grabber, capturing screen from display 10 and piping the output.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab.py\":0-7",
+            "content": "cmd = \"env XAUTHORITY=/tmp/.Xauthority ffmpeg -f x11grab -i :10 -f image2pipe pipe:1\"\nimport subprocess\np = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)\nwhile True:\n    print(len(p.stdout.readline()))"
+        }
+    ]
+}

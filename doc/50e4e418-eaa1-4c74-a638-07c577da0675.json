@@ -1,0 +1,10 @@
+{
+    "summary": "The code is cloning four GitHub repositories: \"self-operating-computer\", \"QStarLearning.mojo\", \"open_qstar\", and \"gpt4v-browsing\".",
+    "details": [
+        {
+            "comment": "The code is cloning four GitHub repositories: \"self-operating-computer\", \"QStarLearning.mojo\", \"open_qstar\", and \"gpt4v-browsing\".",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/external_reference/supercharge_init.sh\":0-3",
+            "content": "git clone https://github.com/OthersideAI/self-operating-computer\ngit clone https://github.com/tairov/QStarLearning.mojo\ngit clone https://github.com/estill01/open_qstar\ngit clone https://github.com/unconv/gpt4v-browsing"
+        }
+    ]
+}

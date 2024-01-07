@@ -1,0 +1,10 @@
+{
+    "summary": "Generating Python code from a YAML datamodel file, with class name \"MyModel\".",
+    "details": [
+        {
+            "comment": "Generating Python code from a YAML datamodel file, with class name \"MyModel\".",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/generate_datamodel_code.sh\":0-2",
+            "content": "datamodel-codegen --input mydatamodel.yaml --output mydatamodel.py --class-name MyModel\n# cannot process multiple instances of datamodel."
+        }
+    ]
+}

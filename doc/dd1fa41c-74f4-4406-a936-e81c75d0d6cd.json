@@ -1,0 +1,20 @@
+{
+    "summary": "The code configures a Chromium-based browser with specific extensions and automation settings, importing a Greasy Fork script for ad management, and sets a page object timeout to 10 seconds.",
+    "details": [
+        {
+            "comment": "The code defines the path for the browser executable (Microsoft Edge), user data, and cache. It also sets the flag to use Chromium or not. The code imports necessary modules and may require installing extensions manually.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/the_frozen_forest_intro/drissionpage_common.py\":1-34",
+            "content": "# this thing has compatibility issue. the data is not always loaded when ported to a different device.\n# maybe you need docker. we can talk about that later.\nfrom DrissionPage.easy_set import set_paths\n# this thing is not chromium-compatible\n# CHROMIUM_PATH = r\"C:\\Users\\Administrator\\AppData\\Local\\ms-playwright\\chromium-1084\\chrome-win\\chrome.exe\"\nBROWSER_PATH = r\"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\"\n# DOWNLOAD_PATH = r\"\"\nUSER_DATA_PATH = r\"F:\\MicrosoftEdgeUserData\"\nCACHE_PATH = r\"F:\\MicrosoftEdgeCache\"\n# you may have to install extensions yourself.\nUSE_CHROME = False\n# USE_CHROME = True\nset_paths(\n    browser_path=BROWSER_PATH,\n    # browser_path=(CHROMIUM_PATH if USE_CHROME else BROWSER_PATH),\n    # download_path=DOWNLOAD_PATH,\n    # **(dict() if USE_CHROME else dict(\n    user_data_path=USER_DATA_PATH,\n    cache_path=CACHE_PATH #)),\n)\n# no sound!\n# \u5173\u95ed\u9759\u97f3\u5f00\u64ad\nfrom DrissionPage import ChromiumPage # , ChromiumOptions\n# that way we may have the extensions\n# co = ChromiumOptions()\nimport os\n"
+        },
+        {
+            "comment": "This code sets up a Chromium-based browser with extensions for the frozen forest intro. It loads the \"keylogger_extension/virtual-keylogger\" and \"ForceCORS\" extensions, disables all other extensions except these two, enables automation, mutes the browser, and adds user scripts to fix Bilibili ads.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/the_frozen_forest_intro/drissionpage_common.py\":34-49",
+            "content": "ext_path = \"keylogger_extension/virtual-keylogger\"\npathToExtension = os.path.abspath(ext_path)\npathToCORSExtension = os.path.abspath(\"ForceCORS\")\nextension_path = \",\".join([pathToExtension, pathToCORSExtension])\n# not very nice.\n# co.set_argument('load-extension', extension_path)\n# co.set_argument(\"disable-extensions-except\", extension_path)\n# co.set_argument(\"enable-automation\")\n# co.set_mute(True)\n# co.set_mute(False)\n# userscripts to fix bilibili ads, for babysitting\n# https://greasyfork.org/zh-CN/scripts/467511-bilibili-%E5%9C%A8%E6%9C%AA%E7%99%BB%E5%BD%95%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%E8%87%AA%E5%8A%A8%E5%B9%B6%E6%97%A0%E9%99%90%E8%AF%95%E7%94%A8%E6%9C%80%E9%AB%98%E7%94%BB%E8%B4%A8\n# https://greasyfork.org/zh-CN/scripts/467474-bilibili-%E9%98%B2%E6%AD%A2%E8%A7%86%E9%A2%91%E8%A2%AB%E8%87%AA%E5%8A%A8%E6%9A%82%E5%81%9C%E5%8F%8A%E5%BC%B9%E5%87%BA%E7%99%BB%E5%BD%95%E7%AA%97%E5%8F%A3\n# https://greasyfork.org/zh-CN/scripts/470714-bilibili-b%E7%AB%99-%E6%9C%AA%E7%99%BB%E5%BD%95%E8%B4%A6%E5%8F%B7"
+        },
+        {
+            "comment": "This code imports a Greasy Fork script and sets the default timeout for a page object to 10 seconds.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/the_frozen_forest_intro/drissionpage_common.py\":49-56",
+            "content": "%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E6%9C%80%E9%AB%98%E7%94%BB%E8%B4%A8\n# https://greasyfork.org/zh-CN/scripts/473498-bilibili-%E5%9C%A8%E6%9C%AA%E7%99%BB%E5%BD%95%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%E7%85%A7%E5%B8%B8%E5%8A%A0%E8%BD%BD%E8%AF%84%E8%AE%BA\n# \u7528 d \u6a21\u5f0f\u521b\u5efa\u9875\u9762\u5bf9\u8c61\uff08\u9ed8\u8ba4\u6a21\u5f0f\uff09\n# page = ChromiumPage(co if USE_CHROME else None)\npage = ChromiumPage()\nDEFAULT_TIMEOUT = 10\npage.timeout = DEFAULT_TIMEOUT"
+        }
+    ]
+}

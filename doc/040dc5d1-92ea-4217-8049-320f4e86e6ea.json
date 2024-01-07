@@ -1,0 +1,10 @@
+{
+    "summary": "This code is archiving the \"agi_computer_control\" directory, removing the original 7z file, and moving a backup copy into the directory.",
+    "details": [
+        {
+            "comment": "This code is archiving the \"agi_computer_control\" directory, removing the original 7z file, and moving a backup copy into the directory.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/packup.cmd\":0-4",
+            "content": "rm agi_computer_control.7z\ncd ..\n7z a -snl agi_computer_control.7z agi_computer_control\ncd agi_computer_control\nmv ../agi_computer_control.7z ."
+        }
+    ]
+}

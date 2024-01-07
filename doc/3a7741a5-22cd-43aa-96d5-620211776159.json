@@ -1,0 +1,10 @@
+{
+    "summary": "Enables VRDE and stops audio output for \"Ubuntu 16.04\" VM.",
+    "details": [
+        {
+            "comment": "Enables VRDE and stops audio output for \"Ubuntu 16.04\" VM.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/control_vm.sh\":0-13",
+            "content": "# vboxmanage controlvm \"Ubuntu 16.04\" keyboardputscancode\n# vboxmanage controlvm \"Ubuntu 16.04\" keyboardputstring\n# cannot perform mouse actions.\n# can only do this when vm running.\nvboxmanage controlvm \"Ubuntu 16.04\" vrde on\nvboxmanage controlvm \"Ubuntu 16.04\" vrdeport 8991\nvboxmanage controlvm \"Ubuntu 16.04\" vrdeproperty vrdeaddress=127.0.0.1\nvboxmanage controlvm \"Ubuntu 16.04\" vrdeproperty vrdeauthtype=null\nvboxmanage controlvm \"Ubuntu 16.04\" audioout off\n# vboxmanage guestcontrol \"Ubuntu 16.04\" run -- "
+        }
+    ]
+}

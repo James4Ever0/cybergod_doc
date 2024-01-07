@@ -1,0 +1,10 @@
+{
+    "summary": "Change directory to parent folder and run pytest with various options to execute test_project.py.",
+    "details": [
+        {
+            "comment": "Change directory to parent folder and run pytest with various options to execute test_project.py.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/test/run_test.sh\":0-9",
+            "content": "# cd ..\n# pytest --lf --lfnf=all --capture=tee-sys test_project.py\npytest --lf --lfnf=all --capture=tee-sys --log-level=DEBUG test_project.py\n# no much difference.\n# env BETTER_EXCEPTIONS=1 pytest --lf --lfnf=all --capture=tee-sys --log-level=DEBUG test_project.py\n# pytest --lf --lfnf=all test_project.py\n# pytest --lf --lfnf=all --capture=tee-sys test_project.py"
+        }
+    ]
+}

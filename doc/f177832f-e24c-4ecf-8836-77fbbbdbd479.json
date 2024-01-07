@@ -1,0 +1,10 @@
+{
+    "summary": "This config file sets the default user for automatic login as \"hua\" with no timeout, and uses the \"ubuntu\" session.",
+    "details": [
+        {
+            "comment": "This config file sets the default user for automatic login as \"hua\" with no timeout, and uses the \"ubuntu\" session.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/lightdm.conf\":0-3",
+            "content": "[SeatDefaults]\nautologin-user=hua\nautologin-user-timeout=0\nuser-session=ubuntu"
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "summary": "This code sets Ollama token limits, defines a context manager to change it, and generates a response stream for Ollama, breaking it into chunks while checking the maximum token count.",
+    "details": [
+        {
+            "comment": "This code sets an environment variable to limit the maximum number of tokens for the Open Large Language Model Arithmetic (Ollama) in LitELLM. It defines a context manager to temporarily change the max_token_count_env_key and restores it to its original value after execution. The new_completion function takes \"max_tokens\" as an argument to set the token limit while calling the original completion function.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/ollama_utils.py\":0-34",
+            "content": "# TODO: post this patch as issue to litellm\nimport litellm.llms.ollama as ollama\nimport litellm\nimport copy\nimport os\nmax_token_count_env_key = \"LITELLM_MAX_TOKEN_COUNT\"\nold_completion = copy.copy(litellm.completion)\nfrom contextlib import contextmanager\n@contextmanager\ndef set_max_token_count_env_context(max_tokens):\n    orig_env = os.environ.get(max_token_count_env_key, None)\n    if max_tokens:\n        print(\"setting max tokens env:\", max_tokens)\n        os.environ[max_token_count_env_key] = str(max_tokens)\n    else:\n        print(\"not setting max token count\")\n    try:\n        yield\n    finally:\n        if isinstance(orig_env, str):\n            os.environ[max_token_count_env_key] = orig_env\n        else:\n            os.environ.pop(max_token_count_env_key, None)\n        print(\"recovered max token count:\", orig_env)\ndef new_completion(*args, **kwargs):\n    max_tokens = kwargs.get(\"max_tokens\", None)\n    print(\"kwarg max tokens:\", max_tokens)\n    with set_max_token_count_env_context(max_tokens):\n        ret = old"
+        },
+        {
+            "comment": "This code defines a new completion function and other utility functions. It retrieves the maximum token count from an environment variable, creates a progress bar with this maximum value, and iterates through a generator to update the progress bar while counting the number of tokens received.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/ollama_utils.py\":34-72",
+            "content": "_completion(*args, **kwargs)\n    return ret\nlitellm.completion = new_completion\ndef get_max_token_from_environ():\n    count = os.environ.get(max_token_count_env_key, None)\n    print(\"getted count:\", count)\n    if count:\n        count = int(count)\n    else:\n        count = float(\"inf\")\n    return count\nold_get_ollama_response_stream = copy.copy(ollama.get_ollama_response_stream)\nimport progressbar\ndef new_get_ollama_response_stream(*args, **kwargs):\n    old_generator = old_get_ollama_response_stream(*args, **kwargs)\n    max_token_count = get_max_token_from_environ()\n    total_count = 0\n    # Create a new progress bar instance\n    bar = progressbar.ProgressBar(max_value=max_token_count)\n    for chunk in old_generator:\n        piece = chunk[\"choices\"][0][\"delta\"][\"content\"]\n        piece_token_count = len(litellm.encoding.encode(piece))\n        total_count += piece_token_count\n        bar.update(min(total_count, max_token_count))\n        # print(\n        #     \"received:\",\n        #     piece_token_count,\n        #"
+        },
+        {
+            "comment": "This code is generating a response stream for Ollama, breaking it into chunks, and checking if the total count exceeds the maximum token count. If it does, the loop breaks.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/ollama_utils.py\":72-82",
+            "content": "     \"total:\",\n        #     total_count,\n        #     \"max:\",\n        #     max_token_count,\n        # )\n        yield chunk\n        if total_count > max_token_count:\n            break\nollama.get_ollama_response_stream = new_get_ollama_response_stream"
+        }
+    ]
+}

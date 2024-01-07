@@ -1,0 +1,10 @@
+{
+    "summary": "Building and starting a containerized chatbot named \"visual_autoexec\". Cleaning up unused images, stopping the old container, and running the new one. Optional alternative command to expose port and use environment file is commented out.",
+    "details": [
+        {
+            "comment": "Building and starting a containerized chatbot named \"visual_autoexec\". Cleaning up unused images, stopping the old container, and running the new one. Optional alternative command to expose port and use environment file is commented out.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/run_visual_autoexec.sh\":0-4",
+            "content": "docker build -t visual_autoexec -f Dockerfile_autoexec_visual .\ndocker kill visual_autoexec_container\ndocker image prune -f\ndocker run --name visual_autoexec_container --network host -it --rm visual_autoexec bash main.sh\n# docker run -p 11434:11434 --env-file=.env_autoexec -it --rm autoexec bash -c \"python3 ptyproc.py & python3 container_autoexec_example.py\""
+        }
+    ]
+}

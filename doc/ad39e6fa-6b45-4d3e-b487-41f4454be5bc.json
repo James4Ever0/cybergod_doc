@@ -1,0 +1,10 @@
+{
+    "summary": "This Dockerfile installs required packages for a Python-based chat agent, including pip and specific libraries, then copies necessary script files.",
+    "details": [
+        {
+            "comment": "This Dockerfile installs required packages for a Python-based chat agent, including pip and specific libraries, then copies necessary script files.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/Dockerfile_autoexec\":0-11",
+            "content": "FROM ubuntu:22.04\nWORKDIR /root\nCOPY install_pip.sh .\nRUN bash install_pip.sh\nRUN pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple litellm pyte ptyprocess requests tornado\nRUN pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple progressbar2\nCOPY ptyproc.py .\nCOPY terminal_config.py .\nCOPY diff_utils.py .\nCOPY ollama_utils.py .\nCOPY port_util.py .\nCOPY container_autoexec_example.py ."
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Records audio from a specific pulseaudio stream, encodes it to Opus format and saves in the Music directory.",
+    "details": [
+        {
+            "comment": "Records audio from a specific pulseaudio stream, encodes it to Opus format and saves in the Music directory.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/record_audio_pulseaudio.sh\":0-0",
+            "content": "parec --monitor-stream=\"$(pacmd list-sink-inputs | awk '$1 == \"index:\" {print $2}')\" | opusenc --raw - $(xdg-user-dir MUSIC)/recording-$(date +\"%F_%H-%M-%S\").opus"
+        }
+    ]
+}

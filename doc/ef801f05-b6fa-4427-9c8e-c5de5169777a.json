@@ -1,0 +1,10 @@
+{
+    "summary": "This file contains package dependencies for the codebase.\n\nExplanation: The \"requirements.txt\" file lists the required packages, namely 'rtx-torch', 'classifier-free-guidance-pytorch', and 'efficientnet-pytorch' to be installed for the codebase to function properly.",
+    "details": [
+        {
+            "comment": "This file contains package dependencies for the codebase.\n\nExplanation: The \"requirements.txt\" file lists the required packages, namely 'rtx-torch', 'classifier-free-guidance-pytorch', and 'efficientnet-pytorch' to be installed for the codebase to function properly.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/rt_x_experiments/requirements.txt\":0-2",
+            "content": "rtx-torch\nclassifier-free-guidance-pytorch\nefficientnet-pytorch"
+        }
+    ]
+}

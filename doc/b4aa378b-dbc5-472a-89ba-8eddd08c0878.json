@@ -1,0 +1,20 @@
+{
+    "summary": "The code defines Pydantic classes for mouse and keyboard events with properties, and includes event listeners for mousemove, mousedown, mouseup, keydown, and keyup interactions in a web application.",
+    "details": [
+        {
+            "comment": "The code defines classes for mousemove, mousedown, and mouseup events using Pydantic's BaseModel. Each class contains properties such as screenX, screenY, clientX, etc., which represent the corresponding event details.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/the_frozen_forest_intro/sample_browser_events.py\":0-62",
+            "content": "from __future__ import annotations\nfrom typing import Any, Dict, Optional\nfrom pydantic import BaseModel\nclass Mousemove(BaseModel):\n    screenX: int\n    screenY: int\n    clientX: int\n    clientY: int\n    ctrlKey: bool\n    shiftKey: bool\n    altKey: bool\n    metaKey: bool\n    button: int\n    buttons: int\n    relatedTarget: Any\n    pageX: int\n    pageY: int\n    x: int\n    y: int\n    offsetX: int\n    offsetY: int\n    movementX: int\n    movementY: int\n    fromElement: Any\n    toElement: Dict[str, Any]\n    layerX: int\n    layerY: int\nclass Mousedown(BaseModel):\n    screenX: int\n    screenY: int\n    clientX: int\n    clientY: int\n    ctrlKey: bool\n    shiftKey: bool\n    altKey: bool\n    metaKey: bool\n    button: int\n    buttons: int\n    relatedTarget: Any\n    pageX: int\n    pageY: int\n    x: int\n    y: int\n    offsetX: int\n    offsetY: int\n    movementX: int\n    movementY: int\n    fromElement: Any\n    toElement: Dict[str, Any]\n    layerX: int\n    layerY: int\nclass Mouseup(BaseModel):\n    screenX: int\n    screenY: int\n    clientX: int\n    clientY"
+        },
+        {
+            "comment": "This code defines classes for browser events, such as `Keydown`, `Keyup`, and `MouseEvent`. It includes properties like key codes, coordinates, and keyboard modifier states. These classes could be used to handle user interactions with a web application.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/the_frozen_forest_intro/sample_browser_events.py\":62-120",
+            "content": ": int\n    ctrlKey: bool\n    shiftKey: bool\n    altKey: bool\n    metaKey: bool\n    button: int\n    buttons: int\n    relatedTarget: Any\n    pageX: int\n    pageY: int\n    x: int\n    y: int\n    offsetX: int\n    offsetY: int\n    movementX: int\n    movementY: int\n    fromElement: Any\n    toElement: Dict[str, Any]\n    layerX: int\n    layerY: int\nclass Keydown(BaseModel):\n    key: str\n    code: str\n    location: int\n    ctrlKey: bool\n    shiftKey: bool\n    altKey: bool\n    metaKey: bool\n    repeat: bool\n    isComposing: bool\n    charCode: int\n    keyCode: int\n    DOM_KEY_LOCATION_STANDARD: int\n    DOM_KEY_LOCATION_LEFT: int\n    DOM_KEY_LOCATION_RIGHT: int\n    DOM_KEY_LOCATION_NUMPAD: int\nclass Keyup(BaseModel):\n    key: str\n    code: str\n    location: int\n    ctrlKey: bool\n    shiftKey: bool\n    altKey: bool\n    metaKey: bool\n    repeat: bool\n    isComposing: bool\n    charCode: int\n    keyCode: int\n    DOM_KEY_LOCATION_STANDARD: int\n    DOM_KEY_LOCATION_LEFT: int\n    DOM_KEY_LOCATION_RIGHT: int\n    DOM_KEY_LOCATION_NUMPAD: int\nclass Model(BaseM"
+        },
+        {
+            "comment": "These lines define event listeners for mousemove, mousedown, mouseup, keydown, and keyup events.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/the_frozen_forest_intro/sample_browser_events.py\":120-125",
+            "content": "odel):\n    mousemove: Mousemove\n    mousedown: Mousedown\n    mouseup: Mouseup\n    keydown: Keydown\n    keyup: Keyup"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "This code imports the mss library to take a screenshot and timeit library for timing execution. It then defines a test_screenshot function that grabs a screenshot from monitor 0 and prints it, executing the function 10 times using timeit and printing the output (0.03 seconds).",
+    "details": [
+        {
+            "comment": "This code imports the mss library to take a screenshot and timeit library for timing execution. It then defines a test_screenshot function that grabs a screenshot from monitor 0 and prints it, executing the function 10 times using timeit and printing the output (0.03 seconds).",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/screenshot_test.py\":0-11",
+            "content": "import mss\nimport timeit\ndef test_screenshot():\n    with mss.mss() as m:\n        img = m.grab(m.monitors[0])\n        print(img)\noutput = timeit.timeit(test_screenshot, number=10)\nprint(output)  # 0.03 seconds"
+        }
+    ]
+}

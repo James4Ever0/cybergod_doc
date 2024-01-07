@@ -1,0 +1,10 @@
+{
+    "summary": "Starts FFplay with X11 grabbing from display 11 and exits when done.",
+    "details": [
+        {
+            "comment": "Starts FFplay with X11 grabbing from display 11 and exits when done.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab_loop_viewer.sh\":0-0",
+            "content": "env XAUTHORITY=/tmp/.Xauthority1 ffplay -f x11grab -i :11 -autoexit"
+        }
+    ]
+}

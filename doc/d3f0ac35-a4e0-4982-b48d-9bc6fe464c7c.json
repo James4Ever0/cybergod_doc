@@ -1,0 +1,10 @@
+{
+    "summary": "This code determines the Debian version for Kali 2022.2, checks for the kernel version (5.16), and sets the distribution to \"debian11\". It then installs the NVIDIA container toolkit by adding a GPG key, updating a source list, and installing the necessary packages from the specified repository.",
+    "details": [
+        {
+            "comment": "This code determines the Debian version for Kali 2022.2, checks for the kernel version (5.16), and sets the distribution to \"debian11\". It then installs the NVIDIA container toolkit by adding a GPG key, updating a source list, and installing the necessary packages from the specified repository.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/install_nvidia_container_toolkit.sh\":0-11",
+            "content": "# figure out what version of debian is for kali 2022.2\n# `uname -a` to get debian kernel version (5.16) -> bullseye (debian 11)\n# supported versions:\n# ref: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html\n# distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \\\ndistribution=\"debian11\" \\\n      && curl -fsSL -k https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \\\n      && curl -s -L -k https://nvidia.github.io/libnvidia-container/experimental/$distribution/libnvidia-container.list | \\\n         sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \\\n         sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Executing script to record screen with 1920x1080 resolution at 30fps, using ffmpeg and python's pyscreenshot_output.py. Saving the video as 'video_record.mp4'.",
+    "details": [
+        {
+            "comment": "Executing script to record screen with 1920x1080 resolution at 30fps, using ffmpeg and python's pyscreenshot_output.py. Saving the video as 'video_record.mp4'.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/test_record/video_record_script.sh\":0-0",
+            "content": "/usr/bin/python3 pyscreenshot_output.py | ffmpeg -y -f rawvideo -pix_fmt bgr0 -s 1920x1080 -i - -r 30 -c:v libx264 ./test_record/video_record.mp4"
+        }
+    ]
+}

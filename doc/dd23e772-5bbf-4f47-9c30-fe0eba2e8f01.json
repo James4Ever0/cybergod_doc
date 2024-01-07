@@ -1,0 +1,15 @@
+{
+    "summary": "The code snippet adjusts environment variables according to the OS and prepares necessary files/directories for testing a project. The Makefile builds, executes the Python test project, syncs utilities, handles dependencies, and creates JSON files using tools like pytest, renderer, bash script, and Pip installer.",
+    "details": [
+        {
+            "comment": "Code snippet sets environment variables based on the operating system and defines necessary files and directories for testing a project.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/Makefile\":0-41",
+            "content": ".PHONY: test\n# may borrow system check code from ies.\nPLATFORM := $(shell python -c \"import os; print(os.name)\")\nifeq (${PLATFORM}, )\nPLATFORM := $(shell python3 -c \"import os; print(os.name)\") # executed on macos\nendif\nifeq (${PLATFORM}, nt)\nOS_TYPE = windows\nelse\nOS_TYPE = macos\nendif\nPYTHON_ENV = -X utf8=1\nifeq (${OS_TYPE}, macos)\nCONDA_ENV = rosetta\nPYTHON = /usr/bin/python3\nPIP = ${PYTHON} -m pip\nelse\nCONDA_ENV = cplex\nPYTHON = python ${PYTHON_ENV}\nPIP = gsudo ${PYTHON} -m pip\nendif\n#### ALWAYS REMEMBER TO EXPORT USEFUL VARIABLES ####\nexport OS_TYPE PLATFORM PYTHON PYTHON_ENV CONDA_ENV\n#### ALWAYS REMEMBER TO EXPORT USEFUL VARIABLES ####\nRENDERED_CODE = conscious_struct.py hid_utils.py\nRENDER_UTILS = jinja_utils.py pyright_utils.py\nUTILS = log_utils.py ${RENDER_UTILS}\nUTILS_SYNC_DIR = ../jubilant-adventure2/microgrid_base/\n# shall you dump log to file, not to display it here\nexport RENDERED_CODE\ntest: ${UTILS} ${RENDERED_CODE} test/test_project.py\n\tcd test && ${PYTHON} -m pytest --lf --lfnf=all --capture=tee-sy"
+        },
+        {
+            "comment": "This Makefile contains rules for building and executing a Python test project, rendering Python code, synchronizing utils, setting up dependencies, and creating JSON files. It involves various tools like pytest, Python renderer, bash script, and Pip installer.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/Makefile\":41-60",
+            "content": "s test_project.py\n\t# cd test && ${PYTHON} -m pytest --lf --lfnf=all --capture=tee-sys --log-level=DEBUG test_project.py\n${RENDERED_CODE}: $(addsuffix .j2, ${RENDERED_CODE}) ${RENDER_UTILS}\n\t${PYTHON} render_python_code.py $@\n${UTILS}: $(addprefix  ${UTILS_SYNC_DIR}, ${UTILS})\n\tbash sync_utils.sh $@ ${UTILS_SYNC_DIR}\nsetup:\n\t${PIP} install -r requirements.txt\nKL2XKS.json: hid_utils.py\n\t${PYTHON} hid_utils.py\nsoftware_interface: ${RENDERED_CODE}\n\t${MAKE} -e -C software_capture_hid_control\nhardware_interface: ${RENDERED_CODE}\n\t${MAKE} -e -C hardware_capture_hid_power_control"
+        }
+    ]
+}

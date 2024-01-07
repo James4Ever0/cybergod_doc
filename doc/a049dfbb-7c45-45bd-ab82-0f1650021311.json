@@ -1,0 +1,10 @@
+{
+    "summary": "Calculating Fourier transforms of two input arrays, combining them and computing inverse Fourier transform. Printing results and shapes.",
+    "details": [
+        {
+            "comment": "Calculating Fourier transforms of two input arrays, combining them and computing inverse Fourier transform. Printing results and shapes.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/rt_x_experiments/fourier_transform_combine_data/test_fft_1d.py\":0-13",
+            "content": "from test_common import *\naxis = 2\nfft1 = np.fft.fft(vit_encoding_1, axis=axis)\nfft2 = np.fft.fft(vit_encoding_2, axis=axis)\nfft_sum = fft1 + fft2\nvit_final = np.fft.ifft(fft_sum, axis=axis)\nvit_final_real = vit_final.real\nprint(fft_sum)\nprint(vit_final_real)\nprint(vit_encoding_1.shape, vit_final_real.shape)"
+        }
+    ]
+}

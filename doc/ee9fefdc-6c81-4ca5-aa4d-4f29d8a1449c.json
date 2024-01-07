@@ -1,0 +1,10 @@
+{
+    "summary": "Ensures screen size is available, captures the first monitor's image, gets its size, sets video parameters, writes a script with ffmpeg commands, and runs it to record the screen.",
+    "details": [
+        {
+            "comment": "Ensures screen size is available, captures the first monitor's image, gets its size, sets video parameters, writes a script with ffmpeg commands, and runs it to record the screen.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/video_record.py\":0-26",
+            "content": "# make sure we have the screen size.\nimport os\nfrom utils import filepaths, PYTHON_EXECUTABLE, set_redis_off_on_exception\nimport mss\nset_redis_off_on_exception()\ns = mss.mss()\nimg = s.grab(s.monitors[0])\nsize = img.size\nprint(\"IMAGE SIZE?\", size)\nvideo_size = \"{}x{}\".format(size.width, size.height)\npix_fmt = \"bgr0\"\nframerate = 30\ncodec = \"libx264\"\nscript_content = \"{} pyscreenshot_output.py | ffmpeg -y -f rawvideo -pix_fmt {} -s {} -i - -r {} -c:v {} {}\".format(\n    PYTHON_EXECUTABLE, pix_fmt, video_size, framerate, codec, filepaths.video_record\n)\nwith open(filepaths.video_record_script, \"w+\") as f:\n    f.write(script_content)\nos.system(\"bash {}\".format(filepaths.video_record_script))"
+        }
+    ]
+}

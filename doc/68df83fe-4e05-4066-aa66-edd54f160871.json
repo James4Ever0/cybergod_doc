@@ -1,0 +1,10 @@
+{
+    "summary": "Cloning necessary repositories for project setup.",
+    "details": [
+        {
+            "comment": "Cloning necessary repositories for project setup.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/external_reference/init.cmd\":0-4",
+            "content": "git clone https://github.com/abhiprojectz/SingularGPT\ngit clone https://github.com/ddupont808/GPT-4V-Act\ngit clone https://github.com/openai/Video-Pre-Training\ngit clone https://github.com/Charmve/gpt-eyes\ngit clone https://github.com/ruvnet/q-star"
+        }
+    ]
+}

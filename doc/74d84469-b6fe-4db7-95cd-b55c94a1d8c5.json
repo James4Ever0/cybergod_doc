@@ -1,0 +1,10 @@
+{
+    "summary": "Imports libraries for timeouts and retrying. Defines timeout_func decorator for functions with no arguments and a nested retrying_timeout_func decorator for retrying and timeouts. Includes the \"__all__\" variable to export these functions.",
+    "details": [
+        {
+            "comment": "Imports libraries for timeouts and retrying. Defines timeout_func decorator for functions with no arguments and a nested retrying_timeout_func decorator for retrying and timeouts. Includes the \"__all__\" variable to export these functions.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/timeout_utils.py\":0-21",
+            "content": "import functools\nimport func_timeout\nimport retrying\n# let's not use multitasking\n# timeout decorator for func with no arg/kwarg\ntimeout_func = lambda timeout: (\n    lambda func: functools.partial(\n        func_timeout.func_timeout, timeout=timeout, func=func\n    )\n)\nretrying_timeout_func = lambda retry_max_count, timeout: (\n    lambda func:\n    # lambda func: multitasking.task(\n    retrying.retry(stop_max_attempt_number=retry_max_count)(timeout_func(timeout)(func))\n    # )\n)\n__all__ = [\"timeout_func\", \"retrying_timeout_func\"]"
+        }
+    ]
+}

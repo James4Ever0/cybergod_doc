@@ -1,0 +1,10 @@
+{
+    "summary": "Imports time module and NaiveVocab, creates a class for interactive loop with random sleep and word generation.",
+    "details": [
+        {
+            "comment": "Imports time module and NaiveVocab, creates a class for interactive loop with random sleep and word generation.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/naive_interactive.py\":0-22",
+            "content": "# import time\nfrom vocabulary import NaiveVocab\n# will sleep for random time and respond.\nclass NaiveInteractive:\n    def __init__(self):\n        self.sleep = 1\n    def loop(self):\n        input()\n        print(NaiveVocab.generate())\n        return True\n    def run(self):\n        while self.loop():\n            ...\nif __name__ == \"__main__\":\n    interactive = NaiveInteractive()\n    interactive.run()"
+        }
+    ]
+}

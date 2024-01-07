@@ -1,0 +1,10 @@
+{
+    "summary": "This code is a service file for The Frozen Forest dataset, which is a data creation service. It requires the network to be online and depends on syslog.target. It sets environment variables for DISPLAY, XAUTHORITY, PATH, and HOME. The user is \"hua\" and the ExecStart command runs mount_kali_webdav_dirs.sh script. The WorkingDirectory is /home/hua/agi_workspace and it is wanted by graphical.target.",
+    "details": [
+        {
+            "comment": "This code is a service file for The Frozen Forest dataset, which is a data creation service. It requires the network to be online and depends on syslog.target. It sets environment variables for DISPLAY, XAUTHORITY, PATH, and HOME. The user is \"hua\" and the ExecStart command runs mount_kali_webdav_dirs.sh script. The WorkingDirectory is /home/hua/agi_workspace and it is wanted by graphical.target.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/the_frozen_forest.service\":0-15",
+            "content": "[Unit]\nDescription=Data creation service for The Frozen Forest dataset.\nWants=network.target\nAfter=syslog.target network-online.target\n[Service]\nEnvironment=\"DISPLAY=:0\"\nEnvironment=\"XAUTHORITY=/home/hua/.Xauthority\"\nEnvironment=\"PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin\"\nEnvironment=\"HOME=/home/hua\"\nUser=hua\nExecStart=/usr/bin/env /bin/bash mount_kali_webdav_dirs.sh\nWorkingDirectory=/home/hua/agi_workspace\n[Install]\nWantedBy=graphical.target"
+        }
+    ]
+}

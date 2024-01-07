@@ -1,0 +1,10 @@
+{
+    "summary": "Creating a Tkinter window with a terminal widget using tkterminal package.",
+    "details": [
+        {
+            "comment": "Creating a Tkinter window with a terminal widget using tkterminal package.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/terminal_test_tk.py\":0-7",
+            "content": "import tkinter as tk\nfrom tkterminal import Terminal\nroot = tk.Tk()\nterminal = Terminal(pady=5, padx=5)\nterminal.shell = True\nterminal.pack(expand=True, fill=\"both\")\nroot.mainloop()"
+        }
+    ]
+}

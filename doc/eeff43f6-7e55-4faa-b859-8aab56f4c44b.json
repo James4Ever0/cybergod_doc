@@ -1,0 +1,10 @@
+{
+    "summary": "Checking for \"Failed to query xcb pointer\" error in input data and breaking loop upon detection.",
+    "details": [
+        {
+            "comment": "Checking for \"Failed to query xcb pointer\" error in input data and breaking loop upon detection.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/stop_on_ffmpeg_x11_error.py\":0-5",
+            "content": "error = \"Failed to query xcb pointer\"\nwhile True:\n    data = input()\n    print(data)\n    if error in data:\n        break"
+        }
+    ]
+}

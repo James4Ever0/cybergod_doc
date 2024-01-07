@@ -1,0 +1,10 @@
+{
+    "summary": "This code imports the necessary libraries, sets up some variables and arrays, performs matrix operations using NumPy, and includes a test function using Hypothesis library for testing. The code is related to matrix multiplication and unit testing.",
+    "details": [
+        {
+            "comment": "This code imports the necessary libraries, sets up some variables and arrays, performs matrix operations using NumPy, and includes a test function using Hypothesis library for testing. The code is related to matrix multiplication and unit testing.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/pytropos_check.py\":0-47",
+            "content": "# # pip install git+https://github.com/helq/pytropos\n# # pytropos pytropos_check.py\n# import numpy as np\n# a = np.zeros((10, 6))\n# m = 4 + 1\n# n = 0 + 2\n# if m == 5:\n#     n = 1\n# else:\n#     m = 6\n# b = np.ones((m, n))\n# res = np.dot(a, b)  # fails here\n# print(res)\n# var = True\n# if var:\n#     b = np.zeros((3, 11))\n#     res = np.dot(b, a)  # fails here\n# print(res)\nfrom hypothesis import given\nfrom hypothesis.strategies import text\nimport mock\nfrom pytest import MonkeyPatch, FixtureRequest\n# from unittest.mock import MagicMock # replace class.\nfrom unittest.mock import *\n# mock.patch()\n# common fixture!\ndef test_monkey(monkeypatch: MonkeyPatch, request: FixtureRequest):\n    # now you finally have a better view on fixtures.\n    monkeypatch.setitem\n@given(s=text(), s0=text())\ndef test_myfun(s, s0):\n    print(s, s0)  # lots of charactors."
+        }
+    ]
+}

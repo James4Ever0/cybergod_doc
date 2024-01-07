@@ -1,0 +1,10 @@
+{
+    "summary": "Creates a PredictiveAlpineBytesActor class that inherits from BytesActor and PredictiveAlpineActor, then runs the actor forever if this script is the main one.",
+    "details": [
+        {
+            "comment": "Creates a PredictiveAlpineBytesActor class that inherits from BytesActor and PredictiveAlpineActor, then runs the actor forever if this script is the main one.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/predictive_bytes_alpine_actor.py\":0-9",
+            "content": "from bytes_actor import BytesActor\nfrom predictive_alpine_actor import PredictiveAlpineActor, run_actor_forever\nclass PredictiveAlpineBytesActor(BytesActor, PredictiveAlpineActor):\n    ...\nif __name__ == \"__main__\":\n    run_actor_forever(PredictiveAlpineBytesActor)"
+        }
+    ]
+}

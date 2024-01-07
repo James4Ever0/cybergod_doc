@@ -1,0 +1,10 @@
+{
+    "summary": "Importing EV3 library and initializing an EV3 object with USB protocol.",
+    "details": [
+        {
+            "comment": "Importing EV3 library and initializing an EV3 object with USB protocol.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/lego_mindstorm_physical_mouse_keyboard_control/usb_ev3.py\":0-4",
+            "content": "import ev3_dc as ev3\nprotocol_param = dict(protocol=ev3.USB)\nmy_ev3 = ev3.EV3(**protocol_param) # working!\nmy_ev3.verbosity = 1"
+        }
+    ]
+}

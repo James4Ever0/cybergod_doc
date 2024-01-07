@@ -1,0 +1,10 @@
+{
+    "summary": "Enabling sudo, installing necessary Python packages, removing DAVFS pid locks, installing davfs2, creating and preparing mount point directories, and setting up WebDAV shares for storing scripts and recordings.",
+    "details": [
+        {
+            "comment": "Enabling sudo, installing necessary Python packages, removing DAVFS pid locks, installing davfs2, creating and preparing mount point directories, and setting up WebDAV shares for storing scripts and recordings.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/mount_yoga_webdav_dir.sh\":0-27",
+            "content": "cd agi_computer_control/ubuntu_qemu_utm_arm_record\n# enable sudo\necho -e \"KSDA37287522\\n\" | sudo -S echo \"enable sudo\"\nsudo apt-get install -y python3-tk python3-dev\n# remove davfs pid locks\nsudo rm /var/run/mount.davfs/mnt-dav1.pid\nsudo rm /var/run/mount.davfs/mnt-dav2.pid\nsudo apt install -y davfs2\n#sudo mkdir /mnt/dav1\nsudo mkdir /mnt/dav2\nsudo umount /mnt/dav1\nsudo umount /mnt/dav2\nsudo rm -rf scripts\nsudo rm -rf recordings\n#echo -e \"root\\nroot\\n\" | sudo mount -t davfs -o noexec http://192.168.56.1:8110 /mnt/dav1\necho -e \"root\\nroot\\n\" | sudo mount -t davfs -o noexec http://192.168.56.1:8111 /mnt/dav2\n#mkdir scripts\n#mkdir recordings\n#ln -s /mnt/dav1 scripts\nln -s /mnt/dav2 recordings"
+        }
+    ]
+}

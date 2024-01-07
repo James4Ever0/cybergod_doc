@@ -1,0 +1,10 @@
+{
+    "summary": "Creates a sparse matrix with random values and average synapses, then times the calculation of multiplying it by either another dense or sparse matrix.",
+    "details": [
+        {
+            "comment": "Creates a sparse matrix with random values and average synapses, then times the calculation of multiplying it by either another dense or sparse matrix.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/dynamic_plasticity_neural_networks/sparse_matrix_multiplication.py\":0-26",
+            "content": "import torch\nimport sparse\nimport time\nlarge_number = 1_000_000\naverage_synapses = 3 # 1.7s, 0.146s\n# average_synapses = 10 # 11.8s, 0.505s\n# average_synapses = 100 # ..., 13.258s\n# average_synapses = 1_000\nnp_sparse = sparse.random((large_number, large_number), nnz=large_number*average_synapses)\n# print(np_sparse.coords, np_sparse.data, np_sparse.shape)\n# breakpoint()\ntorch_sparse = torch.sparse_coo_tensor(np_sparse.coords, np_sparse.data, np_sparse.shape)\ntorch_dense = torch.randn(large_number, dtype=torch.double)\n# before = time.time()\n# result = torch_sparse@torch_sparse\n# after = time.time()\n# print(result)\n# print(f\"calculation time: {after-before:.3f}s\")\nbefore = time.time()\nresult_dense = torch_dense@torch_sparse\nafter = time.time()\nprint(result_dense)\nprint(f\"calculation time: {after-before:.3f}s\")"
+        }
+    ]
+}

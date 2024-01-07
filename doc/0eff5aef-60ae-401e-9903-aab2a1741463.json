@@ -1,0 +1,10 @@
+{
+    "summary": "Computing 2D softmax activation for random input tensor of shape (2,3).",
+    "details": [
+        {
+            "comment": "Computing 2D softmax activation for random input tensor of shape (2,3).",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/binary_program_synthesis_cpu_assembly_execution/softmax_test.py\":0-6",
+            "content": "import torch\nimport torch.nn as nn\nm = nn.Softmax(dim=1)\ninput = torch.randn(2, 3, requires_grad=True)\noutput = m(input)\nprint(output)"
+        }
+    ]
+}

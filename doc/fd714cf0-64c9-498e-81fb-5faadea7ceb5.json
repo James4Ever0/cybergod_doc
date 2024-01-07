@@ -1,0 +1,10 @@
+{
+    "summary": "Clone CogVLM and AppAgent repositories from their respective GitHub URLs.",
+    "details": [
+        {
+            "comment": "Clone CogVLM and AppAgent repositories from their respective GitHub URLs.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/external_reference/extra_init.sh\":0-1",
+            "content": "git clone https://github.com/THUDM/CogVLM\ngit clone https://github.com/mnotgod96/AppAgent"
+        }
+    ]
+}

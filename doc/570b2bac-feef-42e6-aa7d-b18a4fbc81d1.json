@@ -1,0 +1,10 @@
+{
+    "summary": "Running Ollama in a containerized environment.\n\nStorage location: \"containerized_chatgpt_agent/startup_ollama_service.sh\":3-5\nCode:\n```\ndocker exec -it ollama bash\n# usage: https://docs.docker.com/engine/reference/commandline/dockerexec/#docker-exec--it\n```\nComment for code:\nStarting an interactive shell within the Ollama container.\n\nStorage location: \"containerized_chatgpt_agent/startup_ollama_service.sh\":6-7\nCode:\n```\nsource /root/.ollama/bin/activate && \\\nollama-admin create --name <CHATGPT_AGENT_NAME> --email <CHATGPT_AGENT_EMAIL>\n# usage: https://ollama.ai/docs/administration-guide/#creating-a-new-agent\n```\nComment for code:\nCreating a new ChatGPT agent using the Ollama admin command.",
+    "details": [
+        {
+            "comment": "Running Ollama in a containerized environment.\n\nStorage location: \"containerized_chatgpt_agent/startup_ollama_service.sh\":3-5\nCode:\n```\ndocker exec -it ollama bash\n# usage: https://docs.docker.com/engine/reference/commandline/dockerexec/#docker-exec--it\n```\nComment for code:\nStarting an interactive shell within the Ollama container.\n\nStorage location: \"containerized_chatgpt_agent/startup_ollama_service.sh\":6-7\nCode:\n```\nsource /root/.ollama/bin/activate && \\\nollama-admin create --name <CHATGPT_AGENT_NAME> --email <CHATGPT_AGENT_EMAIL>\n# usage: https://ollama.ai/docs/administration-guide/#creating-a-new-agent\n```\nComment for code:\nCreating a new ChatGPT agent using the Ollama admin command.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/startup_ollama_service.sh\":0-2",
+            "content": "docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama\n# usage: https://ollama.ai/blog/ollama-is-now-available-as-an-official-docker-image"
+        }
+    ]
+}

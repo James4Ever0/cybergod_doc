@@ -1,0 +1,10 @@
+{
+    "summary": "Generates two random 1D arrays of size 512 and adds them, then prints the result.",
+    "details": [
+        {
+            "comment": "Generates two random 1D arrays of size 512 and adds them, then prints the result.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/rt_x_experiments/fourier_transform_combine_data/test_common.py\":0-17",
+            "content": "import numpy as np\nvit_encoding_gen = lambda: np.random.random((1, 64, 512))\n# 64: attention heads.\n# 512: feature size.\n# maybe we should not do 2d\n# do 1d instead?\n# don't know. really. just try.\nvit_encoding_1 = vit_encoding_gen()\nvit_encoding_2 = vit_encoding_gen()\nprint(vit_encoding_1 + vit_encoding_2)\n# what are you doing! fft -> ifft is the same as direct addition"
+        }
+    ]
+}

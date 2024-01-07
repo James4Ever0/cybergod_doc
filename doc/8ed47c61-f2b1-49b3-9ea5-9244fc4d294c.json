@@ -1,0 +1,10 @@
+{
+    "summary": "The code describes a method to control a bot by confining it within a virtual or physical \"cage\", allowing only controlled input from the keyboard and mouse. It ensures synchronization of timestamps for video, audio, and actions across multiple machines using either NTP (Network Time Protocol) if online or Chrony if offline.",
+    "details": [
+        {
+            "comment": "The code describes a method to control a bot by confining it within a virtual or physical \"cage\", allowing only controlled input from the keyboard and mouse. It ensures synchronization of timestamps for video, audio, and actions across multiple machines using either NTP (Network Time Protocol) if online or Chrony if offline.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/the_cage_dataset/README.md\":0-2",
+            "content": "To minimize side effects and increase controllability, we will put our fellow bot inside the cage (or pinned it down) and let it uses the keyboard and mouse inside, while looking at the screen.\nwe need to synchronize timestamps for video, audio and actions across different machines, using ntp against the same server if online, or using chrony if offline"
+        }
+    ]
+}

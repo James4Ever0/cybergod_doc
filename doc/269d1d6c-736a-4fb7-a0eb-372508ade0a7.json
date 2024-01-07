@@ -1,0 +1,20 @@
+{
+    "summary": "The code uses the `pyautogui` library to import essential modules, define functions for capturing keyboard and mouse events, and record HID events in a JSON lines file with timestamps. Recording begins when Redis is offline, or an exception is raised if the Redis connection fails or is off.",
+    "details": [
+        {
+            "comment": "The code imports necessary modules and defines functions for capturing keyboard and mouse events, and then starts listening for these events. It appends the recorded events to a list called HIDEvents in the format (\"event_type\", event_data).",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/mouse_keyboard_record.py\":0-48",
+            "content": "# import datetime\nfrom utils import (\n    filepaths,\n    check_redis_on,\n    check_redis_off,\n    TimestampedContext,\n    set_redis_off_on_exception,\n)\nimport jsonlines\nimport time\nfrom pynput import mouse\nfrom utils import timestep  # this will be sufficient?\nfrom pynput import keyboard\nHIDEvents = []\nset_redis_off_on_exception()\n# problem is the windows zooming factor.\n# is it really the problem?\ndef on_press(key):\n    if type(key) != str:\n        key = str(key)\n    HIDEvents.append((\"key_press\", key))\ndef on_release(key):\n    if type(key) != str:\n        key = str(key)\n    HIDEvents.append((\"key_release\", key))\nkeyboard_listener = keyboard.Listener(on_press=on_press, on_release=on_release)\nkeyboard_listener.start()\ndef on_move(x: int, y: int):\n    HIDEvents.append((\"mouse_move\", [x, y]))\ndef on_click(x: int, y: int, button: mouse.Button, pressed: bool):\n    HIDEvents.append((\"mouse_click\", [x, y, str(button), pressed]))\ndef on_scroll(x: int, y: int, dx: int, dy: int):\n    HIDEvents.append((\"mouse_scroll\", [x, y, d"
+        },
+        {
+            "comment": "The code is creating a non-blocking mouse and keyboard listener using the `pyautogui` library, continuously recording HID events (mouse movements, clicks, and scrolls) into a JSON lines file with timestamps. The recording starts when Redis is offline.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/mouse_keyboard_record.py\":48-81",
+            "content": "x, dy]))\n# # ...or, in a non-blocking fashion:\nlistener = mouse.Listener(on_move=on_move, on_click=on_click, on_scroll=on_scroll)\nlistener.start()\n# you may start that non-blocking. start some looping-forever thread for writing states to file.\n# import pyautogui\n# import datetime\n# loopCount = 500\nprint(\"RECORDING START\")\n# world_start = datetime.datetime.now()\nif check_redis_on():\n    with TimestampedContext(filepaths.hid_timestamps) as t:\n        with jsonlines.open(filepaths.hid_record, \"w\") as w:\n            # for _ in range(loopCount):\n            while check_redis_off() is False:\n                time.sleep(timestep)\n                # as for screenshot, use mss instead of screenshot.\n                #     screenshot = pyautogui.screenshot()\n                # shall you mark the time here.\n                state = dict(HIDEvents=HIDEvents)  # also the image!\n                print(\"STATE?\", state)\n                w.write(state)\n                t.commit()\n                HIDEvents = []\n                mouselo"
+        },
+        {
+            "comment": "Code snippet handles the case when redis connection fails or is off. It raises an exception with the message \"HIDRecorder: Can't start. Redis signal is off.\"",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/mouse_keyboard_record.py\":81-85",
+            "content": "c = []\n    print(\"EXITING HID RECORDER.\")\n    print(\"SAVING HID RECORDS TO:\", filepaths.hid_record)\nelse:\n    raise Exception(\"HIDRecorder: Can't start. Redis signal is off.\".upper())"
+        }
+    ]
+}

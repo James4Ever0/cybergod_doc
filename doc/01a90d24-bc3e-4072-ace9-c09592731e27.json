@@ -1,0 +1,10 @@
+{
+    "summary": "Starting script to launch streaming utilities in new tmux sessions.",
+    "details": [
+        {
+            "comment": "Starting script to launch streaming utilities in new tmux sessions.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/launch_streaming_utils.sh\":1-5",
+            "content": "bash off_streaming_utils.sh\n# tmux kill-session -t streaming_utils\ngnome-terminal -- bash ubuntu_qemu_utm_arm_record/kali_prepare_dirs_loop.sh\ngnome-terminal -- tmuxp load streaming_utils.yaml"
+        }
+    ]
+}

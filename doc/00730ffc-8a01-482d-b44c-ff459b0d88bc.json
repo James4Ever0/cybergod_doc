@@ -1,0 +1,15 @@
+{
+    "summary": "The code demonstrates various logging implementations using Python libraries, including forced logging with optional overriding, executing an illegal debug log statement, and examples of using structlog and loguru for logging information.",
+    "details": [
+        {
+            "comment": "The code is setting up logging configuration and testing the logging level. It starts by importing necessary libraries, then defines a function to get the effective logging level. The logger object is created with the name \"mylogger\". The script outputs the current logging level and sets the basic configuration for logging. The default level is warning, and the format of the log messages is set. Finally, it prints some debug and normal level logs.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/use_logging.py\":0-35",
+            "content": "# test 1\nimport logging\nimport sys\n# can format arbitrary object into string.\ndef get_logging_level():\n    logger = logging.getLogger(\"mylogger\")  # not root?\n    logging_level = logger.getEffectiveLevel()\n    level_name = logging.getLevelName(logging_level)\n    # logging_level = logging.getLogger().getEffectiveLevel()\n    logger.critical(\"LOGGING LEVEL: %s (%d)\", level_name, logging_level)\n    return logging_level\nget_logging_level()\nlogging.warning(\"abc %s\", (1, 2))  # default level: warning.\n# can only set once, unless using \"force\" to override.\nlogging.basicConfig(\n    level=logging.INFO,\n    stream=sys.stdout,\n    format=\"%(asctime)s %(levelname)s:%(message)s\",\n    force=True,\n)\n# logging.basicConfig(level=logging.INFO, stream=sys.stdout) # suppress debug output.\n# level priority: DEBUG < INFO < WARNING < ERROR < CRITICAL\n# logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)\nprint(\"def\")\nlogging.debug(\"abc\")\nprint(\"2 abc\")\n# cannot override?\n# logging.basicConfig(level=logging.DEBUG, stream=sys.stdo"
+        },
+        {
+            "comment": "This code demonstrates various logging implementations using Python libraries. It includes forced logging with optional overriding, executing an illegal debug log statement, and examples of using structlog and loguru for logging information.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/use_logging.py\":35-59",
+            "content": "ut, force=True) # force overriding. you can set it somewhere.\nlogging.debug(\"abc\", (1, 2))  # though illegal, will be executed as well.\nlogging.info(\"abc %s\", {1: []})\n# test 2\nimport structlog\nslogger: structlog.stdlib.BoundLogger = structlog.get_logger()\nlog = slogger.bind(val = 1)\nlog.bind(bar = 1)\nlog.info(\"anything %s\", (1,2))\n# test 3\nimport loguru\nulogger = loguru.logger\nmylogger = ulogger.bind(foo = 1)\nmylogger.info(\"anything {}\", (1,)) # use {} instead of %\nulogger.critical(\"something wrong {}\", (1,2))"
+        }
+    ]
+}

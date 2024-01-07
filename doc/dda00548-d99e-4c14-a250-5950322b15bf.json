@@ -1,0 +1,10 @@
+{
+    "summary": "Testing GPU availability and NVIDIA driver version within the Docker container.",
+    "details": [
+        {
+            "comment": "Testing GPU availability and NVIDIA driver version within the Docker container.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/run_gpu_docker.sh\":0-0",
+            "content": "docker run --rm -it --gpus 1 --runtime nvidia ubuntu:22.04 nvidia-smi # working!"
+        }
+    ]
+}

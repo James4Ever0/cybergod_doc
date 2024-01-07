@@ -1,0 +1,10 @@
+{
+    "summary": "Moves to directory and loops through loading a WebDAV configuration file.",
+    "details": [
+        {
+            "comment": "Moves to directory and loops through loading a WebDAV configuration file.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_prepare_dirs_loop.sh\":0-4",
+            "content": "cd '/media/root/Toshiba XG3/works/agi_computer_control'\nwhile true; do\n    cd .\n    tmuxp load \"/media/root/Toshiba XG3/works/agi_computer_control/ubuntu_qemu_utm_arm_record/kali_prepare_two_webdav_dirs.yaml\"\ndone"
+        }
+    ]
+}

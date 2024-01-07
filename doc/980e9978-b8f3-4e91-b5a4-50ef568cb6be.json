@@ -1,0 +1,10 @@
+{
+    "summary": "Creates an RTX1 model, generates random video data and instructions, computes train logits, sets the model to evaluation mode, and computes eval logits with a conditional scale of 3.0.",
+    "details": [
+        {
+            "comment": "Creates an RTX1 model, generates random video data and instructions, computes train logits, sets the model to evaluation mode, and computes eval logits with a conditional scale of 3.0.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/rt_x_experiments/rt_x_test_code/rtx1_example.py\":0-18",
+            "content": "import torch\nfrom rtx.rtx1 import RTX1\nmodel = RTX1()\nvideo = torch.randn(2, 3, 6, 224, 224)\ninstructions = [\"bring me that apple sitting on the table\", \"please pass the butter\"]\n# compute the train logits\ntrain_logits = model.train(video, instructions)\nprint('train logits:', train_logits.shape)\n# set the model to evaluation mode\nmodel.model.eval()\n# compute the eval logits with a conditional scale of 3\neval_logits = model.run(video, instructions, cond_scale=3.0)\nprint('eval_logits:', eval_logits.shape)"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Sets the simulation timestep to 0.03 seconds and defines the file path for storing state data as \"states.jsonl\".",
+    "details": [
+        {
+            "comment": "Sets the simulation timestep to 0.03 seconds and defines the file path for storing state data as \"states.jsonl\".",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/config.py\":0-1",
+            "content": "timestep = 0.03\nfilePath = \"states.jsonl\""
+        }
+    ]
+}

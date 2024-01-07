@@ -1,0 +1,10 @@
+{
+    "summary": "This Dockerfile installs Xfce4 and Xvfb, sets up the screenshot process using xfce4-session and PyAutoGUI. It then installs various Python packages and copies required scripts and files for the application to function properly.",
+    "details": [
+        {
+            "comment": "This Dockerfile installs Xfce4 and Xvfb, sets up the screenshot process using xfce4-session and PyAutoGUI. It then installs various Python packages and copies required scripts and files for the application to function properly.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/Dockerfile_autoexec_visual\":0-17",
+            "content": "# install xfce4, xvfb\n# run the screenshot process.\n# xvfb-run -n 99 -f ~/.Xauthority xfce4-session\nFROM ubuntu:22.04\nWORKDIR /root\nENV DEBIAN_FRONTEND=noninteractive\nCOPY install_pip_and_pyautogui_prequisites.sh .\nRUN bash install_pip_and_pyautogui_prequisites.sh\nRUN pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple litellm requests fastapi uvicorn pytesseract ascii_magic pyautogui\nRUN pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple progressbar2\nCOPY ptyproc.py .\nCOPY port_util.py .\nCOPY visual_autoexec_example.py .\nCOPY ollama_utils.py .\nCOPY diff_utils.py .\nCOPY cursor.png .\nCOPY visual_server_on_ubuntu.py .\nCOPY visual_autoexec_main.sh main.sh"
+        }
+    ]
+}

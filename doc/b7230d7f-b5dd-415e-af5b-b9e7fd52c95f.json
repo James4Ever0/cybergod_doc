@@ -1,0 +1,10 @@
+{
+    "summary": "Defining an abstract class Example with two abstract methods a and b.",
+    "details": [
+        {
+            "comment": "Defining an abstract class Example with two abstract methods a and b.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/software_capture_hid_control/abstract_class_test.py\":0-12",
+            "content": "from abc import ABC, abstractmethod, ABCMeta\n# class Example(ABC):\nclass Example(ABC):\n    @abstractmethod\n    def a(self):\n        print('a')\n    @abstractmethod\n    def b(self):\n        print('a')\ne = Example()"
+        }
+    ]
+}

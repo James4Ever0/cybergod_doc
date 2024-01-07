@@ -1,0 +1,10 @@
+{
+    "summary": "Building and running a containerized chatGPT agent. Dockerizing the interpreter and running it in a container.",
+    "details": [
+        {
+            "comment": "Building and running a containerized chatGPT agent. Dockerizing the interpreter and running it in a container.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/build_and_run_image.sh\":0-3",
+            "content": "docker build -t open_interpreter_container -f Dockerfile .\nbash run_interpreter_container.sh\n# docker run --rm -it open_interpreter_container python3 -m interpreter\n# docker run --rm -it open_interpreter_container interpreter --help"
+        }
+    ]
+}

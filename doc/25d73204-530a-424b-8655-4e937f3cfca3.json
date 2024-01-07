@@ -1,0 +1,10 @@
+{
+    "summary": "Importing pstats module and creating a Stats object for analyzing the profiling data.\n\nStorage location: \"basic_interactive_program_emulation_and_image_with_docker_support/profile_vis.py\":6-10\nCode:\n```\n# from pstats import SortKey\np = pstats.Stats(\"alpine_actor.profile\", SortBy=\"calls\")\n```\nComment for code:\nSorting the stats by number of calls.",
+    "details": [
+        {
+            "comment": "Importing pstats module and creating a Stats object for analyzing the profiling data.\n\nStorage location: \"basic_interactive_program_emulation_and_image_with_docker_support/profile_vis.py\":6-10\nCode:\n```\n# from pstats import SortKey\np = pstats.Stats(\"alpine_actor.profile\", SortBy=\"calls\")\n```\nComment for code:\nSorting the stats by number of calls.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/profile_vis.py\":0-5",
+            "content": "import pstats\n# from pstats import SortKey\np = pstats.Stats(\"alpine_actor.profile\")\nstats = p.strip_dirs().sort_stats(2)\nstats.print_stats()"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Installs Docker.io from Alpine Linux package manager (APT).",
+    "details": [
+        {
+            "comment": "Installs Docker.io from Alpine Linux package manager (APT).",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/Dockerfile\":0-3",
+            "content": "# just install 'docker.io' from apt\n# remember to use sudo.\n# no official support on i386 now!\nFROM alpine:3.7"
+        }
+    ]
+}

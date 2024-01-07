@@ -1,0 +1,10 @@
+{
+    "summary": "This code downloads and saves Docker images of Alpine Linux with different architectures in separate directories. It ensures the target directory is created if it doesn't exist and handles platform-specific architecture pulls for \"amd64\", \"arm64\", \"arm/v7\", and \"i386\".",
+    "details": [
+        {
+            "comment": "This code downloads and saves Docker images of Alpine Linux with different architectures in separate directories. It ensures the target directory is created if it doesn't exist and handles platform-specific architecture pulls for \"amd64\", \"arm64\", \"arm/v7\", and \"i386\".",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/pull_alpine_with_different_arch.py\":0-18",
+            "content": "arch_list = [\"amd64\", \"arm64\", \"arm/v7\", \"i386\"]\ntarget_image = \"alpine:3.7\"\ntarget_fname_prefix = target_image.replace(\":\", \"_\")\nimport os\ndirpath = \"docker_images\"\nif os.path.exists(dirpath):\n    raise Exception(f\"target directory '{dirpath}' already exists.\")\nos.mkdir(dirpath)\nfor arch in arch_list:\n    fpath = f\"{target_fname_prefix}_{arch.replace('/','')}.tar\"\n    cmds = [\n        f'docker pull --platform \"linux/{arch}\" {target_image}',\n        f\"docker save {target_image} -o {dirpath}/{fpath}\",\n        f\"docker rmi {target_image}\",\n    ]\n    for cmd in cmds:\n        print(\"executing:\", cmd)\n        os.system(cmd)"
+        }
+    ]
+}

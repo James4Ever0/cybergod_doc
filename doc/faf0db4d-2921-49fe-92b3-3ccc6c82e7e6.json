@@ -1,0 +1,15 @@
+{
+    "summary": "The code modifies torch.cat to handle zero-sized arrays and enables DirectML compatibility for inference mode. It processes a filepath with the model multiple times using a loop, sets it to specified device, prints output for 1000 iterations, and disables automatic differentiation using torch.no_grad().",
+    "details": [
+        {
+            "comment": "Code is modifying torch.cat to handle zero size arrays and nullifying inference mode for DirectML compatibility.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/directml_yolov5/test.py\":0-40",
+            "content": "import torch\nimport torch_directml\nimport contextlib\nimport copy\nfrom functools import reduce\n@contextlib.contextmanager\ndef null_inference_mode(*args, **kwargs):\n    try:\n        yield\n    finally:\n        pass\ntorch.inference_mode = null_inference_mode\nold_cat = copy.copy(torch.cat)\ndef smart_cat(arr, *args, **kwargs):\n    new_arr = []\n    for it in arr:\n        shape = it.shape\n        size = reduce(lambda x,y: x*y, shape)\n        if size >0:\n            new_arr.append(it)\n    ret = old_cat(new_arr, *args, **kwargs)\n    return ret\ntorch.cat = smart_cat\ndev = torch_directml.device()\nmodel = torch.hub.load(\"../yolov5\", \"yolov5m\", source='local')\n# get torch cache path?\n# model = torch.hub.load(\"ultralytics/yolov5\", \"yolov5m\")\nfilepath = \"./zidane.jpg\"\n# two issues:\n# 1. directml doesn't work with inference mode (yet), you can nullify it.\n# 2. torch.cat is not working properly, because we are passing zero size arrays into it. however, the cpu executor supports it.\n# with torch.inference_mode(mode=False):\nwith torch.n"
+        },
+        {
+            "comment": "This code is using the \"model\" to process the \"filepath\" multiple times in a loop. It first sets the model to the specified device (dev), and then prints the output of the model for 1000 iterations. The \"torch.no_grad()\" context manager ensures that automatic differentiation is disabled, potentially improving performance during these model evaluations.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/directml_yolov5/test.py\":40-48",
+            "content": "o_grad():\n    # for _ in range(1000):\n    print(model(filepath))\nmodel.to(dev)\n# with torch.inference_mode(mode=False):\nwith torch.no_grad():\n    # for _ in range(1000):\n    # amd yes!\n    print(model(filepath))"
+        }
+    ]
+}

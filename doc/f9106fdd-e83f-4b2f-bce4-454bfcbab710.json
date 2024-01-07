@@ -1,0 +1,10 @@
+{
+    "summary": "This code contains YAML formatted data with two sets of variables: \"data\" and \"data2\". Each set has key-value pairs where the keys are letters (a, b) and values are numbers (1, 2).",
+    "details": [
+        {
+            "comment": "This code contains YAML formatted data with two sets of variables: \"data\" and \"data2\". Each set has key-value pairs where the keys are letters (a, b) and values are numbers (1, 2).",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/mydatamodel.yaml\":0-9",
+            "content": "data:\n  a: 1\n  b: 2\n# ---\n# data2:\n#   a: 2\n#   b: 3\n#   d: 4"
+        }
+    ]
+}

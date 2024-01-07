@@ -1,0 +1,10 @@
+{
+    "summary": "Checking the state and VRDE of the \"Ubuntu 16.04\" virtual machine using VirtualBox commands",
+    "details": [
+        {
+            "comment": "Checking the state and VRDE of the \"Ubuntu 16.04\" virtual machine using VirtualBox commands",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/check_vm.sh\":0-2",
+            "content": "vboxmanage showvminfo \"Ubuntu 16.04\" | grep State # get the state\n# vboxmanage showvminfo \"Ubuntu 16.04\" | grep VRDE # get VRDE\n# vboxmanage showvminfo \"Ubuntu 16.04\""
+        }
+    ]
+}

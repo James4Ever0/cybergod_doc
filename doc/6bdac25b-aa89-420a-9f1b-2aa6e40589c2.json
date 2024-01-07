@@ -1,0 +1,10 @@
+{
+    "summary": "Code is attempting to run a virtual display (Xvfb) and then launch a virtual machine (Ubuntu 16.04) using VBoxSDL commands within the Xvfb display context. The code also includes a progress bar for a simulated long-running task, but it doesn't seem to be functioning properly.",
+    "details": [
+        {
+            "comment": "Code is attempting to run a virtual display (Xvfb) and then launch a virtual machine (Ubuntu 16.04) using VBoxSDL commands within the Xvfb display context. The code also includes a progress bar for a simulated long-running task, but it doesn't seem to be functioning properly.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/xvfbwrapper_vboxmanager_test.py\":1-22",
+            "content": "from xvfbwrapper import Xvfb\n# it sucks!\n# vdisplay = Xvfb(display=3)\n# vdisplay.start()\nimport os\ncmd = 'vboxsdl --startvm \"Ubuntu 16.04\"' \nwith Xvfb(display=3) as vdisplay: # not working...\n    os.system(cmd)\n# try:\n#     # launch stuff inside virtual display here.\n#     # os.system('bash start_vm.sh')\n#     import time\n#     import progressbar\n#     for _ in progressbar.progressbar(range(1000)):\n#         time.sleep(1)\n# finally:\n#     vdisplay.stop()"
+        }
+    ]
+}

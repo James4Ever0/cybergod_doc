@@ -1,0 +1,15 @@
+{
+    "summary": "The code tackles resolving orderings in words and actions, offering various methods to combine embeddings such as elementwise addition, FFT+IFFT or separate transformer layers with linear decoders. It then passes through a transformer and decodes into two logits.",
+    "details": [
+        {
+            "comment": "The code is discussing the issue of resolving orderings in words and actions, and potential methods for embedding them together. The author proposes several choices for combining embeddings from different token types, such as elementwise addition, Fast Fourier Transform (FFT) followed by Inverse FFT (IFFT), or using separate transformer layers with linear layers to decode the embeddings.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/rt_x_experiments/special_tokenizer_with_actions/test_simutaneous_tokenization_embedding.py\":0-21",
+            "content": "# words have orderings.\n# but actions have not. usually stacked.\n# how to resolve this issue?\n# if you can decode the embedding using multiple embedding layers, what happens?\n# one embedding -> multiple meanings\n# for every embedding there is one silent token, allow to train separately.\n# fourier transform to concat these different kinds of embeddings\n# or you could train some decision embedding, to control the action type\nimport torch\nemb = torch.nn.Embedding\nemb2 = torch.nn.Embedding\n# the bot told us that we need to process different token separately.\n# you could have more choices on fft/ifft and more. you can first concat then use some dense layer to reduce its size.\n# choice 1: emb1+emb2 (elementwise addition) -> transformer -> decode by two linear layers and compare original logits\n# choice 2: fft(emb1)+fft(emb2) -> ifft -> transformer -> decode by two linear layers and compare original logits\n# choice 3: emb1 -> tranformer1 -> linear1 -> logits1; emb2 -> tranformer1 -> linear2 -> logits2\n# choi"
+        },
+        {
+            "comment": "Combines embeddings, passes through transformer, and decodes into two separate logits.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/rt_x_experiments/special_tokenizer_with_actions/test_simutaneous_tokenization_embedding.py\":21-21",
+            "content": "ce 4: concat emb1&emb2 -> transformer -> decode -> separate into two logits"
+        }
+    ]
+}

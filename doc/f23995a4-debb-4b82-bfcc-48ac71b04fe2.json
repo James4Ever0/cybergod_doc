@@ -1,0 +1,10 @@
+{
+    "summary": "This code is an introduction to the \"The Frozen Forest\" dataset, which includes time-aligned keystrokes, mouse, and screen recordings. The author plans to expand the dataset with more modalities like text and audio for training their multimodal model, called \"cybergod\".",
+    "details": [
+        {
+            "comment": "This code is an introduction to the \"The Frozen Forest\" dataset, which includes time-aligned keystrokes, mouse, and screen recordings. The author plans to expand the dataset with more modalities like text and audio for training their multimodal model, called \"cybergod\".",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/the_frozen_forest_intro/README.md\":0-14",
+            "content": "![icon of the frozen forest](../propaganda/logos/frozen_forest_1.png)\n*\"Can you hear it slowing? You're slowing it. You are in control. Calm. At peace.\"*\n<div style='text-align: right;'>\u2014 Corvus</div>\n# The Frozen Forest\nA dataset of time-aligned keystrokes, mouse and screen recordings.\n## Roadmap\nCurrently I only record these contents by running autostart scripts within our tiny little virtual machine, copy and rinse it before feeding into our model.\nTo train our mighty multimodal `cybergod`, I plan to add more modalities into this dataset, namely text, audio and more."
+        }
+    ]
+}

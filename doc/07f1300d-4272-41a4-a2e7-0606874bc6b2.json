@@ -1,0 +1,10 @@
+{
+    "summary": "This code appears to be informal notes about a project, possibly related to containerizing an AI model and working with different interfaces. The author is facing challenges in getting the AI to respond well in GUI but finds it more successful in terminal interface. They decide to name this project \"Helen Keller\".",
+    "details": [
+        {
+            "comment": "This code appears to be informal notes about a project, possibly related to containerizing an AI model and working with different interfaces. The author is facing challenges in getting the AI to respond well in GUI but finds it more successful in terminal interface. They decide to name this project \"Helen Keller\".",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/README.md\":0-14",
+            "content": "let's try to containerize open-interpreter first. seems easier.\nit sucks! but it is safe!\ni think it is a good start!\n---\nthe ai is not responding well to our request of performing actions in GUI.\nhowever, it is doing somehow good in terminal interface.\n---\nlet's call this project 'Helen Keller'"
+        }
+    ]
+}

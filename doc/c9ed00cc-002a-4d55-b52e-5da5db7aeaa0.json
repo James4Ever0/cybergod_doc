@@ -1,0 +1,10 @@
+{
+    "summary": "This code introduces the concept of creating artificial neurons that can move around and change connections. It first focuses on replicating a static classic neural network before moving to dynamic ones.",
+    "details": [
+        {
+            "comment": "This code introduces the concept of creating artificial neurons that can move around and change connections. It first focuses on replicating a static classic neural network before moving to dynamic ones.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/dynamic_plasticity_neural_networks/README.md\":0-2",
+            "content": "We can create artificial neurons that can move around, form new connections, changing its overall shape.\nBut first we will replicate a common static classic neural network."
+        }
+    ]
+}

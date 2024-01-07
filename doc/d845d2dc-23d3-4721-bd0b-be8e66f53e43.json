@@ -1,0 +1,15 @@
+{
+    "summary": "The code imports a package, creates a 3D tensor with zeros, initializes a PositionalEncoding2D object for rescaling, and then performs bilinear interpolation and normalization to display the resulting image using matplotlib without axis ticks or labels.",
+    "details": [
+        {
+            "comment": "Importing positional encodings package.\nCreating a 3D tensor with zeros for input tensor shape.\nInitializing PositionalEncoding2D object for rescaling.\nRescaling input tensor using PositionalEncoding2D.\nRearranging the output tensor.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/rt_x_experiments/real_attention/sin_2d_positional_encoding.py\":0-38",
+            "content": "# do we need a new dimension?\n# pip install positional-encodings[pytorch]\nimport torch\nimport einops\nfrom positional_encodings.torch_encodings import PositionalEncoding2D\nimport torch.nn.functional as F\nimport matplotlib.pyplot as plt\n# according to the formula, shall we recalculate or interpolate the encodings?\n# or we just downscale the picture?\n# we will view the thing.\n# it is not gaussian.\nchannel_count = 3\nbatch_size = 1\noriginal_image_width_or_height = 256\n# original_image_width_or_height = 1024\nscale_factor = 0.5\nscaled_image_width_or_height = int(original_image_width_or_height * scale_factor)\ninput_tensor_shape = (\n    batch_size,\n    original_image_width_or_height,\n    original_image_width_or_height,\n    channel_count,\n)\ninput_tensor = torch.zeros(input_tensor_shape)\n# how to rescale the thing?\nposenc_2d = PositionalEncoding2D(channel_count)\noutput_tensor = posenc_2d(input_tensor)\noutput_tensor_rearranged = einops.rearrange(output_tensor, \"b h w c -> b c h w\")\nnew_size = (scaled_image_width_or_height, s"
+        },
+        {
+            "comment": "The code rescales the input tensor, interpolates it using bilinear interpolation, and then normalizes the resulting image between 0 and 1. It displays the normalized image using matplotlib without axis ticks or labels.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/rt_x_experiments/real_attention/sin_2d_positional_encoding.py\":38-61",
+            "content": "caled_image_width_or_height)\n# first check the result of the rescaled tensor.\ninterpolated_tensor = F.interpolate(\n    output_tensor_rearranged, size=new_size, mode=\"bilinear\", align_corners=False\n)\nprint(f\"Original tensor shape: {input_tensor.shape}\")\nprint(f\"Output tensor shape: {output_tensor.shape}\")\nprint(f\"Output tensor (rearranged) shape: {output_tensor_rearranged.shape}\")\nprint(f\"Interpolated tensor shape: {interpolated_tensor.shape}\")\nimage = output_tensor_rearranged.numpy()\nimage = einops.rearrange(image, \"b c h w -> b h w c\")\n# now, view the tensor.\n# Normalize the image between 0 and 1\nimage = (image - image.min()) / (image.max() - image.min())\n# Display the image using matplotlib\nplt.imshow(image[0, :, :, :])\n# plt.imshow(image)\nplt.axis(\"off\")  # Remove axis ticks and labels\nplt.show()"
+        }
+    ]
+}

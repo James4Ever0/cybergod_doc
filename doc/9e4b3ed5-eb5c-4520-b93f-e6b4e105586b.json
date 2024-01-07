@@ -1,0 +1,10 @@
+{
+    "summary": "This code defines a function to resize an image while maintaining its aspect ratio, then saves the resized image. It takes three arguments: the input image path, output image path, and maximum size for the resized image. An example usage is also provided.",
+    "details": [
+        {
+            "comment": "This code defines a function to resize an image while maintaining its aspect ratio, then saves the resized image. It takes three arguments: the input image path, output image path, and maximum size for the resized image. An example usage is also provided.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/change_icon_size.py\":0-26",
+            "content": "from PIL import Image\ndef resize_image(image_path, output_path, max_size):\n    # Open the image file\n    image = Image.open(image_path)\n    # Calculate the new size while maintaining the aspect ratio\n    width, height = image.size\n    if width > height:\n        new_width = max_size\n        new_height = int(height * max_size / width)\n    else:\n        new_height = max_size\n        new_width = int(width * max_size / height)\n    # Resize the image\n    resized_image = image.resize((new_width, new_height))\n    # Save the resized image\n    resized_image.save(output_path)\n# Example usage\ninput_image_path = 'windows-mouse-cursor-png-2.png'\noutput_image_path = 'cursor.png'\nmax_size = 20  # Maximum size (width or height) for the resized image\nresize_image(input_image_path, output_image_path, max_size)"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Executes WebDAV command to connect to host, port, and path for recordings.",
+    "details": [
+        {
+            "comment": "Executes WebDAV command to connect to host, port, and path for recordings.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/propaganda/agi_computer_recordings/launch_server.cmd\":0-0",
+            "content": "webdav-cli --host 192.168.56.1 --port 8111 --username root --password root --path=D:\\works\\agi_computer_recordings\\recordings "
+        }
+    ]
+}

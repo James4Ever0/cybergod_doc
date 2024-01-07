@@ -1,0 +1,10 @@
+{
+    "summary": "The code performs a 2D Fast Fourier Transform (FFT) on two arrays, then combines the results using both addition and element-wise multiplication before performing an inverse FFT to obtain the final result. The author is printing various results for comparison, including the original data, addition result, multiplication result, and sum of the two operations. The code ends by discarding imaginary parts due to strange values obtained in the process.",
+    "details": [
+        {
+            "comment": "The code performs a 2D Fast Fourier Transform (FFT) on two arrays, then combines the results using both addition and element-wise multiplication before performing an inverse FFT to obtain the final result. The author is printing various results for comparison, including the original data, addition result, multiplication result, and sum of the two operations. The code ends by discarding imaginary parts due to strange values obtained in the process.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/rt_x_experiments/fourier_transform_combine_data/test_multidimension_fourier_transform_2d.py\":0-32",
+            "content": "from test_common import *\naxes = [1, 2]\n# now you can choose to do fft over 1d or 2d\n# what a problem.\nfft1 = np.fft.fft2(vit_encoding_1, axes=axes)\nfft2 = np.fft.fft2(vit_encoding_2, axes=axes)\nfft_sum = fft1 + fft2\n# how about let's use elementwise multiplication to replace the addition?\nfft_mul = fft1 * fft2\nfft_sum_and_mul = fft_sum + fft_mul\nvit_final = np.fft.ifft2(fft_sum, axes=axes)\nvit_final_real = vit_final.real\nvit_final_mul_real = np.fft.ifft2(fft_mul, axes=axes).real\nvit_final_sum_and_mul_real = np.fft.ifft2(fft_sum_and_mul, axes=axes).real\n# print(vit_final)\nprint(fft_sum)\nprint(vit_final_real)\nprint(vit_final_mul_real)\nprint(vit_final_sum_and_mul_real)\nprint(\n    vit_encoding_1.shape, vit_final_real.shape\n)  # shape is the same. however, we have strange imaginary parts. let's discard them.\n# now we can just sum. it does not have to be complex."
+        }
+    ]
+}

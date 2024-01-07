@@ -1,0 +1,10 @@
+{
+    "summary": "Code is disabling all hotkeys by pressing the Control key.",
+    "details": [
+        {
+            "comment": "Code is disabling all hotkeys by pressing the Control key.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/hotkey_tester.py\":0-9",
+            "content": "import pyautogui\nimport pynput\n# you simply deprecate all hotkeys.\nkeyboard_controller = pynput.keyboard.Controller()\nkeyboard_controller.press(pynput.keyboard.Key.ctrl)\npyautogui.typewrite('1')\nkeyboard_controller.release(pynput.keyboard.Key.ctrl)"
+        }
+    ]
+}

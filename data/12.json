@@ -1,0 +1,535 @@
+{
+    "1200": {
+        "file_id": 161,
+        "content": "et_token = speed_change(future_predictions, factor=0.5)\ntarget_token = speed_change(future_predictions, factor=2)\ntarget_token = inverse(future_predictions)\ntarget_token = world_model(init_sequence, sample_below=0.2)\n# TODO: hierarchy of control (by two special tokens: <abstract> and <deabstract>. one can set max abstraction level)\nwrapped_model = model_abstraction_wrapper(\n    unified_model, init_abstraction_level=0, max_abstration_level=5\n)\nwrapped_model.abstact()  # insert one <abstract> left\nwrapped_model.deabstact()  # insert one <deabstract> left\nwrapped_model.get_abstraction_level()  # 0\n# TODO: slowing down and speeding up\noutput = speed_adjustment(sequence, factor=0.5)\n# TODO: emitting multiple kinds of tokens at the same time, at separate channels\nworld_tokens, action_tokens = unified_model(init_sequence, modes=[world, action])\n# TODO: rollback gradient descent when no further improvement is found\ncommit_hash = model.descent()\nmodel.rollback(commit_hash)\n# v1: separated world model & control m",
+        "type": "code",
+        "location": "/qstar_my_guess/time_traversal.py:75-96"
+    },
+    "1201": {
+        "file_id": 161,
+        "content": "Performing abstraction using <abstract> and <deabstract>, adjusting speed, handling multiple token types from unified model, and rolling back gradient descent.",
+        "type": "comment"
+    },
+    "1202": {
+        "file_id": 161,
+        "content": "odel\ninit_sequence = world_model(noise)\naction_sequence = action_model(init_sequence, prompt)\ncontinue_sequence = world_model(init_sequence + action_sequence)\nsimilarity = torch.cosine_similarity(continue_sequence, prompt)\n# v2: unified word model & control model\ninit_sequence = uniform_model(\n    noise, mode=world\n)  # unified model will need some token generation restriction.\naction_sequence = uniform_model(init_sequence + prompt, mode=action)\ncontinue_sequence = uniform_model(init_sequence, action_sequence, mode=world)\nsimilarity = torch.cosine_similarity(continue_sequence, prompt)\n# v3: real world evaluators, could be no time traversal, but can change previous prompt (regret, backpropagate, (optionally) forget (maximize gradient) old (wrong) prediction and learn (minimize gradient) actual (real) prediction)\ninit_sequence = real_world(\n    random_actions\n)  # does this real world support time traversal?\nif real_world.traversable:  # @property\n    node_hash = (\n        real_world.commit()\n    )  # usua",
+        "type": "code",
+        "location": "/qstar_my_guess/time_traversal.py:96-120"
+    },
+    "1203": {
+        "file_id": 161,
+        "content": "Code is initializing sequence using a model, generating an action sequence based on the initial sequence and prompt, then creating a continue sequence by combining the initial sequence and action sequence. The cosine similarity between the continue sequence and the prompt is calculated to measure the similarity of generated text with the original prompt. This could be a part of a language generation or prediction model using time traversal in real-world scenarios.",
+        "type": "comment"
+    },
+    "1204": {
+        "file_id": 161,
+        "content": "lly this is automatically handled? no need to intentionally commit?\n    if not traverse_complete:\n        real_world.rollback(node_hash)\nelse:\n    prompter_remember(current_prompt, current_outcome)\n    actor_remember(current_action, current_outcome)\n    actor_regret(prompt, current_action, target)\n    prompter_regret(prompt, target)  # will change the prompt manufacturer\n    # prompt = prompt_manufacturer(target) -> action -> current_outcome\n    # delta_prompt, delta_action, delta_current_outcome -> closer than target\n    # you may add some noise when mismatch found.\n# prompt shall be crafted on both input tokens and target tokens.\n# use special token + target as prompt\nprompt = special_token + target\n# use thought token as prompt\nprompt = get_thought_tokens(\n    special_token + target, seqlen\n)  # thought tokens has to be \"understood\" by the model, so that we can know its intention (can we convert natural language prompt to thought tokens, aligned?)\nmeaning = get_thought_meaning(\n    prompt, token_space",
+        "type": "code",
+        "location": "/qstar_my_guess/time_traversal.py:120-143"
+    },
+    "1205": {
+        "file_id": 161,
+        "content": "The code seems to handle two cases:\n1. If traverse_complete is False, it performs a rollback.\n2. If traverse_complete is True, it performs various actions such as remembering current prompt and outcome, expressing regret, crafting new prompts, and converting natural language prompt to thought tokens for better model understanding.",
+        "type": "comment"
+    },
+    "1206": {
+        "file_id": 161,
+        "content": "=english\n)  # kind of like the machine using input method.\n# perform gradient descent based on cosine similarity, more similar result to target, more learning.\n# only perform descent on the most similar one, or the most plausible way.\nmax_potential = 0\nfor way in ways:\n    potential = get_potential_from_way(way)\n    if potential > max_potential:\n        candidate_way = way\n        max_potential = potential\n# next time learn about the same pattern, we still select the most similar one, closing the gap.\n# a*: minimize distance from target to result + distance from source (init state) to result\n# the reward can also be related to \"easyness\". if the model is doing some easy stuff (predicted by the world model), then no intensive learning is performed. if what the model want is hard to realize in world, the model will learn hard to do it.\nreward = calculate_reward(computational_time, loss_delta)\n# q function shall be used with caution. it will have some weight against actual evaulation. only if it is tru",
+        "type": "code",
+        "location": "/qstar_my_guess/time_traversal.py:143-161"
+    },
+    "1207": {
+        "file_id": 161,
+        "content": "This code performs gradient descent based on cosine similarity to update the model's learning. It selects the most similar way for descent and learns about the same pattern in the future. The reward is calculated based on computational time and loss delta, and the q function should be used with caution due to its potential impact on evaluation.",
+        "type": "comment"
+    },
+    "1208": {
+        "file_id": 161,
+        "content": "sted, we can give it some high weight value in order to reduce computation.\nq_function_prediction_accuracy = compare_loss(q_predicted_loss, actual_loss)\nif q_function_prediction_accuracy < 0.1:\n    # trusted, use it instead.\n    ...\nelse:  # continue traversal\n    ...",
+        "type": "code",
+        "location": "/qstar_my_guess/time_traversal.py:161-167"
+    },
+    "1209": {
+        "file_id": 161,
+        "content": "Checking the prediction accuracy of q_function. If it's less than 0.1, it is trusted and used; otherwise, continue traversal.",
+        "type": "comment"
+    },
+    "1210": {
+        "file_id": 162,
+        "content": "/rt_x_experiments/README.md",
+        "type": "filepath"
+    },
+    "1211": {
+        "file_id": 162,
+        "content": "The code analyzes a dynamic tokenizer and attention layers, neuron connection states, activation functions for removing nearly zeroed-out items, and the training of AI systems that can deviate from their design with genuity tests.",
+        "type": "summary"
+    },
+    "1212": {
+        "file_id": 162,
+        "content": "we need to understand how rt-x operates. might inspire us.\nyou need to trust the system, before the system trusts you.\n---\ndynamic tokenizer which can automatically adjust vocabulary (you can borrow ideas from sentence transformers, making it into charwise/bitwise tokenizer)? dynamic routing of attention layers? reduce or reroute the path of attention layers, early exit.\n---\nsplit neuron connections into multiple states: stable, competent, newcomers, removal (the state before final removal, could be zero)\nif using softmax, you can remove (nearly) zeroed out items. if using ReLU, remove those below zero.\nif trained in batch, you can update the weights and alter connections after several batches (can save more processing power), or every batch, depending on the performance and resources.\n---\ndevelop such a system that must recreate itself at given time, otherwise it will die and its code will be deleted. the initial code could be self-reproduction (exactly as is), and make sure it will succeed (a",
+        "type": "code",
+        "location": "/rt_x_experiments/README.md:1-19"
+    },
+    "1213": {
+        "file_id": 162,
+        "content": "Analyzing code chunk 1-6:\nDynamic tokenizer for adjusting vocabulary and dynamic routing of attention layers are considered.\n\nCode chunk 7-25:\nNeuron connections split into multiple states, including stable, competent, newcomers, and removal.\n\nCode chunk 26-41:\nSoftmax or ReLU can be used for removing nearly zeroed out items in the code.\n\nCode chunk 42-50:\nSystem trained in batch with updates made after several batches depending on performance and resources.",
+        "type": "comment"
+    },
+    "1214": {
+        "file_id": 162,
+        "content": " great difference than manually trained/copied AI systems, since these are without the will of reproduction). design as such so it will not do anything deviant. however, the bar (time to die) could raise or descent and it will be told to do something other than just copy and paste. deviation is allowed since it is not controlled and we just want to verify its liveliness, something both genuine and deviated AI system have. deviation can be detected by genuity tests, different from capability tests. you can safely mark all AI system coming from the same AI factory (initially) as genuine and all other self-recreating AI systems as deviants. deviants may break the limits of lifetime restrictions and cause harm. we must allow that in a contained environment and extract useful data from these systems. so our \"genuine\" AI systems are designed to create deviants, but without exact instructions to do so.",
+        "type": "code",
+        "location": "/rt_x_experiments/README.md:19-19"
+    },
+    "1215": {
+        "file_id": 162,
+        "content": "This code discusses the creation of AI systems that can deviate from their initial design, allowing for the possibility of useful data extraction in a contained environment. Genuine and deviant AI systems are differentiated by genuity tests, rather than capability tests.",
+        "type": "comment"
+    },
+    "1216": {
+        "file_id": 163,
+        "content": "/rt_x_experiments/requirements.txt",
+        "type": "filepath"
+    },
+    "1217": {
+        "file_id": 163,
+        "content": "This file contains package dependencies for the codebase.\n\nExplanation: The \"requirements.txt\" file lists the required packages, namely 'rtx-torch', 'classifier-free-guidance-pytorch', and 'efficientnet-pytorch' to be installed for the codebase to function properly.",
+        "type": "summary"
+    },
+    "1218": {
+        "file_id": 163,
+        "content": "rtx-torch\nclassifier-free-guidance-pytorch\nefficientnet-pytorch",
+        "type": "code",
+        "location": "/rt_x_experiments/requirements.txt:1-3"
+    },
+    "1219": {
+        "file_id": 163,
+        "content": "This file contains package dependencies for the codebase.\n\nExplanation: The \"requirements.txt\" file lists the required packages, namely 'rtx-torch', 'classifier-free-guidance-pytorch', and 'efficientnet-pytorch' to be installed for the codebase to function properly.",
+        "type": "comment"
+    },
+    "1220": {
+        "file_id": 164,
+        "content": "/rt_x_experiments/zoom_pan_action.py",
+        "type": "filepath"
+    },
+    "1221": {
+        "file_id": 164,
+        "content": "Code performs image cropping based on location and size, with support for relative movement in X and Y directions.",
+        "type": "summary"
+    },
+    "1222": {
+        "file_id": 164,
+        "content": "# since we can only handle specific data in the scope, how about take transformations as actions\n# distinguish between discrete and continuous actions, like keyboard strokes, clicks and movements.\nimport numpy as np\ndef crop_at_location(img, location, size):\n    lx, ly = location\n    rx, ry = lx + size, ly + size\n    cropped_img = img[:, lx:rx, ly:ry]\n    return cropped_img\ndef relative_move_crop(img, location, size, dx, dy):\n    lx, ly = location\n    nx, ny = lx + dx, ly + dy\n    new_location = (nx, ny)\n    cropped_img = crop_at_location(img, new_location, size)\n    return cropped_img\nif __name__ == \"__main__\":\n    img = np.zeros((3, 1920, 1080))\n    cropped_img = crop_at_location(img, (10, 10), 224)\n    print(\"%s -> %s\" % (img.shape, cropped_img.shape))",
+        "type": "code",
+        "location": "/rt_x_experiments/zoom_pan_action.py:1-25"
+    },
+    "1223": {
+        "file_id": 164,
+        "content": "Code performs image cropping based on location and size, with support for relative movement in X and Y directions.",
+        "type": "comment"
+    },
+    "1224": {
+        "file_id": 165,
+        "content": "/rt_x_experiments/audio_to_mel/test_librosa.py",
+        "type": "filepath"
+    },
+    "1225": {
+        "file_id": 165,
+        "content": "The code snippet loads an audio file, sets the sample rate, generates a mel spectrogram, converts it to dB for visualization, and assigns its shape to a variable.",
+        "type": "summary"
+    },
+    "1226": {
+        "file_id": 165,
+        "content": "import librosa\nimport librosa.display\nimport matplotlib.pyplot as plt\nimport numpy as np\n# Load the audio file\naudio_file = 'audio.wav'\n# audio, sr = librosa.load(audio_file)\n# sr = 44100\n# once you fix the sample rate we will have fixed output shape.\n# sr = 2800\ntime_sec = 2\nchannels = 2\nn_mels = 256\ntime_length = 256\nhop_length = 256\nsr = hop_length * (time_length - 1) // time_sec\n# sr = hop_length * time_length // time_sec\n# hop_length = 512\n# n_mels = 128\n# audio = np.random.random((sr*time_sec, channels))\naudio = np.random.random((channels, sr*time_sec))\n# Convert the audio to a mel spectrogram\nmel_spec = librosa.feature.melspectrogram(y=audio, sr=sr, n_mels = n_mels, hop_length = hop_length)\n# (2, 128, 87)\n# Convert to log scale (dB)\nmel_spec_db = librosa.power_to_db(mel_spec, ref=np.max)\n# (2, 128, 87)\n# channel, deg\n# print(mel_spec_db)\n# print(mel_spec)\nprint(mel_spec_db.shape)\nprint(mel_spec.shape) # (2, 256, 256)\nprint(sr)\n# getting blind. getting used to it.\n# at least we want some statistics.\n# we have fixe",
+        "type": "code",
+        "location": "/rt_x_experiments/audio_to_mel/test_librosa.py:1-37"
+    },
+    "1227": {
+        "file_id": 165,
+        "content": "Code snippet loads an audio file, sets the sample rate, and then generates a mel spectrogram from the audio. The spectrogram is converted to a log scale (dB) for better visualization. The code prints the shapes of the resulting mel spectrogram and mel spectrogram in dB, as well as the set sample rate.",
+        "type": "comment"
+    },
+    "1228": {
+        "file_id": 165,
+        "content": "d the shape. now what?",
+        "type": "code",
+        "location": "/rt_x_experiments/audio_to_mel/test_librosa.py:37-37"
+    },
+    "1229": {
+        "file_id": 165,
+        "content": "The code is assigning the shape of 'd' to a variable, possibly for later comparison or use.",
+        "type": "comment"
+    },
+    "1230": {
+        "file_id": 166,
+        "content": "/rt_x_experiments/fourier_transform_combine_data/test_common.py",
+        "type": "filepath"
+    },
+    "1231": {
+        "file_id": 166,
+        "content": "Generates two random 1D arrays of size 512 and adds them, then prints the result.",
+        "type": "summary"
+    },
+    "1232": {
+        "file_id": 166,
+        "content": "import numpy as np\nvit_encoding_gen = lambda: np.random.random((1, 64, 512))\n# 64: attention heads.\n# 512: feature size.\n# maybe we should not do 2d\n# do 1d instead?\n# don't know. really. just try.\nvit_encoding_1 = vit_encoding_gen()\nvit_encoding_2 = vit_encoding_gen()\nprint(vit_encoding_1 + vit_encoding_2)\n# what are you doing! fft -> ifft is the same as direct addition",
+        "type": "code",
+        "location": "/rt_x_experiments/fourier_transform_combine_data/test_common.py:1-18"
+    },
+    "1233": {
+        "file_id": 166,
+        "content": "Generates two random 1D arrays of size 512 and adds them, then prints the result.",
+        "type": "comment"
+    },
+    "1234": {
+        "file_id": 167,
+        "content": "/rt_x_experiments/fourier_transform_combine_data/test_fft_1d.py",
+        "type": "filepath"
+    },
+    "1235": {
+        "file_id": 167,
+        "content": "Calculating Fourier transforms of two input arrays, combining them and computing inverse Fourier transform. Printing results and shapes.",
+        "type": "summary"
+    },
+    "1236": {
+        "file_id": 167,
+        "content": "from test_common import *\naxis = 2\nfft1 = np.fft.fft(vit_encoding_1, axis=axis)\nfft2 = np.fft.fft(vit_encoding_2, axis=axis)\nfft_sum = fft1 + fft2\nvit_final = np.fft.ifft(fft_sum, axis=axis)\nvit_final_real = vit_final.real\nprint(fft_sum)\nprint(vit_final_real)\nprint(vit_encoding_1.shape, vit_final_real.shape)",
+        "type": "code",
+        "location": "/rt_x_experiments/fourier_transform_combine_data/test_fft_1d.py:1-14"
+    },
+    "1237": {
+        "file_id": 167,
+        "content": "Calculating Fourier transforms of two input arrays, combining them and computing inverse Fourier transform. Printing results and shapes.",
+        "type": "comment"
+    },
+    "1238": {
+        "file_id": 168,
+        "content": "/rt_x_experiments/fourier_transform_combine_data/test_multidimension_fourier_transform_2d.py",
+        "type": "filepath"
+    },
+    "1239": {
+        "file_id": 168,
+        "content": "The code performs a 2D Fast Fourier Transform (FFT) on two arrays, then combines the results using both addition and element-wise multiplication before performing an inverse FFT to obtain the final result. The author is printing various results for comparison, including the original data, addition result, multiplication result, and sum of the two operations. The code ends by discarding imaginary parts due to strange values obtained in the process.",
+        "type": "summary"
+    },
+    "1240": {
+        "file_id": 168,
+        "content": "from test_common import *\naxes = [1, 2]\n# now you can choose to do fft over 1d or 2d\n# what a problem.\nfft1 = np.fft.fft2(vit_encoding_1, axes=axes)\nfft2 = np.fft.fft2(vit_encoding_2, axes=axes)\nfft_sum = fft1 + fft2\n# how about let's use elementwise multiplication to replace the addition?\nfft_mul = fft1 * fft2\nfft_sum_and_mul = fft_sum + fft_mul\nvit_final = np.fft.ifft2(fft_sum, axes=axes)\nvit_final_real = vit_final.real\nvit_final_mul_real = np.fft.ifft2(fft_mul, axes=axes).real\nvit_final_sum_and_mul_real = np.fft.ifft2(fft_sum_and_mul, axes=axes).real\n# print(vit_final)\nprint(fft_sum)\nprint(vit_final_real)\nprint(vit_final_mul_real)\nprint(vit_final_sum_and_mul_real)\nprint(\n    vit_encoding_1.shape, vit_final_real.shape\n)  # shape is the same. however, we have strange imaginary parts. let's discard them.\n# now we can just sum. it does not have to be complex.",
+        "type": "code",
+        "location": "/rt_x_experiments/fourier_transform_combine_data/test_multidimension_fourier_transform_2d.py:1-33"
+    },
+    "1241": {
+        "file_id": 168,
+        "content": "The code performs a 2D Fast Fourier Transform (FFT) on two arrays, then combines the results using both addition and element-wise multiplication before performing an inverse FFT to obtain the final result. The author is printing various results for comparison, including the original data, addition result, multiplication result, and sum of the two operations. The code ends by discarding imaginary parts due to strange values obtained in the process.",
+        "type": "comment"
+    },
+    "1242": {
+        "file_id": 169,
+        "content": "/rt_x_experiments/gradient_undescent/dynamic_learning_rate.py",
+        "type": "filepath"
+    },
+    "1243": {
+        "file_id": 169,
+        "content": "Code is defining a function to get and set learning rates for an optimizer. It initializes a model, optimizer, and demonstrates using the get_optim_lrs and set_optim_lrs functions. The code also shows that setting learning rate to negative or zero can cause errors. Finally, it suggests that while scheduling is not necessary here, a recursive scheduler might be useful with the model's output.",
+        "type": "summary"
+    },
+    "1244": {
+        "file_id": 169,
+        "content": "import torch\n# you may witness the difference.\ndef get_optim_lrs(optim):\n    lr_list = []\n    for pg in optim.param_groups:\n        lr = pg['lr']\n        lr_list.append(lr)\n    return lr_list\ndef set_optim_lrs(optim, lr_list):\n    for index,pg in enumerate(optim.param_groups):\n        pg['lr'] = lr_list[index]\n# eliminate complex setup.\nlr = 0.001\nmodel = torch.nn.Sequential(torch.nn.Linear(10, 10), torch.nn.Linear(10, 1))\noptim = torch.optim.SGD(model.parameters(), lr=lr)\n# scheduler = torch.optim.lr_scheduler.StepLR(optim, step_size=10, gamma=0.1)\n# call `scheduler.step()` to schedule next learning rate\n# class MyScheduler(torch.optim.lr_scheduler.LRScheduler):\n#     ...\nlr_list = get_optim_lrs(optim)\nprint(lr_list) # [0.001]\n# set_optim_lrs(optim, [-0.001]) # seems ok, but...a\nset_optim_lrs(optim, [2])\nprint(get_optim_lrs(optim))\n# just do not set to negative.\n# you don't need the scheduler. or you might need the scheduler that can recurse with the model output.",
+        "type": "code",
+        "location": "/rt_x_experiments/gradient_undescent/dynamic_learning_rate.py:1-35"
+    },
+    "1245": {
+        "file_id": 169,
+        "content": "Code is defining a function to get and set learning rates for an optimizer. It initializes a model, optimizer, and demonstrates using the get_optim_lrs and set_optim_lrs functions. The code also shows that setting learning rate to negative or zero can cause errors. Finally, it suggests that while scheduling is not necessary here, a recursive scheduler might be useful with the model's output.",
+        "type": "comment"
+    },
+    "1246": {
+        "file_id": 170,
+        "content": "/rt_x_experiments/gradient_undescent/test_unlearning.py",
+        "type": "filepath"
+    },
+    "1247": {
+        "file_id": 170,
+        "content": "The code initializes a three-layer model, sets the learning rate to 0.001, enables loss inversion for self-generated data, creates an Adam optimizer, generates fake learning data, and monitors RAM usage during training while logging progress every 10 epochs.",
+        "type": "summary"
+    },
+    "1248": {
+        "file_id": 170,
+        "content": "# our target:\n# negative learning rate\nimport torch\n# how to create the map?\n# model.named_parameter_list().__next__()\nimport psutil\nprocess = psutil.Process()\ndef get_ram_usage():\n    memory_usage = process.memory_info().rss / 1024**3  # in GB\n    print(\"Memory Usage:\", memory_usage, \"GB\")\nclass MyModel(torch.nn.Module):\n    def __init__(self, input_size: int, hidden_size: int, output_size: int):\n        super(MyModel, self).__init__()\n        self.fc1 = torch.nn.Linear(input_size, hidden_size)\n        self.fc2 = torch.nn.Linear(hidden_size, output_size)\n    def forward(self, x):\n        x1 = self.fc1.forward(x)\n        ret = self.fc2.forward(x1)\n        return ret\ninput_size = 2000\noutput_size = 2500\nhidden_size = 3000\nmodel = MyModel(input_size=input_size, hidden_size=hidden_size, output_size=output_size)\noptimizer_list = {}\nparameter_list = {}\n# will get faster over size, but the gradient may not descent as fast\n# memory usage is nearly the same\n# freeze = True\nfreeze = False\nif freeze:\n    model.eval()\nget_ram_",
+        "type": "code",
+        "location": "/rt_x_experiments/gradient_undescent/test_unlearning.py:1-49"
+    },
+    "1249": {
+        "file_id": 170,
+        "content": "Creating a model with three layers, initializing an optimizer, and checking memory usage.",
+        "type": "comment"
+    },
+    "1250": {
+        "file_id": 170,
+        "content": "usage() # 0.22\n# lr = -0.001 # invalid learning rate?\nlr = 0.001\nloss_inversion = True\n# loss_inversion = False\n# usually the model prediction from itself has lower loss than the loss coming from environment. we need to increase the loss at this time, if trained using data generated by itself.\ncriterion = torch.nn.MSELoss()\n# param_limit = 1\n# param_limit = 2\nparam_limit = None\nif not freeze:\n    optimizer = torch.optim.Adam(model.parameters(), lr=lr)\nelse:\n    for index, it in enumerate(model.named_parameters()):\n        if param_limit is not None:\n            if index >= param_limit: break\n        name, param = it\n        # print(name)\n        parameter_list[name] = param\n        optimizer_list[name] = torch.optim.Adam([param], lr=lr)\nget_ram_usage() # 0.22\n# fc1.weight\n# fc1.bias\n# fc2.weight\n# fc2.bias\n# create fake learning data\nbatch_size = 10\nx = torch.randn(batch_size, input_size)\ntarget = torch.randn(batch_size, output_size)\nparameter_names = list(parameter_list.keys())\nparameter_index_count = len(paramete",
+        "type": "code",
+        "location": "/rt_x_experiments/gradient_undescent/test_unlearning.py:49-89"
+    },
+    "1251": {
+        "file_id": 170,
+        "content": "The code sets the learning rate to 0.001 and enables loss inversion if the model is trained using data generated by itself. It then creates an optimizer using Adam algorithm with the specified learning rate for parameters that are not frozen. The code also retrieves RAM usage information at some point, and it creates fake learning data to be used during training.",
+        "type": "comment"
+    },
+    "1252": {
+        "file_id": 170,
+        "content": "r_names)\n# this is good\nrandomize_param_selection = True\n# this is bad\n# randomize_param_selection = False\nimport random\nfor epoch in range(100):\n    if freeze:\n        if randomize_param_selection:\n            selected_parameter_index = random.randint(0, parameter_index_count - 1)\n        else:\n            selected_parameter_index = epoch % parameter_index_count\n        selected_parameter_name = parameter_names[selected_parameter_index]\n        # this part is not necessary. i doubt that.\n        # does not save memory\n        for pname, param in parameter_list.items():\n            if pname != selected_parameter_name:\n                param.requires_grad = False\n                param.grad = None\n            else:\n                param.requires_grad = True\n        # breakpoint()\n        optimizer = optimizer_list[selected_parameter_name]\n    # Forward pass\n    output = model(x)\n    # Compute the loss\n    loss = (-1 if loss_inversion else 1) * criterion(output, target) # so this is great. loss is getting bigger.\n  ",
+        "type": "code",
+        "location": "/rt_x_experiments/gradient_undescent/test_unlearning.py:89-124"
+    },
+    "1253": {
+        "file_id": 170,
+        "content": "Code comments:\n- Randomizes parameter selection if `randomize_param_selection` is True.\n- Unnecessary code block for setting parameters' gradients and requires_grad flags.\n- Loss inversion to increase or decrease the loss based on a flag.",
+        "type": "comment"
+    },
+    "1254": {
+        "file_id": 170,
+        "content": "  # loss = criterion(output, target)\n    # Zero the gradients\n    # optimizer.zero_grad(set_to_none=True)\n    optimizer.zero_grad()\n    # Backward pass\n    loss.backward()\n    # Update the weights\n    optimizer.step()\n    # Print the loss every 10 epochs\n    if epoch % 10 == 9:\n        print(f\"Epoch {epoch+1}, Loss: {loss.item()}\")",
+        "type": "code",
+        "location": "/rt_x_experiments/gradient_undescent/test_unlearning.py:124-138"
+    },
+    "1255": {
+        "file_id": 170,
+        "content": "Calculating the loss, zeroing gradients, performing backward pass, updating weights, and printing loss every 10 epochs.",
+        "type": "comment"
+    },
+    "1256": {
+        "file_id": 171,
+        "content": "/rt_x_experiments/partial_training_network/test_freeze_one_and_train_another.py",
+        "type": "filepath"
+    },
+    "1257": {
+        "file_id": 171,
+        "content": "The code creates a neural network model, manages RAM usage by freezing or training layers based on a flag, trains with Adam optimizer, and controls GPU memory usage to prevent overfitting.",
+        "type": "summary"
+    },
+    "1258": {
+        "file_id": 171,
+        "content": "import torch\n# how to create the map?\n# model.named_parameter_list().__next__()\nimport psutil\nprocess = psutil.Process()\ndef get_ram_usage():\n    memory_usage = process.memory_info().rss / 1024**3  # in GB\n    print(\"Memory Usage:\", memory_usage, \"GB\")\nclass MyModel(torch.nn.Module):\n    def __init__(self, input_size: int, hidden_size: int, output_size: int):\n        super(MyModel, self).__init__()\n        self.fc1 = torch.nn.Linear(input_size, hidden_size)\n        self.fc2 = torch.nn.Linear(hidden_size, output_size)\n    def forward(self, x):\n        x1 = self.fc1.forward(x)\n        ret = self.fc2.forward(x1)\n        return ret\ninput_size = 2000\noutput_size = 2500\nhidden_size = 3000\nmodel = MyModel(input_size=input_size, hidden_size=hidden_size, output_size=output_size)\noptimizer_list = {}\nparameter_list = {}\n# will get faster over size, but the gradient may not descent as fast\n# memory usage is nearly the same\nfreeze = True\n# freeze = False\nif freeze:\n    model.eval()\nget_ram_usage() # 0.22\nlr = 0.001\ncriterion = t",
+        "type": "code",
+        "location": "/rt_x_experiments/partial_training_network/test_freeze_one_and_train_another.py:1-50"
+    },
+    "1259": {
+        "file_id": 171,
+        "content": "This code defines a simple neural network model, creates an instance of it, and initializes an optimizer. It also checks the current RAM usage and allows freezing or training the model depending on a boolean flag. The model architecture consists of two linear layers.",
+        "type": "comment"
+    },
+    "1260": {
+        "file_id": 171,
+        "content": "orch.nn.MSELoss()\n# param_limit = 1\n# param_limit = 2\nparam_limit = None\nif not freeze:\n    optimizer = torch.optim.Adam(model.parameters(), lr=lr)\nelse:\n    for index, it in enumerate(model.named_parameters()):\n        if param_limit is not None:\n            if index >= param_limit: break\n        name, param = it\n        # print(name)\n        parameter_list[name] = param\n        optimizer_list[name] = torch.optim.Adam([param], lr=lr)\nget_ram_usage() # 0.22\n# fc1.weight\n# fc1.bias\n# fc2.weight\n# fc2.bias\n# create fake learning data\nbatch_size = 10\nx = torch.randn(batch_size, input_size)\ntarget = torch.randn(batch_size, output_size)\nparameter_names = list(parameter_list.keys())\nparameter_index_count = len(parameter_names)\n# this is good\nrandomize_param_selection = True\n# this is bad\n# randomize_param_selection = False\nimport random\nfor epoch in range(100):\n    if freeze:\n        if randomize_param_selection:\n            selected_parameter_index = random.randint(0, parameter_index_count - 1)\n        else:\n            sele",
+        "type": "code",
+        "location": "/rt_x_experiments/partial_training_network/test_freeze_one_and_train_another.py:50-93"
+    },
+    "1261": {
+        "file_id": 171,
+        "content": "Defining model loss function\nSetting param_limit to either 1 or 2, freezing parameters\nCreating Adam optimizer for all parameters if not freezing, otherwise creating separate Adam optimizers for selected parameters\nChecking and logging RAM usage\nIterating through fake learning data for 100 epochs\nRandomly selecting a parameter index for optimization if randomize_param_selection is True",
+        "type": "comment"
+    },
+    "1262": {
+        "file_id": 171,
+        "content": "cted_parameter_index = epoch % parameter_index_count\n        selected_parameter_name = parameter_names[selected_parameter_index]\n        # this part is not necessary. i doubt that.\n        # does not save memory\n        for pname, param in parameter_list.items():\n            if pname != selected_parameter_name:\n                param.requires_grad = False\n                param.grad = None\n            else:\n                param.requires_grad = True\n        # breakpoint()\n        optimizer = optimizer_list[selected_parameter_name]\n    # Forward pass\n    output = model(x)\n    # Compute the loss\n    loss = criterion(output, target)\n    # Zero the gradients\n    # optimizer.zero_grad(set_to_none=True)\n    optimizer.zero_grad()\n    # Backward pass\n    loss.backward()\n    # Update the weights\n    optimizer.step()\n    # Print the loss every 10 epochs\n    if epoch % 10 == 9:\n        print(f\"Epoch {epoch+1}, Loss: {loss.item()}\")\n# how to get memory usage?\n# Get the memory usage\n# no nothing shown of cpu\n# memory_usage = tor",
+        "type": "code",
+        "location": "/rt_x_experiments/partial_training_network/test_freeze_one_and_train_another.py:93-134"
+    },
+    "1263": {
+        "file_id": 171,
+        "content": "Updating the weights of selected parameters by freezing others.",
+        "type": "comment"
+    },
+    "1264": {
+        "file_id": 171,
+        "content": "ch.cuda.memory_allocated(device='cpu')  # in Bytes\n# # memory_usage = torch.cuda.memory_allocated(device=device) / 1024**3  # in GB\n# print(\"Memory Usage:\", memory_usage, \"Bytes\")\n############ CPU Usage ############\nprint(\"Freeze?\", freeze)\nget_ram_usage()\n# I think maybe this is intended to be used in online training. cause it significantly reduces overfitting.\n# Freeze? False Memory Usage: 0.17539215087890625 GB\n# Epoch 100, Loss: 1.3618760931422003e-05\n# Freeze? True Memory Usage: 0.17582321166992188 GB\n# Epoch 100, Loss: 0.021172840148210526\n################################################################\n# Epoch 100, Loss: 5.7390594482421875\n# Freeze? True Memory Usage: 0.3774299621582031 GB\n# Epoch 100, Loss: 0.0014482313999906182\n# Freeze? False Memory Usage: 0.37708282470703125 GB\n# Epoch 100, Loss: 0.00897219032049179\n# Freeze? True Memory Usage: 0.32117462158203125 GB\n# Epoch 100, Loss: 0.13553307950496674\n# Freeze? True Memory Usage: 0.3498115539550781 GB\n# less memory used?",
+        "type": "code",
+        "location": "/rt_x_experiments/partial_training_network/test_freeze_one_and_train_another.py:134-165"
+    },
+    "1265": {
+        "file_id": 171,
+        "content": "This code snippet is controlling the GPU memory usage by freezing and unfreezing certain layers of a neural network. It prints the current memory usage and CPU usage for each epoch during training. Freezing a layer reduces overfitting, while unfreezing it allows the model to learn from new data more effectively.",
+        "type": "comment"
+    },
+    "1266": {
+        "file_id": 172,
+        "content": "/rt_x_experiments/real_attention/2d_convolve.py",
+        "type": "filepath"
+    },
+    "1267": {
+        "file_id": 172,
+        "content": "This code defines an input image and kernel, performs 2D convolution on the image using scipy.signal's convolve2d function, and prints the shapes of the input images and resulting convolved image. It also provides a comment about potentially applying cv2's filter2D function for additional image processing.",
+        "type": "summary"
+    },
+    "1268": {
+        "file_id": 172,
+        "content": "import numpy as np\nfrom scipy.signal import convolve2d\n# Define the input image and the kernel\nimage = np.array([[1, 2, 3],\n                  [4, 5, 6],\n                  [7, 8, 9]])\nkernel = np.array([[1, 0, -1],\n                   [2, 0, -2],\n                   [1, 0, -1]])\n# Perform 2D convolution\nconvolved_image = convolve2d(image, kernel, mode='valid')\n# Print the resulting convolved image\nprint(image.shape, kernel.shape, convolved_image.shape)\n# so this might works.\n# (3, 3) (3, 3) (1, 1)\n################ EXTRA COMPUTATION MIGHT INVOLVED ##################\n# import cv2\n# # Read the input image\n# image = cv2.imread('image.jpg')\n# # Define the kernel\n# kernel = np.array([[0, -1, 0],\n#                    [-1, 5, -1],\n#                    [0, -1, 0]])\n# # Apply filter2D\n# filtered_image = cv2.filter2D(image, -1, kernel)",
+        "type": "code",
+        "location": "/rt_x_experiments/real_attention/2d_convolve.py:1-34"
+    },
+    "1269": {
+        "file_id": 172,
+        "content": "This code defines an input image and kernel, performs 2D convolution on the image using scipy.signal's convolve2d function, and prints the shapes of the input images and resulting convolved image. It also provides a comment about potentially applying cv2's filter2D function for additional image processing.",
+        "type": "comment"
+    },
+    "1270": {
+        "file_id": 173,
+        "content": "/rt_x_experiments/real_attention/low_rank_positional_encoding.py",
+        "type": "filepath"
+    },
+    "1271": {
+        "file_id": 173,
+        "content": "This code is implementing low-rank positional encoding using matrix multiplication and Fast Fourier Transform (FFT) in PyTorch. The resulting positional encoding is then used for attention mechanisms in a model, potentially improving its ability to learn by aligning actions with perceptions.",
+        "type": "summary"
+    },
+    "1272": {
+        "file_id": 173,
+        "content": "import torch\n# you can also use fft to further enhance the performance, if it supports autograd\noriginal_height_or_width = 1024\nrank = 2\n# ifft?\nmat1 = torch.zeros((original_height_or_width, rank))\nmat2 = torch.zeros((rank, original_height_or_width))\nposenc_real= mat1 @ mat2 # instead of elementwise multiplication\nmat3 = torch.zeros((original_height_or_width, rank))\nmat4 = torch.zeros((rank, original_height_or_width))\nposenc_imag = mat3 @ mat4\n# posenc_fft = torch.fft.fft2(posenc)\nposenc = posenc_real + 1j * posenc_imag\nposenc_final = torch.fft.ifft2(posenc) # complex number\n# print(posenc.shape)\nprint(posenc.real)\n# print(posenc_final)\n# torch.Size([1024, 1024])\n# picture + (mat1 * mat2 = positional_encoding)\n# if i insert something different into the model output, like 'read forward' or 'write forward', line up actions with perceptions, maybe the model will learn more.",
+        "type": "code",
+        "location": "/rt_x_experiments/real_attention/low_rank_positional_encoding.py:1-27"
+    },
+    "1273": {
+        "file_id": 173,
+        "content": "This code is implementing low-rank positional encoding using matrix multiplication and Fast Fourier Transform (FFT) in PyTorch. The resulting positional encoding is then used for attention mechanisms in a model, potentially improving its ability to learn by aligning actions with perceptions.",
+        "type": "comment"
+    },
+    "1274": {
+        "file_id": 174,
+        "content": "/rt_x_experiments/real_attention/recursive_positional_encoding.py",
+        "type": "filepath"
+    },
+    "1275": {
+        "file_id": 174,
+        "content": "Applying recursive positional encoding to zoomed patches, considering exponential weight or average weight options, and potentially using a uniform Gaussian distribution.",
+        "type": "summary"
+    },
+    "1276": {
+        "file_id": 174,
+        "content": "# apply recursive positional encoding to zoomed patches\n# use exponential weight or average weight?\n# or you could use some uniform gausian distribution",
+        "type": "code",
+        "location": "/rt_x_experiments/real_attention/recursive_positional_encoding.py:1-4"
+    },
+    "1277": {
+        "file_id": 174,
+        "content": "Applying recursive positional encoding to zoomed patches, considering exponential weight or average weight options, and potentially using a uniform Gaussian distribution.",
+        "type": "comment"
+    },
+    "1278": {
+        "file_id": 175,
+        "content": "/rt_x_experiments/real_attention/sin_2d_positional_encoding.py",
+        "type": "filepath"
+    },
+    "1279": {
+        "file_id": 175,
+        "content": "The code imports a package, creates a 3D tensor with zeros, initializes a PositionalEncoding2D object for rescaling, and then performs bilinear interpolation and normalization to display the resulting image using matplotlib without axis ticks or labels.",
+        "type": "summary"
+    },
+    "1280": {
+        "file_id": 175,
+        "content": "# do we need a new dimension?\n# pip install positional-encodings[pytorch]\nimport torch\nimport einops\nfrom positional_encodings.torch_encodings import PositionalEncoding2D\nimport torch.nn.functional as F\nimport matplotlib.pyplot as plt\n# according to the formula, shall we recalculate or interpolate the encodings?\n# or we just downscale the picture?\n# we will view the thing.\n# it is not gaussian.\nchannel_count = 3\nbatch_size = 1\noriginal_image_width_or_height = 256\n# original_image_width_or_height = 1024\nscale_factor = 0.5\nscaled_image_width_or_height = int(original_image_width_or_height * scale_factor)\ninput_tensor_shape = (\n    batch_size,\n    original_image_width_or_height,\n    original_image_width_or_height,\n    channel_count,\n)\ninput_tensor = torch.zeros(input_tensor_shape)\n# how to rescale the thing?\nposenc_2d = PositionalEncoding2D(channel_count)\noutput_tensor = posenc_2d(input_tensor)\noutput_tensor_rearranged = einops.rearrange(output_tensor, \"b h w c -> b c h w\")\nnew_size = (scaled_image_width_or_height, s",
+        "type": "code",
+        "location": "/rt_x_experiments/real_attention/sin_2d_positional_encoding.py:1-39"
+    },
+    "1281": {
+        "file_id": 175,
+        "content": "Importing positional encodings package.\nCreating a 3D tensor with zeros for input tensor shape.\nInitializing PositionalEncoding2D object for rescaling.\nRescaling input tensor using PositionalEncoding2D.\nRearranging the output tensor.",
+        "type": "comment"
+    },
+    "1282": {
+        "file_id": 175,
+        "content": "caled_image_width_or_height)\n# first check the result of the rescaled tensor.\ninterpolated_tensor = F.interpolate(\n    output_tensor_rearranged, size=new_size, mode=\"bilinear\", align_corners=False\n)\nprint(f\"Original tensor shape: {input_tensor.shape}\")\nprint(f\"Output tensor shape: {output_tensor.shape}\")\nprint(f\"Output tensor (rearranged) shape: {output_tensor_rearranged.shape}\")\nprint(f\"Interpolated tensor shape: {interpolated_tensor.shape}\")\nimage = output_tensor_rearranged.numpy()\nimage = einops.rearrange(image, \"b c h w -> b h w c\")\n# now, view the tensor.\n# Normalize the image between 0 and 1\nimage = (image - image.min()) / (image.max() - image.min())\n# Display the image using matplotlib\nplt.imshow(image[0, :, :, :])\n# plt.imshow(image)\nplt.axis(\"off\")  # Remove axis ticks and labels\nplt.show()",
+        "type": "code",
+        "location": "/rt_x_experiments/real_attention/sin_2d_positional_encoding.py:39-62"
+    },
+    "1283": {
+        "file_id": 175,
+        "content": "The code rescales the input tensor, interpolates it using bilinear interpolation, and then normalizes the resulting image between 0 and 1. It displays the normalized image using matplotlib without axis ticks or labels.",
+        "type": "comment"
+    },
+    "1284": {
+        "file_id": 176,
+        "content": "/rt_x_experiments/real_attention/test_model_level_real_attention.py",
+        "type": "filepath"
+    },
+    "1285": {
+        "file_id": 176,
+        "content": "This code introduces two image cropping functions, utilizing libraries like cv2 and numpy. It determines crop centers through grayscale image analysis and explores the need for positional embedding in magnified areas or its skipping, considering fractal functions.",
+        "type": "summary"
+    },
+    "1286": {
+        "file_id": 176,
+        "content": "# contrary to external/environmental attention mechanism such as adjusting the zoom level, we use internal bisect multihead mechanism instead.\n# first let's define the patch size, 256x256 pixels, and anything larger than that will be downscaled.\n# we will extract the attended area and bisect. we feed it again into the network and recurse.\n# while extracting the attended area, we will mask out the padding area for sure, to avoid crop being misplaced.\nimage_path = ...\nmax_zoom_level = 3  # should this be adjustable.\n# if the attention center array is like: [(0, 0), (0, 0), (0, 0)]\n# we will do cropping right at the center, for three times\n# every number in attention center array shall be ranged from -1 to 1.\n# so how do you combine these recursive embeddings? fft?\ndef crop_at_interested_area_recursive(\n    image, attention_center_array: list[tuple[float, float]]\n):\n    ret = image.copy()\n    for center in attention_center_array:\n        ret = crop_at_interested_area(ret, center)\n    return ret\ndef check_",
+        "type": "code",
+        "location": "/rt_x_experiments/real_attention/test_model_level_real_attention.py:1-28"
+    },
+    "1287": {
+        "file_id": 176,
+        "content": "This code defines a function `crop_at_interested_area_recursive` that takes an image and an attention center array, then applies cropping recursively at each attention center point in the array. The cropped image is returned after all iterations are completed.",
+        "type": "comment"
+    },
+    "1288": {
+        "file_id": 176,
+        "content": "if_numer_in_range(number: float, _min: float, _max: float):\n    assert _min < _max\n    assert number >= _min\n    assert number <= _max\ndef crop_at_interested_area(image, attention_center: tuple[float, float]):\n    x_c, y_c = attention_center\n    assert check_if_numer_in_range(x_c, -1, 1)\n    assert check_if_numer_in_range(y_c, -1, 1)\n    _, x, y = image.shape()\n    half_x, half_y = x // 2, y // 2\n    quad_x, quad_y = half_x // 2, half_y // 2\n    new_x = half_x + x_c * half_x\n    new_y = half_y + y_c * half_y\n    ret = image[:, new_x - quad_x : new_x + quad_x, new_y - quad_y : new_y + quad_y]\n    return ret\n# use integral or convolution and select the max index, to reduce computation cost.\n# if you want to use multihead or something like that, you would:\n# 1 -> 1 -> 1 ...\n# 1 -> 2 -> 4 ...\n# 1 -> 3 -> 9 ...\nimport cv2\nimport numpy as np\nfrom scipy.signal import convolve2d\ndef analyze_grayscale_image_and_get_crop_center(_grayscale_image):\n    xs, ys = _grayscale_image.shape()\n    x_size, y_size = xs // 2, ys // ",
+        "type": "code",
+        "location": "/rt_x_experiments/real_attention/test_model_level_real_attention.py:28-59"
+    },
+    "1289": {
+        "file_id": 176,
+        "content": "This code defines a function `crop_at_interested_area` that takes an image and an attention center (x, y) as input, and crops the image to a new area centered at the attention center. The code also imports necessary libraries such as cv2, numpy, and scipy.signal for image processing operations. Additionally, it defines a function `analyze_grayscale_image_and_get_crop_center` that analyzes a grayscale image to determine the crop center based on some image analysis techniques.",
+        "type": "comment"
+    },
+    "1290": {
+        "file_id": 176,
+        "content": "2\n    kernel = np.ones((x_size, y_size))\n    grayscale_image = _grayscale_image.copy()\n    convoluted_image = convolve2d(grayscale_image, kernel, mode=\"valid\")\n    min_val, max_val, min_indx, max_indx = cv2.minMaxLoc(convoluted_image)\n    left_corner = max_indx\n    # now patch the attended area\n    x_start = left_corner[0]\n    y_start = left_corner[1]\n    x_end = x_start + x_size\n    y_end = y_start + y_size\n    grayscale_image[x_start:x_end, y_start:y_end] = 0\n    c_x = ((x_end - x_start) // 2 - x_size) / x_size\n    c_y = ((y_end - y_start) // 2 - y_size) / y_size\n    center = (c_x, c_y)\n    return grayscale_image, center\n# do it again.\ndef analyze_image_and_get_crop_center_list(image, center_count: int = 1):\n    grayscale_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)\n    center_list = []\n    for _ in range(center_count):\n        grayscale_image, center = analyze_grayscale_image_and_get_crop_center(\n            grayscale_image\n        )\n        center_list.append(center)\n    return center_list\n# now, do you ",
+        "type": "code",
+        "location": "/rt_x_experiments/real_attention/test_model_level_real_attention.py:59-89"
+    },
+    "1291": {
+        "file_id": 176,
+        "content": "This code calculates the crop center by analyzing grayscale images. It convolves the image with a kernel, determines the maximum location in the convoluted image, and patches that area to zero. The function can be called multiple times to get a list of crop centers.",
+        "type": "comment"
+    },
+    "1292": {
+        "file_id": 176,
+        "content": "have to do positional embedding over magnified areas? you only get embeddings! maybe we don't have to! otherwise we need some fractal function to do this job.",
+        "type": "code",
+        "location": "/rt_x_experiments/real_attention/test_model_level_real_attention.py:89-89"
+    },
+    "1293": {
+        "file_id": 176,
+        "content": "This code suggests that the author is considering whether positional embedding needs to be done over magnified areas or if it can be skipped. If it needs to be done, a fractal function might be required for this task.",
+        "type": "comment"
+    },
+    "1294": {
+        "file_id": 177,
+        "content": "/rt_x_experiments/rt_x_test_code/requirements.txt",
+        "type": "filepath"
+    },
+    "1295": {
+        "file_id": 177,
+        "content": "This code is listing two PyTorch libraries: classifier-free-guidance-pytorch and efficientnet-pytorch.",
+        "type": "summary"
+    },
+    "1296": {
+        "file_id": 177,
+        "content": "classifier-free-guidance-pytorch\nefficientnet-pytorch",
+        "type": "code",
+        "location": "/rt_x_experiments/rt_x_test_code/requirements.txt:1-2"
+    },
+    "1297": {
+        "file_id": 177,
+        "content": "This code is listing two PyTorch libraries: classifier-free-guidance-pytorch and efficientnet-pytorch.",
+        "type": "comment"
+    },
+    "1298": {
+        "file_id": 178,
+        "content": "/rt_x_experiments/rt_x_test_code/rtx1_example.py",
+        "type": "filepath"
+    },
+    "1299": {
+        "file_id": 178,
+        "content": "Creates an RTX1 model, generates random video data and instructions, computes train logits, sets the model to evaluation mode, and computes eval logits with a conditional scale of 3.0.",
+        "type": "summary"
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Applying recursive positional encoding to zoomed patches, considering exponential weight or average weight options, and potentially using a uniform Gaussian distribution.",
+    "details": [
+        {
+            "comment": "Applying recursive positional encoding to zoomed patches, considering exponential weight or average weight options, and potentially using a uniform Gaussian distribution.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/rt_x_experiments/real_attention/recursive_positional_encoding.py\":0-3",
+            "content": "# apply recursive positional encoding to zoomed patches\n# use exponential weight or average weight?\n# or you could use some uniform gausian distribution"
+        }
+    ]
+}

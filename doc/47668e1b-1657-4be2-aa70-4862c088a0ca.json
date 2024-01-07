@@ -1,0 +1,10 @@
+{
+    "summary": "Installing pip, open-interpreter using Tsinghua mirror.",
+    "details": [
+        {
+            "comment": "Installing pip, open-interpreter using Tsinghua mirror.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/Dockerfile\":0-4",
+            "content": "FROM ubuntu:22.04\nWORKDIR /root\nCOPY install_pip.sh .\nRUN bash install_pip.sh\nRUN pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple open-interpreter"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "The code defines a variable 'timestep' set to 0.1, imports the pyautogui library and creates a dictionary named 'frame' containing various data elements such as image, keystate, mouseloc, mousestate and sound. The comment suggests that the keystroke timing may need further consideration, the code could benefit from decoding the screen recording video into images, and the computer only has CPU without an Nvidia GPU.",
+    "details": [
+        {
+            "comment": "The code defines a variable 'timestep' set to 0.1, imports the pyautogui library and creates a dictionary named 'frame' containing various data elements such as image, keystate, mouseloc, mousestate and sound. The comment suggests that the keystroke timing may need further consideration, the code could benefit from decoding the screen recording video into images, and the computer only has CPU without an Nvidia GPU.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/recorder.py\":0-20",
+            "content": "timestep = 0.1\nimport pyautogui\n# are you sure the keystroke is just enough?\n# let's first record them separately.\nframe = dict(\n    image=image,\n    keystate=keystate,\n    mouseloc=mouseloc,\n    mousestate=mousestate,\n    sound=sound,\n)\n# no other feelings, currently.\n# this computer only has cpu, no nvidia gpu.\n# you may want to decode the screen recording video into a series of images."
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "The code captures X11 window content from a remote server, saves images to a pipe and plays them in real-time.",
+    "details": [
+        {
+            "comment": "The code captures X11 window content from a remote server, saves images to a pipe and plays them in real-time.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab.sh\":0-8",
+            "content": "cd .\nwhile true; do\n    env XAUTHORITY=/tmp/.Xauthority ffmpeg -f x11grab -r 10 -i :10 -f image2pipe pipe:1 | ffplay -f image2pipe -i - -autoexit\n    sleep 1\ndone;\n# still with some lag! need improvement.\n# env XAUTHORITY=/tmp/.Xauthority ffmpeg -f x11grab -i :10 -f image2pipe pipe:1\n# env XAUTHORITY=/tmp/.Xauthority ffplay -f x11grab -i :10 2>&1"
+        }
+    ]
+}

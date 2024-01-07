@@ -1,0 +1,15 @@
+{
+    "summary": "The code retrieves the audio input device list, rearranges it to prioritize a virtual driver (BlackHole), checks for available channels, and obtains the list of audio devices using Python Audio (PyAudio).",
+    "details": [
+        {
+            "comment": "The code retrieves the available audio input device list and rearranges it so that a virtual audio driver (BlackHole) is listed first, followed by the actual devices. It checks if the device has any available input channels before appending the device name to the input_device_list.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/pyaudio_get_device_info.py\":0-32",
+            "content": "import pyaudio\ndef get_audio_input_device_list(p):\n    info = p.get_host_api_info_by_index(0)\n    numdevices = info.get(\"deviceCount\")\n    # make speakers recordable? macos needs blackhole.\n    # BEFORE\n    # Input Device id  0  -  MacBook Air Microphone\n    # Input Device id  2  -  NoMachine Audio Adapter\n    # Input Device id  3  -  NoMachine Microphone Adapter\n    # AFTER\n    # Input Device id  0  -  BlackHole 2ch\n    # Input Device id  1  -  MacBook Air Microphone\n    # Input Device id  3  -  NoMachine Audio Adapter\n    # Input Device id  4  -  NoMachine Microphone Adapter\n    input_device_list = []\n    for i in range(0, numdevices):\n        if (\n            p.get_device_info_by_host_api_device_index(0, i).get(\"maxInputChannels\")\n        ) > 0:\n            device_name = p.get_device_info_by_host_api_device_index(0, i).get(\"name\")\n            print(\"Input Device id \", i, \" - \", device_name)\n            input_device_list.append((i, device_name))\n    return input_device_list\nif __name__ == \"__main__\":\n    p "
+        },
+        {
+            "comment": "Getting the Python Audio (PyAudio) instance and calling a function to get the list of audio input devices.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/pyaudio_get_device_info.py\":32-33",
+            "content": "= pyaudio.PyAudio()\n    get_audio_input_device_list(p)"
+        }
+    ]
+}

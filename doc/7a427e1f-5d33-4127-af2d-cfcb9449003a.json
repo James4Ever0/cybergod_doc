@@ -1,0 +1,10 @@
+{
+    "summary": "Idea: Programs ingest and evolve via evolutionary process, directly executing assembly code without human interface. Interaction through isolated environments like a computer virus. Consider hierarchical tokenizer or embedding for memory efficiency.",
+    "details": [
+        {
+            "comment": "Idea: Programs ingest and evolve via evolutionary process, directly executing assembly code without human interface. Interaction through isolated environments like a computer virus. Consider hierarchical tokenizer or embedding for memory efficiency.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/binary_program_synthesis_cpu_assembly_execution/README.md\":0-8",
+            "content": "I had an idea that programs shall ingest programs and learn to evolve in a evolutionary manner.\nThe program shall directly execute assembly code. So obviously, no human interface is needed.\nYou may ask how do we interact with such program? Consider computer virus. We first run it in isolated environments, then we interact.\n---\nyou may make hierarchical tokenizer or hierarchical embedding to reduce memory consumption"
+        }
+    ]
+}

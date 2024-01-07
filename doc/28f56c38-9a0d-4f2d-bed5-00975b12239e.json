@@ -1,0 +1,10 @@
+{
+    "summary": "Downloading virtual-keylogger repository.",
+    "details": [
+        {
+            "comment": "Downloading virtual-keylogger repository.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/the_frozen_forest_intro/keylogger_extension/init.cmd\":0-0",
+            "content": "git clone https://github.com/AyamDobhal/virtual-keylogger"
+        }
+    ]
+}

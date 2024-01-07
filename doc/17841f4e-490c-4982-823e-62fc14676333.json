@@ -1,0 +1,10 @@
+{
+    "summary": "The code is starting X virtual framebuffer (Xvfb) server with a specified resolution, running x11grab.sh in it, and also providing an option to monitor for X11 errors using stop_on_ffmpeg_x11_error.py script.",
+    "details": [
+        {
+            "comment": "The code is starting X virtual framebuffer (Xvfb) server with a specified resolution, running x11grab.sh in it, and also providing an option to monitor for X11 errors using stop_on_ffmpeg_x11_error.py script.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab_loop.sh\":0-3",
+            "content": "cd . # FIX: input/output error\nps aux | grep -i xvfb | grep 11 | grep -v grep | awk '{print $2}' | xargs -iabc kill -s TERM abc\nxvfb-run --server-num=11 --listen-tcp --server-args=\"-screen 0 1280x800x24\" -f /tmp/.Xauthority1 bash x11grab.sh\n# xvfb-run --server-num=11 --listen-tcp --server-args=\"-screen 0 1280x800x24\" -f /tmp/.Xauthority1 bash x11grab.sh | python3 stop_on_ffmpeg_x11_error.py"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Infinite loop, continuously adds 1 to 'a'.",
+    "details": [
+        {
+            "comment": "Infinite loop, continuously adds 1 to 'a'.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/loop_forever.py\":0-1",
+            "content": "while True:\n    a = 1 + 1"
+        }
+    ]
+}

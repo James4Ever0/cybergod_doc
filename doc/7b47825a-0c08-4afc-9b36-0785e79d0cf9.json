@@ -1,0 +1,10 @@
+{
+    "summary": "These functions ensure the input is either a bytes or string type, and raise exceptions if it's not.",
+    "details": [
+        {
+            "comment": "These functions ensure the input is either a bytes or string type, and raise exceptions if it's not.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/type_utils.py\":0-13",
+            "content": "def enforce_bytes(s):\n    if isinstance(s, str):\n        s = s.encode()\n    if not isinstance(s, bytes):\n        raise Exception(\"unknown line content type:\", type(s))\n    return s\ndef enforce_str(content):\n    if isinstance(content, bytes):\n        content = content.decode()\n    if not isinstance(content, str):\n        raise Exception(\"Invalid content type: %s\\nShould be: str\" % type(content))\n    return content"
+        }
+    ]
+}

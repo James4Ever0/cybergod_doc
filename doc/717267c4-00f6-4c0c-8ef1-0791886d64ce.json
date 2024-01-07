@@ -1,0 +1,10 @@
+{
+    "summary": "Code performs image cropping based on location and size, with support for relative movement in X and Y directions.",
+    "details": [
+        {
+            "comment": "Code performs image cropping based on location and size, with support for relative movement in X and Y directions.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/rt_x_experiments/zoom_pan_action.py\":0-24",
+            "content": "# since we can only handle specific data in the scope, how about take transformations as actions\n# distinguish between discrete and continuous actions, like keyboard strokes, clicks and movements.\nimport numpy as np\ndef crop_at_location(img, location, size):\n    lx, ly = location\n    rx, ry = lx + size, ly + size\n    cropped_img = img[:, lx:rx, ly:ry]\n    return cropped_img\ndef relative_move_crop(img, location, size, dx, dy):\n    lx, ly = location\n    nx, ny = lx + dx, ly + dy\n    new_location = (nx, ny)\n    cropped_img = crop_at_location(img, new_location, size)\n    return cropped_img\nif __name__ == \"__main__\":\n    img = np.zeros((3, 1920, 1080))\n    cropped_img = crop_at_location(img, (10, 10), 224)\n    print(\"%s -> %s\" % (img.shape, cropped_img.shape))"
+        }
+    ]
+}

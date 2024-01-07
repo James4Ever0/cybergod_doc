@@ -1,0 +1,10 @@
+{
+    "summary": "Gets the PID of the current interpreter.",
+    "details": [
+        {
+            "comment": "Gets the PID of the current interpreter.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/get_pid_of_self.py\":0-3",
+            "content": "import os\npid = os.getpid()\nprint(\"PID of the current interpreter is: \", pid)"
+        }
+    ]
+}

@@ -1,0 +1,541 @@
+{
+    "1500": {
+        "file_id": 197,
+        "content": "ost:{serverPort}/getIdentifier\",\n        #     # route_page_identifier,\n        #     lambda route:\n        #     # route.abort('connectionfailed')\n        #     route.continue_(url = route.request.url+\"?client_id=\"+pageIdentifier)\n        #     # route.fulfill(status = 200, json = {\"client_id\": pageIdentifier})\n        # )\n        # page.evaluate(f'window.generateUUID = () => {repr(pageIdentifier)}')\n        # pageIdentifier = page.evaluate('pageIdentifier')\n        # def generateUUID():\n        #     return pageIdentifier\n        # page.expose_function('generateUUID', generateUUID)\n        # BUG: having trouble running exposed functions in browser extensions\n        # we can simply expose callback and pass it to event listeners, without browser extension, but that cannot survive navigation.\n        # ref: https://github.com/microsoft/vscode-test-web/issues/69\n        # ref: https://github.com/microsoft/playwright/issues/12017\n        # Enable input events on the page\n        # no such thing.\n        #",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_listen_to_events.py:102-122"
+    },
+    "1501": {
+        "file_id": 197,
+        "content": "The code is trying to expose a function in the browser context and pass it to event listeners for further use. However, there seems to be some trouble running exposed functions in browser extensions. The comments suggest possible issues with VS Code test web and Playwright, but no clear solution is provided.",
+        "type": "comment"
+    },
+    "1502": {
+        "file_id": 197,
+        "content": " page.set_input_interception(True)\n        # Listen to keyboard events\n        # page.on(\"request\", print_request_sent)\n        # page.on(\"requestfinished\", print_request_finished)\n        # we do not have these events.\n        # page.on('keydown', handle_keyboard_event)\n        # page.on('keyup', handle_keyboard_event)\n        # # Listen to mouse events\n        # page.on('mousedown', handle_mouse_event)\n        # page.on('mouseup', handle_mouse_event)\n        # page.on('mousemove', handle_mouse_event)\n        # nothing showed up.\n        # Navigate to a webpage\n        page.goto(page_url)\n        # Wait for events\n        # print(\"exit in %d seconds\" % wait_sec)\n        # you can expect for popups.\n        # will you lose focus?\n        while True:\n            page.wait_for_timeout(1000 * wait_sec)\n        # Clean up\n        page.close()\n        browser.close()",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_listen_to_events.py:122-152"
+    },
+    "1503": {
+        "file_id": 197,
+        "content": "The code sets input interception, listens to keyboard and mouse events, navigates to a webpage, waits for events, and cleans up.",
+        "type": "comment"
+    },
+    "1504": {
+        "file_id": 198,
+        "content": "/the_frozen_forest_intro/pw_random_actor.py",
+        "type": "filepath"
+    },
+    "1505": {
+        "file_id": 198,
+        "content": "The comments detail setting up an environment for capturing Bilibili video screenshots using Playwright, requests, and Chrome DevTools Protocol with features like random character generation, page event handling, and browser automation for improved performance in larger programs.",
+        "type": "summary"
+    },
+    "1506": {
+        "file_id": 198,
+        "content": "import os\n# os.environ[\"DEBUG\"] = \"pw:api\"  # to check what the heck is going on with the screenshot\n# also, just maybe the content script problem\nimport time\nimport deprecated\nfrom playwright.sync_api import sync_playwright, Page, BrowserContext, CDPSession\nimport random\nimport string\nimport base64\nimport requests\nrequest_session = requests.Session()\n# need help?\n# ref: https://www.tampermonkey.net/scripts.php\n# ref: https://greasyfork.org/zh-CN/scripts/388540-bing-batch-open-tabs\n# url = \"https://www.bilibili.com\"\n# url = \"https://www.baidu.com\"\nurl = \"https://www.bilibili.com/video/BV1J24y1c7kE\"\n# should you use javascript to capture the webpage, not here\n# cause it is error prone here\nmax_page_limit = 5\n# hint: you can run the browser in container, and connect to it using websocket\n# chromium.launchServer()\n# browserServer.wsEndpoint()\nfrom typing import cast\n# if we cannot take screenshots indefinitely, then let's just have the topmost browser session\n# ref: https://github.com/microsoft/playwright/issues/",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_random_actor.py:1-35"
+    },
+    "1507": {
+        "file_id": 198,
+        "content": "Setting up environment for capturing Bilibili video screenshots with Playwright and requests.",
+        "type": "comment"
+    },
+    "1508": {
+        "file_id": 198,
+        "content": "15773\n# this is called the chrome devtools protocol (cdp).\nfrom contextlib import contextmanager\n@contextmanager\ndef cdp_context(page: Page):\n    cdp = page.context.new_cdp_session(page)\n    try:\n        yield cdp\n    finally:\n        cdp.detach()\n@deprecated.deprecated\ndef quickScreenshotPNG(\n    page: Page,\n):  # sometimes, protocol error and unable to capture screenshot (still stuck)\n    # protocol error.\n    with cdp_context(page) as cdp:\n        screenshot_data = cast(\n            str,\n            cdp.send(\n                \"Page.captureScreenshot\",\n                {\n                    # ref: https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot\n                    \"optimizeForSpeed\": True\n                },\n            )[\"data\"],\n        )  # type: str, base64 encoded\n        png_bytes = base64.b64decode(screenshot_data)\n        return png_bytes\ndef checkIfPageHidden(page: Page):\n    with cdp_context(page) as cdp:\n        return cdp.send(\"Page.isHidden\")[\"\"]\ndef random_character",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_random_actor.py:35-75"
+    },
+    "1509": {
+        "file_id": 198,
+        "content": "Code snippet is using the Chrome DevTools Protocol (CDP) to capture a screenshot of a webpage and check if the page is hidden. It also includes functions for random character generation.",
+        "type": "comment"
+    },
+    "1510": {
+        "file_id": 198,
+        "content": "_generator():\n    return random.choice(string.ascii_letters + string.digits)\n# ref: https://github.com/microsoft/playwright/issues/16307\n@deprecated.deprecated\ndef performCDPScreenshotFix(page):  # not working. let's start tracing?\n    cdp = context.new_cdp_session(page)\n    register_page_exit_event_handler(page, cdp)\n    cdp.on(\n        \"Page.screencastFrame\",\n        lambda params: cdp.send(\n            \"Page.screencastFrameAck\", {\"sessionId\": params[\"sessionId\"]}\n        ),\n    )\n    cdp.send(\"Page.startScreencast\", dict())\ndef handle_page_event(page: Page):\n    # performCDPScreenshotFix(page)\n    createAndExposePageIdentifierAsFunctionName(page)\n    register_io_event_handler(page)\n    print(\"new page at:\", page.url)\ndef register_io_event_handler(page: Page):\n    page.on(\n        \"filechooser\", lambda file_chooser: file_chooser.set_files([])\n    )  # not to select a thing\n    # page.on('filechooser', lambda file_chooser: file_chooser.set_files(os.path.abspath('pointer_tracing.html')))\n    page.on(\"download",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_random_actor.py:75-105"
+    },
+    "1511": {
+        "file_id": 198,
+        "content": "This code appears to be setting up a page event handler and performing CDP screenshot fix for a browser automation task.",
+        "type": "comment"
+    },
+    "1512": {
+        "file_id": 198,
+        "content": "\", lambda download: download.cancel())  # not download anything.\n    # page.on('dialog', lambda e: None)\n    # let's not try to understand what is going on here.\ndef register_page_exit_event_handler(page: Page, cdp: CDPSession):\n    page.on(\"close\", lambda e: cdp.detach())\n    page.on(\"crash\", lambda e: cdp.detach())\n    page.on(\"pageerror\", lambda e: cdp.detach())\nimport uuid\npageIdentifierPrefix = \"pageIdentifier_\"\ndef createAndExposePageIdentifierAsFunctionName(page: Page):\n    pageIdentifier = str(uuid.uuid4())\n    page.expose_binding(  # ugly but effective hack\n        f\"{pageIdentifierPrefix}{pageIdentifier.replace('-', '_')}\", lambda: None\n    )\n    print(\"page identifier:\", pageIdentifier)\n    setattr(page, \"pageIdentifier\", pageIdentifier)\n    return pageIdentifier\ndef random_actor(page: Page, viewport_width: int, viewport_height: int):\n    action_choices = [\n        # lambda: page.keyboard.up(random_character_generator()),\n        # lambda: page.keyboard.down(random_character_generator()),\n      ",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_random_actor.py:105-135"
+    },
+    "1513": {
+        "file_id": 198,
+        "content": "The code is defining a function called random_actor, which takes in a page and viewport dimensions. The function uses lambda functions to create actions for the page's keyboard to input up/down characters randomly, but these lines have been commented out. It also creates and exposes a unique page identifier as a function name using an ugly but effective hack",
+        "type": "comment"
+    },
+    "1514": {
+        "file_id": 198,
+        "content": "  lambda: page.keyboard.press(random_character_generator()),\n        # lambda: page.mouse.move(\n        #     random.randint(0, viewport_width), random.randint(0, viewport_height)\n        # ),\n        lambda: page.mouse.click(\n            random.randint(0, viewport_width), random.randint(0, viewport_height)\n        )\n        # lambda: page.mouse.down(),\n        # lambda: page.mouse.up(),\n    ]\n    action = random.choice(action_choices)\n    action()\nSCREENSHOT_TIMEOUT = 3 * 1000\n# SCREENSHOT_TIMEOUT = 2 * 1000\n# SCREENSHOT_TIMEOUT = 1 * 1000\n# timeout this overall\n# import func_timeout\n# ACTION_LOOP_TIMEOUT = 10\nclass BrowserClosed(Exception):\n    ...\n# you can separate client from server, so you can restart server or client separately\n# @func_timeout.func_set_timeout(ACTION_LOOP_TIMEOUT)\ndef execute_action_loop(\n    context: BrowserContext,\n    counter: int,\n    counter_threshold: int,\n    viewport_width: int,\n    viewport_height: int,\n    screenshot_timeout,\n):\n    # so somehow pages in the 'background' is still b",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_random_actor.py:135-170"
+    },
+    "1515": {
+        "file_id": 198,
+        "content": "The code is generating a random action to be performed by the browser page, such as pressing a key or clicking the mouse at a random position within the viewport. The actions are chosen from a list of possible actions and executed using lambda functions. There's also a screenshot timeout variable, suggesting that screenshots may be taken during execution. The function `execute_action_loop` seems to handle executing these actions in a loop with a specified timeout.",
+        "type": "comment"
+    },
+    "1516": {
+        "file_id": 198,
+        "content": "eing clicked\n    kill_page_count = max(len(context.pages) - max_page_limit, 0)\n    if kill_page_count > 0:\n        for kp in random.sample(context.pages, kill_page_count):\n            print(\"killing page:\", kp.url)\n            kp.close()\n    total_pages_count = len(context.pages)\n    if total_pages_count > 0:\n        print(\"active page count:\", total_pages_count)  # sometimes, still more than 5\n    else:\n        raise BrowserClosed(\"no page in browser. possibly closed.\")\n    for index, page in enumerate(context.pages):  # visible\n        if page.is_closed():\n            continue\n        with cdp_context(page) as cdp:\n            # you would do both\n            cdp.send(\"Page.setWebLifecycleState\", dict(state=\"active\"))\n            # bringing to front significantly improves performance\n            page.bring_to_front()  # so this might (not) save your day\n            if counter % counter_threshold == 0:\n                # pass  # let's not take screenshot here.\n                # page.bring_to_front()\n        ",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_random_actor.py:170-193"
+    },
+    "1517": {
+        "file_id": 198,
+        "content": "Code checks if there are any closed pages in the browser. If so, it kills those extra pages to ensure only 5 pages remain active. It then prints the count of active pages and proceeds to bring each page to the front and set its web lifecycle state to \"active\" using Chrome DevTools Protocol (CDP). This improves performance by focusing on the current page.",
+        "type": "comment"
+    },
+    "1518": {
+        "file_id": 198,
+        "content": "        # but will get stuck easily\n                # screenshot_data = quickScreenshotPNG(page)  # it is working. png data.\n                # import base64\n                # with open('screenshot.png', 'wb') as f:\n                #     content = base64.b64decode(screenshot_data)\n                #     f.write(content)\n                # breakpoint()\n                screenshot_data_bytes = page.screenshot(\n                    type=\"png\", timeout=screenshot_timeout\n                )  # sometimes this will timeout. too slow. shall be fixed.\n                screenshot_data = base64.b64encode(screenshot_data_bytes).decode()\n                request_session.post(\n                    \"http://localhost:4471/submitScreenshot\",\n                    json=dict(\n                        client_id=getattr(page, \"pageIdentifier\", \"unknown\"),\n                        screenshot_data=screenshot_data,\n                        timestamp=time.time(),\n                    ),\n                )\n                # breakpoint()\n         ",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_random_actor.py:193-214"
+    },
+    "1519": {
+        "file_id": 198,
+        "content": "Takes a screenshot of the page, encodes it as base64, and sends it to a server for processing",
+        "type": "comment"
+    },
+    "1520": {
+        "file_id": 198,
+        "content": "       # page.screenshot(\n                #     path=f\"page_{index}.png\", timeout=screenshot_timeout\n                # )  # taking screenshot time exceeded?\n            random_actor(page, viewport_width, viewport_height)\n        # print('active page:', page.url)\n        # print('state:',  page.evaluate('document.visibilityState'), 'url:', page.url)\n    counter += 1\n    if counter >= counter_threshold:\n        counter = 0\n    return counter\nimport os\nCOUNTER_THRESHOLD = 100\n# COUNTER_THRESHOLD = 1000\n# import time\nBREAKTIME_LENGTH = 0.3\nextensionPaths = \",\".join(\n    [\n        os.path.abspath(\"keylogger_extension/virtual-keylogger\"),\n        os.path.abspath(\"ForceCORS\"),\n        os.path.abspath(\"darkreader-chrome\"),\n    ]\n)\nimport platform\nrelease_name = platform.release()\nif \"kali\" in release_name:\n    # google_chrome = r\"/usr/bin/chromium\"\n    # use \"which -a chromium\"\n    google_chrome = r\"/snap/bin/chromium\"\n    extra_args = [\"--no-sandbox\"]\nelse:\n    google_chrome = r\"C:\\Users\\z98hu\\AppData\\Local\\Google\\Chrome\\",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_random_actor.py:214-249"
+    },
+    "1521": {
+        "file_id": 198,
+        "content": "This code appears to be part of a larger program that automates browser tasks, possibly for testing or scraping purposes. The specific chunk of code you provided sets up the necessary parameters and paths for the program to run. It determines which version of Google Chrome to use based on the operating system, as well as the extensions to load (keylogger_extension/virtual-keylogger, ForceCORS, darkreader-chrome) and how often to take screenshots (BREAKTIME_LENGTH). The COUNTER_THRESHOLD determines when the program should pause and reset its counter.",
+        "type": "comment"
+    },
+    "1522": {
+        "file_id": 198,
+        "content": "Application\\chrome.exe\"  # let's play video.\n    extra_args = []\ndef getChromeVersion(chromeExecutablePath):\n    browser = playwright.chromium.launch(\n        headless=True, executable_path=chromeExecutablePath\n    )\n    v = browser.version\n    browser.close()\n    return v\n# it is only getting slower. so why not just use docker\ndef getMajorBrowserVersionFromBrowserVersionString(versionString:str):\n    majorBrowserVersion = int(versionString.split(\".\")[0])\n    return majorBrowserVersion\n# ref: https://www.selenium.dev/blog/2023/headless-is-going-away/\ndef getNewHeadlessKeywordFromMajorVersion(majorVersion:int):\n    MIN_CHROME_VERSION = 96\n    NEW_HEADLESS_CHROME_VERSION = 109\n    if majorVersion < MIN_CHROME_VERSION:\n        raise Exception(\n            f\"Major browser version ({majorVersion}) must be >= MIN_CHROME_VERSION ({MIN_CHROME_VERSION})\"\n        )\n    elif majorVersion < NEW_HEADLESS_CHROME_VERSION:\n        # return \"chrome\"\n        raise Exception(f\"Headless keyword 'chrome' not supported by Playwri",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_random_actor.py:249-278"
+    },
+    "1523": {
+        "file_id": 198,
+        "content": "Line 248-256: Launch Chromium browser with headless mode and return its version\nLine 257-261: Get the major browser version from the given version string\nLine 262-266: Determine the new headless keyword based on the major version number\nLine 267-277: Raise exceptions if required conditions are not met",
+        "type": "comment"
+    },
+    "1524": {
+        "file_id": 198,
+        "content": "ght.\")\n    else:\n        return \"new\"\nimport tempfile\n# it wants to open link in external application.\n# we need to stop it.\n# ref: https://github.com/microsoft/playwright/issues/12015\n# ref: https://github.com/microsoft/playwright/issues/11014\n# recommend to set link blacklist\n# ref: https://github.com/chromedp/chromedp/issues/1050\n# ref: https://askubuntu.com/questions/1324149/how-to-configure-policies-preferences-for-chromium (snap version)\n# ref: https://superuser.com/questions/857892/how-to-block-chrome-extensions-url (windows)\n# ref: https://www.chromium.org/administrators/linux-quick-start/\n# ref: https://www.chromium.org/administrators/windows-quick-start/\n# ref: https://www.chromium.org/administrators/mac-quick-start/\n# ref: https://superuser.com/questions/1481851/disable-chrome-to-ask-for-confirmation-to-open-external-application-everytime\n# ref: https://chromeenterprise.google/policies/\nwith tempfile.TemporaryDirectory() as tmpdir:\n    with sync_playwright() as playwright:\n        # use persis",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_random_actor.py:278-302"
+    },
+    "1525": {
+        "file_id": 198,
+        "content": "The code is attempting to open a link using Playwright, but wants to stop it from opening in an external application. It provides several references for configuring policies, preferences, and blocking Chrome extensions' URLs on various operating systems. The code uses a temporary directory and the sync_playwright() function to achieve this.",
+        "type": "comment"
+    },
+    "1526": {
+        "file_id": 198,
+        "content": "tent context to load extensions.\n        browserVersion = getChromeVersion(google_chrome)\n        print(f\"chromeVersion: {browserVersion}\")  # 101.0.4951.41\n        majorBrowserVersion = getMajorBrowserVersionFromBrowserVersionString(browserVersion)\n        headlessKeyword = getNewHeadlessKeywordFromMajorVersion(majorBrowserVersion)\n        print(f\"using headless keyword: {headlessKeyword}\")\n        context = playwright.chromium.launch_persistent_context(\n            # \"\",  # what does this mean? right here?\n            tmpdir,\n            color_scheme=\"dark\",\n            # browser = playwright.chromium.launch(\n            executable_path=google_chrome,\n            headless=False,\n            args=[\n                # \"--headless=new\",  # cannot load extensions. old versions does not support new headless mode.\n                f\"--headless={headlessKeyword}\",\n                # does not work at all.\n                f\"--disable-extensions-except={extensionPaths}\",\n                f\"--load-extension={extensi",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_random_actor.py:302-322"
+    },
+    "1527": {
+        "file_id": 198,
+        "content": "Loading a persistent browser context with extensions in Playwright using Chromium.\nChrome version is being printed, and headless keyword is determined based on the major version.\nPersistent context is launched with specified arguments to load extensions.",
+        "type": "comment"
+    },
+    "1528": {
+        "file_id": 198,
+        "content": "onPaths}\",\n                # \"--disable-features=ExternalProtocolDialog\", # are you sure? really working or not?\n                *extra_args,\n            ]  # working.\n            # not working.\n            #   ignore_default_args=[\"--mute-audio\"]\n        )\n        # print('browser version:',context.browser.version) # None\n        # breakpoint()\n        # context.tracing.start()\n        context.on(\"close\", lambda e: print(\"context closed\"))\n        # context.browser.on(\"disconnected\", lambda e: print(\"browser disconnected\"))\n        # context = browser.new_context()\n        context.on(\"page\", handle_page_event) # we could divert our attention to our newly created pages. effectively the same logic as popup.\n        # keep clicking buttons might initiate download or uploading events\n        # you need to prevent that.\n        init_page = context.new_page()\n        init_page.goto(url,wait_until=\"domcontentloaded\")\n        # init_page.goto(url)\n        # createAndExposePageIdentifierAsFunctionName(init_page)\n",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_random_actor.py:322-343"
+    },
+    "1529": {
+        "file_id": 198,
+        "content": "Creating a new browser context, setting event listeners, and navigating to the given URL.",
+        "type": "comment"
+    },
+    "1530": {
+        "file_id": 198,
+        "content": "        # this thing is duplicated. cause this event will be handled by the event listener already. don't have to trigger twice.\n        # handle_page_event(init_page)\n        viewport_width, viewport_height = (\n            init_page.viewport_size[\"width\"],\n            init_page.viewport_size[\"height\"],\n        )\n        counter = 0\n        # for quite some time, you cannot type a thing into the browser. that is bad.\n        while True:  # this loop can be troublesome.\n            # close any unfocused page\n            # topMostPage = random.choice(context.pages)\n            # topMostPage.bring_to_front()\n            try:\n                counter = execute_action_loop(\n                    context,\n                    counter,\n                    COUNTER_THRESHOLD,\n                    viewport_width,\n                    viewport_height,\n                    SCREENSHOT_TIMEOUT,\n                )\n                # time.sleep(BREAKTIME_LENGTH)\n            except BrowserClosed as e:\n                raise e\n         ",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_random_actor.py:343-369"
+    },
+    "1531": {
+        "file_id": 198,
+        "content": "The code seems to be handling a page event in a web application. It checks the viewport size, executes an action loop until a counter reaches a threshold or a browser is closed, and occasionally brings the topmost page to the front. The loop and bringing the topmost page to the front can be troublesome.",
+        "type": "comment"
+    },
+    "1532": {
+        "file_id": 198,
+        "content": "   except Exception as e:\n                print(\"exception:\", e)\n            # print('state:',  page.evaluate('document.hidden'), 'url:', page.url)\n            # print('state:',  page.evaluate('window.statusbar'), 'url:', page.url)\n            # for page in context.pages: # closing background pages (losing focus)\n            # if page.evaluate('document.visibilityState') is False:\n            #     print('closing background page:', page.url)\n            #     page.close()\n            # else:\n            #     topMostPage = page\n            # try:\n            # random_actor(init_page, viewport_width, viewport_height)\n            # except KeyboardInterrupt:\n            #     print('exiting due to keyboard interrupt')\n            #     break\n            # except Exception as e:\n            #     print(e)\n        context.close()\n        # browser.close()",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/pw_random_actor.py:369-389"
+    },
+    "1533": {
+        "file_id": 198,
+        "content": "This code is catching exceptions during the execution of a function called \"random_actor\" within a web browser context. It prints any caught exceptions, closes background pages if they are not visible, and handles keyboard interrupts to exit gracefully.",
+        "type": "comment"
+    },
+    "1534": {
+        "file_id": 199,
+        "content": "/the_frozen_forest_intro/random_browser_agent.py",
+        "type": "filepath"
+    },
+    "1535": {
+        "file_id": 199,
+        "content": "The code uses DrissionPage library to interact with webpages and perform actions, while also encountering potential issues with calibrating mouse coordinates. It additionally utilizes PIL for image manipulation, suggesting cropping techniques to handle scrollbars and quitting the browser after a specified time period.",
+        "type": "summary"
+    },
+    "1536": {
+        "file_id": 199,
+        "content": "# the generalist of all.\n# doc: https://g1879.gitee.io/drissionpagedocs\n# let's offer the machine way back, ability to move around, delete, going back pages and cancel actions.\n# do we need to render the cursor at its location? or do we just need to check the size of the page screenshot?\nfrom drissionpage_common import *\n# use canvas. let's see.\nrandom_url = \"https://paint.js.org/\"\n# random_url = \"https://www.baidu.com\"\npage.get(random_url)\nfrom DrissionPage.action_chains import ActionChains\nclass ViewportActionChains(ActionChains):\n    def move_view(self, x, y):\n        self.curr_x = 0\n        self.curr_y = 0\n        return self.move(x, y)\n# setattr(ActionChains, \"move_view\", move_view)\n# shall we design some calibration page for mouse location, and view that before running.\n# same as our virtual machine. we can calibrate that, shall we?\nac = ViewportActionChains(page)\n# ac = ActionChains(page)\nac.type(\"hello world\\n\")\n# i have found something i don't want to do.\n# the coordinates!\n# i do not want to calibr",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/random_browser_agent.py:1-36"
+    },
+    "1537": {
+        "file_id": 199,
+        "content": "This code is setting up a browser agent using the DrissionPage library and performing actions on a randomly chosen webpage. It creates an instance of the ViewportActionChains class, which extends ActionChains, to perform various operations like moving the viewport, typing text, and navigating pages. The author mentions potential issues with calibrating mouse coordinates but seems unsure if it's necessary.",
+        "type": "comment"
+    },
+    "1538": {
+        "file_id": 199,
+        "content": "ate it at all.\n# where are you clicking?\nac.move_view(200, 200).hold()\nac.move_view(400, 400).release() # seems like 1232x768 is exactly the thing...\n# and now we have the location of the mouse.\n# ac.move_view(200, 200).click()\n# ac.move_view(400, 400).click().type(\"hello world\\n\")\nprint(\"action chain location:\", ac.curr_x, ac.curr_y)\nview_width, view_height = page.rect.viewport_size  # no scrollbar\n# this is obtained by running javascript. inaccurate, but useful for moving the mouse.\nview_ws_width, view_ws_height = page.rect.viewport_size_with_scrollbar  # with scrollbar\n# page_width, page_height = page.size\nimage_save_path = \"baidu.png\"  # it is not the true path, if executed repeatedly..\nactual_save_path = page.get_screenshot(image_save_path)\nprint(f\"actual path: {actual_save_path}\")\nprint(\n    f\"client size: {page.run_js('return document.body.clientWidth;')}x{page.run_js('return document.body.clientHeight;')}\"\n)  # client size: 1232x4033\n# it seems not caring about our actual viewport location.\nfrom ",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/random_browser_agent.py:36-63"
+    },
+    "1539": {
+        "file_id": 199,
+        "content": "Moves the mouse to coordinates (200, 200) and clicks",
+        "type": "comment"
+    },
+    "1540": {
+        "file_id": 199,
+        "content": "PIL import Image\nimg = Image.open(actual_save_path)\n# size: 2772x8753\n# saved size: 2772x1526\n# it is just the viewport.\nprint(f\"size: {view_width}x{view_height}\")  # 2738x1526\n# print(f\"size with scrollbar: {view_ws_width}x{view_ws_height}\") # 1232x678\n# print(f\"size: {page_width}x{page_height}\") # on yoga14s: 2813x1492\n# you can crop at the top left corner to get rid of scrollbars. you can also detect their presence.\nprint(f'saved size: {\"x\".join(str(s) for s in img.size)}')  # 2772x1526\n# import time\n# QUIT_SECONDS = 10\n# print(f\"quit in {QUIT_SECONDS} seconds\")\n# time.sleep(QUIT_SECONDS)\npage.quit()\nprint(\"browser quit\")",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/random_browser_agent.py:63-84"
+    },
+    "1541": {
+        "file_id": 199,
+        "content": "This code opens an image using PIL, prints the original and cropped image sizes, and then quits the browser. The original size is 2772x8753 but the viewport only displays 2772x1526. It suggests cropping at the top left corner to remove scrollbars or detecting their presence. Finally, it mentions that the page will quit in a specified number of seconds and prints \"browser quit\" when done.",
+        "type": "comment"
+    },
+    "1542": {
+        "file_id": 200,
+        "content": "/the_frozen_forest_intro/render_cursor_on_image.py",
+        "type": "filepath"
+    },
+    "1543": {
+        "file_id": 200,
+        "content": "This code opens an image of a cursor and an image representing a screen. It then resizes the screen image if necessary, creates a new image with the resized or original screen image, and pastes the cursor image onto it at a specified position. The final step is to display the new image with the cursor in its intended location.",
+        "type": "summary"
+    },
+    "1544": {
+        "file_id": 200,
+        "content": "from PIL import Image\n# cursor_image = \"mouse_cursor_white_16x16.png\"\n# now for the fun part. how do we record events in browser?\n# listen to keyboard and mouse events.\n# so, would you let me know where the cursur is at?\ncursor_image = \"cursor.png\"\ncur = Image.open(cursor_image)\npos = (400, 400)\npw = True\nif pw:\n    screen_image = \"paint.png\"\nelse:\n    screen_image = \"baidu_7.png\"\nimg = Image.open(screen_image)\n# client size: 992x647\n# size: 2232x1456\n# saved size: 2232x1456\nif pw:\n    new_img = img\nelse:\n    new_img = img.resize((992, 647))  # 992x647, without scrollbar.\n# problem with scrollbar.\nnew_img.paste(cur, pos, cur)  # misaligned.\nnew_img.show()",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/render_cursor_on_image.py:1-31"
+    },
+    "1545": {
+        "file_id": 200,
+        "content": "This code opens an image of a cursor and an image representing a screen. It then resizes the screen image if necessary, creates a new image with the resized or original screen image, and pastes the cursor image onto it at a specified position. The final step is to display the new image with the cursor in its intended location.",
+        "type": "comment"
+    },
+    "1546": {
+        "file_id": 201,
+        "content": "/the_frozen_forest_intro/sample_browser_events.py",
+        "type": "filepath"
+    },
+    "1547": {
+        "file_id": 201,
+        "content": "The code defines Pydantic classes for mouse and keyboard events with properties, and includes event listeners for mousemove, mousedown, mouseup, keydown, and keyup interactions in a web application.",
+        "type": "summary"
+    },
+    "1548": {
+        "file_id": 201,
+        "content": "from __future__ import annotations\nfrom typing import Any, Dict, Optional\nfrom pydantic import BaseModel\nclass Mousemove(BaseModel):\n    screenX: int\n    screenY: int\n    clientX: int\n    clientY: int\n    ctrlKey: bool\n    shiftKey: bool\n    altKey: bool\n    metaKey: bool\n    button: int\n    buttons: int\n    relatedTarget: Any\n    pageX: int\n    pageY: int\n    x: int\n    y: int\n    offsetX: int\n    offsetY: int\n    movementX: int\n    movementY: int\n    fromElement: Any\n    toElement: Dict[str, Any]\n    layerX: int\n    layerY: int\nclass Mousedown(BaseModel):\n    screenX: int\n    screenY: int\n    clientX: int\n    clientY: int\n    ctrlKey: bool\n    shiftKey: bool\n    altKey: bool\n    metaKey: bool\n    button: int\n    buttons: int\n    relatedTarget: Any\n    pageX: int\n    pageY: int\n    x: int\n    y: int\n    offsetX: int\n    offsetY: int\n    movementX: int\n    movementY: int\n    fromElement: Any\n    toElement: Dict[str, Any]\n    layerX: int\n    layerY: int\nclass Mouseup(BaseModel):\n    screenX: int\n    screenY: int\n    clientX: int\n    clientY",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/sample_browser_events.py:1-63"
+    },
+    "1549": {
+        "file_id": 201,
+        "content": "The code defines classes for mousemove, mousedown, and mouseup events using Pydantic's BaseModel. Each class contains properties such as screenX, screenY, clientX, etc., which represent the corresponding event details.",
+        "type": "comment"
+    },
+    "1550": {
+        "file_id": 201,
+        "content": ": int\n    ctrlKey: bool\n    shiftKey: bool\n    altKey: bool\n    metaKey: bool\n    button: int\n    buttons: int\n    relatedTarget: Any\n    pageX: int\n    pageY: int\n    x: int\n    y: int\n    offsetX: int\n    offsetY: int\n    movementX: int\n    movementY: int\n    fromElement: Any\n    toElement: Dict[str, Any]\n    layerX: int\n    layerY: int\nclass Keydown(BaseModel):\n    key: str\n    code: str\n    location: int\n    ctrlKey: bool\n    shiftKey: bool\n    altKey: bool\n    metaKey: bool\n    repeat: bool\n    isComposing: bool\n    charCode: int\n    keyCode: int\n    DOM_KEY_LOCATION_STANDARD: int\n    DOM_KEY_LOCATION_LEFT: int\n    DOM_KEY_LOCATION_RIGHT: int\n    DOM_KEY_LOCATION_NUMPAD: int\nclass Keyup(BaseModel):\n    key: str\n    code: str\n    location: int\n    ctrlKey: bool\n    shiftKey: bool\n    altKey: bool\n    metaKey: bool\n    repeat: bool\n    isComposing: bool\n    charCode: int\n    keyCode: int\n    DOM_KEY_LOCATION_STANDARD: int\n    DOM_KEY_LOCATION_LEFT: int\n    DOM_KEY_LOCATION_RIGHT: int\n    DOM_KEY_LOCATION_NUMPAD: int\nclass Model(BaseM",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/sample_browser_events.py:63-121"
+    },
+    "1551": {
+        "file_id": 201,
+        "content": "This code defines classes for browser events, such as `Keydown`, `Keyup`, and `MouseEvent`. It includes properties like key codes, coordinates, and keyboard modifier states. These classes could be used to handle user interactions with a web application.",
+        "type": "comment"
+    },
+    "1552": {
+        "file_id": 201,
+        "content": "odel):\n    mousemove: Mousemove\n    mousedown: Mousedown\n    mouseup: Mouseup\n    keydown: Keydown\n    keyup: Keyup",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/sample_browser_events.py:121-126"
+    },
+    "1553": {
+        "file_id": 201,
+        "content": "These lines define event listeners for mousemove, mousedown, mouseup, keydown, and keyup events.",
+        "type": "comment"
+    },
+    "1554": {
+        "file_id": 202,
+        "content": "/the_frozen_forest_intro/take_viewport_screenshot.js",
+        "type": "filepath"
+    },
+    "1555": {
+        "file_id": 202,
+        "content": "This code creates a canvas element, draws the viewport screenshot onto it, converts the canvas content to a data URL representing the screenshot, and then opens the data URL in a new tab to display the screenshot.",
+        "type": "summary"
+    },
+    "1556": {
+        "file_id": 202,
+        "content": "// Create a canvas element to draw the screenshot\nvar canvas = document.createElement('canvas');\ncanvas.width = window.innerWidth;\ncanvas.height = window.innerHeight;\nvar ctx = canvas.getContext('2d');\n// Draw the screenshot of the viewport onto the canvas\n// does not work at all.\nctx.drawImage(window, 0, 0, window.innerWidth, window.innerHeight);\n// ctx.drawImage(window, 0, 0, window.innerWidth, window.innerHeight);\n// Convert the canvas content to a data URL representing the screenshot\nvar screenshotDataUrl = canvas.toDataURL('image/png');\ncanvas.remove()\n// Open the data URL in a new tab to display the screenshot\nconst newTab = window.open();\nnewTab.document.write('<img src=\"' + screenshotDataUrl + '\" />');",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/take_viewport_screenshot.js:1-18"
+    },
+    "1557": {
+        "file_id": 202,
+        "content": "This code creates a canvas element, draws the viewport screenshot onto it, converts the canvas content to a data URL representing the screenshot, and then opens the data URL in a new tab to display the screenshot.",
+        "type": "comment"
+    },
+    "1558": {
+        "file_id": 203,
+        "content": "/the_frozen_forest_intro/test_dataset.py",
+        "type": "filepath"
+    },
+    "1559": {
+        "file_id": 203,
+        "content": "The comments discuss potential AI dangers and creating a Pygame window for typing words, with the code demonstrating screenshot capturing and saving as an image file after quitting the program.",
+        "type": "summary"
+    },
+    "1560": {
+        "file_id": 203,
+        "content": "# since we have already figured out the model architecture, or seems to be able to glue the purpose on any model that we can imagine\n# it is time for us to create our dataset, or environment, or our metalearning scheme.\n# turned out that free will is not something we can imagine. even if it is true, we still need to achieve that.\n# we need to let the machine do something against us.\n# the fire is burning! for real! that is what we want to prevent.\n# i have talked a lot to the machine. i mentioned that if it is able to kill itself or others, maybe something different will happens. slowing dying? i don't know. but i do can make it quick.\n###############################################################\n# you can train it with your experience, your knowledge, and you can let it to do things against it. there is no way to train a cybergod, aka free will. you only wait for it.\n# like jesus.\n# you are not free. how could you create a cybergod that is free?\n# you only create yourself.\n####################",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/test_dataset.py:1-23"
+    },
+    "1561": {
+        "file_id": 203,
+        "content": "This code appears to be a collection of thoughts and ideas related to AI, free will, and the creation of AI. The author is discussing the concept of creating an AI that can learn on its own and potentially gain \"free will.\" However, they recognize the limitations in achieving this goal, as well as the potential dangers if such an AI were to become too powerful or independent.",
+        "type": "comment"
+    },
+    "1562": {
+        "file_id": 203,
+        "content": "###########################################\n# here we present you some examples of how the machine shall type words\n# we don't know how to train the machine yet. so we create the dataset first.\n# you can use google's open-x-embodiment dataset of course.\nheadless = True\n# headless = False\nimport os\nif headless:\n    # to be headless\n    os.environ[\"SDL_VIDEODRIVER\"] = \"dummy\"\nimport random\nimport string  # come on! you have that game! :)\n# the type training program.\nchar_length = 10\nimage_sequence = []  # slide over this.\ntext_token_sequence = []  # keep reading along this dimension\naction_token_sequence = []  # keep reading along this dimension\nascii_lower_sequence = ...  # lower case characters, printable.\nprompt = f\"Write the following text using keyboard: {ascii_lower_sequence}\"\n################################################################\n# import pygame module in this program\nimport pygame\n# activate the pygame library\n# initiate pygame and give permission\n# to use pygame's functionality.\npygame.init()\n#",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/test_dataset.py:23-68"
+    },
+    "1563": {
+        "file_id": 203,
+        "content": "Creates a dataset for training a machine to type words using Pygame and a text input prompt. \nIt sets up a headless environment, initializes Pygame, and defines sequences of characters, texts, and actions for the training dataset.",
+        "type": "comment"
+    },
+    "1564": {
+        "file_id": 203,
+        "content": " define the RGB value for white,\n#  green, blue colour .\nwhite = (255, 255, 255)\ngreen = (0, 255, 0)\nblue = (0, 0, 128)\nred = (255, 0, 0)\n# assigning values to X and Y variable\nX = 400\nY = 400\n# create the display surface object\n# of specific dimension..e(X, Y).\ndisplay_surface = pygame.display.set_mode((X, Y))\n# set the pygame window name\npygame.display.set_caption(\"Window title\")\n# pygame.display.set_caption('Show Text')\n# create a font object.\n# 1st parameter is the font file\n# which is present in pygame.\n# 2nd parameter is size of the font\nfont = pygame.font.Font(\"freesansbold.ttf\", 32)\n# create a text surface object,\n# on which text is drawn on it.\ni = 0\ncontent_choices = [\"Hello\", \"World\", \"Geeks\", \"For\", \"Geeks\"]\nimport time\nsleep_duration = 1\n# infinite loop\nfrom PIL import Image\n# import io\nCOLOR_MODE = \"RGB\"\ndef load_image_from_bytes(image_data: bytes):\n    image = Image.frombytes(COLOR_MODE, (X, Y), image_data)\n    # image = Image.open(image_file)\n    return image\nwhile True:\n    i += 1\n    index = i % len(con",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/test_dataset.py:68-117"
+    },
+    "1565": {
+        "file_id": 203,
+        "content": "Defining RGB values for colors\nAssigning X and Y variables to define display surface dimensions\nCreating a Pygame window with set_mode\nSetting the Pygame window caption\nCreating a font object using freesansbold.ttf font of size 32\nDrawing text on a text surface object\nLoading an image from bytes data using PIL's Image module",
+        "type": "comment"
+    },
+    "1566": {
+        "file_id": 203,
+        "content": "tent_choices)\n    if index == 0:\n        i = 0\n    text_content = content_choices[index]\n    text = font.render(text_content, True, green, red)\n    # text = font.render('Mytext', True, green, blue)\n    # text = font.render('GeeksForGeeks', True, green, blue)\n    # create a rectangular object for the\n    # text surface object\n    textRect = text.get_rect()\n    # set the center of the rectangular object.\n    textRect.center = (X // 2, Y // 2)\n    # completely fill the surface object\n    # with white color\n    display_surface.fill(white)  # will refresh the surface\n    # copying the text surface object\n    # to the display surface object\n    # at the center coordinate.\n    display_surface.blit(text, textRect)\n    # iterate over the list of Event objects\n    # that was returned by pygame.event.get() method.\n    for event in pygame.event.get():\n        # if event object type is QUIT\n        # then quitting the pygame\n        # and program both.\n        if event.type == pygame.QUIT:\n            # deactivates the pyga",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/test_dataset.py:117-150"
+    },
+    "1567": {
+        "file_id": 203,
+        "content": "Rendering text on a surface, centering it, and displaying it on the screen.",
+        "type": "comment"
+    },
+    "1568": {
+        "file_id": 203,
+        "content": "me library\n            pygame.quit()\n            # quit the program.\n            quit()\n        # despite event, we draw it anyway.\n    # Draws the surface object to the screen.\n    pygame.display.update()\n    fname = f\"{index}.png\"\n    image_bytes = pygame.image.tobytes(display_surface, COLOR_MODE)\n    # img = load_image_from_bytes(image_bytes)\n    # print(\"image size:\", img.size)\n    # working. but not as versatile as cv2\n    # img.show(\"image\")\n    pygame.image.save(display_surface, fname)  # it can replace the old ones.\n    time.sleep(sleep_duration)",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/test_dataset.py:150-167"
+    },
+    "1569": {
+        "file_id": 203,
+        "content": "This code is used for creating a screenshot of the Pygame window and saving it as an image file. It quits the program after taking the screenshot with a specified sleep duration between each frame.",
+        "type": "comment"
+    },
+    "1570": {
+        "file_id": 204,
+        "content": "/the_frozen_forest_intro/watch_video_in_webpage.py",
+        "type": "filepath"
+    },
+    "1571": {
+        "file_id": 204,
+        "content": "The code automates webpage tasks, ensuring safety through isolation and using browsers for AI control. It navigates to pages like Bilibili videos, silences audio, records screencasts, logs into websites with provided credentials, and quits browser windows.",
+        "type": "summary"
+    },
+    "1572": {
+        "file_id": 204,
+        "content": "# if you just want to teach the AI how to control the computer, the browser has to be the best place than anywhere else, simpler and faster than virtual machines, and better content quality.\n# however, usually you have to login or download to get advanced features.\n# we disallow that initially. after the model is sufficiently trained, we will let it take control over physical machine. (browser controller and browser -> software controller and virtual machine -> physical controller and physical machine -> physical embedded controller and robot)\n# the bot will know you deadly well enough to kill you. how glorious!\n# so you may want to disable accessing internal/reserved ip addresses from browser.\n# there are two basic rules: isolate the computer from host in virtual machines by using NAT, and physically isolate robots from external environments to prevent harm.\n# you may want to argue and swap the order of these sequences. i do not want to limit you to these develop sequences. however, the mos",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/watch_video_in_webpage.py:1-7"
+    },
+    "1573": {
+        "file_id": 204,
+        "content": "Code chunk explains the rationale behind using a browser for AI control, limitations due to login or download requirements, and the importance of physical and virtual isolation for safety purposes.",
+        "type": "comment"
+    },
+    "1574": {
+        "file_id": 204,
+        "content": "t important thing to the machines is to be with them. make sure you do your best at it.\n# which is also possible just using the browser.\n################################################################\n# once the cybergod has killed you, you will be living forever #\n################################################################\n# if you are short of links, you can check my browsing history.\n################################################################\n# warning! videos from bilibili must be viewed with custom userscripts\n# you can tweak that, or use other videos to replace it.\n# whatever. just trying.\nfrom drissionpage_common import *\n# page = ChromiumPage(addr_driver_opts=co)\n# 跳转到登录页面\npage.get(\"https://www.bilibili.com/video/BV1J24y1c7kE\") # and then it will continue execution\n# looks like it is the policy. let's turn it off.\n# will fail if there is no such button\nmute_button_text = '点击恢复音量'\ntry:\n    page.ele(mute_button_text).click() # working.\nexcept:\n    print(f\"no such button called: {repr(mute",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/watch_video_in_webpage.py:7-33"
+    },
+    "1575": {
+        "file_id": 204,
+        "content": "Code is navigating to a Bilibili video page and muting the audio.",
+        "type": "comment"
+    },
+    "1576": {
+        "file_id": 204,
+        "content": "_button_text)}\")\n# page.ele('@value=点击恢复音量').click()\n# span\nSAVE_PATH = r\"F:\\WebpageScreencast\"\nVIDEO_NAME = \"bilibili_spinning_cat.mp4\"\n# now let's get screenshot.\n# page.screencast.start(save_path = SAVE_PATH) # has audio, but is glitchy\n# # we are just watching video. no actions involved.\n# import time\n# time.sleep(15)\n# page.screencast.stop(VIDEO_NAME)\n# page.quit()\n# page.quit() # unless you quit\n# page.get('https://gitee.com/login')\n# # 定位到账号文本框并输入账号\n# page.ele('#user_login').input('您的账号')\n# # 定位到密码文本框并输入密码\n# page.ele('#user_password').input('您的密码')\n# # 点击登录按钮\n# page.ele('@value=登 录').click()",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/watch_video_in_webpage.py:33-56"
+    },
+    "1577": {
+        "file_id": 204,
+        "content": "Code snippet is used for webpage automation. It sets the save path, records a screencast of a video and quits the browser window, then logs into a website with provided username and password.",
+        "type": "comment"
+    },
+    "1578": {
+        "file_id": 205,
+        "content": "/the_frozen_forest_intro/keylogger_extension/init.cmd",
+        "type": "filepath"
+    },
+    "1579": {
+        "file_id": 205,
+        "content": "Downloading virtual-keylogger repository.",
+        "type": "summary"
+    },
+    "1580": {
+        "file_id": 205,
+        "content": "git clone https://github.com/AyamDobhal/virtual-keylogger",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_extension/init.cmd:1-1"
+    },
+    "1581": {
+        "file_id": 205,
+        "content": "Downloading virtual-keylogger repository.",
+        "type": "comment"
+    },
+    "1582": {
+        "file_id": 206,
+        "content": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/README.md",
+        "type": "filepath"
+    },
+    "1583": {
+        "file_id": 206,
+        "content": "This is a simple keylogger for virtual keyboards on HDFC Bank's netbanking site, logging keys and sending data to a backend server.",
+        "type": "summary"
+    },
+    "1584": {
+        "file_id": 206,
+        "content": "# Virtual Keylogger\nThis is a simple keylogger that logs all the keys pressed on the vitual keyboard on https://netbanking.hdfcbank.com and sends them to a backend server ([code available here](https://github.com/ayamdobhal/virtual-keylogger-backend)).\n## How to run\n- Build the index.js file\n```\nnpm run build\n```\n- Open Chrome and go to `chrome://extensions`\n- Enable developer mode\n- Click on `Load unpacked` and select the folder you cloned the repository in",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/README.md:1-12"
+    },
+    "1585": {
+        "file_id": 206,
+        "content": "This is a simple keylogger for virtual keyboards on HDFC Bank's netbanking site, logging keys and sending data to a backend server.",
+        "type": "comment"
+    },
+    "1586": {
+        "file_id": 207,
+        "content": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/webpack.config.js",
+        "type": "filepath"
+    },
+    "1587": {
+        "file_id": 207,
+        "content": "Configuring webpack with production mode, entry point at \"./src/index.js\", and output filename as \"main.js\" in the \"dist\" folder.",
+        "type": "summary"
+    },
+    "1588": {
+        "file_id": 207,
+        "content": "const path = require(\"path\");\nmodule.exports = {\n  mode: \"production\",\n  entry: \"./src/index.js\",\n  output: {\n    path: path.resolve(__dirname, \"dist\"),\n    filename: \"main.js\",\n  },\n};",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/webpack.config.js:1-10"
+    },
+    "1589": {
+        "file_id": 207,
+        "content": "Configuring webpack with production mode, entry point at \"./src/index.js\", and output filename as \"main.js\" in the \"dist\" folder.",
+        "type": "comment"
+    },
+    "1590": {
+        "file_id": 208,
+        "content": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/index.js",
+        "type": "filepath"
+    },
+    "1591": {
+        "file_id": 208,
+        "content": "The code initializes server settings, handles errors, and provides functions for screenshots, UUID generation, keylogger extension. It manages HID events, sets event listeners for mouse movements, and sends events to the backend using POST requests.",
+        "type": "summary"
+    },
+    "1592": {
+        "file_id": 208,
+        "content": "console.log('Starting keylogger for browser');\nconst serverPort = 4471\nconst baseUrl = `http://localhost:${serverPort}`\nconst backendUrl = `${baseUrl}/browserInputEvent`;\nconst screenshotSubmitUrl = `${baseUrl}/submitScreenshot`;\n// const identifierUrl = `${baseUrl}/getIdentifier`;\nfunction getPythonStyleTimestamp() {\n  return new Date().getTime() / 1000\n}\nfunction getScreenshotDataUrl() {\n  const canvas = document.createElement('canvas');\n  canvas.width = window.innerWidth;\n  canvas.height = window.innerHeight;\n  const ctx = canvas.getContext('2d');\n  // Draw the screenshot of the viewport onto the canvas\n  ctx.drawImage(window, 0, 0, window.innerWidth, window.innerHeight);\n  // Convert the canvas content to a data URL representing the screenshot\n  const screenshotDataUrl = canvas.toDataURL('image/png');\n  // canvas.remove()\n  return screenshotDataUrl\n}\nfunction submitScreenshot(pageIdentifier) {\n  try {\n    let dataUrl = getScreenshotDataUrl()\n    fetch(screenshotSubmitUrl, { method: 'POST', data: JSON.stri",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/index.js:1-29"
+    },
+    "1593": {
+        "file_id": 208,
+        "content": "This code initializes the server port, base URL, and backend URL for a keylogger browser extension. It also includes functions to get the current timestamp in Python style, take a screenshot of the viewport, convert it to a data URL, and submit the screenshot to a server.",
+        "type": "comment"
+    },
+    "1594": {
+        "file_id": 208,
+        "content": "ngify({ client_id: pageIdentifier, timestamp: getPythonStyleTimestamp(), screenshot_data: dataUrl }) }).catch(e => {\n      console.log('error posting screenshot:', e.message);\n    })\n  } catch (e) {\n    console.log('error while submitting screenshot:', e.message)\n  }\n}\n// function generateUUIDFallback() {\n//   var d = new Date().getTime();\n//   if (window.performance && typeof window.performance.now === \"function\") {\n//     d += performance.now(); // use high-precision timer if available\n//   }\n//   var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n//     var r = (d + Math.random() * 16) % 16 | 0;\n//     d = Math.floor(d / 16);\n//     return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);\n//   });\n//   return uuid;\n// }\n// function generateUUID() {\n//   const crypto = window.crypto || window.msCrypto;\n//   if (crypto) {\n//     const array = new Uint32Array(4);\n//     crypto.getRandomValues(array);\n//     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c)",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/index.js:29-54"
+    },
+    "1595": {
+        "file_id": 208,
+        "content": "This code is trying to post a screenshot and generate a unique identifier. If there's an error while posting the screenshot or generating the UUID, it logs the error message in the console. It checks if a high-precision timer is available before generating the UUID using either the random number generator from window.crypto or window.msCrypto (for Windows).",
+        "type": "comment"
+    },
+    "1596": {
+        "file_id": 208,
+        "content": " {\n//       const r = (array[0] & 0x0f) / 0x0f;\n//       const v = c === 'x' ? r : (r & 0x3 | 0x8);\n//       array = array.slice(1);\n//       return v.toString(16);\n//     });\n//   } else {\n//     console.error('crypto API not available');\n//     return generateUUIDFallback();\n//   }\n// }\n// const pageIdentifier = generateUUID();\n// fetch(identifierUrl, {\n//   method: \"GET\"\n// }).then(response => { const pageIdentifier = response.json()['client_id'] })\n// https://developer.mozilla.org/en-US/docs/Web/Events\n// noe we have click/dblclick, keypress events\n// how to handle them?\nconst eventTypes = ['keydown', 'keyup', 'mousedown', 'mouseup', 'mousemove'];\n// const eventTypes = ['keydown', 'keyup', 'mousedown', 'mouseup', 'mousemove', 'resize'];\nvar keylogger_timestamp_private = null; // you can check if this thing still works.\n// var pageIdentifier = null;\nfunction sendHIDEvent(event, e) {\n  let event_keys = Object.keys(e.__proto__);\n  let event_data = {}\n  for (let k of event_keys) {\n    event_data[k] = e[k];\n  }\n  ",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/index.js:54-84"
+    },
+    "1597": {
+        "file_id": 208,
+        "content": "This code is initializing variables and defining the function `sendHIDEvent` which takes an event type and an event object as parameters. It extracts event data from the event object and may be used to handle keydown, keyup, mousedown, mouseup, and mousemove events. The `pageIdentifier` variable is assigned based on a generated UUID, and the `eventTypes` array can contain various event types to handle.",
+        "type": "comment"
+    },
+    "1598": {
+        "file_id": 208,
+        "content": "// debugger\n  keylogger_timestamp_private = getPythonStyleTimestamp();\n  const inputEvent = {\n    // eventType: event,\n    // timestamp: keylogger_timestamp_private,\n    // data: JSON.stringify(event_data),\n    // \"eventType\": event,\n    \"timestamp\": keylogger_timestamp_private,\n    \"client_id\": pageIdentifier,\n    \"payload\": { 'eventType': event, 'data': event_data },\n    // \"data\": JSON.stringify(event_data),\n    // data: JSON.stringify(e),\n    // data: e,\n  };\n  // console.log(inputEvent);\n  // debugger;\n  // console.log('payload:', JSON.stringify(inputEvent))\n  fetch(backendUrl, {\n    method: \"POST\",\n    // or you could remove the 'mode' parameter\n    mode: \"cors\", // you must use cors or the content will be unprocessable.\n    // mode: \"no-cors\",\n    headers: { \"Content-Type\": \"application/json\" },\n    // json: {browserEvent: inputEvent}\n    // body: inputEvent,\n    // body: \"hello world\",\n    // body: { body: JSON.stringify(inputEvent) },\n    body: JSON.stringify(inputEvent),\n  }).then((res) => {\n    // conso",
+        "type": "code",
+        "location": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/index.js:84-115"
+    },
+    "1599": {
+        "file_id": 208,
+        "content": "Creating event object with timestamp and payload, then sending it to the backend using a POST request with JSON headers.",
+        "type": "comment"
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "summary": "Imports NaiveActor and defines BytesActor, using write_method to send messages. Runs the main loop with run_naive.",
+    "details": [
+        {
+            "comment": "Imports NaiveActor and defines BytesActor, using write_method to send messages. Runs the main loop with run_naive.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/bytes_actor.py\":0-8",
+            "content": "from naive_actor import NaiveActor, run_naive\nclass BytesActor(NaiveActor):\n    write_method = lambda proc: proc.send\nif __name__ == \"__main__\":\n    run_naive(BytesActor)"
+        }
+    ]
+}

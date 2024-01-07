@@ -1,0 +1,10 @@
+{
+    "summary": "Taking a screenshot of window with ID 9859 and saving it as \"output.png\".",
+    "details": [
+        {
+            "comment": "Taking a screenshot of window with ID 9859 and saving it as \"output.png\".",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/macos_take_screenshot.py\":0-4",
+            "content": "from screenshot import screencapture\nwindow_id = 9859\nscreencapture.take_screenshot(window_id, filename=\"output.png\")"
+        }
+    ]
+}

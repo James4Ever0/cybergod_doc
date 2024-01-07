@@ -1,0 +1,10 @@
+{
+    "summary": "Loading and tokenizing text using TokenMonster with a specific vocabulary.",
+    "details": [
+        {
+            "comment": "Loading and tokenizing text using TokenMonster with a specific vocabulary.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/rt_x_experiments/special_tokenizer_with_actions/test_tokenmonster.py\":0-11",
+            "content": "import tokenmonster\n# # Optionally set the tokenmonster directory, otherwise it will use ~/_tokenmonster\n# tokenmonster.set_local_directory(\"/path/to/preferred\")\n# Load a vocabulary by name, filepath or URL\nvocab = tokenmonster.load(\"english-24000-consistent-v1\") # cannot download.\n# Tokenize some text\ntext = \"Some text to turn into token IDs.\"\ntokens = vocab.tokenize(text)\nprint('tokens', tokens)"
+        }
+    ]
+}

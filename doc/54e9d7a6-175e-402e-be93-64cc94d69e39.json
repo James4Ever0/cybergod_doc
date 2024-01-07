@@ -1,0 +1,10 @@
+{
+    "summary": "Copying model file to the container and creating an autoexec model.",
+    "details": [
+        {
+            "comment": "Copying model file to the container and creating an autoexec model.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/containerized_chatgpt_agent/build_llama2_autoexec_model.sh\":0-2",
+            "content": "docker cp Modelfile ollama:/root/.ollama/Modelfile\n# docker exec -it ollama ollama create autoexec -f Modelfile\ndocker exec -it ollama ollama create autoexec -f \"root/.ollama/Modelfile\""
+        }
+    ]
+}

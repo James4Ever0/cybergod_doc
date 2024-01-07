@@ -1,0 +1,16 @@
+[Unit]
+Description=Data creation service for The Frozen Forest dataset.
+Wants=network.target
+After=syslog.target network-online.target
+
+[Service]
+Environment="DISPLAY=:0"
+Environment="XAUTHORITY=/home/hua/.Xauthority"
+Environment="PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin"
+Environment="HOME=/home/hua"
+User=hua
+ExecStart=/usr/bin/env /bin/bash mount_kali_webdav_dirs.sh
+WorkingDirectory=/home/hua/agi_workspace
+
+[Install]
+WantedBy=graphical.target

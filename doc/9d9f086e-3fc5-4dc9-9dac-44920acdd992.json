@@ -1,0 +1,10 @@
+{
+    "summary": "Code is recording and playing back user interface actions in a Windows environment using the pywinauto library.",
+    "details": [
+        {
+            "comment": "Code is recording and playing back user interface actions in a Windows environment using the pywinauto library.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/record_playback_test.py\":0-23",
+            "content": "from pywinauto_recorder.recorder import Recorder\n# from pywinauto_recorder.player import UIPath, click, move, playback\n# this seems not working.\nfrom pywinauto_recorder.player import playback\nrecorder = Recorder()\ninput(\"START?\")\nrecorder.start_recording()\nimport time\ntime.sleep(10)\nprint(\"RECORD COMPLETE\")\ninput(\"PLAY?\")\n#  |          with UIPath(\"Untitled - Notepad||Window\"):\n#  |                  doc = move(\"Text editor||Document\")\n#  |                  time.sleep(0.5)\n#  |                  click(doc)\n#  |                  utf8 = move(\"||Pane-> UTF-8||Text\")\n#  |                  time.sleep(0.5)\n#  |                  click(utf8)\nrecorded_python_script = recorder.stop_recording()\nrecorder.quit()\nprint(\"RECORDING FILENAME?\", recorded_python_script)\nplayback(filename=recorded_python_script)"
+        }
+    ]
+}

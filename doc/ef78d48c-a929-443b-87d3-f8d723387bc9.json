@@ -1,0 +1,10 @@
+{
+    "summary": "This script is attempting to run a series of commands using xvfb (X virtual framebuffer) for displaying graphics in a virtual environment. It repeatedly executes the script \"x11grab_loop.sh\" every second until stopped. The commented out section suggests an alternative approach using subprocess and progressbar modules for running commands sequentially with a progress bar.",
+    "details": [
+        {
+            "comment": "This script is attempting to run a series of commands using xvfb (X virtual framebuffer) for displaying graphics in a virtual environment. It repeatedly executes the script \"x11grab_loop.sh\" every second until stopped. The commented out section suggests an alternative approach using subprocess and progressbar modules for running commands sequentially with a progress bar.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/xvfb_test_loop_double_display.py\":0-27",
+            "content": "# import subprocess\n# # run this using xvfb.\nimport os\n# script_1 = 'xvfb-run --server-num=10 --listen-tcp --server-args=\"-screen 0 1280x800x24\" -f /tmp/.Xauthority vboxsdl --startvm \"Ubuntu 16.04\"'\n# script_2 = 'env XAUTHORITY=/tmp/.Xauthority ffplay -f x11grab -i :10'\n# script_3 = 'vboxmanage controlvm \"Ubuntu 16.04\" poweroff'\nscript_4 = \"bash x11grab_loop.sh\"\nimport time\n# import progressbar\nwhile True:\n    time.sleep(1)\n    os.system(\"cd .\") # FIX: input/output error\n    os.system(script_4)\n# while True:\n#     p1 = subprocess.run(script_1)\n#     p2 = subprocess.run(script_2)\n#     for _ in progressbar.progressbar(range(100)):\n#         time.sleep(1)\n#     os.system(script_3)"
+        }
+    ]
+}

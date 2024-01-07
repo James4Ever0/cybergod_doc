@@ -1,0 +1,535 @@
+{
+    "300": {
+        "file_id": 27,
+        "content": "ctor)\n            mouse_controller.position = (x, y)\n            mouse_controller.scroll(dx, dy)\n        else:\n            raise Exception(\"Unknown action type: {}\".format(action_type))\n# after all the havok, you should not leave the mouse button pressed, and you should not leave any button onhold.\nmodifier_keys = [\"alt\", \"alt_gr\", \"ctrl\", \"shift\"]\nfor modifier_key in modifier_keys:\n    if keyboard_controller.__getattribute__(f\"{modifier_key}_pressed\"):\n        keyboard_controller.release(pynput.keyboard.Key.__dict__[modifier_key])\nfor button in mouse_buttons:\n    if mouse_button_states[button]:  # pressed, not released yet.\n        mouse_controller.release(button)",
+        "type": "code",
+        "location": "/player.py:204-220"
+    },
+    "301": {
+        "file_id": 27,
+        "content": "Updates mouse and keyboard positions based on action type.\nEnsures mouse button is not held down after movement.\nReleases modifier keys if still pressed.\nChecks for remaining held mouse buttons and releases them.",
+        "type": "comment"
+    },
+    "302": {
+        "file_id": 28,
+        "content": "/pyanalyze_check.py",
+        "type": "filepath"
+    },
+    "303": {
+        "file_id": 28,
+        "content": "The code defines a function that takes an argument which must be a literal string and includes another function call with a literal string argument. The code also tests lambda functions using pytest, serialize/deserialize them, and attempts to extract their source but currently prints the full source code instead of just the lambda expression.",
+        "type": "summary"
+    },
+    "304": {
+        "file_id": 28,
+        "content": "# from typing import TYPE_CHECKING\n# import typing\n# typing.TYPE_CHECKING = True\nimport dill\nimport pytest\nimport ast\nimport inspect\nfrom pyanalyze.value import Value, CanAssign, CanAssignContext\nfrom pyanalyze.extensions import CustomCheck\n# from pyanalyze.extensions import CustomCheck, Value, CanAssignContext, CanAssign\nimport pyanalyze\nfrom typing_extensions import Annotated\nimport rich\nclass LiteralOnly(CustomCheck):\n    def can_assign(self, value: Value, ctx: CanAssignContext) -> CanAssign:\n        rich.print(value.__dict__)\n        rich.print(ctx.__dict__)\n        breakpoint()\n        for subval in pyanalyze.value.flatten_values(value):\n            if not isinstance(subval, pyanalyze.value.KnownValue):\n                return pyanalyze.value.CanAssignError(\"Value must be a literal\")\n        return {}\ndef func(arg: Annotated[str, LiteralOnly()]) -> None:\n    ...\ndef some_call():\n    # it is actually running this. damn it!\n    print(\"CALLING FUNCTION\")\n    return \"abc\"\ndef anotherfunc():\n    func(\"x\")  # ok\n    ",
+        "type": "code",
+        "location": "/pyanalyze_check.py:1-40"
+    },
+    "305": {
+        "file_id": 28,
+        "content": "class LiteralOnly(CustomCheck):\n    can_assign: check if value is a literal, returns CanAssign or error\ndef func(arg: Annotated[str, LiteralOnly()]) -> None:\n    function with argument that must be a literal\ndef some_call():\n    call a function with a literal string argument\n\ndef anotherfunc():\n    call func with a literal string argument (ok)",
+        "type": "comment"
+    },
+    "306": {
+        "file_id": 28,
+        "content": "func(str(some_call()))  # error\n# actually will not run the code, only if putting in between definitions.\n# anotherfunc() # will run\nif __name__ == \"__main__\":\n    anotherfunc()  # will not run\n@pytest.mark.parametrize(\"mylambda\", [lambda x: x == 0, lambda x: x < 0])\ndef test_0(mylambda):\n    # a = lambda x: x<0\n    # print(dill.dumps(mylambda))\n    # print(dill.source.dumpsource(mylambda))\n    ...\n    # a_source = inspect.getsource(mylambda)  # full source being dumped. not the lambda expression alone.\n    # print(a_source)\n    # tree = ast.parse(a_source)",
+        "type": "code",
+        "location": "/pyanalyze_check.py:40-57"
+    },
+    "307": {
+        "file_id": 28,
+        "content": "This code is defining a function that uses lambdas and then tests them using pytest. The lambdas are being serialized and deserialized to check if they are being correctly defined in the codebase. The code also tries to extract the source of the lambda functions, but it seems to be printing the full source code instead of just the lambda expression.",
+        "type": "comment"
+    },
+    "308": {
+        "file_id": 29,
+        "content": "/pyright_utils.py",
+        "type": "filepath"
+    },
+    "309": {
+        "file_id": 29,
+        "content": "The code sets the Pyright version, tracks errors, and creates a regex pattern. It imports modules for parsing, subprocess execution, and cache creation. The code then checks for undefined variables, finds type errors using regex, logs them, and asserts based on an error message.",
+        "type": "summary"
+    },
+    "310": {
+        "file_id": 29,
+        "content": "from log_utils import logger_print\nMIN_PYRIGHT_VERSION = \"1.1.317\"  # if lower than this version then raise exception.\npyright_errors = [\"reportImportCycles\", \"reportUndefinedVariable\"]\nerrorRegex = r\"^(.+?(?:{}).+)$\".format(\"|\".join(pyright_errors))\n# use `os.strerror` to translate os-specific error code obtained by `subprocess.run`\nimport parse\nimport re\ndef parse_version(version: str):\n    p = parse.parse(\"{x:d}.{y:d}.{z:d}\", version)\n    return [p[k] for k in \"xyz\"]\ndef check_version(current_version: str, minimum_version: str):\n    cp = parse_version(current_version)\n    mp = parse_version(minimum_version)\n    for cv, mv in zip(cp, mp):\n        if cv < mv:\n            return False\n    return True\nimport pyright\nfrom typing import Any, Union\nimport subprocess\n# monkey patch start\ndef run(\n    *args: str, **kwargs: Any\n) -> Union[\"subprocess.CompletedProcess[bytes]\", \"subprocess.CompletedProcess[str]\"]:\n    ROOT_CACHE_DIR = pyright.utils.get_cache_dir() / \"pyright-python\"\n    version = pyright.__pyright_vers",
+        "type": "code",
+        "location": "/pyright_utils.py:1-37"
+    },
+    "311": {
+        "file_id": 29,
+        "content": "- Set the minimum required Pyright version.\n- Define a list of errors to track.\n- Create a regular expression pattern for matching error messages.\n- Import necessary modules for parsing and subprocess execution.\n- Define functions for parsing versions and checking if a current version meets the minimum requirement.",
+        "type": "comment"
+    },
+    "312": {
+        "file_id": 29,
+        "content": "ion__\n    if not check_version(version, MIN_PYRIGHT_VERSION):\n        raise Exception(\n            f\"Pyright version {version} does not meet minimum version {MIN_PYRIGHT_VERSION}\\nPlease upgrade using `pip install -U pyright`\"\n        )\n    # current_version = pyright.node.get_pkg_version(pkg_dir / 'package.json')\n    # cache_dir = ROOT_CACHE_DIR / current_version\n    cache_dir = ROOT_CACHE_DIR / version\n    cache_dir.mkdir(exist_ok=True, parents=True)\n    pkg_dir = cache_dir / \"node_modules\" / \"pyright\"\n    script = pkg_dir / \"index.js\"\n    if not script.exists():\n        raise RuntimeError(f\"Expected CLI entrypoint: {script} to exist\")\n    result = pyright.node.run(\"node\", str(script), *args, **kwargs)\n    return result\npyright.cli.run = run\n# monkey patch end\n# short test.\nif __name__ == \"__main__\":\n    args = [\"../test_undefined.py\"]\n    # args = ['ies_optim.py']\n    kwargs = dict(capture_output=True)\n    run_result = pyright.cli.run(*args, capture_output=True, encoding=\"utf-8\")\n    import rich\n    logger",
+        "type": "code",
+        "location": "/pyright_utils.py:37-67"
+    },
+    "313": {
+        "file_id": 29,
+        "content": "The code checks the version of Pyright installed and creates a cache directory based on that version. It then locates the CLI entrypoint (index.js) and runs it using pyright's node module, returning the result. The monkey patch allows the pyright.cli.run function to be called with arguments and keyword arguments for running the Pyright CLI. A short test is included at the end to demonstrate the functionality of the code.",
+        "type": "comment"
+    },
+    "314": {
+        "file_id": 29,
+        "content": "_print(run_result)\n    # errorRegex = r\".+?reportUndefinedVariable.+\"\n    # if \"does not exist\" in run_result.stderr:\n    if run_result.stderr:\n        raise Exception(f\"Pyright error:\\n{run_result.stderr}\")\n    typeErrors = re.findall(errorRegex, run_result.stdout, re.MULTILINE)\n    # breakpoint()\n    logger_print(typeErrors)\n    assert typeErrors[0].endswith(\n        'test_undefined.py:1:5 - error: \"b\" is not defined (reportUndefinedVariable)'\n    )",
+        "type": "code",
+        "location": "/pyright_utils.py:67-77"
+    },
+    "315": {
+        "file_id": 29,
+        "content": "This code checks if there are any undefined variable errors in the Pyright output. If an error message containing \"does not exist\" is found in stderr, it raises an exception with the error message. It then finds all occurrences of the regular expression 'errorRegex' in stdout using re.findall, and logs these type errors. Finally, it asserts that the first type error ends with a specific error message.",
+        "type": "comment"
+    },
+    "316": {
+        "file_id": 30,
+        "content": "/pytest_disable_assertion_inspection_use_better_exceptions.py",
+        "type": "filepath"
+    },
+    "317": {
+        "file_id": 30,
+        "content": "Code utilizes Monkeypatch to replace numpy.array with custom marray class and sets environment variables for testing exceptions, creating an array in the process.",
+        "type": "summary"
+    },
+    "318": {
+        "file_id": 30,
+        "content": "# commandline:\n# env BETTER_EXCEPTIONS=1 python3 -m pytest --full-capture --assert=plain pytest_disable_assertion_inspection_use_better_exceptions.py\n# env BETTER_EXCEPTIONS=1 python3 -m pytest pytest_disable_assertion_inspection_use_better_exceptions.py\nfrom pytest import MonkeyPatch\nimport numpy as np\nimport better_exceptions\n# # import unittest\nfrom pytest import ExceptionInfo\n# def max_traceback_limit(tb, max_limit = 3):\n#     if getattr(tb, 'tb_next',None):\n#         if max_limit == 0:\n#             tb.tb_next = None\n#         else:\n#             max_traceback_limit(tb.tb_next, max_limit = max_limit-1)\n# import rich\ndef patch(exc_info, exprinfo):\n    tb = exc_info[2]\n    # max_traceback_limit(tb)\n    # traceback is staring from the root cause. deal it in the end.\n    # rich.print(tb)\n    # breakpoint()\n    cls = ExceptionInfo\n    textlist = better_exceptions.format_exception(\n        exc=exc_info[0], value=exc_info[1], tb=tb\n    )\n    # textlist = better_exceptions.format_exception(*exc_info)\n    text = \"\"",
+        "type": "code",
+        "location": "/pytest_disable_assertion_inspection_use_better_exceptions.py:1-33"
+    },
+    "319": {
+        "file_id": 30,
+        "content": "Setting environment variable to enable better exceptions, running pytest with full capture and assertions as plain text.",
+        "type": "comment"
+    },
+    "320": {
+        "file_id": 30,
+        "content": ".join(textlist)\n    keyword = \"in pytest_pyfunc_call\"\n    text = text.split(\"\\n\")\n    last_index = -20\n    for i, t in enumerate(text):\n        if keyword in t:\n            last_index = i\n            break\n    text = text[last_index:]\n    text = \"\\n\".join(text)\n    print()\n    print(text)  # great. this could be the hook.\n    return cls(exc_info, text, _ispytest=True)\nExceptionInfo.from_exc_info = patch\n# better_exceptions.hook()\ndef create_array():\n    a = np.array([1, 2, 3])\n    b = np.array([1, 2, 3, 4])\n    c = a + b\n    return c\nimport numpy\nclass marray:\n    def __init__(self, content):\n        print(\"CREATING ARRAY WITH CONTENT:\", content)\n        # how do you inspect that after patched the original method?\n        # shall you return \"None\"\n        # return \"CREATED_ARRAY\"\ndef test_mytest(monkeypatch: MonkeyPatch):\n    # monkeypatch.setitem(numpy.__dict__, \"array\", marray) # patched!\n    monkeypatch.setattr(numpy, \"array\", marray) # again, patched!\n    monkeypatch.setenv(\"BETTER_EXCEPTIONS\",\"1\") # still, no ",
+        "type": "code",
+        "location": "/pytest_disable_assertion_inspection_use_better_exceptions.py:33-72"
+    },
+    "321": {
+        "file_id": 30,
+        "content": "Creating a numpy array and testing it with Monkeypatch.\n\nThe code creates two numpy arrays (a and b) and adds them together to create another array (c). Then, it defines a class marray which should be used for creating numpy arrays instead of the original numpy.array function. The test_mytest function uses Monkeypatch to replace the numpy.array function with the marray class.\n\nMonkeypatch is being used to set attributes and environment variables in order to change how numpy's array function behaves during testing. This allows for inspection of exceptions thrown by this function, presumably using a different method than the original one. The code appears to be setting up an alternative way of handling numpy arrays specifically for testing purposes.",
+        "type": "comment"
+    },
+    "322": {
+        "file_id": 30,
+        "content": "\"better\" exception.\n    a = 1\n    b = {}\n    create_array()\n    # print(b[1])\n    # assert b[2] == a\n# if __name__ == \"__main__\":\n#     test_mytest()",
+        "type": "code",
+        "location": "/pytest_disable_assertion_inspection_use_better_exceptions.py:72-81"
+    },
+    "323": {
+        "file_id": 30,
+        "content": "Creates an array.",
+        "type": "comment"
+    },
+    "324": {
+        "file_id": 31,
+        "content": "/pytropos_check.py",
+        "type": "filepath"
+    },
+    "325": {
+        "file_id": 31,
+        "content": "This code imports the necessary libraries, sets up some variables and arrays, performs matrix operations using NumPy, and includes a test function using Hypothesis library for testing. The code is related to matrix multiplication and unit testing.",
+        "type": "summary"
+    },
+    "326": {
+        "file_id": 31,
+        "content": "# # pip install git+https://github.com/helq/pytropos\n# # pytropos pytropos_check.py\n# import numpy as np\n# a = np.zeros((10, 6))\n# m = 4 + 1\n# n = 0 + 2\n# if m == 5:\n#     n = 1\n# else:\n#     m = 6\n# b = np.ones((m, n))\n# res = np.dot(a, b)  # fails here\n# print(res)\n# var = True\n# if var:\n#     b = np.zeros((3, 11))\n#     res = np.dot(b, a)  # fails here\n# print(res)\nfrom hypothesis import given\nfrom hypothesis.strategies import text\nimport mock\nfrom pytest import MonkeyPatch, FixtureRequest\n# from unittest.mock import MagicMock # replace class.\nfrom unittest.mock import *\n# mock.patch()\n# common fixture!\ndef test_monkey(monkeypatch: MonkeyPatch, request: FixtureRequest):\n    # now you finally have a better view on fixtures.\n    monkeypatch.setitem\n@given(s=text(), s0=text())\ndef test_myfun(s, s0):\n    print(s, s0)  # lots of charactors.",
+        "type": "code",
+        "location": "/pytropos_check.py:1-48"
+    },
+    "327": {
+        "file_id": 31,
+        "content": "This code imports the necessary libraries, sets up some variables and arrays, performs matrix operations using NumPy, and includes a test function using Hypothesis library for testing. The code is related to matrix multiplication and unit testing.",
+        "type": "comment"
+    },
+    "328": {
+        "file_id": 32,
+        "content": "/random_actor.py",
+        "type": "filepath"
+    },
+    "329": {
+        "file_id": 32,
+        "content": "The code generates random mouse and keyboard inputs for simulation purposes, including modifiers and directionals, utilizing pyautogui. It lacks keydown state support and requires error handling for a smooth execution.",
+        "type": "summary"
+    },
+    "330": {
+        "file_id": 32,
+        "content": "# you generate states.jsonl.\n# must include all possible states.\n# try to match the distribution?\n# i think it is kind of like monkey.js (aka monkey testing)?\n# it's better to add some kind of randomness, or \"experienced learner\" responsible for generating new data, to overcome the shortage of imagination and possibilities.\n# virtualbox unattended installation:\n# vboxuser:changeme\n# connect via openai universe (vnc)\n# you can setup initial desktop environments, just like yours, using automated scripts.\n# you perform your actions randomly, inject actions while the bot is acting alone.\n# first let's use pyautogui as random actor.\n# then may consider cross-platform RPA record/replay libs\n# like: https://github.com/repeats/Repeat\n# you may use pyinput or something else.\nfrom functools import lru_cache\nimport random\nimport pyautogui\n# there are several keys we should never touch.\nKEY_CHARS = [\n    \"\\t\",\n    \"\\n\",\n    \"\\r\",\n    \" \",\n    \"!\",\n    '\"',\n    \"#\",\n    \"$\",\n    \"%\",\n    \"&\",\n    \"'\",\n    \"(\",\n    \")\",\n    \"*\",\n  ",
+        "type": "code",
+        "location": "/random_actor.py:1-44"
+    },
+    "331": {
+        "file_id": 32,
+        "content": "This code is for generating random user input using the pyautogui library. It aims to cover all possible states by introducing some randomness and avoids interacting with certain keys. The code can be used in unattended installation scenarios and may consider cross-platform RPA record/replay libraries for further improvements.",
+        "type": "comment"
+    },
+    "332": {
+        "file_id": 32,
+        "content": "  \"+\",\n    \",\",\n    \"-\",\n    \".\",\n    \"/\",\n    \"0\",\n    \"1\",\n    \"2\",\n    \"3\",\n    \"4\",\n    \"5\",\n    \"6\",\n    \"7\",\n    \"8\",\n    \"9\",\n    \":\",\n    \";\",\n    \"<\",\n    \"=\",\n    \">\",\n    \"?\",\n    \"@\",\n    \"[\",\n    \"\\\\\",\n    \"]\",\n    \"^\",\n    \"_\",\n    \"`\",\n    \"a\",\n    \"b\",\n    \"c\",\n    \"d\",\n    \"e\",\n    \"f\",\n    \"g\",\n    \"h\",\n    \"i\",\n    \"j\",\n    \"k\",\n    \"l\",\n    \"m\",\n    \"n\",\n    \"o\",\n    \"p\",\n    \"q\",\n    \"r\",\n    \"s\",\n    \"t\",\n    \"u\",\n    \"v\",\n    \"w\",\n    \"x\",\n    \"y\",\n    \"z\",\n    \"{\",\n    \"|\",\n    \"}\",\n    \"~\",\n]\nKEY_MOD = [\n    \"alt\",\n    \"altleft\",\n    \"altright\",\n    \"shift\",\n    \"shiftleft\",\n    \"shiftright\",\n    \"ctrl\",\n    \"ctrlleft\",\n    \"ctrlright\",\n]\nKEY_WIN_MOD = [\n    \"win\",\n    \"winleft\",\n    \"winright\",\n]\nKEY_MAC_MOD = [\n    \"option\",\n    \"optionleft\",\n    \"optionright\",\n    \"command\",\n]\nKEY_DIRECTION = [\n    \"down\",\n    \"up\",\n    \"right\",\n    \"left\",\n]\nKEY_SPECIAL = [\n    \"backspace\",\n    \"capslock\",\n    \"del\",\n    \"delete\",\n    \"tab\",\n    \"home\",\n    \"insert\",\n    \"end\",\n    \"enter\",\n    \"esc\",\n    \"escape\",\n    \"pagedown\",\n    \"pageup\",\n    \"pgdn\",\n    \"pgup\",\n    \"r",
+        "type": "code",
+        "location": "/random_actor.py:44-150"
+    },
+    "333": {
+        "file_id": 32,
+        "content": "The code defines a list of keys that can be used for keyboard interactions. It includes both standard alphanumeric characters and special keys like \"backspace\" and \"enter\". Additionally, it separates the modifiers into three categories: \"KEY_MOD\", \"KEY_WIN_MOD\", and \"KEY_MAC_MOD\". The \"KEY_DIRECTION\" list contains directional keyboard actions.",
+        "type": "comment"
+    },
+    "334": {
+        "file_id": 32,
+        "content": "eturn\",\n]\nKEY_FUNC = [\n    \"fn\",\n    \"f1\",\n    \"f10\",\n    \"f11\",\n    \"f12\",\n    \"f13\",\n    \"f14\",\n    \"f15\",\n    \"f16\",\n    \"f17\",\n    \"f18\",\n    \"f19\",\n    \"f2\",\n    \"f20\",\n    \"f21\",\n    \"f22\",\n    \"f23\",\n    \"f24\",\n    \"f3\",\n    \"f4\",\n    \"f5\",\n    \"f6\",\n    \"f7\",\n    \"f8\",\n    \"f9\",\n]\nKEY_NUMPAD = [\n    \"num0\",\n    \"num1\",\n    \"num2\",\n    \"num3\",\n    \"num4\",\n    \"num5\",\n    \"num6\",\n    \"num7\",\n    \"num8\",\n    \"num9\",\n    \"numlock\",\n]\nKEY_MORE = [\n    \"accept\",\n    \"pause\",\n    \"add\",\n    \"apps\",\n    \"browserback\",\n    \"browserfavorites\",\n    \"browserforward\",\n    \"browserhome\",\n    \"browserrefresh\",\n    \"browsersearch\",\n    \"browserstop\",\n    \"clear\",\n    \"convert\",\n    \"decimal\",\n    \"divide\",\n    \"execute\",\n    \"playpause\",\n    \"prevtrack\",\n    \"print\",\n    \"printscreen\",\n    \"prntscrn\",\n    \"prtsc\",\n    \"prtscr\",\n    \"scrolllock\",\n    \"select\",\n    \"separator\",\n    \"sleep\",\n    \"space\",\n    \"stop\",\n    \"subtract\",\n    \"volumedown\",\n    \"volumemute\",\n    \"volumeup\",\n    \"yen\",\n    \"final\",\n    \"hanguel\",\n    \"hangul\",\n    \"hanja\",\n    \"help\",\n    \"junja\",\n    \"",
+        "type": "code",
+        "location": "/random_actor.py:150-236"
+    },
+    "335": {
+        "file_id": 32,
+        "content": "This code defines various keyboard keys as lists for later use, such as KEY_ALPHA, KEY_NUMERIC, KEY_FUNCTIONS, and KEY_MORE.",
+        "type": "comment"
+    },
+    "336": {
+        "file_id": 32,
+        "content": "kana\",\n    \"kanji\",\n    \"launchapp1\",\n    \"launchapp2\",\n    \"launchmail\",\n    \"launchmediaselect\",\n    \"modechange\",\n    \"multiply\",\n    \"nexttrack\",\n    \"nonconvert\",\n]\nALL_KEYS = (\n    KEY_CHARS\n    + KEY_DIRECTION\n    + KEY_MOD\n    + KEY_MAC_MOD\n    + KEY_WIN_MOD\n    + KEY_SPECIAL\n    + KEY_FUNC\n    + KEY_NUMPAD\n    + KEY_MORE\n)\nINIT_KEYS = KEY_CHARS + KEY_DIRECTION + KEY_MOD + KEY_WIN_MOD + KEY_SPECIAL\n# turn off pyautogui failsafe.\npyautogui.FAILSAFE = False\ndef get_random_single_key():\n    key = random.choice(INIT_KEYS)\n    return key\ndef random_press_single_key():\n    key = get_random_single_key()\n    pyautogui.press(key)\n# no keydown support? what about states?\ndef get_random_mod_key():\n    key = random.choice(KEY_SPECIAL + KEY_WIN_MOD)\n    return key\ndef random_mod_key_down():\n    key = get_random_mod_key()\n    try:\n        pyautogui.keyDown(key)\n    except:\n        pass\ndef random_mod_key_up():\n    key = get_random_mod_key()\n    try:\n        pyautogui.keyUp(key)\n    except:\n        pass\ndef get_random_offset():\n    offset ",
+        "type": "code",
+        "location": "/random_actor.py:236-304"
+    },
+    "337": {
+        "file_id": 32,
+        "content": "This code defines several lists of keys representing various key types, and functions for randomly selecting and pressing a single key, as well as pressing and releasing modifier keys. It also turns off the pyautogui failsafe. The code lacks support for keydown states and does not handle exceptions well.",
+        "type": "comment"
+    },
+    "338": {
+        "file_id": 32,
+        "content": "= random.randint(-100, 100)\n    return offset\ndef random_mouse_move():\n    xOffset = get_random_offset()\n    yOffset = get_random_offset()\n    pyautogui.move(xOffset, yOffset)\n@lru_cache(maxsize=1)\ndef get_screen_size():\n    return pyautogui.size()  # (width, height)\ndef get_random_screen_position():\n    width, height = get_screen_size()\n    return random.randint(0, width), random.randint(0, height)\ndef random_mouse_moveTo():\n    x, y = get_random_screen_position()\n    pyautogui.moveTo(x, y)\n# mouse click, mouse move, mouse scroll, mouse double click\ndef random_mouse_scroll():\n    # don't use hscroll/vscroll because it only supports linux\n    pyautogui.scroll(get_random_offset())\nMOUSE_BUTTONS = [pyautogui.LEFT, pyautogui.MIDDLE, pyautogui.RIGHT]\ndef get_random_mouse_button():\n    button = random.choice(MOUSE_BUTTONS)\n    return button\nMOUSE_ACTIONS = [\n    lambda: pyautogui.leftClick(),\n    lambda: pyautogui.rightClick(),\n    lambda: pyautogui.middleClick(),\n    lambda: pyautogui.mouseDown(button=get_random_mou",
+        "type": "code",
+        "location": "/random_actor.py:304-349"
+    },
+    "339": {
+        "file_id": 32,
+        "content": "get_random_offset: Returns a random integer between -100 and 100.\nrandom_mouse_move: Moves the mouse randomly by calling get_random_offset twice for x and y coordinates, then using pyautogui.move.\nget_screen_size: Returns the screen size as a tuple (width, height) using pyautogui.size.\nget_random_screen_position: Gets the screen size and returns a random position on the screen within those bounds using get_random_offset.\nrandom_mouse_moveTo: Moves the mouse to a random position on the screen using get_random_screen_position, then moves to that position with pyautogui.moveTo.\nrandom_mouse_scroll: Scrolls randomly by calling get_random_offset and passing it to pyautogui.scroll.\nget_random_mouse_button: Chooses a random mouse button from MOUSE_BUTTONS list.\nMOUSE_ACTIONS: A list of lambda functions that perform left click, right click, middle click, or get_random_mou \n\nThe codebase contains several functions for interacting with the mouse. There are functions to randomly move the mouse, scroll the mouse wheel, and select a random mouse button. It also includes a list of lambda functions that can be used to simulate left, right, and middle mouse clicks as well as get_random_mouse_button(). Additionally, it has a function called get_random_screen_position() which returns a random position on the screen within the bounds of the screen size.",
+        "type": "comment"
+    },
+    "340": {
+        "file_id": 32,
+        "content": "se_button()),\n    lambda: pyautogui.mouseUp(button=get_random_mouse_button()),\n]\ndef random_mouse_button_action():\n    try:\n        action = random.choice(MOUSE_ACTIONS)\n    except:\n        pass\n    action()\nif __name__ == \"__main__\":\n    random_keyboard_actions = [\n        random_mod_key_down,\n        random_mod_key_up,\n        random_press_single_key,\n    ]\n    random_mouse_actions = [\n        random_mouse_button_action,\n        random_mouse_move,\n        random_mouse_moveTo,\n        random_mouse_scroll,\n    ]\n    random_actions = random_mouse_actions + random_keyboard_actions\n    for _ in range(10):\n        random_action = random.choice(random_actions)\n        try:\n            random_action()\n        except:\n            pass\n    # to recover from mortality...\n    # use try...finally or something...\n    # context manager...\n    for key in KEY_MOD + KEY_WIN_MOD + KEY_MAC_MOD:\n        try:\n            pyautogui.keyUp(key)\n        except:\n            pass\n    for button in MOUSE_BUTTONS:\n        try:\n            pyautogui.m",
+        "type": "code",
+        "location": "/random_actor.py:349-398"
+    },
+    "341": {
+        "file_id": 32,
+        "content": "This code defines functions for random mouse and keyboard actions, then executes a loop of 10 random actions. It attempts to recover from potential key presses and ends by releasing all keys and mouse buttons.",
+        "type": "comment"
+    },
+    "342": {
+        "file_id": 32,
+        "content": "ouseUp(button)\n        except:\n            pass",
+        "type": "code",
+        "location": "/random_actor.py:398-400"
+    },
+    "343": {
+        "file_id": 32,
+        "content": "This code is attempting to call a function \"ouseUp(button)\" but if an exception occurs, it will be ignored with the \"pass\" statement.",
+        "type": "comment"
+    },
+    "344": {
+        "file_id": 33,
+        "content": "/record_playback_test.py",
+        "type": "filepath"
+    },
+    "345": {
+        "file_id": 33,
+        "content": "Code is recording and playing back user interface actions in a Windows environment using the pywinauto library.",
+        "type": "summary"
+    },
+    "346": {
+        "file_id": 33,
+        "content": "from pywinauto_recorder.recorder import Recorder\n# from pywinauto_recorder.player import UIPath, click, move, playback\n# this seems not working.\nfrom pywinauto_recorder.player import playback\nrecorder = Recorder()\ninput(\"START?\")\nrecorder.start_recording()\nimport time\ntime.sleep(10)\nprint(\"RECORD COMPLETE\")\ninput(\"PLAY?\")\n#  |          with UIPath(\"Untitled - Notepad||Window\"):\n#  |                  doc = move(\"Text editor||Document\")\n#  |                  time.sleep(0.5)\n#  |                  click(doc)\n#  |                  utf8 = move(\"||Pane-> UTF-8||Text\")\n#  |                  time.sleep(0.5)\n#  |                  click(utf8)\nrecorded_python_script = recorder.stop_recording()\nrecorder.quit()\nprint(\"RECORDING FILENAME?\", recorded_python_script)\nplayback(filename=recorded_python_script)",
+        "type": "code",
+        "location": "/record_playback_test.py:1-24"
+    },
+    "347": {
+        "file_id": 33,
+        "content": "Code is recording and playing back user interface actions in a Windows environment using the pywinauto library.",
+        "type": "comment"
+    },
+    "348": {
+        "file_id": 34,
+        "content": "/recorder.py",
+        "type": "filepath"
+    },
+    "349": {
+        "file_id": 34,
+        "content": "The code defines a variable 'timestep' set to 0.1, imports the pyautogui library and creates a dictionary named 'frame' containing various data elements such as image, keystate, mouseloc, mousestate and sound. The comment suggests that the keystroke timing may need further consideration, the code could benefit from decoding the screen recording video into images, and the computer only has CPU without an Nvidia GPU.",
+        "type": "summary"
+    },
+    "350": {
+        "file_id": 34,
+        "content": "timestep = 0.1\nimport pyautogui\n# are you sure the keystroke is just enough?\n# let's first record them separately.\nframe = dict(\n    image=image,\n    keystate=keystate,\n    mouseloc=mouseloc,\n    mousestate=mousestate,\n    sound=sound,\n)\n# no other feelings, currently.\n# this computer only has cpu, no nvidia gpu.\n# you may want to decode the screen recording video into a series of images.",
+        "type": "code",
+        "location": "/recorder.py:1-21"
+    },
+    "351": {
+        "file_id": 34,
+        "content": "The code defines a variable 'timestep' set to 0.1, imports the pyautogui library and creates a dictionary named 'frame' containing various data elements such as image, keystate, mouseloc, mousestate and sound. The comment suggests that the keystroke timing may need further consideration, the code could benefit from decoding the screen recording video into images, and the computer only has CPU without an Nvidia GPU.",
+        "type": "comment"
+    },
+    "352": {
+        "file_id": 35,
+        "content": "/recording_train_parse.py",
+        "type": "filepath"
+    },
+    "353": {
+        "file_id": 35,
+        "content": "The code prepares training data by synchronizing hidden and video data, reading frames for processing, and handling failed frame readings through logging and raising exceptions.",
+        "type": "summary"
+    },
+    "354": {
+        "file_id": 35,
+        "content": "# from collections import namedtuple\ntry:\n    from typing import TypedDict\nexcept:\n    from typing_extensions import TypedDict\ntry:\n    from typing import Literal\nexcept:\n    from typing import Literal\ntry:\n    from typing import NamedTuple\nexcept:\n    from typing_extensions import NamedTuple\nimport numpy as np\nfrom typing import Union, cast, overload\n# import logging\nfrom log_utils import logger\nclass HIDStruct(TypedDict):\n    HIDEvents: list\nclass TrainingFrame(NamedTuple):\n    datatype: Literal['hid','image']\n    data: Union[HIDStruct, np.ndarray]\n# we just need the basepath.\ndef getTrainingData(basePath: str):\n    import os\n    hid_timestamp_path = os.path.join(basePath,\"hid_timestamps.json\")\n    video_timestamp_path = os.path.join(basePath,\"video_timestamps.json\")\n    video_path = os.path.join(basePath,\"video_record.mp4\")\n    hid_rec_path = os.path.join(basePath,\"hid_record.jsonl\")\n    import json\n    import cv2\n    import jsonlines\n    video_cap = cv2.VideoCapture(video_path)\n    # breakpoint()\n    # 318 frames? ",
+        "type": "code",
+        "location": "/recording_train_parse.py:1-42"
+    },
+    "355": {
+        "file_id": 35,
+        "content": "The code imports necessary libraries, defines data structure classes and functions for parsing training data from a given base path. It uses NamedTuple and TypedDict for defining data structures, and utilizes OpenCV and JSON for handling video and data files.",
+        "type": "comment"
+    },
+    "356": {
+        "file_id": 35,
+        "content": "only got 266 timestamps!\n    frame_count = video_cap.get(cv2.CAP_PROP_FRAME_COUNT)\n    logger.info(\"FRAME COUNT: %d\", frame_count)\n    def load_json(filename):\n        with open(filename, \"r\") as f:\n            return json.load(f)\n    hid_timestamp = load_json(hid_timestamp_path)\n    video_timestamp = load_json(video_timestamp_path)\n    from typing import List, Union\n    import numpy as np\n    def getVideoFrameIndexSynced(\n        x: Union[List[int], np.ndarray],\n        y: Union[List[int], np.ndarray],\n        EPS: float = 1e-10,\n    ) -> List[int]:\n        \"\"\"\n        Notes:\n            All input arrays and output array are positive and increasing.\n        Params:\n            x: Actual video frame indexes.\n            y: Index list to be synced against.\n        Output:\n            x_: Synced frame indexs. (len(x_) == len(y))\n        \"\"\"\n        x_ = np.linspace(x[0], x[-1] + (1 - EPS), len(y))\n        x_ = np.floor(x_).astype(int).tolist()\n        return x_\n    hidseq = np.zeros(shape=(2, len(hid_timestamp))) ",
+        "type": "code",
+        "location": "/recording_train_parse.py:42-78"
+    },
+    "357": {
+        "file_id": 35,
+        "content": "The code is loading a video's frame count, two JSON files containing timestamp information, and defining a function to synchronize frame indexes between two arrays.",
+        "type": "comment"
+    },
+    "358": {
+        "file_id": 35,
+        "content": "- 1\n    hidseq[0] = np.array(range(len(hid_timestamp)))\n    videoseq = np.zeros(shape=(2, len(video_timestamp))) - 1\n    # videoseq[1] = np.array(range(len(video_timestamp)))\n    index_list_to_be_synced_against = np.array(range(len(video_timestamp)))\n    actual_video_frame_indexs = np.array(range(int(frame_count)))\n    videoseq[1] = getVideoFrameIndexSynced(\n        actual_video_frame_indexs, index_list_to_be_synced_against\n    )\n    seq = np.hstack((hidseq, videoseq))\n    logger.info(\"SEQ SHAPE: %s\", seq.shape)\n    timeseq = np.array(hid_timestamp + video_timestamp)\n    sorted_indexes = np.argsort(timeseq)\n    sorted_seq = seq[:, sorted_indexes].T.astype(int)\n    # print(sorted_seq)\n    # now, attempt to parse them.\n    hid_data_list = []\n    with open(hid_rec_path, \"r\") as f:\n        jsonl_reader = jsonlines.Reader(f)\n        while True:\n            try:\n                hid_data = jsonl_reader.read()\n                hid_data_list.append(hid_data)\n            except:\n                break\n    # maybe you shou",
+        "type": "code",
+        "location": "/recording_train_parse.py:78-111"
+    },
+    "359": {
+        "file_id": 35,
+        "content": "Code is creating a sequence of hidden and video data points in synchronization. It uses numpy arrays to represent the sequences, including hidden timestamp, video timestamp, and corresponding video frame indices. The code sorts the combined sequence based on the timestamps and opens a file (hid_rec_path) to read JSON lines containing the hidden data for parsing.",
+        "type": "comment"
+    },
+    "360": {
+        "file_id": 35,
+        "content": "ld \"yield\" data through these iterators.\n    NO_CONTENT = -1\n    suc, frame = video_cap.read()\n    frame_index_cursor = 0\n    for hid_index, frame_index in sorted_seq:\n        logger.debug(\"HID INDEX: %d, FRAME INDEX: %d\", hid_index, frame_index)\n        assert not all(\n            [e == NO_CONTENT for e in [hid_index, frame_index]]\n        ), \"at least one type of content is active\"\n        assert not all(\n            [e != NO_CONTENT for e in [hid_index, frame_index]]\n        ), \"cannot have two types of active content sharing the same index\"\n        if hid_index != NO_CONTENT:\n            hid_data = hid_data_list[hid_index]\n            logger.debug(\"HID DATA: %s\", hid_data)\n            yield TrainingFrame(datatype='hid', data=cast(HIDStruct, hid_data))\n        elif frame_index != NO_CONTENT:\n            while frame_index_cursor != frame_index:\n                suc, frame = video_cap.read()\n                frame_index_cursor += 1\n            assert (\n                suc\n            ), f\"Video '{video_path}",
+        "type": "code",
+        "location": "/recording_train_parse.py:111-136"
+    },
+    "361": {
+        "file_id": 35,
+        "content": "This code is parsing a sequence of hidden index (HID) and frame index values. It checks that at least one type of content is active, and ensures that there are no two types of active content sharing the same index. If a HID index is present, it yields a TrainingFrame with datatype 'hid' and the corresponding HIDStruct data. If a frame index is present, it reads frames from video_cap until reaching the specified frame index before continuing.",
+        "type": "comment"
+    },
+    "362": {
+        "file_id": 35,
+        "content": "' failed to read frame #{frame_index} (index starting from zero)\"\n            logger.debug(\"FRAME SHAPE: %s\", frame.shape)\n            yield TrainingFrame(datatype='image', data=frame)\n            # cv2.imshow(\"win\", frame)\n            # cv2.waitKey(1)\n        else:\n            raise Exception(\"Something impossible has happened.\")\n    # breakpoint()\n    video_cap.release()\n    # success, frame = video_cap.read()\n    # print(frame.shape) # (768, 1280, 3)",
+        "type": "code",
+        "location": "/recording_train_parse.py:136-147"
+    },
+    "363": {
+        "file_id": 35,
+        "content": "Reading video frames and processing them for training data. If a frame fails to read, logs the frame shape and raises an exception.",
+        "type": "comment"
+    },
+    "364": {
+        "file_id": 36,
+        "content": "/render_python_code.py",
+        "type": "filepath"
+    },
+    "365": {
+        "file_id": 36,
+        "content": "The code imports the jinja_utils module and sys, gets the current working directory (but not actually used), and takes the input file path as a command-line argument. It checks if it ends with .py, extracts the base name without .py, uses jinja_utils to get the code and template paths based on the base name, asserts that the code path is the same as the target path, and then loads the renderer and formats the template using the specified parameters and banner.",
+        "type": "summary"
+    },
+    "366": {
+        "file_id": 36,
+        "content": "import jinja_utils as ju\nimport sys\n# get current working direcory.\n# import os\n# curdir = os.curdir\ntarget = sys.argv[-1]\nprint(\"target output:\", target)\nassert target.endswith(\".py\")\nbasename = target.strip(\".py\")\ncode_path, template_path = ju.code_and_template_path(basename)\nassert code_path == target\nju.load_render_and_format(template_path, code_path, render_params = {}, banner = basename.replace(\"_\",\" \").upper()) # TODO: case by case. ensure we have the right render_params.",
+        "type": "code",
+        "location": "/render_python_code.py:1-16"
+    },
+    "367": {
+        "file_id": 36,
+        "content": "The code imports the jinja_utils module and sys, gets the current working directory (but not actually used), and takes the input file path as a command-line argument. It checks if it ends with .py, extracts the base name without .py, uses jinja_utils to get the code and template paths based on the base name, asserts that the code path is the same as the target path, and then loads the renderer and formats the template using the specified parameters and banner.",
+        "type": "comment"
+    },
+    "368": {
+        "file_id": 37,
+        "content": "/requirements.txt",
+        "type": "filepath"
+    },
+    "369": {
+        "file_id": 37,
+        "content": "This code is importing various libraries for data processing, image manipulation, and handling keyboard input.",
+        "type": "summary"
+    },
+    "370": {
+        "file_id": 37,
+        "content": "easyprocess\njsonlines\npynput\neinops\ndatetime\nparse\nmss\nopencv-python\npydantic-numpy\nhypothesis\nstopit\nkeysymdef",
+        "type": "code",
+        "location": "/requirements.txt:1-12"
+    },
+    "371": {
+        "file_id": 37,
+        "content": "This code is importing various libraries for data processing, image manipulation, and handling keyboard input.",
+        "type": "comment"
+    },
+    "372": {
+        "file_id": 38,
+        "content": "/run_gpu_docker.sh",
+        "type": "filepath"
+    },
+    "373": {
+        "file_id": 38,
+        "content": "Testing GPU availability and NVIDIA driver version within the Docker container.",
+        "type": "summary"
+    },
+    "374": {
+        "file_id": 38,
+        "content": "docker run --rm -it --gpus 1 --runtime nvidia ubuntu:22.04 nvidia-smi # working!",
+        "type": "code",
+        "location": "/run_gpu_docker.sh:1-1"
+    },
+    "375": {
+        "file_id": 38,
+        "content": "Testing GPU availability and NVIDIA driver version within the Docker container.",
+        "type": "comment"
+    },
+    "376": {
+        "file_id": 39,
+        "content": "/screenshot_test.py",
+        "type": "filepath"
+    },
+    "377": {
+        "file_id": 39,
+        "content": "This code imports the mss library to take a screenshot and timeit library for timing execution. It then defines a test_screenshot function that grabs a screenshot from monitor 0 and prints it, executing the function 10 times using timeit and printing the output (0.03 seconds).",
+        "type": "summary"
+    },
+    "378": {
+        "file_id": 39,
+        "content": "import mss\nimport timeit\ndef test_screenshot():\n    with mss.mss() as m:\n        img = m.grab(m.monitors[0])\n        print(img)\noutput = timeit.timeit(test_screenshot, number=10)\nprint(output)  # 0.03 seconds",
+        "type": "code",
+        "location": "/screenshot_test.py:1-12"
+    },
+    "379": {
+        "file_id": 39,
+        "content": "This code imports the mss library to take a screenshot and timeit library for timing execution. It then defines a test_screenshot function that grabs a screenshot from monitor 0 and prints it, executing the function 10 times using timeit and printing the output (0.03 seconds).",
+        "type": "comment"
+    },
+    "380": {
+        "file_id": 40,
+        "content": "/streaming_utils.yaml",
+        "type": "filepath"
+    },
+    "381": {
+        "file_id": 40,
+        "content": "The code configures a set of windows, each with specific shell commands and start directories. The windows include \"dev window\", \"BongoCat\", \"virtualbox\", \"viewer_loop\", and \"viewer_final\".",
+        "type": "summary"
+    },
+    "382": {
+        "file_id": 40,
+        "content": "session_name: streaming_utils\nstart_directory: \"/media/root/Toshiba XG3/works/agi_computer_control\"\nwindows:\n  - window_name: dev window\n    layout: tiled\n    panes:\n######################[bongocats]\n      - shell_command:\n        - \"python3 cat.pyw\"\n        start_directory: \"BongoCat\"\n      - shell_command:\n        - \"python3 cat.pyw\"\n        start_directory: \"BongoCat\"\n######################[virtualbox]\n      - shell_command:\n        - \"python3 kali_vbox_main_loop.py\"\n        start_directory: \"ubuntu_qemu_utm_arm_record/kali_vbox_control\"\n######################[viewer_loop]\n      - shell_command:\n        - sleep 1\n        - \"python3 xvfb_test_loop_double_display.py\"\n        start_directory: \"ubuntu_qemu_utm_arm_record/kali_vbox_control\"\n######################[viewer_final]\n      - shell_command:\n        - sleep 3\n        - \"bash x11grab_loop_viewer.sh\"\n        start_directory: \"ubuntu_qemu_utm_arm_record/kali_vbox_control\"",
+        "type": "code",
+        "location": "/streaming_utils.yaml:1-31"
+    },
+    "383": {
+        "file_id": 40,
+        "content": "The code configures a set of windows, each with specific shell commands and start directories. The windows include \"dev window\", \"BongoCat\", \"virtualbox\", \"viewer_loop\", and \"viewer_final\".",
+        "type": "comment"
+    },
+    "384": {
+        "file_id": 41,
+        "content": "/sync_utils.sh",
+        "type": "filepath"
+    },
+    "385": {
+        "file_id": 41,
+        "content": "Copying necessary files and updating file names.",
+        "type": "summary"
+    },
+    "386": {
+        "file_id": 41,
+        "content": "# cp ../jubilant-adventure2/microgrid_base/log_utils.py .\n# cp ../jubilant-adventure2/microgrid_base/jinja_utils.py .\n# sed -i \"s/microgrid/agi_computer_control/g\" log_utils.py\ncp $2$1 .\n# echo $1\nif [[ \"$1\" == \"log_utils.py\" ]]; then\n    sed -i \"s/microgrid/agi_computer_control/g\" $1\nfi",
+        "type": "code",
+        "location": "/sync_utils.sh:1-9"
+    },
+    "387": {
+        "file_id": 41,
+        "content": "Copying necessary files and updating file names.",
+        "type": "comment"
+    },
+    "388": {
+        "file_id": 42,
+        "content": "/terminal_test_tk.py",
+        "type": "filepath"
+    },
+    "389": {
+        "file_id": 42,
+        "content": "Creating a Tkinter window with a terminal widget using tkterminal package.",
+        "type": "summary"
+    },
+    "390": {
+        "file_id": 42,
+        "content": "import tkinter as tk\nfrom tkterminal import Terminal\nroot = tk.Tk()\nterminal = Terminal(pady=5, padx=5)\nterminal.shell = True\nterminal.pack(expand=True, fill=\"both\")\nroot.mainloop()",
+        "type": "code",
+        "location": "/terminal_test_tk.py:1-8"
+    },
+    "391": {
+        "file_id": 42,
+        "content": "Creating a Tkinter window with a terminal widget using tkterminal package.",
+        "type": "comment"
+    },
+    "392": {
+        "file_id": 43,
+        "content": "/test_calculated_type.py",
+        "type": "filepath"
+    },
+    "393": {
+        "file_id": 43,
+        "content": "Code explains the problem of determining types in libraries like PyTorch and NumPy, where different parameters create different types. The author proposes using Erg to solve this issue by allowing static type checking before execution. Help can be found through `help(torch.nn.Conv2d)`.",
+        "type": "summary"
+    },
+    "394": {
+        "file_id": 43,
+        "content": "# i wouldn't know if there is anything called \"calculated type\" in python \"typing\" module or erglang, but i do know some \"type\" details about numpy matrix multiplication and torch convolutional neural networks.\n# Calculated types or custom type hint and type checkers\n# There's been a long history of attempts on typechecking libraries like `pytorch` and `numpy`. One major issue is that passing different parameters to these constructors create different types (tensors with traits (matrix multiplication) and tensor functions). There's some relationship between definition of a convolutional network and what type of value (usually not a fixed type, but rather a set of types (infinite)) it can accept and return.\n# So I propose or want to know how we can let Erg to solve this long-standing problem, by letting the static typechecker to know the type of `torch.nn.Conv2d` and emit errors before execution? Help can be found by:\n# ```python\n# import torch\n# help(torch.nn.Conv2d)\n# ```",
+        "type": "code",
+        "location": "/test_calculated_type.py:1-12"
+    },
+    "395": {
+        "file_id": 43,
+        "content": "Code explains the problem of determining types in libraries like PyTorch and NumPy, where different parameters create different types. The author proposes using Erg to solve this issue by allowing static type checking before execution. Help can be found through `help(torch.nn.Conv2d)`.",
+        "type": "comment"
+    },
+    "396": {
+        "file_id": 44,
+        "content": "/try_better_exceptions.py",
+        "type": "filepath"
+    },
+    "397": {
+        "file_id": 44,
+        "content": "Attempting to access non-existent key \"2\" from dictionary \"a\", resulting in a KeyError.",
+        "type": "summary"
+    },
+    "398": {
+        "file_id": 44,
+        "content": "a = {1:\"a\"}\nprint(a[2]) # must be error.",
+        "type": "code",
+        "location": "/try_better_exceptions.py:2-3"
+    },
+    "399": {
+        "file_id": 44,
+        "content": "Attempting to access non-existent key \"2\" from dictionary \"a\", resulting in a KeyError.",
+        "type": "comment"
+    }
+}

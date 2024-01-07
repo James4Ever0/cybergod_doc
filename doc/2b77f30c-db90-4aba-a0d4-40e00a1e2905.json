@@ -1,0 +1,10 @@
+{
+    "summary": "Enables and starts Redis server, kills running Python processes, kills bash processes named main_loop (excluding grep), runs main_loop.sh in background without logging.",
+    "details": [
+        {
+            "comment": "Enables and starts Redis server, kills running Python processes, kills bash processes named main_loop (excluding grep), runs main_loop.sh in background without logging.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/start_main_loop.sh\":0-4",
+            "content": "systemctl enable redis-server\nsystemctl start redis-server\nps aux | grep python | grep -v grep | awk '{print $2}' | xargs -iabc kill -s KILL abc\nps aux | grep bash | grep main_loop | grep -v grep | grep -v start | awk '{print $2}' | xargs -iabc kill -s KILL abc\nnohup bash main_loop.sh &> /dev/null &"
+        }
+    ]
+}

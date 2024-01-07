@@ -1,0 +1,15 @@
+{
+    "summary": "The code uses PyAutoGUI and mss libraries to capture screenshots, save them as \"output.png\" and convert them to bytes for writing to stdout. It checks Redis status and raises an exception if off.",
+    "details": [
+        {
+            "comment": "The code is capturing a screenshot using the PyAutoGUI library and saving it as \"output.png\". It then converts the image to bytes and attempts to write it to the standard output (stdout). The code uses the mss library to capture the screenshot, but there are issues with redirection and compatibility between Wayland and X11. Additionally, the code imports modules from utils and checks the Redis status using check_redis_on() and check_redis_off().",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/pyscreenshot_output.py\":0-45",
+            "content": "# import pyautogui\n#\n# img = pyautogui.screenshot()\n##print(img)\n##print(dir(img))\n# img.save(\"output.png\")\n#\n# img_bytes = img.tobytes()\n#\n# print(len(img_bytes), type(img_bytes))\n#\n# import sys\n#\n## maybe it is just completely zero.\n#\n# with open(sys.stdout.fileno(), 'wb', closefd=False) as stdout:\n#    #stdout.write(b\"hello world\")\n#    stdout.write(img_bytes)\n#    stdout.flush()\n# this sucks. this is wayland. hell. what will happen on pynput?\n# i'd better stick to x11vnc instead. but is this x11?\n# import pyscreenshot\nimport mss\nimport sys\nfrom utils import (\n    TimestampedContext,\n    filepaths,\n    check_redis_on,\n    check_redis_off,\n    set_redis_off_on_exception,\n)\nset_redis_off_on_exception()\ns = mss.mss()\n# where is the damn mouse cursor?\nif check_redis_on():\n    with TimestampedContext(filepaths.video_timestamps) as t:\n        with open(sys.stdout.fileno(), \"wb\", closefd=False) as stdout:\n            while check_redis_off() is False:\n                # img = pyscreenshot.grab()\n                # img_bytes = img."
+        },
+        {
+            "comment": "Code is capturing the first monitor's screen as an image and writing it to stdout. If Redis signal is off, an exception is raised.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/pyscreenshot_output.py\":45-52",
+            "content": "tobytes()\n                img = s.grab(s.monitors[0])\n                img_bytes = img.raw\n                stdout.write(img_bytes)\n                stdout.flush()\n                t.commit()\nelse:\n    raise Exception(\"VideoRecorder: Can't start. Redis signal is off.\".upper())"
+        }
+    ]
+}

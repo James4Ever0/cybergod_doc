@@ -1,0 +1,10 @@
+{
+    "summary": "Launching Python script for double-display testing with XVFB.",
+    "details": [
+        {
+            "comment": "Launching Python script for double-display testing with XVFB.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/ubuntu_qemu_utm_arm_record/kali_vbox_control/xvfb_test_loop_double_display.sh\":0-0",
+            "content": "python3 xvfb_test_loop_double_display.py"
+        }
+    ]
+}

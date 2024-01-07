@@ -1,0 +1,10 @@
+{
+    "summary": "Running script with environment variable set for better exceptions handling.",
+    "details": [
+        {
+            "comment": "Running script with environment variable set for better exceptions handling.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/try_better_exceptions.sh\":0-0",
+            "content": "env BETTER_EXCEPTIONS=1 python3 try_better_exceptions.py"
+        }
+    ]
+}

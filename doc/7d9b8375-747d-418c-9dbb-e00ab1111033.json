@@ -1,0 +1,20 @@
+{
+    "summary": "Class A and C define method b; class B inherits, overrides method b calling super().b() but due to MRO, it calls a. Class Child overrides Parent1 and Parent2 methods using super().",
+    "details": [
+        {
+            "comment": "Code is defining two classes A and C, with class A having method b which calls super() to access the __init__ method. Class C has method d and overrides the __init__ method. The code also prints types and checks if the methods are instances of MethodType or MethodWrapperType.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/hardware_capture_hid_power_control/multiple_inheritance.py\":0-41",
+            "content": "from types import MethodType, MethodWrapperType\nclass A:\n    def a(self):\n        print(\"a\")\n    def b(self):\n        print(\"a.b method\")\n        self.a()\n        super().b()\n        print(\"a.super()\", super())\n        print(\"super.b\", super().b)\n        my_b = super().b\n        a_sup = super()\n        #     breakpoint()\n        print(\"a.super init?\", init := getattr(super(), \"__init__\", None))\n        print(dir(init), type(init), dir(type(init)))\n        print(\"CALLING A.SUPER.INIT\")\n        super().__init__()\n        print(\n            type(super().__init__),\n            isinstance(super().__init__, MethodType),\n            isinstance(super().__init__, MethodWrapperType),\n        )\n    def d(self):\n        print(\"a.d\")\nclass C:\n    def __init__(self):\n        print(\"C.INIT\")\n        #   super().__init__(a=1)\n        print(\n            type(super().__init__),\n            isinstance(super().__init__, MethodWrapperType),\n            isinstance(super().__init__, MethodType),\n        )\n    def d(self):\n        print(\"c.d\""
+        },
+        {
+            "comment": "The code defines two classes, B and Child.\n\nClass B inherits from A and C, and has methods b and c. In method b, it calls super().b(), which would normally call the next method in the Method Resolution Order (MRO), but due to Python's MRO implementation, it ends up calling a() instead. Then it calls self.c() and super(A,self).d() and super(C,self).d().\n\nClass Child also inherits from Parent1 and Parent2, and overrides their method by calling it using the super() function with the correct arguments.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/hardware_capture_hid_power_control/multiple_inheritance.py\":41-94",
+            "content": ")\n    def b(self):\n        print(\"c.b method\")\n        # super().b()\n        print(\"c.super()\", super())\n        print(getattr(super(), \"b\", None))\n        c_sup = super()\n        # breakpoint()\n        print(\"c.super init?\", init := getattr(super(), \"__init__\", None))\n        print(dir(init), type(init), dir(type(init)))\n    def c(self):\n        print(\"c\")\nclass B(A, C):\n    def __init__(self):\n        print(\"CALLING B.INIT\")\n        self.A = super().__init__()\n    def b(self):\n        print(\"b.b method\")\n        print(\"b.super()\", super())\n        super().b()\n        #     super().b()\n        self.c()\n        super(A,self).d()\n        super(C,self).d()\n    def a(self):\n        print(\"override\")\n# B().b()\n# c.b not shown up!\n# b.b method\n# a.b method\n# override\n# c\nclass Parent1:\n    def method(self):\n        print(\"Parent1 method\")\nclass Parent2:\n    def method(self):\n        print(\"Parent2 method\")\nclass Child(Parent1, Parent2):\n    def method(self):\n        super(Parent1, self).method()\n        super(Parent2, self).method"
+        },
+        {
+            "comment": "Creates an instance of Child class.\nCalls method on the created object.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/hardware_capture_hid_power_control/multiple_inheritance.py\":94-97",
+            "content": "()\nc = Child()\nc.method()"
+        }
+    ]
+}

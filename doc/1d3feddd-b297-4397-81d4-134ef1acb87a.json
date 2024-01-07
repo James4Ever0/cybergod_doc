@@ -1,0 +1,10 @@
+{
+    "summary": "Reads script from 'script.txt', removes specified spliters, and stores data in a list. Writes the list to 'script.md' with \"- text: \" and \"  video: \" for each item.",
+    "details": [
+        {
+            "comment": "Reads script from 'script.txt', removes specified spliters, and stores data in a list. Writes the list to 'script.md' with \"- text: \" and \"  video: \" for each item.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/propaganda/video_script/preprocess.py\":1-17",
+            "content": "spliters = \",.\uff0c\u3002\uff01~\"\noutput = 'script.md'\nwith open('script.txt', 'r') as f:\n\tdata = f.read()\nfor e in spliters:\n\tdata = data.replace(e, \" \")\ndata = data.strip()\ndata = data.split(\" \")\nwith open(output, 'w+') as f:\n\t#f.write(\"\\n\".join(data))\n\tfor d in data:\n\t\tf.write(f\"- text: {d}\\n\")\n\t\tf.write(\"  video: \\n\")"
+        }
+    ]
+}

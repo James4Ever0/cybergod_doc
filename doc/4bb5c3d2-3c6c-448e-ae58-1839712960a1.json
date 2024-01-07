@@ -1,0 +1,10 @@
+{
+    "summary": "This script turns on power management for all USB devices, sets the power level to \"on\", disables hardware LPM for USB 3.0, and disables USB 3.1 hardware LPM.",
+    "details": [
+        {
+            "comment": "This script turns on power management for all USB devices, sets the power level to \"on\", disables hardware LPM for USB 3.0, and disables USB 3.1 hardware LPM.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/usb_power_management/linux/devcontrol.sh\":0-7",
+            "content": "# ref: https://www.kernel.org/doc/html/v4.16/driver-api/usb/power-management.html\ncd /sys/bus/usb/devices\nls -1 */power/control | xargs -Iabc bash -c \"echo on > abc\"\nls -1 */power/level | xargs -Iabc bash -c \"echo on > abc\"\necho -1 > /sys/module/usbcore/parameters/autosuspend/.\nls -1 */power/usb2_hardware_lpm | xargs -Iabc bash -c \"echo n > abc\"\n# ls -1 */power/usb3_hardware_lpm_u1 | xargs -Iabc bash -c \"echo disable > abc\"\n# ls -1 */power/usb3_hardware_lpm_u2 | xargs -Iabc bash -c \"echo disable > abc\""
+        }
+    ]
+}

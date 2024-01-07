@@ -1,0 +1,10 @@
+{
+    "summary": "Imports necessary libraries and sets up a logger with rotating file handler, debug level logging to a file and console in case of exceptions. Provides a function for logging and printing unknown exceptions.",
+    "details": [
+        {
+            "comment": "Imports necessary libraries and sets up a logger with rotating file handler, debug level logging to a file and console in case of exceptions. Provides a function for logging and printing unknown exceptions.",
+            "location": "\"/media/root/Toshiba XG3/works/cybergod_doc/src/basic_interactive_program_emulation_and_image_with_docker_support/log_common.py\":1-29",
+            "content": "import sys\nimport logging\nfrom logging.handlers import RotatingFileHandler\nimport better_exceptions\nlog_filename = \"actors.log\"\nrthandler = RotatingFileHandler(\n    log_filename, maxBytes=1024 * 1024 * 15, backupCount=3, encoding=\"utf-8\"\n)\nlogger = logging.getLogger(\"actors\")\nlogger.setLevel(logging.DEBUG)\nlogger.addHandler(rthandler)\nlogger.addHandler(logging.StreamHandler(sys.stderr))\nbetter_exceptions.SUPPORTS_COLOR = False\ndef log_and_print_unknown_exception():\n    exc_type, exc_info, exc_tb = sys.exc_info()\n    # traceback.print_exc()\n    if exc_type is not None:\n        exc_str = \"\\n\".join(\n            better_exceptions.format_exception(exc_type, exc_info, exc_tb)\n        )\n        logger.debug(exc_str)\n        print(exc_str)"
+        }
+    ]
+}
