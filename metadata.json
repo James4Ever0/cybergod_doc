@@ -17,7 +17,7 @@
         "2": {
             "filepath": "/README.md",
             "entry_id": 10,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "3": {
             "filepath": "/array_check_ast_parsing.py",
@@ -257,7 +257,7 @@
         "50": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/README.md",
             "entry_id": 422,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "51": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py",
@@ -402,7 +402,7 @@
         "79": {
             "filepath": "/binary_program_synthesis_cpu_assembly_execution/README.md",
             "entry_id": 638,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "80": {
             "filepath": "/binary_program_synthesis_cpu_assembly_execution/bnn_data_ingest.py",
@@ -462,7 +462,7 @@
         "91": {
             "filepath": "/containerized_chatgpt_agent/README.md",
             "entry_id": 700,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "92": {
             "filepath": "/containerized_chatgpt_agent/ai_captialism.py",
@@ -607,7 +607,7 @@
         "120": {
             "filepath": "/dynamic_plasticity_neural_networks/README.md",
             "entry_id": 892,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "121": {
             "filepath": "/dynamic_plasticity_neural_networks/dnn_reference.py",
@@ -712,7 +712,7 @@
         "141": {
             "filepath": "/metalearning_random_shuffle/README.md",
             "entry_id": 1054,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "142": {
             "filepath": "/metalearning_random_shuffle/main.py",
@@ -732,7 +732,7 @@
         "145": {
             "filepath": "/propaganda/video_script/README.md",
             "entry_id": 1070,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "146": {
             "filepath": "/propaganda/video_script/clyde_script.txt",
@@ -967,7 +967,7 @@
         "192": {
             "filepath": "/the_cage_dataset/README.md",
             "entry_id": 1458,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "193": {
             "filepath": "/the_frozen_forest_intro/README.md",
@@ -1037,7 +1037,7 @@
         "206": {
             "filepath": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/README.md",
             "entry_id": 1582,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "207": {
             "filepath": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/webpack.config.js",
@@ -1197,7 +1197,7 @@
         "238": {
             "filepath": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/README.md",
             "entry_id": 1786,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "239": {
             "filepath": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/check_vm.sh",
