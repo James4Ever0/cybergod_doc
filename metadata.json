@@ -17,7 +17,7 @@
         "2": {
             "filepath": "/README.md",
             "entry_id": 10,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "3": {
             "filepath": "/array_check_ast_parsing.py",
@@ -257,7 +257,7 @@
         "50": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/README.md",
             "entry_id": 422,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "51": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py",
@@ -462,7 +462,7 @@
         "91": {
             "filepath": "/containerized_chatgpt_agent/README.md",
             "entry_id": 700,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "92": {
             "filepath": "/containerized_chatgpt_agent/ai_captialism.py",
@@ -692,7 +692,7 @@
         "137": {
             "filepath": "/lego_mindstorm_physical_mouse_keyboard_control/README.md",
             "entry_id": 1038,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "138": {
             "filepath": "/lego_mindstorm_physical_mouse_keyboard_control/test.py",
@@ -727,7 +727,7 @@
         "144": {
             "filepath": "/propaganda/cybergod_propaganda/README.md",
             "entry_id": 1066,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "145": {
             "filepath": "/propaganda/video_script/README.md",
@@ -777,7 +777,7 @@
         "154": {
             "filepath": "/qstar_my_guess/README.md",
             "entry_id": 1114,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "155": {
             "filepath": "/qstar_my_guess/astar_test.py",
@@ -817,7 +817,7 @@
         "162": {
             "filepath": "/rt_x_experiments/README.md",
             "entry_id": 1210,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "163": {
             "filepath": "/rt_x_experiments/requirements.txt",
@@ -967,12 +967,12 @@
         "192": {
             "filepath": "/the_cage_dataset/README.md",
             "entry_id": 1458,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "193": {
             "filepath": "/the_frozen_forest_intro/README.md",
             "entry_id": 1462,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "194": {
             "filepath": "/the_frozen_forest_intro/drissionpage_common.py",
@@ -1052,7 +1052,7 @@
         "209": {
             "filepath": "/ubuntu_qemu_utm_arm_record/README.md",
             "entry_id": 1610,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "210": {
             "filepath": "/ubuntu_qemu_utm_arm_record/audio_record.py",
@@ -1327,7 +1327,7 @@
         "264": {
             "filepath": "/usb_power_management/linux/README.md",
             "entry_id": 1898,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "265": {
             "filepath": "/usb_power_management/linux/devcontrol.sh",
@@ -1337,7 +1337,7 @@
         "266": {
             "filepath": "/usb_power_management/windows/README.md",
             "entry_id": 1912,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         }
     },
     "project_name": "agi_computer_control",
