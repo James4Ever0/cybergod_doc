@@ -15,9 +15,26 @@
             background-color: yellow;
         }
 
+        .folded::before {
+            content: '\25B6';
+            margin-right: 8px;
+            /* Add space between marker and text */
+        }
+
+        .expanded::before {
+            content: '\25BC';
+            margin-right: 8px;
+            /* Add space between marker and text */
+        }
     </style>
     <script>
         function toggleVisibility(element) {
+            let mclass = element.getAttribute("class");
+            if (mclass == "expanded") {
+                element.setAttribute('class', 'folded');
+            } else {
+                element.setAttribute('class', 'expanded');
+            }
             const siblings = element.parentNode.children;
             for (const sibling of siblings) {
                 if (sibling !== element) {
@@ -44,18 +61,22 @@
                 display: none;
             }
         }
+
+        ul {
+            list-style: none;
+        }
     </style>
 </head>
 
 <body>
     <article class="markdown-body">
-        <h2>Project Structure<span class="partial-repository-url"> of: james4ever0/agi_computer_control</span></h2>
+        <h2>Project Structure<span hierarchy="0" class="partial-repository-url"> of: james4ever0/agi_computer_control</span></h2>
 <ul>
-<li><span hierarchy="0" onclick="toggleVisibility(this)" ><strong class="directory" id="/"><code>agi_computer_control</code></strong> <em>Interactive AI, Docker, Machine Learning</em></span><ul>
+<li><span hierarchy="0" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/"><code>agi_computer_control</code></strong> <em>Interactive AI, Docker, Machine Learning</em></span><ul>
 <li><a href="index.html?q=/Dockerfile" id="/Dockerfile"><code>Dockerfile</code></a> <em>Dockerfile: x11docker base, dev server setup</em></li>
 <li><a href="index.html?q=/Makefile" id="/Makefile"><code>Makefile</code></a> <em>Automates project setup, builds, and tests.</em></li>
 <li><a href="index.html?q=/README.md" id="/README.md"><code>README.md</code></a> <em>Entertaining AI project with devcontainers and utility features.</em></li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/action_state_machine/"><code>action_state_machine</code></strong></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/action_state_machine/"><code>action_state_machine</code></strong></span><ul>
 <li><a href="index.html?q=/action_state_machine/example.txt" id="/action_state_machine/example.txt"><code>example.txt</code></a> <em>Terminal session: user input, responses, prompts, cursor movements.</em></li>
 </ul>
 </li>
@@ -63,7 +84,7 @@
 <li><a href="index.html?q=/array_shape_typecheck.py" id="/array_shape_typecheck.py"><code>array_shape_typecheck.py</code></a> <em>2D array, Array class, numpy, Literal casting, Jinja2 macros.</em></li>
 <li><a href="index.html?q=/array_static_typecheck.py" id="/array_static_typecheck.py"><code>array_static_typecheck.py</code></a> <em>Static-typed array class with type checks, operations, and SymPy integration.</em></li>
 <li><a href="index.html?q=/autogui.py" id="/autogui.py"><code>autogui.py</code></a> <em>AutoGUI Python script for GUI input capture and playback.</em></li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/basic_interactive_program_emulation_and_image_with_docker_support/"><code>basic_interactive_program_emulation_and_image_with_docker_support</code></strong> <em>Docker support, interactive emulation, image development</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/basic_interactive_program_emulation_and_image_with_docker_support/"><code>basic_interactive_program_emulation_and_image_with_docker_support</code></strong> <em>Docker support, interactive emulation, image development</em></span><ul>
 <li><a href="index.html?q=/basic_interactive_program_emulation_and_image_with_docker_support/Dockerfile" id="/basic_interactive_program_emulation_and_image_with_docker_support/Dockerfile"><code>Dockerfile</code></a> <em>Installs Docker from Alpine APT.</em></li>
 <li><a href="index.html?q=/basic_interactive_program_emulation_and_image_with_docker_support/README.md" id="/basic_interactive_program_emulation_and_image_with_docker_support/README.md"><code>README.md</code></a> <em>Train and use a bot for exploration and learning.</em></li>
 <li><a href="index.html?q=/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py" id="/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py"><code>alpine_actor.py</code></a> <em>Interactive Docker emulation with exceptions and logging.</em></li>
@@ -96,7 +117,7 @@
 <li><a href="index.html?q=/basic_interactive_program_emulation_and_image_with_docker_support/wexpect_example.py" id="/basic_interactive_program_emulation_and_image_with_docker_support/wexpect_example.py"><code>wexpect_example.py</code></a> <em>weexpect: cmd emulation via Python, Docker support.</em></li>
 </ul>
 </li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/binary_program_synthesis_cpu_assembly_execution/"><code>binary_program_synthesis_cpu_assembly_execution</code></strong> <em>Binary program synthesis and assembly execution without human interface.</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/binary_program_synthesis_cpu_assembly_execution/"><code>binary_program_synthesis_cpu_assembly_execution</code></strong> <em>Binary program synthesis and assembly execution without human interface.</em></span><ul>
 <li><a href="index.html?q=/binary_program_synthesis_cpu_assembly_execution/README.md" id="/binary_program_synthesis_cpu_assembly_execution/README.md"><code>README.md</code></a> <em>Evolutionary program synthesis and assembly execution without human interface.</em></li>
 <li><a href="index.html?q=/binary_program_synthesis_cpu_assembly_execution/bnn_data_ingest.py" id="/binary_program_synthesis_cpu_assembly_execution/bnn_data_ingest.py"><code>bnn_data_ingest.py</code></a> <em>Binary quantized tensor computation with attention.</em></li>
 <li><a href="index.html?q=/binary_program_synthesis_cpu_assembly_execution/convert_binary_files_as_zero_and_one_streams.py" id="/binary_program_synthesis_cpu_assembly_execution/convert_binary_files_as_zero_and_one_streams.py"><code>convert_binary_files_as_zero_and_one_streams.py</code></a> <em>Binary file conversion to 8-bit streams.</em></li>
@@ -109,7 +130,7 @@
 <li><a href="index.html?q=/compose.yaml" id="/compose.yaml"><code>compose.yaml</code></a> <em>Compose VNC services with images</em></li>
 <li><a href="index.html?q=/config.py" id="/config.py"><code>config.py</code></a> <em>Sets timestep, defines state path.</em></li>
 <li><a href="index.html?q=/conscious_struct.py" id="/conscious_struct.py"><code>conscious_struct.py</code></a> <em>Python code for image processing, LSTM training, and RNN input prep.</em></li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/containerized_chatgpt_agent/"><code>containerized_chatgpt_agent</code></strong> <em>Containerized ChatGPT AI scripts</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/containerized_chatgpt_agent/"><code>containerized_chatgpt_agent</code></strong> <em>Containerized ChatGPT AI scripts</em></span><ul>
 <li><a href="index.html?q=/containerized_chatgpt_agent/Dockerfile" id="/containerized_chatgpt_agent/Dockerfile"><code>Dockerfile</code></a> <em>Install pip, open-interpreter via Tsinghua mirror.</em></li>
 <li><a href="index.html?q=/containerized_chatgpt_agent/Dockerfile_autoexec" id="/containerized_chatgpt_agent/Dockerfile_autoexec"><code>Dockerfile_autoexec</code></a> <em>Installs Python chat agent dependencies, copies scripts.</em></li>
 <li><a href="index.html?q=/containerized_chatgpt_agent/Dockerfile_autoexec_visual" id="/containerized_chatgpt_agent/Dockerfile_autoexec_visual"><code>Dockerfile_autoexec_visual</code></a> <em>Dockerfile: Xfce4, Xvfb, screenshot, PyAutoGUI setup.</em></li>
@@ -143,13 +164,13 @@
 </ul>
 </li>
 <li><a href="index.html?q=/decorator_method_registry.py" id="/decorator_method_registry.py"><code>decorator_method_registry.py</code></a> <em>Decorator method registry: pre/post execution code.</em></li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/directml_yolov5/"><code>directml_yolov5</code></strong> <em>DirectML-powered YOLOv5 inference tests</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/directml_yolov5/"><code>directml_yolov5</code></strong> <em>DirectML-powered YOLOv5 inference tests</em></span><ul>
 <li><a href="index.html?q=/directml_yolov5/test.py" id="/directml_yolov5/test.py"><code>test.py</code></a> <em>DirectML-enabled, zero-sized array handling inference mode code.</em></li>
 <li><a href="index.html?q=/directml_yolov5/test_concat.py" id="/directml_yolov5/test_concat.py"><code>test_concat.py</code></a> <em>Concatenation test using directml &amp; torch</em></li>
 <li><a href="index.html?q=/directml_yolov5/test_nograd.py" id="/directml_yolov5/test_nograd.py"><code>test_nograd.py</code></a> <em>YOLOv5 model, DirectML inference with warnings.</em></li>
 </ul>
 </li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/dynamic_plasticity_neural_networks/"><code>dynamic_plasticity_neural_networks</code></strong> <em>Dynamic neural networks with plasticity for adaptive bot decision-making.</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/dynamic_plasticity_neural_networks/"><code>dynamic_plasticity_neural_networks</code></strong> <em>Dynamic neural networks with plasticity for adaptive bot decision-making.</em></span><ul>
 <li><a href="index.html?q=/dynamic_plasticity_neural_networks/MCTS_NAS.md" id="/dynamic_plasticity_neural_networks/MCTS_NAS.md"><code>MCTS_NAS.md</code></a> <em>MCTS for NAS: Efficient Network Architecture Search.</em></li>
 <li><a href="index.html?q=/dynamic_plasticity_neural_networks/README.md" id="/dynamic_plasticity_neural_networks/README.md"><code>README.md</code></a> <em>Dynamic neural networks with movable artificial neurons.</em></li>
 <li><a href="index.html?q=/dynamic_plasticity_neural_networks/dnn_reference.py" id="/dynamic_plasticity_neural_networks/dnn_reference.py"><code>dnn_reference.py</code></a> <em>Sigmoid-based DNN classes and functions.</em></li>
@@ -158,14 +179,14 @@
 <li><a href="index.html?q=/dynamic_plasticity_neural_networks/sparse_matrix_multiplication.py" id="/dynamic_plasticity_neural_networks/sparse_matrix_multiplication.py"><code>sparse_matrix_multiplication.py</code></a> <em>Timing sparse matrix multiplication performance.</em></li>
 </ul>
 </li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/external_reference/"><code>external_reference</code></strong> <em>External reference directory: Contains 4 GitHub repos for cloning.</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/external_reference/"><code>external_reference</code></strong> <em>External reference directory: Contains 4 GitHub repos for cloning.</em></span><ul>
 <li><a href="index.html?q=/external_reference/extra_init.sh" id="/external_reference/extra_init.sh"><code>extra_init.sh</code></a> <em>Clones CogVLM and AppAgent repos.</em></li>
 <li><a href="index.html?q=/external_reference/init.cmd" id="/external_reference/init.cmd"><code>init.cmd</code></a> <em>Init script for cloning repos.</em></li>
 <li><a href="index.html?q=/external_reference/supercharge_init.sh" id="/external_reference/supercharge_init.sh"><code>supercharge_init.sh</code></a> <em>Supercharges GitHub repos: 4 clones.</em></li>
 </ul>
 </li>
 <li><a href="index.html?q=/generate_datamodel_code.sh" id="/generate_datamodel_code.sh"><code>generate_datamodel_code.sh</code></a> <em>Generate Python code from YAML datamodel file: MyModel.</em></li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/hardware_capture_hid_power_control/"><code>hardware_capture_hid_power_control</code></strong> <em>Hardware capture, HID power control, Python scripts</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/hardware_capture_hid_power_control/"><code>hardware_capture_hid_power_control</code></strong> <em>Hardware capture, HID power control, Python scripts</em></span><ul>
 <li><a href="index.html?q=/hardware_capture_hid_power_control/Makefile" id="/hardware_capture_hid_power_control/Makefile"><code>Makefile</code></a> <em>Compiles and executes Python script with Makefile</em></li>
 <li><a href="index.html?q=/hardware_capture_hid_power_control/README.md" id="/hardware_capture_hid_power_control/README.md"><code>README.md</code></a> <em>Power control via <code>/dev/serial/by-id/*</code> with HID control using <code>hidapi</code>.</em></li>
 <li><a href="index.html?q=/hardware_capture_hid_power_control/common_keycodes.py" id="/hardware_capture_hid_power_control/common_keycodes.py"><code>common_keycodes.py</code></a> <em>Translation of hardware keycodes for computer compatibility.</em></li>
@@ -185,17 +206,17 @@
 <li><a href="index.html?q=/keyboard_and_mouse.py" id="/keyboard_and_mouse.py"><code>keyboard_and_mouse.py</code></a> <em>Python script records keyboard and mouse events, configurable timesteps.</em></li>
 <li><a href="index.html?q=/launch_docker_devicemapper_limit_storage.sh" id="/launch_docker_devicemapper_limit_storage.sh"><code>launch_docker_devicemapper_limit_storage.sh</code></a> <em>Docker storage options: devicemapper, limits explained.</em></li>
 <li><a href="index.html?q=/launch_streaming_utils.sh" id="/launch_streaming_utils.sh"><code>launch_streaming_utils.sh</code></a> <em>Launch script for streaming utilities in new tmux sessions.</em></li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/lego_mindstorm_physical_mouse_keyboard_control/"><code>lego_mindstorm_physical_mouse_keyboard_control</code></strong> <em>Control LEGO EV3 with keyboard and mouse over USB</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/lego_mindstorm_physical_mouse_keyboard_control/"><code>lego_mindstorm_physical_mouse_keyboard_control</code></strong> <em>Control LEGO EV3 with keyboard and mouse over USB</em></span><ul>
 <li><a href="index.html?q=/lego_mindstorm_physical_mouse_keyboard_control/README.md" id="/lego_mindstorm_physical_mouse_keyboard_control/README.md"><code>README.md</code></a> <em>Control bot with keyboard and mouse without detection or batteries.</em></li>
 <li><a href="index.html?q=/lego_mindstorm_physical_mouse_keyboard_control/test.py" id="/lego_mindstorm_physical_mouse_keyboard_control/test.py"><code>test.py</code></a> <em>Init EV3 motor, play sound, define motor object, move 100 units.</em></li>
 <li><a href="index.html?q=/lego_mindstorm_physical_mouse_keyboard_control/usb_ev3.py" id="/lego_mindstorm_physical_mouse_keyboard_control/usb_ev3.py"><code>usb_ev3.py</code></a> <em>USB EV3 control script.</em></li>
 </ul>
 </li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/lunar_lander_test/"><code>lunar_lander_test</code></strong></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/lunar_lander_test/"><code>lunar_lander_test</code></strong></span><ul>
 <li><a href="index.html?q=/lunar_lander_test/test.py" id="/lunar_lander_test/test.py"><code>test.py</code></a> <em>Lunar Lander test with Gymnasium, 1000 random actions.</em></li>
 </ul>
 </li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/metalearning_random_shuffle/"><code>metalearning_random_shuffle</code></strong> <em>Shuffling datasets, reducing entropy for metalearning.</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/metalearning_random_shuffle/"><code>metalearning_random_shuffle</code></strong> <em>Shuffling datasets, reducing entropy for metalearning.</em></span><ul>
 <li><a href="index.html?q=/metalearning_random_shuffle/README.md" id="/metalearning_random_shuffle/README.md"><code>README.md</code></a> <em>Perform ops without annotations, reduce entropy.</em></li>
 <li><a href="index.html?q=/metalearning_random_shuffle/main.py" id="/metalearning_random_shuffle/main.py"><code>main.py</code></a> <em>Shuffling datasets with letter-digit combos</em></li>
 </ul>
@@ -208,16 +229,16 @@
 <li><a href="index.html?q=/packup.cmd" id="/packup.cmd"><code>packup.cmd</code></a> <em>Archives, removes 7z, moves backup.</em></li>
 <li><a href="index.html?q=/packup.sh" id="/packup.sh"><code>packup.sh</code></a> <em>Remove, change dir, archive, move file</em></li>
 <li><a href="index.html?q=/player.py" id="/player.py"><code>player.py</code></a> <em>Manage keyboard/mouse with Pynput, hotkeys. DPI-aware, event order maintenance, no "ctrl+/" support.</em></li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/propaganda/"><code>propaganda</code></strong> <em>Step-by-step video creation and AI productivity scripts</em></span><ul>
-<li><span hierarchy="2" onclick="toggleVisibility(this)" ><strong class="directory" id="/propaganda/agi_computer_recordings/"><code>agi_computer_recordings</code></strong></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/propaganda/"><code>propaganda</code></strong> <em>Step-by-step video creation and AI productivity scripts</em></span><ul>
+<li><span hierarchy="2" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/propaganda/agi_computer_recordings/"><code>agi_computer_recordings</code></strong></span><ul>
 <li><a href="index.html?q=/propaganda/agi_computer_recordings/launch_server.cmd" id="/propaganda/agi_computer_recordings/launch_server.cmd"><code>launch_server.cmd</code></a> <em>Command connects to host and WebDAV path for recordings.</em></li>
 </ul>
 </li>
-<li><span hierarchy="2" onclick="toggleVisibility(this)" ><strong class="directory" id="/propaganda/cybergod_propaganda/"><code>cybergod_propaganda</code></strong></span><ul>
+<li><span hierarchy="2" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/propaganda/cybergod_propaganda/"><code>cybergod_propaganda</code></strong></span><ul>
 <li><a href="index.html?q=/propaganda/cybergod_propaganda/README.md" id="/propaganda/cybergod_propaganda/README.md"><code>README.md</code></a> <em>Cybergod propaganda: Step-by-step video creation.</em></li>
 </ul>
 </li>
-<li><span hierarchy="2" onclick="toggleVisibility(this)" ><strong class="directory" id="/propaganda/video_script/"><code>video_script</code></strong> <em>Automated Cybergod AI videos for productivity and health.</em></span><ul>
+<li><span hierarchy="2" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/propaganda/video_script/"><code>video_script</code></strong> <em>Automated Cybergod AI videos for productivity and health.</em></span><ul>
 <li><a href="index.html?q=/propaganda/video_script/README.md" id="/propaganda/video_script/README.md"><code>README.md</code></a> <em>Search videos, API endpoint, ffmpeg conversion.</em></li>
 <li><a href="index.html?q=/propaganda/video_script/clyde_script.txt" id="/propaganda/video_script/clyde_script.txt"><code>clyde_script.txt</code></a> <em>Cybergod: AI controller, inspire developers.</em></li>
 <li><a href="index.html?q=/propaganda/video_script/clyde_script_cn.txt" id="/propaganda/video_script/clyde_script_cn.txt"><code>clyde_script_cn.txt</code></a> <em>Introducing Cybergod AI鼠标键控. Automate, save time. Developer collaboration encouraged.</em></li>
@@ -235,7 +256,7 @@
 <li><a href="index.html?q=/pyright_utils.py" id="/pyright_utils.py"><code>pyright_utils.py</code></a> <em>Pyright utils: track errors, regex pattern, cache, undefined vars.</em></li>
 <li><a href="index.html?q=/pytest_disable_assertion_inspection_use_better_exceptions.py" id="/pytest_disable_assertion_inspection_use_better_exceptions.py"><code>pytest_disable_assertion_inspection_use_better_exceptions.py</code></a> <em>Replaces numpy.array with marray, sets test exceptions.</em></li>
 <li><a href="index.html?q=/pytropos_check.py" id="/pytropos_check.py"><code>pytropos_check.py</code></a> <em>Matrix multiplication with unit testing.</em></li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/qstar_my_guess/"><code>qstar_my_guess</code></strong> <em>Exploring A*, MCTS, and transformers for AI problem-solving.</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/qstar_my_guess/"><code>qstar_my_guess</code></strong> <em>Exploring A*, MCTS, and transformers for AI problem-solving.</em></span><ul>
 <li><a href="index.html?q=/qstar_my_guess/README.md" id="/qstar_my_guess/README.md"><code>README.md</code></a> <em>AI-powered code tagging, indexing, and writing. RAG-backed, acknowledging human uniqueness.</em></li>
 <li><a href="index.html?q=/qstar_my_guess/astar_test.py" id="/qstar_my_guess/astar_test.py"><code>astar_test.py</code></a> <em>A* algorithm maze solver tested.</em></li>
 <li><a href="index.html?q=/qstar_my_guess/main.py" id="/qstar_my_guess/main.py"><code>main.py</code></a> <em>Exploring MCTS, transformers, reward functions in PPO. Hidden latent space for video generation.</em></li>
@@ -252,28 +273,28 @@
 <li><a href="index.html?q=/recording_train_parse.py" id="/recording_train_parse.py"><code>recording_train_parse.py</code></a> <em>Train data synchronization and processing.</em></li>
 <li><a href="index.html?q=/render_python_code.py" id="/render_python_code.py"><code>render_python_code.py</code></a> <em>Python code renderer with Jinja templates.</em></li>
 <li><a href="index.html?q=/requirements.txt" id="/requirements.txt"><code>requirements.txt</code></a> <em>Data processing, image manipulation, keyboard handling libraries.</em></li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/"><code>rt_x_experiments</code></strong> <em>Real-time RTX experimentation, diverse techniques and models.</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/"><code>rt_x_experiments</code></strong> <em>Real-time RTX experimentation, diverse techniques and models.</em></span><ul>
 <li><a href="index.html?q=/rt_x_experiments/README.md" id="/rt_x_experiments/README.md"><code>README.md</code></a> <em>Dynamic tokenizer, attention layers, neuron states, activation functions, AI deviation.</em></li>
-<li><span hierarchy="2" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/audio_to_mel/"><code>audio_to_mel</code></strong></span><ul>
+<li><span hierarchy="2" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/audio_to_mel/"><code>audio_to_mel</code></strong></span><ul>
 <li><a href="index.html?q=/rt_x_experiments/audio_to_mel/test_librosa.py" id="/rt_x_experiments/audio_to_mel/test_librosa.py"><code>test_librosa.py</code></a> <em>Load audio, set sample rate, generate mel spectrogram, convert to dB, save as variable.</em></li>
 </ul>
 </li>
-<li><span hierarchy="2" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/fourier_transform_combine_data/"><code>fourier_transform_combine_data</code></strong> <em>Fourier transform experiments: 1D and 2D FFT, array combination, inverse.</em></span><ul>
+<li><span hierarchy="2" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/fourier_transform_combine_data/"><code>fourier_transform_combine_data</code></strong> <em>Fourier transform experiments: 1D and 2D FFT, array combination, inverse.</em></span><ul>
 <li><a href="index.html?q=/rt_x_experiments/fourier_transform_combine_data/test_common.py" id="/rt_x_experiments/fourier_transform_combine_data/test_common.py"><code>test_common.py</code></a> <em>Test script for array addition and print.</em></li>
 <li><a href="index.html?q=/rt_x_experiments/fourier_transform_combine_data/test_fft_1d.py" id="/rt_x_experiments/fourier_transform_combine_data/test_fft_1d.py"><code>test_fft_1d.py</code></a> <em>Compute 1D FFT, combine, and inverse. Print results.</em></li>
 <li><a href="index.html?q=/rt_x_experiments/fourier_transform_combine_data/test_multidimension_fourier_transform_2d.py" id="/rt_x_experiments/fourier_transform_combine_data/test_multidimension_fourier_transform_2d.py"><code>test_multidimension_fourier_transform_2d.py</code></a> <em>2D FFT, combines arrays, inverse FFT, prints results</em></li>
 </ul>
 </li>
-<li><span hierarchy="2" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/gradient_undescent/"><code>gradient_undescent</code></strong> <em>Dynamic learning rate optimization, unlearning with loss inversion and Adam optimizer experiments.</em></span><ul>
+<li><span hierarchy="2" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/gradient_undescent/"><code>gradient_undescent</code></strong> <em>Dynamic learning rate optimization, unlearning with loss inversion and Adam optimizer experiments.</em></span><ul>
 <li><a href="index.html?q=/rt_x_experiments/gradient_undescent/dynamic_learning_rate.py" id="/rt_x_experiments/gradient_undescent/dynamic_learning_rate.py"><code>dynamic_learning_rate.py</code></a> <em>Dynamic learning rate optimization functions</em></li>
 <li><a href="index.html?q=/rt_x_experiments/gradient_undescent/test_unlearning.py" id="/rt_x_experiments/gradient_undescent/test_unlearning.py"><code>test_unlearning.py</code></a> <em>Unlearning model with loss inversion, Adam optimizer</em></li>
 </ul>
 </li>
-<li><span hierarchy="2" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/partial_training_network/"><code>partial_training_network</code></strong></span><ul>
+<li><span hierarchy="2" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/partial_training_network/"><code>partial_training_network</code></strong></span><ul>
 <li><a href="index.html?q=/rt_x_experiments/partial_training_network/test_freeze_one_and_train_another.py" id="/rt_x_experiments/partial_training_network/test_freeze_one_and_train_another.py"><code>test_freeze_one_and_train_another.py</code></a> <em>Trains layers, manages RAM, controls GPU usage.</em></li>
 </ul>
 </li>
-<li><span hierarchy="2" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/real_attention/"><code>real_attention</code></strong> <em>Real-time attention experiments for image cropping and analysis.</em></span><ul>
+<li><span hierarchy="2" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/real_attention/"><code>real_attention</code></strong> <em>Real-time attention experiments for image cropping and analysis.</em></span><ul>
 <li><a href="index.html?q=/rt_x_experiments/real_attention/2d_convolve.py" id="/rt_x_experiments/real_attention/2d_convolve.py"><code>2d_convolve.py</code></a> <em>2D image convolution with scipy's convolve2d</em></li>
 <li><a href="index.html?q=/rt_x_experiments/real_attention/low_rank_positional_encoding.py" id="/rt_x_experiments/real_attention/low_rank_positional_encoding.py"><code>low_rank_positional_encoding.py</code></a> <em>Low-rank positional encoding for attention models.</em></li>
 <li><a href="index.html?q=/rt_x_experiments/real_attention/recursive_positional_encoding.py" id="/rt_x_experiments/real_attention/recursive_positional_encoding.py"><code>recursive_positional_encoding.py</code></a> <em>Recursive positional encoding for zoomed patches.</em></li>
@@ -282,14 +303,14 @@
 </ul>
 </li>
 <li><a href="index.html?q=/rt_x_experiments/requirements.txt" id="/rt_x_experiments/requirements.txt"><code>requirements.txt</code></a> <em>Package dependencies: rtx-torch, classifier-free-guidance-pytorch, efficientnet-pytorch</em></li>
-<li><span hierarchy="2" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/rt_x_test_code/"><code>rt_x_test_code</code></strong> <em>Efficient RTX model training with action interpretation and DirectML fix</em></span><ul>
+<li><span hierarchy="2" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/rt_x_test_code/"><code>rt_x_test_code</code></strong> <em>Efficient RTX model training with action interpretation and DirectML fix</em></span><ul>
 <li><a href="index.html?q=/rt_x_experiments/rt_x_test_code/requirements.txt" id="/rt_x_experiments/rt_x_test_code/requirements.txt"><code>requirements.txt</code></a> <em>Lists: PyTorch libraries
 Classifier-Free and EfficientNet</em></li>
 <li><a href="index.html?q=/rt_x_experiments/rt_x_test_code/rtx1_example.py" id="/rt_x_experiments/rt_x_test_code/rtx1_example.py"><code>rtx1_example.py</code></a> <em>RTX1 model, random video data, computes train and eval logits.</em></li>
 <li><a href="index.html?q=/rt_x_experiments/rt_x_test_code/rtx2_example.py" id="/rt_x_experiments/rt_x_test_code/rtx2_example.py"><code>rtx2_example.py</code></a> <em>Efficient model training with action interpretation and DirectML fix on RTX2.</em></li>
 </ul>
 </li>
-<li><span hierarchy="2" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/special_tokenizer_with_actions/"><code>special_tokenizer_with_actions</code></strong> <em>Special tokenizer for actions and text classification with optimization and hierarchical techniques.</em></span><ul>
+<li><span hierarchy="2" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/rt_x_experiments/special_tokenizer_with_actions/"><code>special_tokenizer_with_actions</code></strong> <em>Special tokenizer for actions and text classification with optimization and hierarchical techniques.</em></span><ul>
 <li><a href="index.html?q=/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py" id="/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py"><code>hourglass_lm.py</code></a> <em>Hourglass Transformer: Efficient Language Modeling</em></li>
 <li><a href="index.html?q=/rt_x_experiments/special_tokenizer_with_actions/test_action_and_text_tokenizer.py" id="/rt_x_experiments/special_tokenizer_with_actions/test_action_and_text_tokenizer.py"><code>test_action_and_text_tokenizer.py</code></a> <em>Custom tokenizer for actions and content, optimization techniques</em></li>
 <li><a href="index.html?q=/rt_x_experiments/special_tokenizer_with_actions/test_hierachical_tokenization.py" id="/rt_x_experiments/special_tokenizer_with_actions/test_hierachical_tokenization.py"><code>test_hierachical_tokenization.py</code></a> <em>Hierarchical tokenization model for text classification using Einops and sparse transforms.</em></li>
@@ -302,7 +323,7 @@ Classifier-Free and EfficientNet</em></li>
 </li>
 <li><a href="index.html?q=/run_gpu_docker.sh" id="/run_gpu_docker.sh"><code>run_gpu_docker.sh</code></a> <em>Test GPU access in Docker container.</em></li>
 <li><a href="index.html?q=/screenshot_test.py" id="/screenshot_test.py"><code>screenshot_test.py</code></a> <em>Screenshot testing in 0.03s</em></li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/software_capture_hid_control/"><code>software_capture_hid_control</code></strong> <em>Controls software with HID and X11 streaming, abstract class tests.</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/software_capture_hid_control/"><code>software_capture_hid_control</code></strong> <em>Controls software with HID and X11 streaming, abstract class tests.</em></span><ul>
 <li><a href="index.html?q=/software_capture_hid_control/Makefile" id="/software_capture_hid_control/Makefile"><code>Makefile</code></a> <em>Builds and executes "test_control.py" with Makefile</em></li>
 <li><a href="index.html?q=/software_capture_hid_control/abstract_class_test.py" id="/software_capture_hid_control/abstract_class_test.py"><code>abstract_class_test.py</code></a> <em>Abstract class with two abstract methods.</em></li>
 <li><a href="index.html?q=/software_capture_hid_control/test_control.py" id="/software_capture_hid_control/test_control.py"><code>test_control.py</code></a> <em>Control software with libxdoHID and X11 live streaming, saving image issues.</em></li>
@@ -312,25 +333,25 @@ Classifier-Free and EfficientNet</em></li>
 <li><a href="index.html?q=/streaming_utils.yaml" id="/streaming_utils.yaml"><code>streaming_utils.yaml</code></a> <em>Windows with commands and directories configuration.</em></li>
 <li><a href="index.html?q=/sync_utils.sh" id="/sync_utils.sh"><code>sync_utils.sh</code></a> <em>Sync script: Updates and copies files.</em></li>
 <li><a href="index.html?q=/terminal_test_tk.py" id="/terminal_test_tk.py"><code>terminal_test_tk.py</code></a> <em>Tkinter window with terminal widget.</em></li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/test/"><code>test</code></strong> <em>Test directory with model training, abstract implementation, and error testing.</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/test/"><code>test</code></strong> <em>Test directory with model training, abstract implementation, and error testing.</em></span><ul>
 <li><a href="index.html?q=/test/run_test.sh" id="/test/run_test.sh"><code>run_test.sh</code></a> <em>Run test_project.py with pytest in parent folder</em></li>
 <li><a href="index.html?q=/test/test_abstract_impl.py" id="/test/test_abstract_impl.py"><code>test_abstract_impl.py</code></a> <em>Abstract base class implementation with instantiation error.</em></li>
 <li><a href="index.html?q=/test/test_project.py" id="/test/test_project.py"><code>test_project.py</code></a> <em>Trains custom models with hypothesis strategies, Adam optimizer.</em></li>
 </ul>
 </li>
 <li><a href="index.html?q=/test_calculated_type.py" id="/test_calculated_type.py"><code>test_calculated_type.py</code></a> <em>Unify PyTorch types with Erg static checking.</em></li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/the_cage_dataset/"><code>the_cage_dataset</code></strong></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/the_cage_dataset/"><code>the_cage_dataset</code></strong></span><ul>
 <li><a href="index.html?q=/the_cage_dataset/README.md" id="/the_cage_dataset/README.md"><code>README.md</code></a> <em>Control bot with "cage", synch timestamps.</em></li>
 </ul>
 </li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/the_frozen_forest_intro/"><code>the_frozen_forest_intro</code></strong> <em>Multimodal training dataset "The Frozen Forest" introduction.</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/the_frozen_forest_intro/"><code>the_frozen_forest_intro</code></strong> <em>Multimodal training dataset "The Frozen Forest" introduction.</em></span><ul>
 <li><a href="index.html?q=/the_frozen_forest_intro/README.md" id="/the_frozen_forest_intro/README.md"><code>README.md</code></a> <em>Introducing "The Frozen Forest" dataset for multimodal training.</em></li>
 <li><a href="index.html?q=/the_frozen_forest_intro/drissionpage_common.py" id="/the_frozen_forest_intro/drissionpage_common.py"><code>drissionpage_common.py</code></a> <em>Configures Chromium browser with extensions for ad management and page object timeout.</em></li>
-<li><span hierarchy="2" onclick="toggleVisibility(this)" ><strong class="directory" id="/the_frozen_forest_intro/keylogger_extension/"><code>keylogger_extension</code></strong> <em>Initializes and manages keylogger extension for frozen forest.</em></span><ul>
+<li><span hierarchy="2" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/the_frozen_forest_intro/keylogger_extension/"><code>keylogger_extension</code></strong> <em>Initializes and manages keylogger extension for frozen forest.</em></span><ul>
 <li><a href="index.html?q=/the_frozen_forest_intro/keylogger_extension/init.cmd" id="/the_frozen_forest_intro/keylogger_extension/init.cmd"><code>init.cmd</code></a> <em>Initiating keylogger download.</em></li>
-<li><span hierarchy="3" onclick="toggleVisibility(this)" ><strong class="directory" id="/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/"><code>virtual-keylogger</code></strong> <em>Initializes server, handles errors, manages HID events for HDFC Bank's netbanking virtual keylogger.</em></span><ul>
+<li><span hierarchy="3" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/"><code>virtual-keylogger</code></strong> <em>Initializes server, handles errors, manages HID events for HDFC Bank's netbanking virtual keylogger.</em></span><ul>
 <li><a href="index.html?q=/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/README.md" id="/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/README.md"><code>README.md</code></a> <em>Virtual keylogger for HDFC Bank's netbanking</em></li>
-<li><span hierarchy="4" onclick="toggleVisibility(this)" ><strong class="directory" id="/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/"><code>src</code></strong></span><ul>
+<li><span hierarchy="4" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/"><code>src</code></strong></span><ul>
 <li><a href="index.html?q=/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/index.js" id="/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/index.js"><code>index.js</code></a> <em>Initializes server, handles errors, and manages HID events.</em></li>
 </ul>
 </li>
@@ -354,7 +375,7 @@ Classifier-Free and EfficientNet</em></li>
 <li><a href="index.html?q=/try_better_exceptions.py" id="/try_better_exceptions.py"><code>try_better_exceptions.py</code></a> <em>Raises KeyError for non-existent key "2" in dictionary "a"</em></li>
 <li><a href="index.html?q=/try_better_exceptions.sh" id="/try_better_exceptions.sh"><code>try_better_exceptions.sh</code></a> <em>Improved exception handling script.</em></li>
 <li><a href="index.html?q=/tsalib_test.py" id="/tsalib_test.py"><code>tsalib_test.py</code></a> <em>Test: Tsalib static shape checking in PyTorch.</em></li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/ubuntu_qemu_utm_arm_record/"><code>ubuntu_qemu_utm_arm_record</code></strong> <em>Ubuntu QEMU UTM ARM recording setup</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/ubuntu_qemu_utm_arm_record/"><code>ubuntu_qemu_utm_arm_record</code></strong> <em>Ubuntu QEMU UTM ARM recording setup</em></span><ul>
 <li><a href="index.html?q=/ubuntu_qemu_utm_arm_record/README.md" id="/ubuntu_qemu_utm_arm_record/README.md"><code>README.md</code></a> <em>Quick start guide for Ubuntu QEMU UTM ARM recording setup.</em></li>
 <li><a href="index.html?q=/ubuntu_qemu_utm_arm_record/audio_record.py" id="/ubuntu_qemu_utm_arm_record/audio_record.py"><code>audio_record.py</code></a> <em>Records and saves audio with error handling.</em></li>
 <li><a href="index.html?q=/ubuntu_qemu_utm_arm_record/enable_audio_loopback.sh" id="/ubuntu_qemu_utm_arm_record/enable_audio_loopback.sh"><code>enable_audio_loopback.sh</code></a> <em>Enable audio loopback for Ubuntu ARM QEMU/UTM system.</em></li>
@@ -362,7 +383,7 @@ Classifier-Free and EfficientNet</em></li>
 <li><a href="index.html?q=/ubuntu_qemu_utm_arm_record/kali_prepare_dirs_loop.sh" id="/ubuntu_qemu_utm_arm_record/kali_prepare_dirs_loop.sh"><code>kali_prepare_dirs_loop.sh</code></a> <em>Prepares Kali WebDAV directories for looping.</em></li>
 <li><a href="index.html?q=/ubuntu_qemu_utm_arm_record/kali_prepare_two_webdav_dirs.sh" id="/ubuntu_qemu_utm_arm_record/kali_prepare_two_webdav_dirs.sh"><code>kali_prepare_two_webdav_dirs.sh</code></a> <em>Create two WebDAV windows using Kali and tmuxp.</em></li>
 <li><a href="index.html?q=/ubuntu_qemu_utm_arm_record/kali_prepare_two_webdav_dirs.yaml" id="/ubuntu_qemu_utm_arm_record/kali_prepare_two_webdav_dirs.yaml"><code>kali_prepare_two_webdav_dirs.yaml</code></a> <em>Set up two WebDAV directories, read and read-write access.</em></li>
-<li><span hierarchy="2" onclick="toggleVisibility(this)" ><strong class="directory" id="/ubuntu_qemu_utm_arm_record/kali_vbox_control/"><code>kali_vbox_control</code></strong> <em>Automated VM management and control.</em></span><ul>
+<li><span hierarchy="2" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/ubuntu_qemu_utm_arm_record/kali_vbox_control/"><code>kali_vbox_control</code></strong> <em>Automated VM management and control.</em></span><ul>
 <li><a href="index.html?q=/ubuntu_qemu_utm_arm_record/kali_vbox_control/README.md" id="/ubuntu_qemu_utm_arm_record/kali_vbox_control/README.md"><code>README.md</code></a> <em>Automatic login, startup script, screenshots, systemd service creation.</em></li>
 <li><a href="index.html?q=/ubuntu_qemu_utm_arm_record/kali_vbox_control/check_vm.sh" id="/ubuntu_qemu_utm_arm_record/kali_vbox_control/check_vm.sh"><code>check_vm.sh</code></a> <em>Check Ubuntu 16.04 VirtualBox VM status</em></li>
 <li><a href="index.html?q=/ubuntu_qemu_utm_arm_record/kali_vbox_control/control_vm.sh" id="/ubuntu_qemu_utm_arm_record/kali_vbox_control/control_vm.sh"><code>control_vm.sh</code></a> <em>Vbox: Stop audio, enable VRDE for Ubuntu 16.04 VM.</em></li>
@@ -405,7 +426,7 @@ Classifier-Free and EfficientNet</em></li>
 <li><a href="index.html?q=/ubuntu_qemu_utm_arm_record/record_audio_pulseaudio.sh" id="/ubuntu_qemu_utm_arm_record/record_audio_pulseaudio.sh"><code>record_audio_pulseaudio.sh</code></a> <em>Script records and saves pulseaudio audio streams as Opus files.</em></li>
 <li><a href="index.html?q=/ubuntu_qemu_utm_arm_record/requirements.txt" id="/ubuntu_qemu_utm_arm_record/requirements.txt"><code>requirements.txt</code></a> <em>Required Python packages for project: redis, jsonlines, pynput.</em></li>
 <li><a href="index.html?q=/ubuntu_qemu_utm_arm_record/start_main_loop.sh" id="/ubuntu_qemu_utm_arm_record/start_main_loop.sh"><code>start_main_loop.sh</code></a> <em>Starts Redis, kills Python processes, runs main_loop.sh (no log)</em></li>
-<li><span hierarchy="2" onclick="toggleVisibility(this)" ><strong class="directory" id="/ubuntu_qemu_utm_arm_record/test_record/"><code>test_record</code></strong></span><ul>
+<li><span hierarchy="2" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/ubuntu_qemu_utm_arm_record/test_record/"><code>test_record</code></strong></span><ul>
 <li><a href="index.html?q=/ubuntu_qemu_utm_arm_record/test_record/video_record_script.sh" id="/ubuntu_qemu_utm_arm_record/test_record/video_record_script.sh"><code>video_record_script.sh</code></a> <em>Record 1920x1080 video with ffmpeg and python.</em></li>
 </ul>
 </li>
@@ -417,14 +438,14 @@ Classifier-Free and EfficientNet</em></li>
 <li><a href="index.html?q=/ubuntu_qemu_utm_arm_record/webdav_macos_start.sh" id="/ubuntu_qemu_utm_arm_record/webdav_macos_start.sh"><code>webdav_macos_start.sh</code></a> <em>Start WebDAV script on MacOS.</em></li>
 </ul>
 </li>
-<li><span hierarchy="1" onclick="toggleVisibility(this)" ><strong class="directory" id="/usb_power_management/"><code>usb_power_management</code></strong> <em>Optimize USB power management across Linux and Windows</em></span><ul>
+<li><span hierarchy="1" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/usb_power_management/"><code>usb_power_management</code></strong> <em>Optimize USB power management across Linux and Windows</em></span><ul>
 <li><a href="index.html?q=/usb_power_management/README.md" id="/usb_power_management/README.md"><code>README.md</code></a> <em>Optimize USB power management for longevity.</em></li>
-<li><span hierarchy="2" onclick="toggleVisibility(this)" ><strong class="directory" id="/usb_power_management/linux/"><code>linux</code></strong> <em>Linux USB power management, solutions and scripts.</em></span><ul>
+<li><span hierarchy="2" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/usb_power_management/linux/"><code>linux</code></strong> <em>Linux USB power management, solutions and scripts.</em></span><ul>
 <li><a href="index.html?q=/usb_power_management/linux/README.md" id="/usb_power_management/linux/README.md"><code>README.md</code></a> <em>Linux USB power management, solutions, and instructions</em></li>
 <li><a href="index.html?q=/usb_power_management/linux/devcontrol.sh" id="/usb_power_management/linux/devcontrol.sh"><code>devcontrol.sh</code></a> <em>Activates USB power management, disables LPM.</em></li>
 </ul>
 </li>
-<li><span hierarchy="2" onclick="toggleVisibility(this)" ><strong class="directory" id="/usb_power_management/windows/"><code>windows</code></strong></span><ul>
+<li><span hierarchy="2" class="expanded" onclick="toggleVisibility(this)" ><strong class="directory" id="/usb_power_management/windows/"><code>windows</code></strong></span><ul>
 <li><a href="index.html?q=/usb_power_management/windows/README.md" id="/usb_power_management/windows/README.md"><code>README.md</code></a> <em>USB device power management for Windows.</em></li>
 </ul>
 </li>
@@ -453,9 +474,9 @@ Classifier-Free and EfficientNet</em></li>
         if (!show_full) {
             const spans = document.querySelectorAll('span');
             for (let span of spans) {
-                if (span.getAttribute("hierarchy") == '1') {
-                    toggleVisibility(span);
-                }
+                if (span.getAttribute("hierarchy") == '0') { continue }
+
+                toggleVisibility(span);
             }
         }
     </script>

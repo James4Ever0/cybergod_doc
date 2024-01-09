@@ -257,7 +257,7 @@
         "50": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/README.md",
             "entry_id": 422,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "51": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py",
@@ -402,7 +402,7 @@
         "79": {
             "filepath": "/binary_program_synthesis_cpu_assembly_execution/README.md",
             "entry_id": 638,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "80": {
             "filepath": "/binary_program_synthesis_cpu_assembly_execution/bnn_data_ingest.py",
@@ -462,7 +462,7 @@
         "91": {
             "filepath": "/containerized_chatgpt_agent/README.md",
             "entry_id": 700,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "92": {
             "filepath": "/containerized_chatgpt_agent/ai_captialism.py",
@@ -652,7 +652,7 @@
         "129": {
             "filepath": "/hardware_capture_hid_power_control/README.md",
             "entry_id": 936,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "130": {
             "filepath": "/hardware_capture_hid_power_control/common_keycodes.py",
@@ -692,7 +692,7 @@
         "137": {
             "filepath": "/lego_mindstorm_physical_mouse_keyboard_control/README.md",
             "entry_id": 1038,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "138": {
             "filepath": "/lego_mindstorm_physical_mouse_keyboard_control/test.py",
@@ -712,7 +712,7 @@
         "141": {
             "filepath": "/metalearning_random_shuffle/README.md",
             "entry_id": 1054,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "142": {
             "filepath": "/metalearning_random_shuffle/main.py",
@@ -1037,7 +1037,7 @@
         "206": {
             "filepath": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/README.md",
             "entry_id": 1582,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "207": {
             "filepath": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/webpack.config.js",
@@ -1197,7 +1197,7 @@
         "238": {
             "filepath": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/README.md",
             "entry_id": 1786,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "239": {
             "filepath": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/check_vm.sh",
@@ -1327,7 +1327,7 @@
         "264": {
             "filepath": "/usb_power_management/linux/README.md",
             "entry_id": 1898,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "265": {
             "filepath": "/usb_power_management/linux/devcontrol.sh",
