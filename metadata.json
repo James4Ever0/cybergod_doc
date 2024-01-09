@@ -17,7 +17,7 @@
         "2": {
             "filepath": "/README.md",
             "entry_id": 10,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "3": {
             "filepath": "/array_check_ast_parsing.py",
@@ -402,7 +402,7 @@
         "79": {
             "filepath": "/binary_program_synthesis_cpu_assembly_execution/README.md",
             "entry_id": 638,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "80": {
             "filepath": "/binary_program_synthesis_cpu_assembly_execution/bnn_data_ingest.py",
@@ -462,7 +462,7 @@
         "91": {
             "filepath": "/containerized_chatgpt_agent/README.md",
             "entry_id": 700,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "92": {
             "filepath": "/containerized_chatgpt_agent/ai_captialism.py",
@@ -777,7 +777,7 @@
         "154": {
             "filepath": "/qstar_my_guess/README.md",
             "entry_id": 1114,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "155": {
             "filepath": "/qstar_my_guess/astar_test.py",
@@ -817,7 +817,7 @@
         "162": {
             "filepath": "/rt_x_experiments/README.md",
             "entry_id": 1210,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "163": {
             "filepath": "/rt_x_experiments/requirements.txt",
@@ -1052,7 +1052,7 @@
         "209": {
             "filepath": "/ubuntu_qemu_utm_arm_record/README.md",
             "entry_id": 1610,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "210": {
             "filepath": "/ubuntu_qemu_utm_arm_record/audio_record.py",
@@ -1322,12 +1322,12 @@
         "263": {
             "filepath": "/usb_power_management/README.md",
             "entry_id": 1894,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "264": {
             "filepath": "/usb_power_management/linux/README.md",
             "entry_id": 1898,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "265": {
             "filepath": "/usb_power_management/linux/devcontrol.sh",
