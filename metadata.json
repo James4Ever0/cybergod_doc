@@ -462,7 +462,7 @@
         "91": {
             "filepath": "/containerized_chatgpt_agent/README.md",
             "entry_id": 700,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "92": {
             "filepath": "/containerized_chatgpt_agent/ai_captialism.py",
@@ -652,7 +652,7 @@
         "129": {
             "filepath": "/hardware_capture_hid_power_control/README.md",
             "entry_id": 936,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "130": {
             "filepath": "/hardware_capture_hid_power_control/common_keycodes.py",
@@ -692,7 +692,7 @@
         "137": {
             "filepath": "/lego_mindstorm_physical_mouse_keyboard_control/README.md",
             "entry_id": 1038,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "138": {
             "filepath": "/lego_mindstorm_physical_mouse_keyboard_control/test.py",
@@ -712,7 +712,7 @@
         "141": {
             "filepath": "/metalearning_random_shuffle/README.md",
             "entry_id": 1054,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "142": {
             "filepath": "/metalearning_random_shuffle/main.py",
@@ -727,7 +727,7 @@
         "144": {
             "filepath": "/propaganda/cybergod_propaganda/README.md",
             "entry_id": 1066,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "145": {
             "filepath": "/propaganda/video_script/README.md",
@@ -967,7 +967,7 @@
         "192": {
             "filepath": "/the_cage_dataset/README.md",
             "entry_id": 1458,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "193": {
             "filepath": "/the_frozen_forest_intro/README.md",
@@ -1037,7 +1037,7 @@
         "206": {
             "filepath": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/README.md",
             "entry_id": 1582,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "207": {
             "filepath": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/webpack.config.js",
@@ -1052,7 +1052,7 @@
         "209": {
             "filepath": "/ubuntu_qemu_utm_arm_record/README.md",
             "entry_id": 1610,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "210": {
             "filepath": "/ubuntu_qemu_utm_arm_record/audio_record.py",
@@ -1327,7 +1327,7 @@
         "264": {
             "filepath": "/usb_power_management/linux/README.md",
             "entry_id": 1898,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "265": {
             "filepath": "/usb_power_management/linux/devcontrol.sh",
