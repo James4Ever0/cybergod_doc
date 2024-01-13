@@ -1,544 +1,540 @@
 {
     "1300": {
-        "file_id": 178,
-        "content": "import torch\nfrom rtx.rtx1 import RTX1\nmodel = RTX1()\nvideo = torch.randn(2, 3, 6, 224, 224)\ninstructions = [\"bring me that apple sitting on the table\", \"please pass the butter\"]\n# compute the train logits\ntrain_logits = model.train(video, instructions)\nprint('train logits:', train_logits.shape)\n# set the model to evaluation mode\nmodel.model.eval()\n# compute the eval logits with a conditional scale of 3\neval_logits = model.run(video, instructions, cond_scale=3.0)\nprint('eval_logits:', eval_logits.shape)",
-        "type": "code",
-        "location": "/rt_x_experiments/rt_x_test_code/rtx1_example.py:1-19"
-    },
-    "1301": {
-        "file_id": 178,
-        "content": "Creates an RTX1 model, generates random video data and instructions, computes train logits, sets the model to evaluation mode, and computes eval logits with a conditional scale of 3.0.",
-        "type": "comment"
-    },
-    "1302": {
-        "file_id": 179,
-        "content": "/rt_x_experiments/rt_x_test_code/rtx2_example.py",
-        "type": "filepath"
-    },
-    "1303": {
-        "file_id": 179,
-        "content": "The code introduces a function for enhancing model training efficiency, addressing robot action interpretation and DirectML incompatibility on RTX2, while also measuring GPU memory usage.",
-        "type": "summary"
-    },
-    "1304": {
-        "file_id": 179,
-        "content": "import torch\nimport typing\nimport functools\n# import zeta.nn.attention\n# no you must change the code.\ntry:\n    from torch.distributed.algorithms._checkpoint.checkpoint_wrapper import (\n        apply_activation_checkpointing,\n    )\nexcept:\n    # let's patch the error.\n    import torch.distributed.algorithms._checkpoint.checkpoint_wrapper\n    def lambda_auto_wrap_policy(\n        module: torch.nn.Module,\n        recurse: bool,\n        unwrapped_params: int,\n        lambda_fn: typing.Callable,\n    ) -> bool:\n        \"\"\"\n        A convenient auto wrap policy to wrap submodules based on an arbitrary user\n        function. If `lambda_fn(submodule) == True``, the submodule will be wrapped as\n        a `wrapper_cls` unit.\n        Return if a module should be wrapped during auto wrapping.\n        The first three parameters are required by :func:`_recursive_wrap`.\n        Args:\n        module (nn.Module):\n            The module to be considered in this decision.\n        recurse (bool):\n            Indicate if this is called",
-        "type": "code",
-        "location": "/rt_x_experiments/rt_x_test_code/rtx2_example.py:1-35"
-    },
-    "1305": {
-        "file_id": 179,
-        "content": "This code is importing necessary modules, attempting to handle errors, and defining a lambda_auto_wrap_policy function. It appears to be related to module wrapping based on an arbitrary user function in the context of torch distributed algorithms.",
-        "type": "comment"
-    },
-    "1306": {
-        "file_id": 179,
-        "content": " to make a decision on whether we\n            should recurse down a subgraph of the module structure.\n            If False, it means this function is called to make a decision\n            on whether we should wrap the said module.\n        unwrapped_params (int):\n            The number of parameters yet to be wrapped in this module.\n        lambda_fn (Callable[nn.Module] -> bool):\n            If this returns ``True``, this module will be wrapped by\n            wrapper_cls individually.\n        \"\"\"\n        if recurse:\n            # always recurse\n            return True\n        else:\n            # if not recursing, decide whether we should wrap for the leaf node or reminder\n            return lambda_fn(module)\n    def apply_activation_checkpointing_wrapper(\n        model,\n        checkpoint_wrapper_fn=torch.distributed.algorithms._checkpoint.checkpoint_wrapper.checkpoint_wrapper,\n        check_fn=lambda _: True,\n    ):\n        \"\"\"\n        Applies :func:`checkpoint_wrapper` to modules within `model` based on a",
-        "type": "code",
-        "location": "/rt_x_experiments/rt_x_test_code/rtx2_example.py:35-59"
-    },
-    "1307": {
-        "file_id": 179,
-        "content": "Function makes a decision to recurse down the module structure (lines 34-58)\n\nUnwrapped parameters determine if there are any left to wrap in this module.\n\nLambda function is used to decide whether to wrap a module individually or not.\n\nIf recursion is enabled, always recurse (line 40).\n\nElse, check lambda function for each module (line 43-45).",
-        "type": "comment"
-    },
-    "1308": {
-        "file_id": 179,
-        "content": " user-defined\n        configuration. For each module within `model`, the `check_fn` is used to decide\n        whether `module` should be wrapped with :func:`checkpoint_wrapper` or not.\n        Note::\n            This function modifies `model` in place and replaces appropriate layers with\n            their checkpoint-wrapped modules.\n        Note::\n            This function will not wrap the overall root module. If this is needed, please directly use\n            :class:`CheckpointWrapper`.\n        Usage::\n            model = nn.Sequential(\n                nn.Linear(10, 10), nn.Linear(10, 10), nn.Linear(10, 10)\n            )\n            check_fn = lambda l: isinstance(l, nn.Linear)\n            apply_activation_checkpointing(model, checkpoint_wrapper_fn=checkpoint_wrapper, check_fn=check_fn)\n        Args:\n            module (nn.Module):\n                The model who's submodules (or self) should be wrapped with activation checkpointing.\n            checkpoint_wrapper_fn (Optional[Callable[nn.Module]])\n     ",
-        "type": "code",
-        "location": "/rt_x_experiments/rt_x_test_code/rtx2_example.py:59-79"
-    },
-    "1309": {
-        "file_id": 179,
-        "content": "This function applies activation checkpointing to a given model by wrapping appropriate layers with the specified wrapper function. It does not wrap the overall root module and requires the user to define a check function to determine which modules to wrap.",
-        "type": "comment"
-    },
-    "1310": {
-        "file_id": 179,
-        "content": "           A `Callable` which will wrap modules\n            check_fn (Optional[Callable[nn.Module, nn.Module]])\n                A lambda function which will be passed current layer and returns\n                ``True`` or ``False`` depending on whether input layer should be wrapped.\n        Returns: None (`model` is modified inplace)\n        \"\"\"\n        # TODO: Importing inside function to avoid circular import issue between FSDP and\n        # checkpoint_wrapper. This can be resolved once wrap() APIs are decoupled from FSDP code.\n        from torch.distributed.fsdp.wrap import _recursive_wrap\n        return _recursive_wrap(\n            module=model,\n            auto_wrap_policy=functools.partial(\n                lambda_auto_wrap_policy, lambda_fn=check_fn\n            ),\n            wrapper_cls=checkpoint_wrapper_fn,\n            ignored_modules=set(),\n            ignored_params=set(),\n            only_wrap_children=True,\n        )\n    setattr(\n        torch.distributed.algorithms._checkpoint.checkpoint_wrap",
-        "type": "code",
-        "location": "/rt_x_experiments/rt_x_test_code/rtx2_example.py:79-101"
-    },
-    "1311": {
-        "file_id": 179,
-        "content": "The code defines a function that wraps modules in a model based on a given check function. The wrapped modules can be used for checkpointing during training to improve efficiency. It uses the _recursive_wrap function from fsdp.wrap module, and sets various parameters like auto_wrap_policy, wrapper_cls, etc. for the wrapping process.",
-        "type": "comment"
-    },
-    "1312": {
-        "file_id": 179,
-        "content": "per,\n        \"apply_activation_checkpointing\",\n        apply_activation_checkpointing_wrapper,\n    )\nfrom rtx import RTX2\nmajor_torch_version = int(torch.__version__.split(\".\")[0])\nflash_attention = False\nif major_torch_version >= 2:  # use flash attention\n    print(\"Using flash attention\")\n    flash_attention = True\n# when posting ad via email. be sure there is an unsubscribe button to avoid legal issues.\ndev = None\ndevice_name = \"CPU\"\nif torch.cuda.is_available():\n    print(\"Trying to use first CUDA device.\")\n    # dev = torch.cuda.device(0)  # not working on torch 1.11\n    dev = \"cuda\"\n    device_name = \"CUDA\"\nelse:\n    print(\"`torch.cuda` is not available.\")\n    try:\n        print(\"Trying DirectML.\")\n        import torch_directml\n        dev = torch_directml.device()\n        device_name = \"DirectML\"\n    except:\n        print(\"Could not find DirectML device.\")\nprint(f\"Using {device_name}.\")\ndef forward_new(self, img: torch.Tensor, text: torch.Tensor):\n    \"\"\"Forward pass of the model.\"\"\"\n    try:\n        _encoded",
-        "type": "code",
-        "location": "/rt_x_experiments/rt_x_test_code/rtx2_example.py:101-137"
-    },
-    "1313": {
-        "file_id": 179,
-        "content": "The code is detecting the available device for execution and setting up the corresponding device name (CPU, CUDA or DirectML). It also initializes a function called \"forward_new\" that performs the forward pass of the model.",
-        "type": "comment"
-    },
-    "1314": {
-        "file_id": 179,
-        "content": " = self.encoder(img, return_embeddings=True)\n        print(\"encoded context shape: {}\".format(_encoded.shape))\n        # torch.Size([2, 64, 512])\n        # b, wtf, 2*dim\n        encoded = _encoded\n        # the shape is fixed. damn.\n        # now we either need addition or some thin nn\n        # encoded = torch.zeros((2,128,512)).to(dev)\n        # encoded = torch.zeros((2,64,1024)).to(dev)\n        # can we use arbitrary input? can we?\n        return self.decoder(text, context=encoded)\n    except Exception as error:\n        print(f\"Failed in forward method: {error}\")\n        raise\nRTX2.forward = forward_new\n# uninstalling and reinstalling 'timm' 'zetascale' and 'beartype' helps.\n# is it data corruption?\n# windows is not supported\n# 'NoneType' object has no attribute 'cadam32bit_grad_fp32'\nbatch_size = 1\n# batch_size = 2\ninput_length = 1024  # output_length = input_length - 1\n# usage\n# it is trying to expand the observation space to infinity, till the model says it is end.\nimg = torch.randn(\n    batch_size, 3, 2",
-        "type": "code",
-        "location": "/rt_x_experiments/rt_x_test_code/rtx2_example.py:137-167"
-    },
-    "1315": {
-        "file_id": 179,
-        "content": "Code is defining a forward method for an RTX2 class. It encodes images with an encoder, prints the shape of the encoded context, and then tries to decode text using the encoded context as input to the decoder. If any exception occurs, it prints the error message and raises the error. The batch size and input length are defined for testing purposes.",
-        "type": "comment"
-    },
-    "1316": {
-        "file_id": 179,
-        "content": "56, 256\n)  # the size of the image is not the same as vit.\ntext = torch.randint(\n    0, 20000, (batch_size, input_length)\n)  # one of 20000 logits, 1024 as count\n# want classification? you can either use more tokens or use special classifiers.\n# for me, just use more tokens. we will train this model in multiple \"continuous\" scenarios anyway.\n# also benefit from llms\n# adjust the resolution according to the environment\n# what is similar transformer in audio files like the ViT?\n# how do we put audio in?\n# approach 1: audio -> mel graph -> ViT -> embedding (ref: https://github.com/YuanGongND/ast)\n# approach 2: native audio transformers (ref: https://github.com/lucidrains/audiolm-pytorch)\n# how to merge?\n# approach 1: linear addition\n# approach 2: concatenation\n# approach 3: concatenation with thin linear nns\n# visual: add global & local area for the robot to inspect\n# hierarchical cascade structure? like small -> medium -> large\n# THE MOST IMPORTANT THING IS TO FIGURE OUT HOW TO CONNECT THE LM WITH VIT\nmodel",
-        "type": "code",
-        "location": "/rt_x_experiments/rt_x_test_code/rtx2_example.py:167-194"
-    },
-    "1317": {
-        "file_id": 179,
-        "content": "The code is creating a random image dataset for training a transformer model. It uses torch.randint() to generate logits, adjusting the resolution based on the environment and considering different approaches to handle audio input with ViTs. The most important task is finding a way to connect the language model (LM) with the ViT.",
-        "type": "comment"
-    },
-    "1318": {
-        "file_id": 179,
-        "content": " = RTX2(attn_flash=flash_attention)\n# let's use the gpu.\n# breakpoint()\nif dev is not None:\n    model.to(dev)\n    output1, output2 = model(img.to(dev), text.to(dev))\nelse:\n    output1, output2 = model(img, text)\n# output1: torch.Size([1, 1023, 20000]) (logits)\n# output2 is a single number (loss? how come?)\n# this is the same as text input. is it?\n# or just trying to reduce the loss against input text?\nprint(\"output logits:\", output1.shape, output2.shape)  # with gradient!\nprint(\"device:\", output1.device)\n# breakpoint()\n# output logits: torch.Size([2, 1023, 20000]) torch.Size([])\n# device: privateuseone:0\n# possible implementations:\n# i decide to go with the latter.\n# 1. interpret the robot action sequentially in a loop, if separated by any other token the interpretation ends, and it will start over from the beginning\n# 2. use indicator/classifier to determine what type of action the robot is taking for every token (token classification)\n# not working for DirectML\n# memory_usage = torch.cuda.memory_allocated",
-        "type": "code",
-        "location": "/rt_x_experiments/rt_x_test_code/rtx2_example.py:194-221"
-    },
-    "1319": {
-        "file_id": 179,
-        "content": "The code is initializing a RTX2 model and moving it to the GPU if one is specified. The model takes in an image and text input, and returns logits (output1) for the image and a single loss value (output2) as well as printing the shapes of these outputs along with the device they are on. The code then explains possible implementations for interpreting the robot action sequentially or using token classification. It also mentions that this implementation does not work for DirectML and measures GPU memory usage.",
-        "type": "comment"
-    },
-    "1320": {
-        "file_id": 179,
-        "content": "(device=dev) / 1024**3  # in GB\n# print(\"Memory Usage:\", memory_usage, \"GB\")\n############ CPU Usage ############\nimport psutil\nprocess = psutil.Process()\nmemory_usage = process.memory_info().rss / 1024**3  # in GB\nprint(\"Memory Usage:\", memory_usage, \"GB\")\n# ref: https://github.com/microsoft/DirectML/issues/444",
-        "type": "code",
-        "location": "/rt_x_experiments/rt_x_test_code/rtx2_example.py:221-233"
-    },
-    "1321": {
-        "file_id": 179,
-        "content": "Computes and prints the system's memory usage in GB.",
-        "type": "comment"
-    },
-    "1322": {
-        "file_id": 180,
-        "content": "/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py",
-        "type": "filepath"
-    },
-    "1323": {
-        "file_id": 180,
-        "content": "The code introduces a hierarchical Transformer language model called \"Hourglass,\" utilizing relative attention, resampling, research-based layers, and customizable decoder blocks for various NLP tasks and autoregressive language modeling. The Transformer decoder network function allows for layer and architecture customization, creating an hourglass-shaped language model for efficient processing.",
-        "type": "summary"
-    },
-    "1324": {
-        "file_id": 180,
-        "content": "# coding=utf-8\n# Copyright 2023 The Trax Authors.\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this file except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#     http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n\"\"\"Hourglass - a hierarchical Transformer language model.\"\"\"\nimport trax.layers as tl\nfrom trax.layers.research.rel_attention import get_rel_att_inputs\nfrom trax.layers.research.rel_attention import RelativeAttentionWrapper\nfrom trax.layers.research.resampling import AttentionResampling\nfrom trax.layers.research.resampling import AveragePooling\nfrom trax.layers.research.resampling import FeedForwardBlock\nfrom trax.layers.",
-        "type": "code",
-        "location": "/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py:1-24"
-    },
-    "1325": {
-        "file_id": 180,
-        "content": "This code is for a hierarchical Transformer language model called \"Hourglass\" which utilizes relative attention, resampling, and research-based layers.",
-        "type": "comment"
-    },
-    "1326": {
-        "file_id": 180,
-        "content": "research.resampling import LinearUpsampling\nfrom trax.models.research.configurable_transformer import ApplyAttentionLayer\ndef _RelativeDecoderBlock(attention_type, d_model, d_ff, n_heads, dropout,\n                          dropout_shared_axes, mode, ff_activation,\n                          context_bias_layer, location_bias_layer,\n                          total_pooling):\n  \"\"\"Returns a list of layers.\n    The layers implement a Transformer decoder block with relative attention\n  parametrization.\n  The input to the block is a pair, (activations, mask), where the mask was\n  created from the original source tokens to prevent attending to the padding\n  part of the input.\n  Args:\n    attention_type: attention type.\n    d_model: Final dimension of tensors at most points in the model, including\n      the initial embedding output.\n    d_ff: Size of special dense layer in the feed-forward part of each block.\n    n_heads: Number of attention heads.\n    dropout: Stochastic rate (probability) for dropping an activa",
-        "type": "code",
-        "location": "/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py:24-47"
-    },
-    "1327": {
-        "file_id": 180,
-        "content": "This code defines a function that creates a Transformer decoder block with relative attention parameterization. The block takes in parameters such as attention type, d_model (final dimension of tensors), d_ff (size of dense layer in feed-forward part), n_heads (number of attention heads), dropout rate, etc.",
-        "type": "comment"
-    },
-    "1328": {
-        "file_id": 180,
-        "content": "tion value when\n      applying dropout within a block.\n    dropout_shared_axes: Tensor axes on which to share a dropout mask. Sharing\n      along batch and sequence axes (`dropout_shared_axes=(0,1)`) is a useful\n      way to save memory and apply consistent masks to activation vectors at\n      different sequence positions.\n    mode: If `'train'`, each block will include dropout; else, it will pass all\n      values through unaltered.\n    ff_activation: Type of activation function at the end of each block; must be\n      an activation-type subclass of `Layer`.\n    context_bias_layer: context bias layer.\n    location_bias_layer: location bias layer.\n    total_pooling: The combined pool size of previously used funnel blocks.\n  Returns:\n    A list of layers that maps (activations, att_vecs, mask) to\n                               (activations, att_vecs, mask).\n  \"\"\"\n  if attention_type == RelativeAttentionWrapper:\n    attention = RelativeAttentionWrapper(\n        d_model,\n        n_heads,\n        dropout,\n       ",
-        "type": "code",
-        "location": "/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py:47-70"
-    },
-    "1329": {
-        "file_id": 180,
-        "content": "Applies dropout to block activations based on shared axes and mode, returns a list of layers for attention calculation.",
-        "type": "comment"
-    },
-    "1330": {
-        "file_id": 180,
-        "content": " mode=mode,\n        context_bias_layer=context_bias_layer,\n        location_bias_layer=location_bias_layer,\n        total_pooling=total_pooling)\n  else:\n    attention = ApplyAttentionLayer(\n        attention_type,\n        d_model,\n        n_heads,\n        d_model // n_heads,\n        d_model // n_heads,\n        causal=True,\n        masked=False,\n        attention_dropout=dropout,\n        output_dropout=dropout,\n        attention_chunk_size=0,  # Disables tl.Chunk in ApplyAttentionLayer.\n        mode=mode,\n    )\n  feed_forward = FeedForwardBlock(d_model, d_ff, dropout, dropout_shared_axes,\n                                  mode, ff_activation)\n  def _Dropout():\n    return tl.Dropout(rate=dropout, shared_axes=dropout_shared_axes, mode=mode)\n  return [\n      tl.Residual(  # vecs\n          tl.LayerNorm(),\n          attention,\n          _Dropout(),\n      ),  # vecs\n      tl.Residual(\n          tl.LayerNorm(),\n          feed_forward,\n          _Dropout(),\n      ),  # vecs\n  ]\ndef _parse_hierarchy(hierarchy_str):  # pylint: di",
-        "type": "code",
-        "location": "/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py:70-109"
-    },
-    "1331": {
-        "file_id": 180,
-        "content": "This code defines a function for creating a hierarchical language model with attention and feed-forward layers, along with layer normalization and dropout regularization. It can be used for various natural language processing tasks.",
-        "type": "comment"
-    },
-    "1332": {
-        "file_id": 180,
-        "content": "sable = invalid-name\n  \"\"\"Parse hierarchy for Hourglass definition.\"\"\"\n  levels = hierarchy_str.split(' ')\n  if levels != levels[::-1]:\n    raise ValueError('Hierarchy is not a palindrome')\n  layer_level_pairs = [(x.split('@')) for x in levels[:1 + (len(levels) // 2)]]\n  hierarchy_n_layers = [int(x[0]) for x in layer_level_pairs]\n  total_sf_per_level = [int(x[1]) for x in layer_level_pairs]\n  hierarchy_shorten_factors = []\n  for current_sf, prev_sf in zip(total_sf_per_level,\n                                 [1] + total_sf_per_level[:-1]):\n    if current_sf % prev_sf != 0:\n      raise ValueError(\n          f'Hierarchy not divisible by previous level: {current_sf}, {prev_sf}')\n    hierarchy_shorten_factors.append(current_sf // prev_sf)\n  return hierarchy_n_layers, hierarchy_shorten_factors\ndef HourglassLM(vocab_size,\n                d_model=512,\n                d_ff=2048,\n                vanilla_layers=(1, 1),\n                hierarchy='6@3',\n                n_heads=8,\n                dropout=0.1,\n            ",
-        "type": "code",
-        "location": "/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py:109-136"
-    },
-    "1333": {
-        "file_id": 180,
-        "content": "This code defines a function HourglassLM that takes in parameters such as vocabulary size, model dimensions, and hierarchy structure. It returns the number of layers and shorten factors for each layer based on the given hierarchy. If the hierarchy is not a palindrome or not divisible by previous levels, it raises a ValueError.",
-        "type": "comment"
-    },
-    "1334": {
-        "file_id": 180,
-        "content": "    dropout_shared_axes=None,\n                mode='train',\n                ff_activation=tl.FastGelu,\n                vanilla_attn_type=RelativeAttentionWrapper,\n                middle_attn_type=RelativeAttentionWrapper,\n                downsampling_fn=AttentionResampling,\n                upsampling_fn=AttentionResampling,\n                attention_downsampling_fn=AveragePooling,\n                attention_upsampling_fn=LinearUpsampling):\n  \"\"\"Returns a hierarchical Transformer language model.\n  This model performs autoregressive language modeling:\n    - input: rank 2 tensor representing a batch of text strings via token IDs\n      plus padding markers; shape is (batch_size, sequence_length). The tensor\n      elements are integers in `range(vocab_size)`, and `0` values mark padding\n      positions.\n    - output: rank 3 tensor representing a batch of log-probability\n      distributions for each sequence position over possible token IDs;\n      shape is (batch_size, sequence_length, `vocab_size`).\n  This mo",
-        "type": "code",
-        "location": "/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py:136-158"
-    },
-    "1335": {
-        "file_id": 180,
-        "content": "This code defines a hierarchical Transformer language model for autoregressive language modeling, taking input as batch of text strings via token IDs and producing output as rank 3 tensor representing log-probability distributions over possible token IDs.",
-        "type": "comment"
-    },
-    "1336": {
-        "file_id": 180,
-        "content": "del uses only the decoder part of the overall Transformer.\n  Args:\n    vocab_size: Input vocabulary size -- each element of the input tensor should\n      be an integer in `range(vocab_size)`. These integers typically represent\n      token IDs from a vocabulary-based tokenizer.\n    d_model: Final dimension of tensors at most points in the model, including\n      the initial embedding output.\n    d_ff: Size of special dense layer in the feed-forward part of each encoder\n      block.\n    vanilla_layers: (pre_layers, post_layers) tuple - number of full token-level\n      Transformer decoder layers before and after shortening.\n    hierarchy: string - shortening hierarchy, as described in the paper.\n      Hierarchy levels must form a palindrome, e.g. '1@2 2@6 1@2'.\n    n_heads: Number of attention heads.\n    dropout: Stochastic rate (probability) for dropping an activation value when\n      applying dropout within an encoder block.\n    dropout_shared_axes: Tensor axes on which to share a dropout mask. Sharing\n ",
-        "type": "code",
-        "location": "/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py:158-176"
-    },
-    "1337": {
-        "file_id": 180,
-        "content": "This code defines a Transformer decoder with optional shortening. The input parameters include vocabulary size, d_model, d_ff, vanilla_layers, hierarchy, n_heads, and dropout.",
-        "type": "comment"
-    },
-    "1338": {
-        "file_id": 180,
-        "content": "     along batch and sequence axes (`dropout_shared_axes=(0,1)`) is a useful\n      way to save memory and apply consistent masks to activation vectors at\n      different sequence positions.\n    mode: str: 'train' or 'eval'.\n    ff_activation: Type of activation function at the end of each encoder block;\n      must be an activation-type subclass of `Layer`.\n    vanilla_attn_type: class: attention class such as SelfAttention to use in\n      the layers before and after shortening (vanilla layers).\n    middle_attn_type: class: attention class to use in the middle layers (these\n      operating on the shortened sequence).\n    downsampling_fn: function that takes full token-level vectors of length `l`\n      and transforms them into `l` / `k` vectors, where `k` denotes\n      `shorten_factor` parameter.\n    upsampling_fn: function that takes shortened representations of a sequence,\n      consisting of `l` / `k` vectors and transforms them into full token-level\n      representations of length `l`.\n    attention",
-        "type": "code",
-        "location": "/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py:176-192"
-    },
-    "1339": {
-        "file_id": 180,
-        "content": "The code defines a function for building an hourglass LM model. It takes arguments for dropout_shared_axes, mode, ff_activation, vanilla_attn_type, middle_attn_type, downsampling_fn, and upsampling_fn to construct the model.",
-        "type": "comment"
-    },
-    "1340": {
-        "file_id": 180,
-        "content": "_downsampling_fn: Downsampling function that transforms token-level\n      vectors into query vectors with reduced length. Necessary only when\n      AttentionResampling is used as `downsampling_fn`.\n    attention_upsampling_fn: Upsampling function for AttentionResampling. Valid\n      only when AttentionResampling is used as a `upsampling_fn`.\n  Returns:\n    A Transformer language model as a layer that maps from a tensor of tokens\n    to activations over a vocab set.\n  \"\"\"\n  assert mode != 'predict'  # For now, 'predict' mode is unsupported.\n  hierarchy_n_layers, hierarchy_shorten_factors = _parse_hierarchy(hierarchy)\n  token_encoder = [\n      tl.Embedding(vocab_size, d_model),\n      tl.Dropout(rate=dropout, shared_axes=dropout_shared_axes, mode=mode)\n  ]\n  context_bias_layer, location_bias_layer = get_rel_att_inputs(d_model, n_heads)\n  n_pre_decoder_blocks, n_post_decoder_blocks = vanilla_layers\n  def create_decoder_blocks(n_layers, total_pooling,  # pylint: disable = invalid-name\n                       ",
-        "type": "code",
-        "location": "/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py:192-215"
-    },
-    "1341": {
-        "file_id": 180,
-        "content": "This code is defining a function that creates a Transformer language model. It includes an embedding layer, dropout layer, relative attention inputs, and decoder blocks. The function also takes into account the hierarchical structure of the model, with shortening factors for each level. However, it does not support 'predict' mode at this time.",
-        "type": "comment"
-    },
-    "1342": {
-        "file_id": 180,
-        "content": "     attention_type):\n    decoder_blocks = [\n        # pylint: disable=g-complex-comprehension\n        _RelativeDecoderBlock(attention_type, d_model, d_ff, n_heads, dropout,\n                              dropout_shared_axes, mode, ff_activation,\n                              context_bias_layer, location_bias_layer,\n                              total_pooling) for _ in range(n_layers)\n    ]\n    return decoder_blocks + [tl.LayerNorm()]\n  def create_hourglass_valley(rest_shorten_factors, rest_n_funnel_blocks,  # pylint: disable = invalid-name\n                              current_total_pooling):\n    assert rest_shorten_factors\n    assert len(rest_shorten_factors) == len(rest_n_funnel_blocks)\n    current_sf = rest_shorten_factors[0]\n    current_n_layers = rest_n_funnel_blocks[0]\n    shortening_layer = downsampling_fn(\n        current_sf,\n        d_model,\n        is_upsampling=False,\n        d_ff=d_ff,\n        n_heads=n_heads,\n        dropout=dropout,\n        dropout_shared_axes=dropout_shared_axes,\n        mode=",
-        "type": "code",
-        "location": "/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py:215-241"
-    },
-    "1343": {
-        "file_id": 180,
-        "content": "The code is creating a decoder block and a function for the hourglass valley. The decoder block consists of multiple layers with different parameters, and the function creates an hourglass valley layer with downsampling based on given factors.",
-        "type": "comment"
-    },
-    "1344": {
-        "file_id": 180,
-        "content": "mode,\n        ff_activation=ff_activation,\n        context_bias_layer=context_bias_layer,\n        location_bias_layer=location_bias_layer,\n        total_pooling=current_total_pooling,\n        resampling_fn=attention_downsampling_fn)\n    upsampling_layer = upsampling_fn(\n        current_sf,\n        d_model=d_model,\n        is_upsampling=True,\n        d_ff=d_ff,\n        n_heads=n_heads,\n        dropout=dropout,\n        dropout_shared_axes=dropout_shared_axes,\n        mode=mode,\n        ff_activation=ff_activation,\n        context_bias_layer=context_bias_layer,\n        location_bias_layer=location_bias_layer,\n        total_pooling=current_total_pooling,\n        resampling_fn=attention_upsampling_fn)\n    if len(rest_shorten_factors) > 1:  # we need to go deeper again\n      pre_stage_blocks = create_decoder_blocks(\n          current_n_layers, current_total_pooling * current_sf,\n          middle_attn_type)\n      post_stage_blocks = create_decoder_blocks(\n          current_n_layers, current_total_pooling * current_sf",
-        "type": "code",
-        "location": "/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py:241-269"
-    },
-    "1345": {
-        "file_id": 180,
-        "content": "Creates downsampling and upsampling layers for decoder blocks with specified parameters.",
-        "type": "comment"
-    },
-    "1346": {
-        "file_id": 180,
+        "file_id": 169,
         "content": ",\n          middle_attn_type)\n      return [\n          tl.Dup(),\n          tl.ShiftRight(current_sf - 1, mode=mode), shortening_layer,\n          pre_stage_blocks, *create_hourglass_valley(\n              rest_shorten_factors[1:], rest_n_funnel_blocks[1:],\n              current_total_pooling * current_sf), post_stage_blocks,\n          upsampling_layer,\n          tl.LayerNorm(),\n          tl.Add()\n      ]\n    else:\n      blocks = create_decoder_blocks(current_n_layers,\n                                     current_total_pooling * current_sf,\n                                     middle_attn_type)\n      return [\n          tl.Dup(),\n          tl.ShiftRight(current_sf - 1), shortening_layer, blocks,\n          upsampling_layer,\n          tl.LayerNorm(),\n          tl.Add()\n      ]\n  pre_decoder_blocks = create_decoder_blocks(n_pre_decoder_blocks, 1,\n                                             vanilla_attn_type)\n  post_decoder_blocks = create_decoder_blocks(n_post_decoder_blocks, 1,\n                                      ",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py:269-299"
     },
-    "1347": {
-        "file_id": 180,
+    "1301": {
+        "file_id": 169,
         "content": "This code defines a function to create a decoder network. It takes in parameters such as the number of layers, shortening factor, attention type, and other variables. Depending on these inputs, it creates different blocks for the decoder. If the \"middle_attn_type\" is not \"hourglass\", it creates a set of decoder blocks with specified parameters. Otherwise, it creates a more complex hourglass-shaped architecture with additional stages and blocks. The result is a list of layers that make up the decoder network.",
         "type": "comment"
     },
-    "1348": {
-        "file_id": 180,
+    "1302": {
+        "file_id": 169,
         "content": "        vanilla_attn_type)\n  valley = create_hourglass_valley(hierarchy_shorten_factors,\n                                   hierarchy_n_layers, 1)\n  # Assemble and return the model.\n  return tl.Serial(  # tokens (or chunked tuple of tokens)\n      tl.ShiftRight(mode=mode),  # toks\n      token_encoder,  # vecs\n      pre_decoder_blocks,  # vecs\n      valley,  # shortened vecs\n      post_decoder_blocks,  # vecs\n      tl.Dense(vocab_size),  # vecs\n  )",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/hourglass_lm.py:299-312"
     },
-    "1349": {
-        "file_id": 180,
+    "1303": {
+        "file_id": 169,
         "content": "Creates a model for hourglass language modeling, assembles it and returns.",
         "type": "comment"
     },
-    "1350": {
-        "file_id": 181,
+    "1304": {
+        "file_id": 170,
         "content": "/rt_x_experiments/special_tokenizer_with_actions/test_action_and_text_tokenizer.py",
         "type": "filepath"
     },
-    "1351": {
-        "file_id": 181,
+    "1305": {
+        "file_id": 170,
         "content": "The code uses \"cl100k_base\" encoding to separate actions from content, defines a function 'l_tokens' for custom special tokens based on direction, value type, and index, and discusses optimization techniques such as allowing AI to emit multiple tokens and considering compression techniques.",
         "type": "summary"
     },
-    "1352": {
-        "file_id": 181,
+    "1306": {
+        "file_id": 170,
         "content": "import tiktoken\n# are you sure you can encode everything? what about bytes?\n# why don't you just encode some bytes to the vocabulary?\n# don't worry we will handle that.\ncl100k_base = tiktoken.get_encoding(\"cl100k_base\")\n# you can separate action from content.\n# we can compare the difference. eventually we will find out which is best and most performant.\n# like: [keyboard_input_start] [char1] [char2] [keyboard_input_end]\n# or: [keyboard_input] [char1] [keyboard_input] [char2]\n# compared to: [keyboard a] [keyboard upper a] [mouse move x 10] [mouse move y 10]\n# well these are some 'action' vocabularies worth learning.\n# how many special tokens can we add?\n# In production, load the arguments directly instead of accessing private attributes\n# See openai_public.py for examples of arguments for specific encodings\n# builtin special tokens: {'<|endoftext|>': 100257, '<|fim_prefix|>': 100258, '<|fim_middle|>': 100259, '<|fim_suffix|>': 100260, '<|endofprompt|>': 100276}\n# max token value: 100276\ndef make_specia",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_action_and_text_tokenizer.py:1-27"
     },
-    "1353": {
-        "file_id": 181,
+    "1307": {
+        "file_id": 170,
         "content": "Code imports the \"cl100k_base\" encoding from the tiktoken library, which allows encoding of text. The code aims to separate actions from content and compare different ways to represent them. It mentions loading arguments for specific encodings and includes built-in special tokens.",
         "type": "comment"
     },
-    "1354": {
-        "file_id": 181,
+    "1308": {
+        "file_id": 170,
         "content": "l_tokens(token_name_list: list[str], start):\n    result = {}\n    for token_name in token_name_list:\n        result[token_name] = start\n        start += 1\n    return result\nbuild_special_token = lambda token_def: f\"<|{token_def}|>\"\ncustom_special_tokens = [build_special_token(\"my_new_token\")]\nfor direction in 'x', 'y':\n    for val_type in 'pos', 'neg':\n        for i in range(1024):\n            tk = build_special_token(f'{direction}_{val_type}_{i}')\n            custom_special_tokens.append(tk)\nenc = tiktoken.Encoding(\n    # If you're changing the set of special tokens, make sure to use a different name\n    # It should be clear from the name what behaviour to expect.\n    name=\"cl100k_im\",\n    pat_str=cl100k_base._pat_str,\n    mergeable_ranks=(mrs := cl100k_base._mergeable_ranks),\n    special_tokens={\n        **make_special_tokens(\n            list(cl100k_base._special_tokens.keys()) + custom_special_tokens,\n            start=max(mrs.values()) + 1,\n        )\n        # **cl100k_base._special_tokens,\n        # \"<|im",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_action_and_text_tokenizer.py:27-56"
     },
-    "1355": {
-        "file_id": 181,
+    "1309": {
+        "file_id": 170,
         "content": "This code defines a function 'l_tokens' that creates a dictionary with special tokens and their positions. It uses a lambda function, 'build_special_token', to create special token strings. The list of custom special tokens is generated from various combinations of direction, value type, and index. The encoding for an 'tiktoken' instance is then defined using this list of custom special tokens along with the existing set of special tokens.",
         "type": "comment"
     },
-    "1356": {
-        "file_id": 181,
+    "1310": {
+        "file_id": 170,
         "content": "_start|>\": 100_264,\n        # \"<|im_end|>\": 100_265,\n        # \"<|my_new_token|>\": 200_000,\n    },\n)\n# 100255 is the max token number in mergeable ranks\n# you can add new tokens.\nprint(f\"{cl100k_base.max_token_value:=}\")\nprint(f\"{cl100k_base.n_vocab:=}\")\n# cl100k_base.special_tokens_set\n# breakpoint()\nencode_bytes_target = bytes([x for x in range(255)])\n# you could use unicode regex to encode bytes\n# tweaking `_encode_single_piece`, `_encode_only_native_bpe` under tiktoken.core.Encoding\ntext_target = f\"hello world{custom_special_tokens[0]}my name is andy{build_special_token('x_pos_1000')}\"\ntokens = enc.encode(\n    text_target, disallowed_special=()\n)  # this will pass but will not be converted into special tokens.\n# can we train the model new tokens by using different encodings? this could introduce duality.\n# you can inform the model about the encoding. so the model might not misbehave.\n# tokens = enc.encode(text_target, allowed_special={custom_special_tokens[0]})\n# tokens = enc.encode(text_target, allowe",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_action_and_text_tokenizer.py:56-83"
     },
-    "1357": {
-        "file_id": 181,
+    "1311": {
+        "file_id": 170,
         "content": "This code is initializing an encoding object and testing the encoding of a text string containing special tokens. The `cl100k_base` represents a predefined vocabulary, which has a maximum token number of 100255. The code is trying to encode a target text that includes custom special tokens (e.g., \"<|my_new_token|>\"), and the encoding object handles converting those tokens into their respective values.",
         "type": "comment"
     },
-    "1358": {
-        "file_id": 181,
+    "1312": {
+        "file_id": 170,
         "content": "d_special={custom_special_tokens[0]}, disallowed_special = ())\ntokens_with_special = enc.encode(\n    text_target, allowed_special=\"all\", disallowed_special=()\n)\nprint(tokens)  # no special token!\nprint(tokens_with_special)\n# what if i allow the ai to emit multiple tokens a time?\n# i will sort the \"simutaneous\" tokens and order by priority\n# what about training? is that purely online? or shall we alter the training method?\n# like: [a,b,c,d,e,f] -> [a,c,e], [b,d,f] -> sample by priority\n# this is compression. this can speed up things. but not necessarily improve quality, unless you trade performance with quality.\n# or you could augment the training data, like input = x[:-3], target = x[3:]\n# either way, could possibly optimize the performance.\n# to use more tokens you need to change the first embedding layer",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_action_and_text_tokenizer.py:83-99"
     },
-    "1359": {
-        "file_id": 181,
+    "1313": {
+        "file_id": 170,
         "content": "The code is discussing the possibility of allowing the AI to emit multiple tokens at a time and how it could potentially impact performance and quality. It suggests considering compression techniques or augmenting training data as potential optimization strategies, but also mentions that changing the first embedding layer would be required to use more tokens.",
         "type": "comment"
     },
-    "1360": {
-        "file_id": 182,
+    "1314": {
+        "file_id": 171,
         "content": "/rt_x_experiments/special_tokenizer_with_actions/test_hierachical_tokenization.py",
         "type": "filepath"
     },
-    "1361": {
-        "file_id": 182,
+    "1315": {
+        "file_id": 171,
         "content": "The code presents a hierarchical tokenization transformer model for text classification using Einops library. It incorporates multiple attention layers and sparse transforms for feature extraction, with a `sparseTransformerForward` function.",
         "type": "summary"
     },
-    "1362": {
-        "file_id": 182,
+    "1316": {
+        "file_id": 171,
         "content": "# bytes -> char -> \"token\" -> sentences -> paragraphs\n# what to do in reverse? must recurse into bytes.\n# how to encode and decode?\nfrom torch import nn\nfrom torch import Tensor\nimport torch\nfrom typing import Literal\n# Convert bytes to binary representation as a list of integers using bitwise shift\ndef bytes_to_binary_int(byte_string):\n    binary_representation = [\n        int((byte_string[i] >> j) & 1)\n        for i in range(len(byte_string))\n        for j in range(7, -1, -1)\n    ]\n    return binary_representation\n# Example usage\nbyte_string = b\"hello world\"\nbinary_representation_int = bytes_to_binary_int(byte_string)\nprint(binary_representation_int)\n# you can pad with zeros when using bitlevel tokenizer\n# but how do you shift? char level or bit level? neither? self-determined?\n# encode:\n# nx2 * 2*d -> n*d\n# (nxn = nxd * dxn) * nxd = nxd\n# nxd -> convolution -> mxd, m = n/2\n# (mxm = mxd * dxm) * mxd = mxd\n# decode:\n# mxd -> deconvolution -> nxd\n# nxd * dx2 -> nx2\n# first, pad the output ahead of time.\n# # so for ",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_hierachical_tokenization.py:1-43"
     },
-    "1363": {
-        "file_id": 182,
+    "1317": {
+        "file_id": 171,
         "content": "Code converts bytes to binary representation as a list of integers using bitwise shift, then discusses encoding and decoding concepts for hierarchical tokenization.",
         "type": "comment"
     },
-    "1364": {
-        "file_id": 182,
+    "1318": {
+        "file_id": 171,
         "content": "every bit in the byte, we have a vector of 768 dimensions\n# # try to reduce the bytes.\n# we've got four level of abstractions.\nfrom pydantic import BaseModel\nclass TransformerArguments(BaseModel, arbitrary_types_allowed=True):\n    key_padding_mask: Tensor | None = None\n    need_weights: bool = True\n    attn_mask: Tensor | None = None\n    average_attn_weights: bool = True\n    is_causal: bool = False\nclass MultiheadSelfAttentionStack(nn.Module):\n    def __init__(self, embed_dim: int, num_heads: int, num_layers: int, **kwargs):\n        super(MultiheadSelfAttentionStack, self).__init__()\n        self.layers = nn.ModuleList(\n            [\n                nn.MultiheadAttention(\n                    embed_dim=embed_dim, num_heads=num_heads, **kwargs\n                )\n                for _ in range(num_layers)\n            ]\n        )\n    def forward(self, input_tensor: Tensor, transformerArguments: TransformerArguments):\n        output = input_tensor\n        for layer in self.layers:\n            output, _ = layer(\n    ",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_hierachical_tokenization.py:43-75"
     },
-    "1365": {
-        "file_id": 182,
+    "1319": {
+        "file_id": 171,
         "content": "This code defines a `MultiheadSelfAttentionStack` class which is a module for self-attention layers. It has multiple layers of `nn.MultiheadAttention`, each with a specific number of heads and embed_dim. The `forward` method iterates over these layers to process the input tensor. The `TransformerArguments` class is used to specify optional arguments like `key_padding_mask`, `attn_mask`, etc.",
         "type": "comment"
     },
-    "1366": {
-        "file_id": 182,
+    "1320": {
+        "file_id": 171,
         "content": "            query=output, key=output, value=output, **transformerArguments.dict()\n            )\n        return output\n# what if i use the inverse causal mask? backtracking mask?\n# import torch\n# a = torch.tril(torch.ones(10, 10))  # Create a lower triangular mask of ones\n# b = torch.tril(a.T)  # Transpose the mask and then take the lower triangular part to ensure backtracking\n# c = torch.tril(torch.flip(a, dims=[1]))  # Flip the mask along the horizontal axis and take the lower triangular part\n# d = torch.tril(torch.flip(a, dims=[0]))  # Flip the mask along the vertical axis and take the lower triangular part\nimport einops\nimport torch.nn.functional as F\n# hourglass replicate? not exactly. this is binary.\n# what about moe? lsm?\nclass HierachicalTokenizationTransformer(nn.Module):\n    def __init__(self, embed_dim=768, num_heads=4, num_layers=1, abstraction_level=4):\n        # of course this is causal.\n        super().__init__()\n        self.TWO = 2\n        self.ONE = 1\n        self.ZERO = 0\n        self.bi",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_hierachical_tokenization.py:75-101"
     },
-    "1367": {
-        "file_id": 182,
+    "1321": {
+        "file_id": 171,
         "content": "Code is defining a `HierachicalTokenizationTransformer` class for text classification tasks using hierarchical tokenization and a transformer model architecture. The code also includes functions to create causal, inverse causal, and backtracking masks for the attention mechanism in the transformer layers.",
         "type": "comment"
     },
-    "1368": {
-        "file_id": 182,
+    "1322": {
+        "file_id": 171,
         "content": "nary_embedding = nn.Embedding(\n            num_embeddings=self.TWO, embedding_dim=embed_dim\n        )\n        self.abstractionLayers = []\n        self.deabstractionLayers = []\n        self.embed_dim = embed_dim\n        self.num_heads = num_heads\n        self.num_layers = num_layers\n        self.abstraction_level = abstraction_level\n        assert abstraction_level > 0, \"abstraction level must be greater than zero\"\n        self.mainTransformer = MultiheadSelfAttentionStack(\n            embed_dim=embed_dim, num_heads=num_heads, num_layers=num_layers\n        )\n        for _ in range(abstraction_level - 1):\n            # for _ in range(abstraction_level):\n            # Create the attention and abstraction layers\n            att_layer = MultiheadSelfAttentionStack(\n                embed_dim=embed_dim, num_heads=num_heads, num_layers=num_layers\n            )\n            abstract_layer = nn.Linear(self.TWO, self.ONE)\n            self.abstractionLayers.append(\n                att_layer\n            )  # Add the atte",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_hierachical_tokenization.py:101-127"
     },
-    "1369": {
-        "file_id": 182,
+    "1323": {
+        "file_id": 171,
         "content": "This code initializes an abstraction-level transformer model with multiple attention and abstraction layers. The `nary_embedding` is an embedding layer, and the `abstractionLayers` and `deabstractionLayers` will contain these layers for different abstraction levels. The code also asserts that the abstraction level must be greater than zero.",
         "type": "comment"
     },
-    "1370": {
-        "file_id": 182,
+    "1324": {
+        "file_id": 171,
         "content": "ntion layer to the list\n            self.abstractionLayers.append(\n                abstract_layer\n            )  # Add the abstraction layer to the list\n            # Create the inverse attention and deabstraction layers\n            datt_layer = MultiheadSelfAttentionStack(\n                embed_dim=embed_dim, num_heads=num_heads, num_layers=num_layers\n            )\n            deabstract_layer = nn.Linear(self.ONE, self.TWO)\n            self.deabstractionLayers.append(\n                datt_layer\n            )  # Add the inverse attention layer to the list\n            self.deabstractionLayers.append(\n                deabstract_layer\n            )  # Add the deabstraction layer to the list\n        self.decode_embedding = nn.Linear(self.embed_dim, self.TWO)\n        self.pad_size = self.TWO**abstraction_level\n    def _sparseTransformerForwardImpl(\n        self,\n        embedding: Tensor,\n        transformer: MultiheadSelfAttentionStack,\n        transformerArguments: TransformerArguments,\n    ):\n        embeddin",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_hierachical_tokenization.py:127-153"
     },
-    "1371": {
-        "file_id": 182,
+    "1325": {
+        "file_id": 171,
         "content": "Appending abstraction and deabstraction layers to the list.\nCreating inverse attention and deabstraction layers, adding them to the list.\nDefining decode embedding layer and setting pad size.\nImplementing sparseTransformerForward function with parameters.",
         "type": "comment"
     },
-    "1372": {
-        "file_id": 182,
+    "1326": {
+        "file_id": 171,
         "content": "g = einops.rearrange(embedding, \"b (s1 g) d -> (b g) s1 d\", g=self.TWO)\n        embedding = transformer(embedding, transformerArguments=transformerArguments)\n        embedding = einops.rearrange(embedding, \"(b g) s1 d -> b (s1 g) d\", g=self.TWO)\n        return embedding\n    def sparseTransformerForward(\n        self,\n        embedding: Tensor,\n        transformer: MultiheadSelfAttentionStack,\n        transformerArguments: TransformerArguments,\n        use_sliding=True,\n    ):\n        _embedding = self._sparseTransformerForwardImpl(\n            embedding, transformer, transformerArguments\n        )\n        if use_sliding:\n            slide_embedding = self.sparseTransformerForward(\n                embedding[:, 1:-1, :],\n                transformer,\n                transformerArguments,\n                use_sliding=False,\n            )\n            _embedding[:, 1:-1, :] = (_embedding[:, 1:-1, :] + slide_embedding) / 2\n        return _embedding\n    def calculateInputPadSizeFromSequenceLength(self, sequence_lengt",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_hierachical_tokenization.py:153-178"
     },
-    "1373": {
-        "file_id": 182,
+    "1327": {
+        "file_id": 171,
         "content": "This code defines a function `sparseTransformerForward` that applies the transformer model to an input embedding. It also includes a helper function `_sparseTransformerForwardImpl` for internal use. If the `use_sliding` parameter is set, it applies the transformer model to non-boundary elements and averages them with boundary elements to reduce boundary effects. The code also includes another incomplete function `calculateInputPadSizeFromSequenceLength`.",
         "type": "comment"
     },
-    "1374": {
-        "file_id": 182,
+    "1328": {
+        "file_id": 171,
         "content": "h: int):\n        input_pad_size = []\n        msequence_length = int(sequence_length)\n        for _ in range(self.abstraction_level):\n            div, mod = divmod(msequence_length, self.TWO)\n            if mod == self.ONE:\n                input_pad_size.append(self.ONE)\n                div += self.ONE\n            else:\n                input_pad_size.append(self.ZERO)\n            msequence_length = div\n        return input_pad_size\n    def padEmbedding(self, embedding: Tensor, pad_direction: Literal[\"left\", \"right\"]):\n        embedding = F.pad(\n            embedding,\n            (self.ZERO, self.ZERO, self.ZERO, self.ONE)\n            if pad_direction == \"right\"\n            else (self.ZERO, self.ZERO, self.ONE, self.ZERO),\n            \"constant\",\n            self.ZERO,\n        )\n        return embedding\n    def chopEmbedding(self, embedding: Tensor, pad_direction: Literal[\"left\", \"right\"]):\n        embedding = (\n            embedding[:, : -self.ONE, :]\n            if pad_direction == \"right\"\n            else embe",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_hierachical_tokenization.py:178-206"
     },
-    "1375": {
-        "file_id": 182,
+    "1329": {
+        "file_id": 171,
         "content": "This code is part of a hierarchical tokenization model. It calculates the input padding size for each abstraction level, pads and chops embeddings based on the padding direction specified.",
         "type": "comment"
     },
-    "1376": {
-        "file_id": 182,
+    "1330": {
+        "file_id": 171,
         "content": "dding[:, self.ONE :, :]\n        )\n        return embedding\n    def abstractionForward(self, embedding: Tensor, abstractionLayer: nn.Linear):\n        embedding = einops.rearrange(embedding, \"b (s1 g) d -> b s1 d g\", g=self.TWO)\n        embedding = abstractionLayer(embedding)  # Apply attention and abstraction\n        embedding = einops.rearrange(embedding, f\"b s d {self.ONE} -> b s d\")\n        return embedding\n    def deabstractionForward(self, embedding: Tensor, deabstractionLayer: nn.Linear):\n        embedding = einops.rearrange(embedding, f\"b s d -> b s d {self.ONE}\")\n        embedding = deabstractionLayer(embedding)\n        embedding = einops.rearrange(embedding, \"b s1 d g -> b (s1 g) d\", g=self.TWO)\n        return embedding\n    def forward(\n        self,\n        input_logits: Tensor,\n        pad_direction: Literal[\"left\", \"right\"],\n        transformerArguments: TransformerArguments,\n    ):  # it is trimmed from one side. is it causal?\n        assert (\n            len(input_logits.shape) == self.TWO\n   ",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_hierachical_tokenization.py:206-230"
     },
-    "1377": {
-        "file_id": 182,
+    "1331": {
+        "file_id": 171,
         "content": "This code defines a class that seems to be part of a transformer-based model. It has three methods: `tokenizationForward`, `abstractionForward`, and `deabstractionForward`. The class takes in an input tensor, pads it from one side (specified by `pad_direction`), and applies transformations based on the provided `transformerArguments`. The code uses the Einops library for array manipulations.",
         "type": "comment"
     },
-    "1378": {
-        "file_id": 182,
+    "1332": {
+        "file_id": 171,
         "content": "     ), \"input logits shall be of shape (batch_size, sequence_length)\"\n        _, sequence_length = input_logits.shape\n        assert sequence_length != self.ZERO, \"zero length sequence encountered\"\n        input_pad_size = self.calculateInputPadSizeFromSequenceLength(sequence_length)\n        residual_conn = []\n        embedding = self.binary_embedding(input_logits)\n        for i in range(\n            self.ZERO, len(self.abstractionLayers), self.TWO\n        ):  # Step through every other layer\n            lookup_index = i // self.TWO\n            if input_pad_size[lookup_index] == self.ONE:  # either 1 or 0\n                embedding = self.padEmbedding(embedding, pad_direction)\n            embedding = self.sparseTransformerForward(\n                embedding, self.abstractionLayers[i], transformerArguments\n            )\n            residual_conn.append(embedding)\n            embedding = self.abstractionForward(\n                embedding, self.abstractionLayers[i + self.ONE]\n            )\n        # basicall",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_hierachical_tokenization.py:230-249"
     },
-    "1379": {
-        "file_id": 182,
+    "1333": {
+        "file_id": 171,
         "content": "The code is performing hierarchical tokenization by iterating through every other layer in the abstraction layers, applying sparse transformer forward and abstraction forward operations, and storing the residual connections.",
         "type": "comment"
     },
-    "1380": {
-        "file_id": 182,
+    "1334": {
+        "file_id": 171,
         "content": "y: n -> 2*n - mod\n        if input_pad_size[-1] == self.ONE:\n            embedding = self.padEmbedding(embedding, pad_direction)\n        embedding = self.sparseTransformerForward(\n            embedding, self.mainTransformer, transformerArguments\n        )\n        if input_pad_size[-1] == self.ONE:\n            embedding = self.chopEmbedding(embedding, pad_direction)\n        for i in range(\n            self.ZERO, len(self.deabstractionLayers), self.TWO\n        ):  # Step through every other layer\n            lookup_index = self.abstraction_level - i // self.TWO - self.TWO\n            embedding = self.deabstractionForward(\n                embedding, self.deabstractionLayers[i + self.ONE]\n            )\n            embedding += residual_conn[lookup_index]\n            embedding = self.sparseTransformerForward(\n                embedding, self.deabstractionLayers[i], transformerArguments\n            )\n            if input_pad_size[lookup_index] == self.ONE:\n                embedding = self.chopEmbedding(embedding",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_hierachical_tokenization.py:249-269"
     },
-    "1381": {
-        "file_id": 182,
+    "1335": {
+        "file_id": 171,
         "content": "This code performs hierarchical tokenization using a sparse transformer model. It applies padding and chopping embeddings when needed, and iterates through every other layer of deabstraction layers for feature extraction.",
         "type": "comment"
     },
-    "1382": {
-        "file_id": 182,
+    "1336": {
+        "file_id": 171,
         "content": ", pad_direction)\n        output_logits = self.decode_embedding(embedding)\n        return output_logits\n# myTransformer = HierachicalTokenizationTransformer()\n# myTransformer = HierachicalTokenizationTransformer(abstraction_level=5, num_layers=10)\n# myTransformer = HierachicalTokenizationTransformer(abstraction_level=100, num_layers=2)\nmyTransformer = HierachicalTokenizationTransformer(abstraction_level=20, num_layers=2)\n# input_data = torch.ones(20, 1000, dtype=torch.long)  # batch size: 20, sequence length: 30\ninput_data = torch.ones(20, 30, dtype=torch.long)  # batch size: 20, sequence length: 30\noutput_data = myTransformer.forward(\n    input_data,\n    pad_direction=\"right\",\n    transformerArguments=TransformerArguments(is_causal=True),\n)\nprint(output_data.shape)  # 20, 30, 2",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_hierachical_tokenization.py:269-286"
     },
-    "1383": {
-        "file_id": 182,
+    "1337": {
+        "file_id": 171,
         "content": "This code is initializing a HierachicalTokenizationTransformer model with specific abstraction level and number of layers. It then takes input data, applies the transformer's forward function, and prints the output shape.",
         "type": "comment"
     },
-    "1384": {
-        "file_id": 183,
+    "1338": {
+        "file_id": 172,
         "content": "/rt_x_experiments/special_tokenizer_with_actions/test_simutaneous_tokenization_embedding.py",
         "type": "filepath"
     },
-    "1385": {
-        "file_id": 183,
+    "1339": {
+        "file_id": 172,
         "content": "The code tackles resolving orderings in words and actions, offering various methods to combine embeddings such as elementwise addition, FFT+IFFT or separate transformer layers with linear decoders. It then passes through a transformer and decodes into two logits.",
         "type": "summary"
     },
-    "1386": {
-        "file_id": 183,
+    "1340": {
+        "file_id": 172,
         "content": "# words have orderings.\n# but actions have not. usually stacked.\n# how to resolve this issue?\n# if you can decode the embedding using multiple embedding layers, what happens?\n# one embedding -> multiple meanings\n# for every embedding there is one silent token, allow to train separately.\n# fourier transform to concat these different kinds of embeddings\n# or you could train some decision embedding, to control the action type\nimport torch\nemb = torch.nn.Embedding\nemb2 = torch.nn.Embedding\n# the bot told us that we need to process different token separately.\n# you could have more choices on fft/ifft and more. you can first concat then use some dense layer to reduce its size.\n# choice 1: emb1+emb2 (elementwise addition) -> transformer -> decode by two linear layers and compare original logits\n# choice 2: fft(emb1)+fft(emb2) -> ifft -> transformer -> decode by two linear layers and compare original logits\n# choice 3: emb1 -> tranformer1 -> linear1 -> logits1; emb2 -> tranformer1 -> linear2 -> logits2\n# choi",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_simutaneous_tokenization_embedding.py:1-22"
     },
-    "1387": {
-        "file_id": 183,
+    "1341": {
+        "file_id": 172,
         "content": "The code is discussing the issue of resolving orderings in words and actions, and potential methods for embedding them together. The author proposes several choices for combining embeddings from different token types, such as elementwise addition, Fast Fourier Transform (FFT) followed by Inverse FFT (IFFT), or using separate transformer layers with linear layers to decode the embeddings.",
         "type": "comment"
     },
-    "1388": {
-        "file_id": 183,
+    "1342": {
+        "file_id": 172,
         "content": "ce 4: concat emb1&emb2 -> transformer -> decode -> separate into two logits",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_simutaneous_tokenization_embedding.py:22-22"
     },
-    "1389": {
-        "file_id": 183,
+    "1343": {
+        "file_id": 172,
         "content": "Combines embeddings, passes through transformer, and decodes into two separate logits.",
         "type": "comment"
     },
-    "1390": {
-        "file_id": 184,
+    "1344": {
+        "file_id": 173,
         "content": "/rt_x_experiments/special_tokenizer_with_actions/test_tokenmonster.py",
         "type": "filepath"
     },
-    "1391": {
-        "file_id": 184,
+    "1345": {
+        "file_id": 173,
         "content": "Loading and tokenizing text using TokenMonster with a specific vocabulary.",
         "type": "summary"
     },
-    "1392": {
-        "file_id": 184,
+    "1346": {
+        "file_id": 173,
         "content": "import tokenmonster\n# # Optionally set the tokenmonster directory, otherwise it will use ~/_tokenmonster\n# tokenmonster.set_local_directory(\"/path/to/preferred\")\n# Load a vocabulary by name, filepath or URL\nvocab = tokenmonster.load(\"english-24000-consistent-v1\") # cannot download.\n# Tokenize some text\ntext = \"Some text to turn into token IDs.\"\ntokens = vocab.tokenize(text)\nprint('tokens', tokens)",
         "type": "code",
         "location": "/rt_x_experiments/special_tokenizer_with_actions/test_tokenmonster.py:1-12"
     },
-    "1393": {
-        "file_id": 184,
+    "1347": {
+        "file_id": 173,
         "content": "Loading and tokenizing text using TokenMonster with a specific vocabulary.",
         "type": "comment"
     },
-    "1394": {
-        "file_id": 185,
+    "1348": {
+        "file_id": 174,
+        "content": "/rt_x_experiments/zoom_pan_action.py",
+        "type": "filepath"
+    },
+    "1349": {
+        "file_id": 174,
+        "content": "Code performs image cropping based on location and size, with support for relative movement in X and Y directions.",
+        "type": "summary"
+    },
+    "1350": {
+        "file_id": 174,
+        "content": "# since we can only handle specific data in the scope, how about take transformations as actions\n# distinguish between discrete and continuous actions, like keyboard strokes, clicks and movements.\nimport numpy as np\ndef crop_at_location(img, location, size):\n    lx, ly = location\n    rx, ry = lx + size, ly + size\n    cropped_img = img[:, lx:rx, ly:ry]\n    return cropped_img\ndef relative_move_crop(img, location, size, dx, dy):\n    lx, ly = location\n    nx, ny = lx + dx, ly + dy\n    new_location = (nx, ny)\n    cropped_img = crop_at_location(img, new_location, size)\n    return cropped_img\nif __name__ == \"__main__\":\n    img = np.zeros((3, 1920, 1080))\n    cropped_img = crop_at_location(img, (10, 10), 224)\n    print(\"%s -> %s\" % (img.shape, cropped_img.shape))",
+        "type": "code",
+        "location": "/rt_x_experiments/zoom_pan_action.py:1-25"
+    },
+    "1351": {
+        "file_id": 174,
+        "content": "Code performs image cropping based on location and size, with support for relative movement in X and Y directions.",
+        "type": "comment"
+    },
+    "1352": {
+        "file_id": 175,
+        "content": "/run_gpu_docker.sh",
+        "type": "filepath"
+    },
+    "1353": {
+        "file_id": 175,
+        "content": "Testing GPU availability and NVIDIA driver version within the Docker container.",
+        "type": "summary"
+    },
+    "1354": {
+        "file_id": 175,
+        "content": "docker run --rm -it --gpus 1 --runtime nvidia ubuntu:22.04 nvidia-smi # working!",
+        "type": "code",
+        "location": "/run_gpu_docker.sh:1-1"
+    },
+    "1355": {
+        "file_id": 175,
+        "content": "Testing GPU availability and NVIDIA driver version within the Docker container.",
+        "type": "comment"
+    },
+    "1356": {
+        "file_id": 176,
+        "content": "/screenshot_test.py",
+        "type": "filepath"
+    },
+    "1357": {
+        "file_id": 176,
+        "content": "This code imports the mss library to take a screenshot and timeit library for timing execution. It then defines a test_screenshot function that grabs a screenshot from monitor 0 and prints it, executing the function 10 times using timeit and printing the output (0.03 seconds).",
+        "type": "summary"
+    },
+    "1358": {
+        "file_id": 176,
+        "content": "import mss\nimport timeit\ndef test_screenshot():\n    with mss.mss() as m:\n        img = m.grab(m.monitors[0])\n        print(img)\noutput = timeit.timeit(test_screenshot, number=10)\nprint(output)  # 0.03 seconds",
+        "type": "code",
+        "location": "/screenshot_test.py:1-12"
+    },
+    "1359": {
+        "file_id": 176,
+        "content": "This code imports the mss library to take a screenshot and timeit library for timing execution. It then defines a test_screenshot function that grabs a screenshot from monitor 0 and prints it, executing the function 10 times using timeit and printing the output (0.03 seconds).",
+        "type": "comment"
+    },
+    "1360": {
+        "file_id": 177,
         "content": "/software_capture_hid_control/Makefile",
         "type": "filepath"
     },
-    "1395": {
-        "file_id": 185,
+    "1361": {
+        "file_id": 177,
         "content": "This Makefile is responsible for building and executing the Python script \"test_control.py\". It first compiles the script using a template, then runs the compiled version with Python interpreter.",
         "type": "summary"
     },
-    "1396": {
-        "file_id": 185,
+    "1362": {
+        "file_id": 177,
         "content": "main: test_control.py\n\t${PYTHON} test_control.py\ntest_control.py: test_control.py.j2 $(addprefix ../, ${RENDERED_CODE})\n\t${PYTHON} ../render_python_code.py test_control.py",
         "type": "code",
         "location": "/hardware_capture_hid_power_control/Makefile:1-5"
     },
-    "1397": {
-        "file_id": 185,
+    "1363": {
+        "file_id": 177,
         "content": "This Makefile is responsible for building and executing the Python script \"test_control.py\". It first compiles the script using a template, then runs the compiled version with Python interpreter.",
         "type": "comment"
     },
-    "1398": {
-        "file_id": 186,
+    "1364": {
+        "file_id": 178,
         "content": "/software_capture_hid_control/abstract_class_test.py",
         "type": "filepath"
     },
-    "1399": {
-        "file_id": 186,
+    "1365": {
+        "file_id": 178,
         "content": "Defining an abstract class Example with two abstract methods a and b.",
         "type": "summary"
+    },
+    "1366": {
+        "file_id": 178,
+        "content": "from abc import ABC, abstractmethod, ABCMeta\n# class Example(ABC):\nclass Example(ABC):\n    @abstractmethod\n    def a(self):\n        print('a')\n    @abstractmethod\n    def b(self):\n        print('a')\ne = Example()",
+        "type": "code",
+        "location": "/software_capture_hid_control/abstract_class_test.py:1-13"
+    },
+    "1367": {
+        "file_id": 178,
+        "content": "Defining an abstract class Example with two abstract methods a and b.",
+        "type": "comment"
+    },
+    "1368": {
+        "file_id": 179,
+        "content": "/software_capture_hid_control/test_control.py",
+        "type": "filepath"
+    },
+    "1369": {
+        "file_id": 179,
+        "content": "The code utilizes multiple control methods, libxdoHID for keyboard & mouse events, and X11 protocol for live streaming, while struggling to save monitor images using mss and xvfb backend.",
+        "type": "summary"
+    },
+    "1370": {
+        "file_id": 179,
+        "content": "# TODO: more control methods (non-hardware) under way\n# vnc/rdp (rdpy3(py2), rdpy3, python3-aardwolf, rdesktop (rdp)) (docker-vnc image: dorowu/ubuntu-desktop-lxde-vnc:focal ; docker rdp image: scottyhardy/docker-remote-desktop)\n# ssh (terminal interface)\n# spice (remmina, remote-viewer (RHEL))\n# xvfb (with pyautogui?) (use vglrun (GPU)) (what alternatives to xvfb are for macOS and Windows?)\n# -----------[use remote control methods as self control methods]-----------\n# self control (pyautogui, pynput, (win)tty, tmux, subprocess, ttyd with electron/xvfb based browser client)\n# qtpy: PyQt5/5/6 abstraction layer\n# https://github.com/spyder-ide/qtpy\n# docker-wine image (in case running windows app on linux): scottyhardy/docker-wine\n# MineRL GPU rendering: https://minerl.readthedocs.io/en/latest/notes/performance-tips.html\n# rdpy3: https://github.com/massimiliano-dalcero/rdpy\n# ref: https://github.com/citronneur/rdpy/issues/91\n# shall you look over our previous project lazero/metalazero\n# unittest for xr",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:1-21"
+    },
+    "1371": {
+        "file_id": 179,
+        "content": "This code snippet appears to be a TODO list for adding more control methods to a software system. These methods include VNC/RDP, SSH, Spice, Xvfb with pyautogui and alternatives on macOS and Windows, remote control methods as self control methods using PyQt5, Docker Wine image, MineRL GPU rendering, rdpy3 library, and unittesting for xr.",
+        "type": "comment"
+    },
+    "1372": {
+        "file_id": 179,
+        "content": "dp:\n# 1. run docker in fullscreen mode, run background keylogger first, then accept inputs through rdp.\n# 2. run some full screen app on windows (virtualbox), along with keylogger.\nimport sys\nsys.path.append(\"../\")\nfrom beartype import beartype\nfrom conscious_struct import HIDActionTypes\nfrom typing import List, Tuple, Union, TYPE_CHECKING\nimport time\nif TYPE_CHECKING:\n    from ..hid_utils import *\nelse:\n    from hid_utils import *\nif sys.version_info >= (3, 11):\n    from enum import StrEnum\nelse:\n    from strenum import StrEnum\nfrom enum import auto\n# TODO: test this under py3.9/3.10\nclass ControlMethod(StrEnum):\n    xvfb = auto()\n# breakpoint()\nclass Xdotool(StrEnum):\n    libxdo = auto()\n    xdoctl = auto()\n    pyxdotool = auto()\n    xdotool_jordan = auto()\n    xdotool_tlaloc = auto()\n    xdotool_cli = auto()  # no external library, work by hand.\ncontrolMethod = ControlMethod.xvfb\nxdt = Xdotool.libxdo\nif controlMethod == ControlMethod.xvfb:\n    # instead use:\n    # [xdotool](https://github.com/jordansissel/xdotool)\n ",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:21-70"
+    },
+    "1373": {
+        "file_id": 179,
+        "content": "This code is setting up variables and enums for controlling a fullscreen application through xdotool or another control method. The chosen control method (Xvfb) will be used to interact with the fullscreen app, and the selected xdotool implementation (libxdo) will perform the actions.",
+        "type": "comment"
+    },
+    "1374": {
+        "file_id": 179,
+        "content": "   # [python-libxdo](https://pypi.org/project/python-libxdo/)\n    # [xdotool python wrapper](https://github.com/Tlaloc-Es/xdotool)\n    # [python-xdoctl](https://pypi.org/project/python-xdoctl/)\n    # [pyxdotool](https://github.com/cphyc/pyxdotool)\n    # -------------[AND NOW FOR SOMETHING COMPLETELY DIFFERENT]---------------\n    # [bezmouse](https://github.com/vincentbavitz/bezmouse) might help you evade bot checks, but it is up to you to **compress** user mouse coordinates. maybe just average out tracks per action frame? you name it.\n    # also compress key events?\n    # another story please...\n    # think of some abstract class, which all implementations follow.\n    # think of \"HIDBase\" instead of your imagination. just follow existing guidelines.\n    if xdt == Xdotool.libxdo:\n        import xdo\n        def xdo_del(self):\n            try:\n                xdo._libxdo.xdo_free(self._xdo)\n            except:  # python shutting down. just ignore this.\n                print(\"Unable to free xdo object. Li",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:70-89"
+    },
+    "1375": {
+        "file_id": 179,
+        "content": "The code is importing the libxdo library and creating a function to delete xdo objects when they are no longer needed. It also includes references to other related libraries and tools for interacting with mouse and keyboard events.",
+        "type": "comment"
+    },
+    "1376": {
+        "file_id": 179,
+        "content": "kely Python is shutting down.\")\n        xdo.Xdo.__del__ = xdo_del\n        @beartype\n        class LibxdoHID(HIDInterface):\n            def __init__(\n                self,\n            ):\n                self.xdo = xdo.Xdo()\n            def getButtonIdFromButtonLiteral(\n                self, button_literal: HIDActionTypes.mouse_buttons\n            ):\n                # Generally, 1 is left, 2 is middle, 3 is right, 4 is wheel up, 5 is wheel down.\n                translation_map = {\n                    \"Button.left\": 1,\n                    \"Button.middle\": 2,\n                    \"Button.right\": 3,\n                }\n                button_id = translation_map[button_literal]\n                return button_id\n            def getKeySequenceFromKeyLiteral(\n                self, key_literal: HIDActionTypes.keys\n            ) -> Union[None, str]:\n                keysequence = key_literal_to_xk_keysym(key_literal)\n                return keysequence  # not joined by \"+\"\n            def _key_release(self, key_literal: HIDA",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:89-118"
+    },
+    "1377": {
+        "file_id": 179,
+        "content": "This class, LibxdoHID, is a HID interface for interacting with the XDo library. It initializes an instance of Xdo and provides methods to get button IDs from mouse buttons and key sequences from key literals.",
+        "type": "comment"
+    },
+    "1378": {
+        "file_id": 179,
+        "content": "ctionTypes.keys):\n                keysequence = self.getKeySequenceFromKeyLiteral(key_literal)\n                if keysequence:\n                    self.xdo.send_keysequence_window_up(\n                        xdo.CURRENTWINDOW, keysequence.encode(\"utf8\")\n                    )\n            def _key_press(self, key_literal: HIDActionTypes.keys):\n                keysequence = self.getKeySequenceFromKeyLiteral(key_literal)\n                if keysequence:\n                    self.xdo.send_keysequence_window_down(\n                        xdo.CURRENTWINDOW, keysequence.encode(\"utf8\")\n                    )\n            def _mouse_move(self, x: Union[int, float], y: Union[int, float]):\n                self.xdo.move_mouse(x, y, screen=0)\n            def _mouse_click(\n                self,\n                x: Union[int, float],\n                y: Union[int, float],\n                button_literal: HIDActionTypes.mouse_buttons,\n                pressed: bool,\n            ):\n                self.mouse_move(x, y)\n             ",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:118-143"
+    },
+    "1379": {
+        "file_id": 179,
+        "content": "The code defines several functions for controlling the mouse and keyboard through X11 protocol. It includes _key_press, _key_release, and _mouse_click functions for sending key presses, releases, and mouse clicks respectively. The _mouse_move function is used to move the mouse pointer.",
+        "type": "comment"
+    },
+    "1380": {
+        "file_id": 179,
+        "content": "   button_id = self.getButtonIdFromButtonLiteral(button_literal)\n                if pressed:\n                    self.xdo.mouse_down(xdo.CURRENTWINDOW, button_id)\n                else:\n                    self.xdo.mouse_up(xdo.CURRENTWINDOW, button_id)\n            def _mouse_scroll(\n                self,\n                x: Union[int, float],\n                y: Union[int, float],\n                dx: Union[int, float],\n                dy: Union[int, float],\n            ):\n                self.mouse_move(x, y)\n                # send up/down/left/right keys instead.\n                if dx < 0:\n                    self.xdo.send_keysequence_window(xdo.CURRENTWINDOW, \"Left\")\n                else:\n                    self.xdo.send_keysequence_window(xdo.CURRENTWINDOW, \"Right\")\n                if dy < 0:\n                    self.xdo.send_keysequence_window(xdo.CURRENTWINDOW, \"Up\")\n                else:\n                    self.xdo.send_keysequence_window(xdo.CURRENTWINDOW, \"Down\")\n    # from pyvirtualdisplay import D",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:143-167"
+    },
+    "1381": {
+        "file_id": 179,
+        "content": "The code defines functions to simulate mouse events and scrolling. It uses the xdo module to send mouse clicks, moves, and key sequences to the current window.",
+        "type": "comment"
+    },
+    "1382": {
+        "file_id": 179,
+        "content": "isplay\n    from pyvirtualdisplay.smartdisplay import SmartDisplay\n    import easyprocess  # no support for stdin!\n    # import time\n    import os\n    import subprocess\n    def type_string(string: str):\n        input_bytes = string.encode()\n        p = subprocess.Popen(\"xdotool type --file -\".split(), stdin=subprocess.PIPE)\n        stdout_data = p.communicate(input=input_bytes)[0]\n        return stdout_data\n    os.system(\"rm *.png\")\n    # keyboard = Controller()\n    # virtual_display = \":3\"\n    # backend = 'xvnc'\n    backend = \"xephyr\"  # like visible xvfb, useful for live streaming (no need for ffmpeg hacks with xvfb)\n    # backend = 'xvfb'\n    # with Display(backend=backend) as disp:\n    # proc_cmd = [\"xterm\"]\n    proc_cmd = [\"leafpad\"]\n    # proc_cmd = [\"alacritty\"]\n    with SmartDisplay(\n        backend=backend, size=(1920, 1080), extra_args=[\"-fullscreen\", \"-softCursor\"]\n    ) as disp:\n        # with SmartDisplay(backend=backend, size=(1920, 1080)) as disp:\n        # with SmartDisplay(backend=backend, size",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:167-195"
+    },
+    "1383": {
+        "file_id": 179,
+        "content": "Creates a fullscreen display with SmartDisplay and sets the backend to \"xephyr\" for live streaming capability. It also defines a function to type out strings using xdotool, clears existing PNG files, and starts a leafpad application in fullscreen mode.",
+        "type": "comment"
+    },
+    "1384": {
+        "file_id": 179,
+        "content": "=(1920, 1080), extra_args=['-fullscreen']) as disp: # for unit testing purpose. maybe we should log events on that display.\n        # with SmartDisplay(backend=backend, extra_args=['-title', 'xephyr_test']) as disp: # get window location by title first, then limit all events to that window.\n        # with SmartDisplay(backend='xvfb') as disp:\n        # with Display(backend='xvfb') as disp:\n        # with Display(visible=False) as disp:\n        # not working in fullscreen mode!\n        import pyautogui\n        print(\"NEW DISPLAY AT\", disp.display)  # 0, INT\n        print(\"ENV DISPLAY?\", os.environ[\"DISPLAY\"])  # :0\n        # pynput controller not working.\n        # from pynput.keyboard import Controller\n        # from pynput.keyboard import Listener\n        # keyboardListener = Listener()\n        # keyboardController = Controller()\n        # with Display(backend='xvfb') as disp2:\n        #     print(\"NEW DISPLAY AT\", disp2.display) # 2\n        # working! do not use gnome-terminal.\n        # proc = easyp",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:195-216"
+    },
+    "1385": {
+        "file_id": 179,
+        "content": "This code is trying to set up a display for unit testing purposes using different backends. It is printing the display number and environment variable DISPLAY value. It also mentions issues with pynput keyboard controller.",
+        "type": "comment"
+    },
+    "1386": {
+        "file_id": 179,
+        "content": "rocess.EasyProcess([\"alacritty\"])\n        # proc = easyprocess.EasyProcess(['gnome-terminal', f\"--display={disp.display}\"])\n        # proc = easyprocess.EasyProcess(['gnome-terminal', f\"--display={disp.display}\"])\n        # no need for starting/stopping\n        import mss\n        with easyprocess.EasyProcess(proc_cmd) as proc:\n            # need this to \"wake\" the terminal when fullscreen.\n            # you click before starting the program, so the program will not be affected by the activation.\n            os.system(\"xdotool mousemove 0 0\")\n            os.system(\"xdotool click 1\")\n            # proc.start()\n            # proc.start().sleep(3)\n            # proc.sleep(5)\n            proc.sleep(3)\n            # time.sleep(3)\n            # from Xlib.display import Display\n            # Display(os.environ['DISPLAY']).get_input_focus()\n            # not working.\n            # pyautogui.write(\"echo hello world pyautogui\\n\")\n            # works.\n            type_string(\n                \"echo hello world\\r\"\n      ",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:216-243"
+    },
+    "1387": {
+        "file_id": 179,
+        "content": "Starting Gnome terminal process and executing a command using mss module.",
+        "type": "comment"
+    },
+    "1388": {
+        "file_id": 179,
+        "content": "      )  # return works in leafpad, but \"\\n\" does not.\n            # type_string('echo hello world\\n')\n            # p.wait()\n            # keyboardController.type(\"echo hello world pynput\\n\")\n            pyautogui.screenshot(\"terminal2.png\")  # full shot\n            # img = disp.grab()  # # partial shot, only on changes\n            # maybe we can use this as some sort of \"attention\" mechanism?\n            img = disp.grab(autocrop=False)  # full shot again.\n            if img:\n                img.save(\"terminal.png\")\n            else:\n                print(\"no image yet.\")\n            type_string(\"just some words.\")\n            # .save not working\n            # mss.mss().save(output=\"terminal4.png\")\n            # mon_shot = mss.mss().save(mon=1, output=\"terminal4.png\")\n            if backend == \"xvfb\":\n                mon_shot = mss.mss().shot(output=\"terminal4.png\")\n            # print(mon_shot)\n            # nope. no attention/diff mechanism.\n            xdo_hid = LibxdoHID()\n            xdo_hid.mouse_mo",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:243-265"
+    },
+    "1389": {
+        "file_id": 179,
+        "content": "Capturing screenshots of terminal and other applications, using different screen grabbing techniques.\n\nThe code is capturing the screenshot of a terminal window and storing it as \"terminal2.png\" in full shot mode. It then checks if an image was captured and saves it as \"terminal.png\" if available or prints \"no image yet.\" Next, it types some text on the screen. It attempts to capture another screenshot of a monitor (mon_shot) using xvfb backend but is unsure about its success due to possible lack of attention/diff mechanism. The code also mentions trying different save methods like mss().save() but they are not working. It uses LibxdoHID to control the mouse movement.",
+        "type": "comment"
+    },
+    "1390": {
+        "file_id": 179,
+        "content": "ve(300, 300)\n            xdo_hid.key_press(\"'q'\")\n            time.sleep(0.2)\n            xdo_hid.key_release(\"'q'\")\n            time.sleep(0.3)\n            disp.grab().save(\"terminal5.png\")\n            time.sleep(0.3)\n            # proc.stop()",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_control.py:265-273"
+    },
+    "1391": {
+        "file_id": 179,
+        "content": "Taking a screenshot of the terminal and pressing q to exit.",
+        "type": "comment"
+    },
+    "1392": {
+        "file_id": 180,
+        "content": "/software_capture_hid_control/test_xdo.py",
+        "type": "filepath"
+    },
+    "1393": {
+        "file_id": 180,
+        "content": "Sends key sequence down and up in current window.",
+        "type": "summary"
+    },
+    "1394": {
+        "file_id": 180,
+        "content": "import xdo\nxdt = xdo.Xdo()\nkey = b\"k\"\nwindow = xdo.CURRENTWINDOW\nxdt.send_keysequence_window_down(window, key)\nxdt.send_keysequence_window_up(window, key)\n# it needs binary encoding.",
+        "type": "code",
+        "location": "/software_capture_hid_control/test_xdo.py:1-7"
+    },
+    "1395": {
+        "file_id": 180,
+        "content": "Sends key sequence down and up in current window.",
+        "type": "comment"
+    },
+    "1396": {
+        "file_id": 181,
+        "content": "/streaming_utils.yaml",
+        "type": "filepath"
+    },
+    "1397": {
+        "file_id": 181,
+        "content": "The code configures a set of windows, each with specific shell commands and start directories. The windows include \"dev window\", \"BongoCat\", \"virtualbox\", \"viewer_loop\", and \"viewer_final\".",
+        "type": "summary"
+    },
+    "1398": {
+        "file_id": 181,
+        "content": "session_name: streaming_utils\nstart_directory: \"/media/root/Toshiba XG3/works/agi_computer_control\"\nwindows:\n  - window_name: dev window\n    layout: tiled\n    panes:\n######################[bongocats]\n      - shell_command:\n        - \"python3 cat.pyw\"\n        start_directory: \"BongoCat\"\n      - shell_command:\n        - \"python3 cat.pyw\"\n        start_directory: \"BongoCat\"\n######################[virtualbox]\n      - shell_command:\n        - \"python3 kali_vbox_main_loop.py\"\n        start_directory: \"ubuntu_qemu_utm_arm_record/kali_vbox_control\"\n######################[viewer_loop]\n      - shell_command:\n        - sleep 1\n        - \"python3 xvfb_test_loop_double_display.py\"\n        start_directory: \"ubuntu_qemu_utm_arm_record/kali_vbox_control\"\n######################[viewer_final]\n      - shell_command:\n        - sleep 3\n        - \"bash x11grab_loop_viewer.sh\"\n        start_directory: \"ubuntu_qemu_utm_arm_record/kali_vbox_control\"",
+        "type": "code",
+        "location": "/streaming_utils.yaml:1-31"
+    },
+    "1399": {
+        "file_id": 181,
+        "content": "The code configures a set of windows, each with specific shell commands and start directories. The windows include \"dev window\", \"BongoCat\", \"virtualbox\", \"viewer_loop\", and \"viewer_final\".",
+        "type": "comment"
     }
 }

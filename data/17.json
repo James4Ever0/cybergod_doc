@@ -1,535 +1,533 @@
 {
     "1700": {
-        "file_id": 224,
+        "file_id": 228,
+        "content": "# vboxmanage startvm \"12c0e77b-5f4a-4d30-b19b-1b105d2042cf\" # Ubuntu 16.04\nnohup xvfb-run --server-num=10 --listen-tcp --server-args=\"-screen 0 1280x800x24\" -f /tmp/.Xauthority vboxsdl --startvm \"Ubuntu 16.04\" &\n# start in headless mode\n# you may not live stream this one! but vrde is available! and you can use ffmpeg for bridging!\n# vboxmanage startvm \"Ubuntu 16.04\" --type headless",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/start_vm.sh:1-5"
+    },
+    "1701": {
+        "file_id": 228,
+        "content": "Starts a virtual machine named \"Ubuntu 16.04\" using VirtualBox, in headless mode with display forwarding disabled.",
+        "type": "comment"
+    },
+    "1702": {
+        "file_id": 229,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/stop_on_ffmpeg_x11_error.py",
+        "type": "filepath"
+    },
+    "1703": {
+        "file_id": 229,
+        "content": "Checking for \"Failed to query xcb pointer\" error in input data and breaking loop upon detection.",
+        "type": "summary"
+    },
+    "1704": {
+        "file_id": 229,
+        "content": "error = \"Failed to query xcb pointer\"\nwhile True:\n    data = input()\n    print(data)\n    if error in data:\n        break",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/stop_on_ffmpeg_x11_error.py:1-6"
+    },
+    "1705": {
+        "file_id": 229,
+        "content": "Checking for \"Failed to query xcb pointer\" error in input data and breaking loop upon detection.",
+        "type": "comment"
+    },
+    "1706": {
+        "file_id": 230,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/stop_vm.sh",
+        "type": "filepath"
+    },
+    "1707": {
+        "file_id": 230,
+        "content": "This script stops a VirtualBox virtual machine named \"12c0e77b-5f4a-4d30-b19b-1b105d2042cf\" running Ubuntu 16.04 and powers it off. If the poweroff fails, it kills related processes to free up resources and prints an error message. The script also notes that it can start the VM in headless mode and mentions using VRDE and ffmpeg for live streaming if needed.",
+        "type": "summary"
+    },
+    "1708": {
+        "file_id": 230,
+        "content": "timeout 10 vboxmanage controlvm \"12c0e77b-5f4a-4d30-b19b-1b105d2042cf\" poweroff # Ubuntu 16.04\n# FIXME: 掉盘了 一般是\n# 就没有更好的固态硬盘盒么\n# 刷固件需要拿出来硬盘\nif [ \"$?\" -ne 0 ]; then\necho \"ERROR: Failed to stop vm.\"\nps aux | grep -i /usr/lib/virtualbox | grep -v grep | awk '{print $2}' | xargs -iabc kill -s TERM abc\nfi\n# start in headless mode\n# you may not live stream this one! but vrde is available! and you can use ffmpeg for bridging!\n# vboxmanage startvm \"Ubuntu 16.04\" --type headless",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/stop_vm.sh:1-14"
+    },
+    "1709": {
+        "file_id": 230,
+        "content": "This script stops a VirtualBox virtual machine named \"12c0e77b-5f4a-4d30-b19b-1b105d2042cf\" running Ubuntu 16.04 and powers it off. If the poweroff fails, it kills related processes to free up resources and prints an error message. The script also notes that it can start the VM in headless mode and mentions using VRDE and ffmpeg for live streaming if needed.",
+        "type": "comment"
+    },
+    "1710": {
+        "file_id": 231,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/the_frozen_forest.service",
+        "type": "filepath"
+    },
+    "1711": {
+        "file_id": 231,
+        "content": "This code is a service file for The Frozen Forest dataset, which is a data creation service. It requires the network to be online and depends on syslog.target. It sets environment variables for DISPLAY, XAUTHORITY, PATH, and HOME. The user is \"hua\" and the ExecStart command runs mount_kali_webdav_dirs.sh script. The WorkingDirectory is /home/hua/agi_workspace and it is wanted by graphical.target.",
+        "type": "summary"
+    },
+    "1712": {
+        "file_id": 231,
+        "content": "[Unit]\nDescription=Data creation service for The Frozen Forest dataset.\nWants=network.target\nAfter=syslog.target network-online.target\n[Service]\nEnvironment=\"DISPLAY=:0\"\nEnvironment=\"XAUTHORITY=/home/hua/.Xauthority\"\nEnvironment=\"PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin\"\nEnvironment=\"HOME=/home/hua\"\nUser=hua\nExecStart=/usr/bin/env /bin/bash mount_kali_webdav_dirs.sh\nWorkingDirectory=/home/hua/agi_workspace\n[Install]\nWantedBy=graphical.target",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/the_frozen_forest.service:1-16"
+    },
+    "1713": {
+        "file_id": 231,
+        "content": "This code is a service file for The Frozen Forest dataset, which is a data creation service. It requires the network to be online and depends on syslog.target. It sets environment variables for DISPLAY, XAUTHORITY, PATH, and HOME. The user is \"hua\" and the ExecStart command runs mount_kali_webdav_dirs.sh script. The WorkingDirectory is /home/hua/agi_workspace and it is wanted by graphical.target.",
+        "type": "comment"
+    },
+    "1714": {
+        "file_id": 232,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab.py",
+        "type": "filepath"
+    },
+    "1715": {
+        "file_id": 232,
+        "content": "Starts an X11 grabber, capturing screen from display 10 and piping the output.",
+        "type": "summary"
+    },
+    "1716": {
+        "file_id": 232,
+        "content": "cmd = \"env XAUTHORITY=/tmp/.Xauthority ffmpeg -f x11grab -i :10 -f image2pipe pipe:1\"\nimport subprocess\np = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)\nwhile True:\n    print(len(p.stdout.readline()))",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab.py:1-8"
+    },
+    "1717": {
+        "file_id": 232,
+        "content": "Starts an X11 grabber, capturing screen from display 10 and piping the output.",
+        "type": "comment"
+    },
+    "1718": {
+        "file_id": 233,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab.sh",
+        "type": "filepath"
+    },
+    "1719": {
+        "file_id": 233,
+        "content": "The code captures X11 window content from a remote server, saves images to a pipe and plays them in real-time.",
+        "type": "summary"
+    },
+    "1720": {
+        "file_id": 233,
+        "content": "cd .\nwhile true; do\n    env XAUTHORITY=/tmp/.Xauthority ffmpeg -f x11grab -r 10 -i :10 -f image2pipe pipe:1 | ffplay -f image2pipe -i - -autoexit\n    sleep 1\ndone;\n# still with some lag! need improvement.\n# env XAUTHORITY=/tmp/.Xauthority ffmpeg -f x11grab -i :10 -f image2pipe pipe:1\n# env XAUTHORITY=/tmp/.Xauthority ffplay -f x11grab -i :10 2>&1",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab.sh:1-9"
+    },
+    "1721": {
+        "file_id": 233,
+        "content": "The code captures X11 window content from a remote server, saves images to a pipe and plays them in real-time.",
+        "type": "comment"
+    },
+    "1722": {
+        "file_id": 234,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab_loop.sh",
+        "type": "filepath"
+    },
+    "1723": {
+        "file_id": 234,
+        "content": "The code is starting X virtual framebuffer (Xvfb) server with a specified resolution, running x11grab.sh in it, and also providing an option to monitor for X11 errors using stop_on_ffmpeg_x11_error.py script.",
+        "type": "summary"
+    },
+    "1724": {
+        "file_id": 234,
+        "content": "cd . # FIX: input/output error\nps aux | grep -i xvfb | grep 11 | grep -v grep | awk '{print $2}' | xargs -iabc kill -s TERM abc\nxvfb-run --server-num=11 --listen-tcp --server-args=\"-screen 0 1280x800x24\" -f /tmp/.Xauthority1 bash x11grab.sh\n# xvfb-run --server-num=11 --listen-tcp --server-args=\"-screen 0 1280x800x24\" -f /tmp/.Xauthority1 bash x11grab.sh | python3 stop_on_ffmpeg_x11_error.py",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab_loop.sh:1-4"
+    },
+    "1725": {
+        "file_id": 234,
+        "content": "The code is starting X virtual framebuffer (Xvfb) server with a specified resolution, running x11grab.sh in it, and also providing an option to monitor for X11 errors using stop_on_ffmpeg_x11_error.py script.",
+        "type": "comment"
+    },
+    "1726": {
+        "file_id": 235,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab_loop_viewer.sh",
+        "type": "filepath"
+    },
+    "1727": {
+        "file_id": 235,
+        "content": "Starts FFplay with X11 grabbing from display 11 and exits when done.",
+        "type": "summary"
+    },
+    "1728": {
+        "file_id": 235,
+        "content": "env XAUTHORITY=/tmp/.Xauthority1 ffplay -f x11grab -i :11 -autoexit",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/x11grab_loop_viewer.sh:1-1"
+    },
+    "1729": {
+        "file_id": 235,
+        "content": "Starts FFplay with X11 grabbing from display 11 and exits when done.",
+        "type": "comment"
+    },
+    "1730": {
+        "file_id": 236,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/xvfb_test_loop_double_display.py",
+        "type": "filepath"
+    },
+    "1731": {
+        "file_id": 236,
+        "content": "This script is attempting to run a series of commands using xvfb (X virtual framebuffer) for displaying graphics in a virtual environment. It repeatedly executes the script \"x11grab_loop.sh\" every second until stopped. The commented out section suggests an alternative approach using subprocess and progressbar modules for running commands sequentially with a progress bar.",
+        "type": "summary"
+    },
+    "1732": {
+        "file_id": 236,
+        "content": "# import subprocess\n# # run this using xvfb.\nimport os\n# script_1 = 'xvfb-run --server-num=10 --listen-tcp --server-args=\"-screen 0 1280x800x24\" -f /tmp/.Xauthority vboxsdl --startvm \"Ubuntu 16.04\"'\n# script_2 = 'env XAUTHORITY=/tmp/.Xauthority ffplay -f x11grab -i :10'\n# script_3 = 'vboxmanage controlvm \"Ubuntu 16.04\" poweroff'\nscript_4 = \"bash x11grab_loop.sh\"\nimport time\n# import progressbar\nwhile True:\n    time.sleep(1)\n    os.system(\"cd .\") # FIX: input/output error\n    os.system(script_4)\n# while True:\n#     p1 = subprocess.run(script_1)\n#     p2 = subprocess.run(script_2)\n#     for _ in progressbar.progressbar(range(100)):\n#         time.sleep(1)\n#     os.system(script_3)",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/xvfb_test_loop_double_display.py:1-28"
+    },
+    "1733": {
+        "file_id": 236,
+        "content": "This script is attempting to run a series of commands using xvfb (X virtual framebuffer) for displaying graphics in a virtual environment. It repeatedly executes the script \"x11grab_loop.sh\" every second until stopped. The commented out section suggests an alternative approach using subprocess and progressbar modules for running commands sequentially with a progress bar.",
+        "type": "comment"
+    },
+    "1734": {
+        "file_id": 237,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/xvfb_test_loop_double_display.sh",
+        "type": "filepath"
+    },
+    "1735": {
+        "file_id": 237,
+        "content": "Launching Python script for double-display testing with XVFB.",
+        "type": "summary"
+    },
+    "1736": {
+        "file_id": 237,
+        "content": "python3 xvfb_test_loop_double_display.py",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/xvfb_test_loop_double_display.sh:1-1"
+    },
+    "1737": {
+        "file_id": 237,
+        "content": "Launching Python script for double-display testing with XVFB.",
+        "type": "comment"
+    },
+    "1738": {
+        "file_id": 238,
+        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/xvfbwrapper_vboxmanager_test.py",
+        "type": "filepath"
+    },
+    "1739": {
+        "file_id": 238,
+        "content": "Code is attempting to run a virtual display (Xvfb) and then launch a virtual machine (Ubuntu 16.04) using VBoxSDL commands within the Xvfb display context. The code also includes a progress bar for a simulated long-running task, but it doesn't seem to be functioning properly.",
+        "type": "summary"
+    },
+    "1740": {
+        "file_id": 238,
+        "content": "from xvfbwrapper import Xvfb\n# it sucks!\n# vdisplay = Xvfb(display=3)\n# vdisplay.start()\nimport os\ncmd = 'vboxsdl --startvm \"Ubuntu 16.04\"' \nwith Xvfb(display=3) as vdisplay: # not working...\n    os.system(cmd)\n# try:\n#     # launch stuff inside virtual display here.\n#     # os.system('bash start_vm.sh')\n#     import time\n#     import progressbar\n#     for _ in progressbar.progressbar(range(1000)):\n#         time.sleep(1)\n# finally:\n#     vdisplay.stop()",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/xvfbwrapper_vboxmanager_test.py:2-23"
+    },
+    "1741": {
+        "file_id": 238,
+        "content": "Code is attempting to run a virtual display (Xvfb) and then launch a virtual machine (Ubuntu 16.04) using VBoxSDL commands within the Xvfb display context. The code also includes a progress bar for a simulated long-running task, but it doesn't seem to be functioning properly.",
+        "type": "comment"
+    },
+    "1742": {
+        "file_id": 239,
+        "content": "/ubuntu_qemu_utm_arm_record/launch_server.cmd",
+        "type": "filepath"
+    },
+    "1743": {
+        "file_id": 239,
+        "content": "Executes WebDAV command to connect to host, port, and path for recordings.",
+        "type": "summary"
+    },
+    "1744": {
+        "file_id": 239,
+        "content": "webdav-cli --host 192.168.56.1 --port 8111 --username root --password root --path=D:\\works\\agi_computer_recordings\\recordings ",
+        "type": "code",
+        "location": "/propaganda/agi_computer_recordings/launch_server.cmd:1-1"
+    },
+    "1745": {
+        "file_id": 239,
+        "content": "Executes WebDAV command to connect to host, port, and path for recordings.",
+        "type": "comment"
+    },
+    "1746": {
+        "file_id": 240,
+        "content": "/ubuntu_qemu_utm_arm_record/macos_iterate_windows.sh",
+        "type": "filepath"
+    },
+    "1747": {
+        "file_id": 240,
+        "content": "This script calls the `get_window_id` function from the `screenshot` module and prints its output after filtering for \"Name\" using grep and displays it with less. Alternatively, OBS and OBS-websocket can be used for screen recording with iTerm enabling the capability.",
+        "type": "summary"
+    },
+    "1748": {
+        "file_id": 240,
+        "content": "python3 -c \"from screenshot import get_window_id; print(get_window_id.get_window_info(options=get_window_id.build_option_bitmask()))\" | grep Name | less\n# or use obs, then use obs-websocket to take screeenshots.\n# enable screen recording capability with iterm.",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_iterate_windows.sh:1-5"
+    },
+    "1749": {
+        "file_id": 240,
+        "content": "This script calls the `get_window_id` function from the `screenshot` module and prints its output after filtering for \"Name\" using grep and displays it with less. Alternatively, OBS and OBS-websocket can be used for screen recording with iTerm enabling the capability.",
+        "type": "comment"
+    },
+    "1750": {
+        "file_id": 241,
+        "content": "/ubuntu_qemu_utm_arm_record/macos_take_screenshot.py",
+        "type": "filepath"
+    },
+    "1751": {
+        "file_id": 241,
+        "content": "Taking a screenshot of window with ID 9859 and saving it as \"output.png\".",
+        "type": "summary"
+    },
+    "1752": {
+        "file_id": 241,
+        "content": "from screenshot import screencapture\nwindow_id = 9859\nscreencapture.take_screenshot(window_id, filename=\"output.png\")",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_take_screenshot.py:1-5"
+    },
+    "1753": {
+        "file_id": 241,
+        "content": "Taking a screenshot of window with ID 9859 and saving it as \"output.png\".",
+        "type": "comment"
+    },
+    "1754": {
+        "file_id": 242,
+        "content": "/ubuntu_qemu_utm_arm_record/macos_utm_run_qemu.sh",
+        "type": "filepath"
+    },
+    "1755": {
+        "file_id": 242,
+        "content": "Both comments describe setting up a QEMU virtual machine with ARM architecture using Ubuntu ARM image, configuring hardware settings and network, and utilizing Spice protocol for display and serial communication.",
+        "type": "summary"
+    },
+    "1756": {
+        "file_id": 242,
+        "content": "# https://vaibhavkaushal.com/posts/ubuntu-focal-on-apple-silicon-m1/#step-4---launch-acvm\n# EFI_PATH=\"/Volumes/Toshiba XG3/QEMU/EFI/QEMU_EFI.fd\"\nEFI_PATH=\"/Volumes/Toshiba XG3/QEMU/EFI/edk2-aarch64-code.fd\"\nIMAGE_PATH=\"/Volumes/Toshiba XG3/QEMU/Images/335D6651-2B4B-47A7-99B4-CBFB1EFDEFF8.qcow2\"\nqemu-system-aarch64 \\\n  -serial stdio \\\n  -M virt,highmem=off \\\n  -accel hvf \\\n  -cpu cortex-a72 \\\n  -smp 4,cores=4 \\\n  -m 2048 \\\n  -bios \"$EFI_PATH\" \\\n  -device virtio-gpu-pci \\\n  -display default,show-cursor=on \\\n  -device qemu-xhci \\\n  -device usb-kbd \\\n  -device usb-tablet \\\n  -device intel-hda \\\n  -device hda-duplex \\\n  -drive file=\"$IMAGE_PATH\",if=virtio,cache=writethrough \n  # -vnc unix:$HOME/.qemu_vnc\n  # -vnc :1,password=off # 5901\n  # -vnc :1,password=on # 5901\n# no visual?\n# https://www.jianshu.com/p/ccde2786ebf8\n##################\n# make snapshots #\n##################\n# CREATE: qemu-img snapshot -c <SNAPSHOT_NAME> <QCOW2_PATH>\n# LIST: qemu-img snapshot -l <QCOW2_PATH>\n# APPLY: qemu-img snapshot -a <SNAPSHOT_NAME>",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_utm_run_qemu.sh:1-35"
+    },
+    "1757": {
+        "file_id": 242,
+        "content": "Launching Ubuntu on Apple M1 using QEMU with EFI boot, virtual devices and a virtio image drive.",
+        "type": "comment"
+    },
+    "1758": {
+        "file_id": 242,
+        "content": " <QCOW2_PATH>\n# DELETE: qemu-img snapshot -d <SNAPSHOT_NAME> <QCOW2_PATH>\n# https://blog.csdn.net/liu_xing_hui/article/details/32718839\n# refer to: https://qemu.readthedocs.io/en/latest/system/vnc-security.html\n# /Applications/UTM.app/Contents/XPCServices/QEMUHelper.xpc/Contents/MacOS/QEMULauncher.app/Contents/MacOS/QEMULauncher /Applications/UTM.app/Contents/Frameworks/qemu-aarch64-softmmu.framework/Versions/A/qemu-aarch64-softmmu -L /Applications/UTM.app/Contents/Resources/qemu -S -spice unix=on,addr=/Users/jamesbrown/Library/Group Containers/WDNLXAD4W8.com.utmapp.UTM/B54F0831-B34F-404D-B600-5E2886D8AC53.spice,disable-ticketing=on,image-compression=off,playback-compression=off,streaming-video=off,gl=off -chardev spiceport,id=org.qemu.monitor.qmp,name=org.qemu.monitor.qmp.0 -mon chardev=org.qemu.monitor.qmp,mode=control -nodefaults -vga none -device virtio-net-pci,mac=9A:B7:7D:21:25:67,netdev=net0 -netdev vmnet-shared,id=net0 -device virtio-ramfb -cpu host -smp cpus=4,sockets=1,cores=4,th",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_utm_run_qemu.sh:35-42"
+    },
+    "1759": {
+        "file_id": 242,
+        "content": "Creates a snapshot of the QCOW2 image with no discard.\nRefers to resources for qemu VNC security and UTM app files.\nLaunches qemu-aarch64-softmmu with specific options and settings.",
+        "type": "comment"
+    },
+    "1760": {
+        "file_id": 242,
+        "content": "reads=1 -machine virt -accel hvf -drive if=pflash,format=raw,unit=0,file=/Applications/UTM.app/Contents/Resources/qemu/edk2-aarch64-code.fd,readonly=on -drive if=pflash,unit=1,file=/Volumes/Toshiba XG3/UTM VMs/Ubuntu ARM.utm/Data/efi_vars.fd -m 2048 -device intel-hda -device hda-duplex -device nec-usb-xhci,id=usb-bus -device usb-tablet,bus=usb-bus.0 -device usb-mouse,bus=usb-bus.0 -device usb-kbd,bus=usb-bus.0 -device qemu-xhci,id=usb-controller-0 -chardev spicevmc,name=usbredir,id=usbredirchardev0 -device usb-redir,chardev=usbredirchardev0,id=usbredirdev0,bus=usb-controller-0.0 -chardev spicevmc,name=usbredir,id=usbredirchardev1 -device usb-redir,chardev=usbredirchardev1,id=usbredirdev1,bus=usb-controller-0.0 -chardev spicevmc,name=usbredir,id=usbredirchardev2 -device usb-redir,chardev=usbredirchardev2,id=usbredirdev2,bus=usb-controller-0.0 -device usb-storage,drive=drive18D1A7CE-50FE-4567-B033-B2AB9F811108,removable=true,bootindex=0,bus=usb-bus.0 -drive if=none,media=cdrom,id=drive18",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_utm_run_qemu.sh:42-42"
+    },
+    "1761": {
+        "file_id": 242,
+        "content": "Creates a QEMU virtual machine with ARM architecture, specifying hardware settings and drive configurations.",
+        "type": "comment"
+    },
+    "1762": {
+        "file_id": 242,
+        "content": "D1A7CE-50FE-4567-B033-B2AB9F811108,readonly=on -device virtio-blk-pci,drive=drive335D6651-2B4B-47A7-99B4-CBFB1EFDEFF8,bootindex=1 -drive if=none,media=disk,id=drive335D6651-2B4B-47A7-99B4-CBFB1EFDEFF8,file=/Volumes/Toshiba XG3/UTM VMs/Ubuntu ARM.utm/Data/335D6651-2B4B-47A7-99B4-CBFB1EFDEFF8.qcow2,discard=unmap,detect-zeroes=unmap -device virtio-serial -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 -chardev spicevmc,id=vdagent,debug=0,name=vdagent -name Linux -uuid B54F0831-B34F-404D-B600-5E2886D8AC53 -device virtio-rng-pci\n# qemu-system-aarch64 -L /Applications/UTM.app/Contents/Resources/qemu -S -spice unix=on,addr='/Users/jamesbrown/Library/Group Containers/WDNLXAD4W8.com.utmapp.UTM/B54F0831-B34F-404D-B600-5E2886D8AC53.spice',disable-ticketing=on,image-compression=off,playback-compression=off,streaming-video=off,gl=off -chardev spiceport,id=org.qemu.monitor.qmp,name=org.qemu.monitor.qmp.0 -mon chardev=org.qemu.monitor.qmp,mode=control -nodefaults -vga none -device virti",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_utm_run_qemu.sh:42-44"
+    },
+    "1763": {
+        "file_id": 242,
+        "content": "Creating a virtual machine with Ubuntu ARM image, using virtio devices and enabling Spice protocol for display and serial communication.",
+        "type": "comment"
+    },
+    "1764": {
+        "file_id": 242,
+        "content": "o-net-pci,mac=9A:B7:7D:21:25:67,netdev=net0 -netdev vmnet-shared,id=net0 -device virtio-ramfb -cpu host -smp cpus=4,sockets=1,cores=4,threads=1 -machine virt -accel hvf -drive if=pflash,format=raw,unit=0,file='/Applications/UTM.app/Contents/Resources/qemu/edk2-aarch64-code.fd',readonly=on -drive if=pflash,unit=1,file='/Volumes/Toshiba XG3/UTM VMs/Ubuntu ARM.utm/Data/efi_vars.fd' -m 2048 -device intel-hda -device hda-duplex -device nec-usb-xhci,id=usb-bus -device usb-tablet,bus=usb-bus.0 -device usb-mouse,bus=usb-bus.0 -device usb-kbd,bus=usb-bus.0 -device qemu-xhci,id=usb-controller-0 -chardev spicevmc,name=usbredir,id=usbredirchardev0 -device usb-redir,chardev=usbredirchardev0,id=usbredirdev0,bus=usb-controller-0.0 -chardev spicevmc,name=usbredir,id=usbredirchardev1 -device usb-redir,chardev=usbredirchardev1,id=usbredirdev1,bus=usb-controller-0.0 -chardev spicevmc,name=usbredir,id=usbredirchardev2 -device usb-redir,chardev=usbredirchardev2,id=usbredirdev2,bus=usb-controller-0.0 -devic",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_utm_run_qemu.sh:44-44"
+    },
+    "1765": {
+        "file_id": 242,
+        "content": "Setting up a virtual machine for UTM, using QEMU, with ARM architecture, PCI device, network configuration, virtio-ramfb display, host CPU, SMP configuration, 2048MB memory, Intel HDA sound, USB devices, XHCI controller and SPICE redirection.",
+        "type": "comment"
+    },
+    "1766": {
+        "file_id": 242,
+        "content": "e usb-storage,drive=drive18D1A7CE-50FE-4567-B033-B2AB9F811108,removable=true,bootindex=0,bus=usb-bus.0 -drive if=none,media=cdrom,id=drive18D1A7CE-50FE-4567-B033-B2AB9F811108,readonly=on -device virtio-blk-pci,drive=drive335D6651-2B4B-47A7-99B4-CBFB1EFDEFF8,bootindex=1 -drive if=none,media=disk,id=drive335D6651-2B4B-47A7-99B4-CBFB1EFDEFF8,file='/Volumes/Toshiba XG3/UTM VMs/Ubuntu ARM.utm/Data/335D6651-2B4B-47A7-99B4-CBFB1EFDEFF8.qcow2',discard=unmap,detect-zeroes=unmap -device virtio-serial -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 -chardev spicevmc,id=vdagent,debug=0,name=vdagent -name Linux -uuid B54F0831-B34F-404D-B600-5E2886D8AC53 -device virtio-rng-pci",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/macos_utm_run_qemu.sh:44-44"
+    },
+    "1767": {
+        "file_id": 242,
+        "content": "Attaching USB storage, defining CD-ROM and primary disk for Ubuntu ARM VM on macOS using QEMU with virtio-serial and Spice support.",
+        "type": "comment"
+    },
+    "1768": {
+        "file_id": 243,
+        "content": "/ubuntu_qemu_utm_arm_record/main_loop.sh",
+        "type": "filepath"
+    },
+    "1769": {
+        "file_id": 243,
+        "content": "This script runs an infinite loop that kills all running python3 processes, then restarts the main_recorder.py script. It requires sudo privileges to run as root.",
+        "type": "summary"
+    },
+    "1770": {
+        "file_id": 243,
+        "content": "while true; do ps aux | grep python3 | awk '{print $2}' | xargs -iabc kill -s TERM abc ; python3 main_recorder.py; done;\n# use sudo!\n# sudo -u root bash",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_loop.sh:1-3"
+    },
+    "1771": {
+        "file_id": 243,
+        "content": "This script runs an infinite loop that kills all running python3 processes, then restarts the main_recorder.py script. It requires sudo privileges to run as root.",
+        "type": "comment"
+    },
+    "1772": {
+        "file_id": 244,
+        "content": "/ubuntu_qemu_utm_arm_record/main_recorder.py",
+        "type": "filepath"
+    },
+    "1773": {
+        "file_id": 244,
+        "content": "The code handles audio, video, and HID recording with Redis signaling, manages folders, starts processes based on preferences, checks statuses, and ensures proper locking and error handling.",
+        "type": "summary"
+    },
+    "1774": {
+        "file_id": 244,
+        "content": "import time\nimport subprocess\nimport datetime\nimport os\nfrom utils import (\n    set_redis_on,\n    set_redis_off,\n    set_prefix,\n    get_prefix,\n    check_redis_on,\n    check_redis_off,\n    PYTHON_EXECUTABLE,\n    set_redis_off_on_exception,\n    filepaths,\n    MAX_RECORDING_COUNT,\n)\nset_prefix()\nset_redis_off_on_exception(main=True)\nMINIBREAK_SECONDS = 1\nRECORD_SECONDS = 10\nWAIT_TIMEOUT = 1\n# how to signal multiple threads at once? use redis.\nset_redis_off()\ntime.sleep(MINIBREAK_SECONDS)\nRECORDERS = {\"Audio\": False, \"Video\": True, \"HID\": True}\n# RECORDERS = {\"Audio\": False, \"Video\": False, \"HID\": True}\n# RECORDERS = {\"Audio\": True, \"Video\": False, \"HID\": False}\n# RECORDERS = {\"Audio\": True, \"Video\": True, \"HID\": True}\nRANDOM_ACTOR = True\n# keep last 30 recordings.\n# will remove anything more than that.\nrec_folders = [\n    \"{}{}\".format(filepaths.target_prefix, p)\n    for p in os.listdir(filepaths.target_prefix)\n    if os.path.isdir(\"{}{}\".format(filepaths.target_prefix, p))\n]\nrec_folders.sort(key=lambda p: -os.path.getmti",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_recorder.py:1-44"
+    },
+    "1775": {
+        "file_id": 244,
+        "content": "The code is setting up various configurations and variables for recording audio, video, and HID events. It uses Redis for thread signaling and keeps the last 30 recordings.",
+        "type": "comment"
+    },
+    "1776": {
+        "file_id": 244,
+        "content": "me(p))\nexpired_rec_folders = rec_folders[MAX_RECORDING_COUNT:]\nprint(\"EXPIRED RECORDING FOLDER COUNT:\", len(expired_rec_folders))\nfor p in expired_rec_folders:\n    print(\"REMOVING EXPIRED RECORDING FOLDER:\", p)\n    os.system(\"rm -rf {}\".format(p))\nif all([signal is not True for _, signal in RECORDERS.items()]):\n    raise Exception(\"Should at least use one recorder.\")\nelse:\n    for key, value in RECORDERS.items():\n        if value:\n            print(\"Recording: %s\" % key)\nif check_redis_off():\n    set_redis_on()\n    time.sleep(MINIBREAK_SECONDS)\n    if check_redis_on():\n        print(\"EXECUTING MAIN PROCESSES\")\n        print(\"RECORD LENGTH: {} secs\".format(RECORD_SECONDS))\n        # execute subcommands. (subprocess)\n        if RECORDERS[\"HID\"]:\n            HIDRecorderProcess = subprocess.Popen(\n                [PYTHON_EXECUTABLE, \"mouse_keyboard_record.py\"]\n            )\n        if RECORDERS[\"Video\"]:\n            VideoRecorderProcess = subprocess.Popen(\n                [PYTHON_EXECUTABLE, \"video_record.py\"]\n    ",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_recorder.py:44-71"
+    },
+    "1777": {
+        "file_id": 244,
+        "content": "Code is removing expired recording folders and starting main processes based on user's preferences.",
+        "type": "comment"
+    },
+    "1778": {
+        "file_id": 244,
+        "content": "        )\n        if RECORDERS[\"Audio\"]:\n            AudioRecorderProcess = subprocess.Popen(\n                [PYTHON_EXECUTABLE, \"audio_record.py\"]\n            )\n        if RANDOM_ACTOR:\n            RandomActorProcess = subprocess.Popen(\n                [PYTHON_EXECUTABLE, \"random_actor_redis.py\"]\n            )\n        # time.sleep(RECORD_SECONDS)\n        for _ in range(RECORD_SECONDS):\n            time.sleep(1)\n            if check_redis_off():\n                print(\"Abnormal recorder exit detected.\")\n                print(\"Abort main recorder.\")\n                break\n        print(\"EXITING.\")\n        print(\"SET LOCK AS OFF.\")\n        set_redis_off()\n        time.sleep(MINIBREAK_SECONDS)\n        if check_redis_off():\n            exit_codes = []\n            if RECORDERS[\"HID\"]:\n                hid_exit_code = HIDRecorderProcess.wait(timeout=WAIT_TIMEOUT)\n                exit_codes.append(hid_exit_code)\n            if RECORDERS[\"Video\"]:\n                video_exit_code = VideoRecorderProcess.wait(\n              ",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_recorder.py:71-99"
+    },
+    "1779": {
+        "file_id": 244,
+        "content": "Checks if audio and random actor recorders should run, then starts them. Waits for RECORD_SECONDS before checking if any recorder abnormally exited. If so, aborts main recorder and sets redis lock as off. After a MINIBREAK_SECONDS delay, checks if the redis lock is still off and exits if it is.",
+        "type": "comment"
+    },
+    "1780": {
+        "file_id": 244,
+        "content": "      timeout=WAIT_TIMEOUT)\n                exit_codes.append(video_exit_code)\n            if RECORDERS[\"Audio\"]:\n                audio_exit_code = AudioRecorderProcess.wait(\n                    timeout=WAIT_TIMEOUT)\n                exit_codes.append(audio_exit_code)\n            if RANDOM_ACTOR:\n                random_actor_exit_code = RandomActorProcess.wait(\n                    timeout=WAIT_TIMEOUT*3)\n                exit_codes.append(random_actor_exit_code)\n            print()\n            print(\"EXIT CODES:\")\n            if RECORDERS[\"Audio\"]:\n                print(\"AUDIO - {}\".format(audio_exit_code))\n            if RECORDERS[\"Video\"]:\n                print(\"VIDEO - {}\".format(video_exit_code))\n            if RECORDERS[\"HID\"]:\n                print(\"HID - {}\".format(hid_exit_code))\n            if RANDOM_ACTOR:\n                print(\"RANDOM_ACTOR - {}\".format(random_actor_exit_code))\n            print()\n            if any([code != 0 for code in exit_codes]):\n                # you may remove all temp file",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_recorder.py:99-121"
+    },
+    "1781": {
+        "file_id": 244,
+        "content": "This code checks for the exit codes of various processes (Audio, Video, HID, and RandomActor) using wait() function. It then appends these exit codes to a list called exit_codes. If any of the exit codes are not 0, it prints the exit codes and removes all temporary files.",
+        "type": "comment"
+    },
+    "1782": {
+        "file_id": 244,
+        "content": "s under recorder folder.\n                prefix = get_prefix()\n                hid_record = \"{}hid_record.jsonl\".format(prefix)\n                audio_record = \"{}audio_record.wav\".format(prefix)\n                video_record = \"{}video_record.mp4\".format(prefix)\n                video_record_script = \"{}video_record_script.sh\".format(prefix)\n                video_timestamps = \"{}video_timestamps.json\".format(prefix)\n                hid_timestamps = \"{}hid_timestamps.json\".format(prefix)\n                audio_timestamps = \"{}audio_timestamps.json\".format(prefix)\n                for fpath in [\n                    hid_record,\n                    audio_record,\n                    video_record,\n                    video_record_script,\n                    video_timestamps,\n                    hid_timestamps,\n                    audio_timestamps,\n                ]:\n                    try:\n                        os.remove(fpath)\n                    except:\n                        pass\n                raise Exceptio",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_recorder.py:121-144"
+    },
+    "1783": {
+        "file_id": 244,
+        "content": "This code is deleting specific recorded files (hid_record, audio_record, video_record, etc.) in the recorder folder.",
+        "type": "comment"
+    },
+    "1784": {
+        "file_id": 244,
+        "content": "n(\"COMPUTER RECORDER HAS ABNORMAL EXIT CODE.\")\n            else:\n                print(\"COMPUTER RECORDER EXIT NORMALLY\")\n                # required for ntfs.\n                current_timestamp = (\n                    datetime.datetime.now().isoformat().replace(\":\", \"_\")\n                )\n                records_folder = \"{}{}\".format(\n                    filepaths.target_prefix, current_timestamp)\n                # records_folder = \"{}{}\".format(filepaths.prefix, current_timestamp)\n                print(\"MOVING RECORDS TO: {}\".format(records_folder))\n                os.mkdir(records_folder)\n                for fpath in [\n                    filepaths.hid_record,\n                    filepaths.audio_record,\n                    filepaths.video_record,\n                    filepaths.video_record_script,\n                    filepaths.video_timestamps,\n                    filepaths.hid_timestamps,\n                    filepaths.audio_timestamps,\n                ]:\n                    os.system(\"mv {} {}\".format(fp",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_recorder.py:144-165"
+    },
+    "1785": {
+        "file_id": 244,
+        "content": "Code snippet checks if the computer recorder exited normally or not. If it exited abnormally, it displays a message indicating an abnormal exit code. If it exits normally, it creates a records folder with the current timestamp and moves recorded files to that folder for organization purposes.",
+        "type": "comment"
+    },
+    "1786": {
+        "file_id": 244,
+        "content": "ath, records_folder))\n                # print(\"MAKING FINISHED INDICATOR\")\n                # os.system(\"touch {}\".format(os.path.join(records_folder, \"finished\")))\n                # or this is not needed. because it is always hard to savage things from a running instance.\n        else:\n            print(\"FAILED TO SET LOCK AS OFF.\")\n            print(\"FAILED AT FINAL CHECK.\")\n    else:\n        print(\"FAILED TO SET LOCK AS ON.\")\n        print(\"FAILED AT INIT CHECK 2\")\nelse:\n    print(\"FAILED TO SET LOCK AS OFF.\")\n    print(\"FAILED AT INIT CHECK 1\")",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/main_recorder.py:165-177"
+    },
+    "1787": {
+        "file_id": 244,
+        "content": "Checks if the lock is set correctly and prints appropriate failure messages.",
+        "type": "comment"
+    },
+    "1788": {
+        "file_id": 245,
+        "content": "/ubuntu_qemu_utm_arm_record/mount_kali_webdav_dirs.sh",
+        "type": "filepath"
+    },
+    "1789": {
+        "file_id": 245,
+        "content": "Mount and configure two WebDAV directories, create script and recordings folders, and symlink the mounted WebDAV directories to the newly created folders.",
+        "type": "summary"
+    },
+    "1790": {
+        "file_id": 245,
+        "content": "echo -e \"110110\\n\" | sudo -S echo \"enable sudo\"\nsudo apt install -y davfs2\nsudo umount /mnt/dav1\nsudo umount /mnt/dav2\nsudo rm -rf /mnt/dav1\nsudo rm -rf /mnt/dav2\nsudo mkdir /mnt/dav1\nsudo mkdir /mnt/dav2\necho -e \"root\\nroot\\n\" | sudo mount -t davfs -o noexec http://10.0.1.6:8110 /mnt/dav1\necho -e \"root\\nroot\\n\" | sudo mount -t davfs -o noexec http://10.0.1.6:8111 /mnt/dav2\nmkdir scripts\nmkdir recordings\nln -s /mnt/dav1 scripts\nln -s /mnt/dav2 recordings\n# just start stuff here.\n# sudo bash main_loop.sh",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/mount_kali_webdav_dirs.sh:1-23"
+    },
+    "1791": {
+        "file_id": 245,
+        "content": "Mount and configure two WebDAV directories, create script and recordings folders, and symlink the mounted WebDAV directories to the newly created folders.",
+        "type": "comment"
+    },
+    "1792": {
+        "file_id": 246,
+        "content": "/ubuntu_qemu_utm_arm_record/mount_yoga_webdav_dir.sh",
+        "type": "filepath"
+    },
+    "1793": {
+        "file_id": 246,
+        "content": "Enabling sudo, installing necessary Python packages, removing DAVFS pid locks, installing davfs2, creating and preparing mount point directories, and setting up WebDAV shares for storing scripts and recordings.",
+        "type": "summary"
+    },
+    "1794": {
+        "file_id": 246,
+        "content": "cd agi_computer_control/ubuntu_qemu_utm_arm_record\n# enable sudo\necho -e \"KSDA37287522\\n\" | sudo -S echo \"enable sudo\"\nsudo apt-get install -y python3-tk python3-dev\n# remove davfs pid locks\nsudo rm /var/run/mount.davfs/mnt-dav1.pid\nsudo rm /var/run/mount.davfs/mnt-dav2.pid\nsudo apt install -y davfs2\n#sudo mkdir /mnt/dav1\nsudo mkdir /mnt/dav2\nsudo umount /mnt/dav1\nsudo umount /mnt/dav2\nsudo rm -rf scripts\nsudo rm -rf recordings\n#echo -e \"root\\nroot\\n\" | sudo mount -t davfs -o noexec http://192.168.56.1:8110 /mnt/dav1\necho -e \"root\\nroot\\n\" | sudo mount -t davfs -o noexec http://192.168.56.1:8111 /mnt/dav2\n#mkdir scripts\n#mkdir recordings\n#ln -s /mnt/dav1 scripts\nln -s /mnt/dav2 recordings",
+        "type": "code",
+        "location": "/ubuntu_qemu_utm_arm_record/mount_yoga_webdav_dir.sh:1-28"
+    },
+    "1795": {
+        "file_id": 246,
+        "content": "Enabling sudo, installing necessary Python packages, removing DAVFS pid locks, installing davfs2, creating and preparing mount point directories, and setting up WebDAV shares for storing scripts and recordings.",
+        "type": "comment"
+    },
+    "1796": {
+        "file_id": 247,
+        "content": "/ubuntu_qemu_utm_arm_record/mouse_keyboard_record.py",
+        "type": "filepath"
+    },
+    "1797": {
+        "file_id": 247,
+        "content": "The code uses the `pyautogui` library to import essential modules, define functions for capturing keyboard and mouse events, and record HID events in a JSON lines file with timestamps. Recording begins when Redis is offline, or an exception is raised if the Redis connection fails or is off.",
+        "type": "summary"
+    },
+    "1798": {
+        "file_id": 247,
         "content": "# import datetime\nfrom utils import (\n    filepaths,\n    check_redis_on,\n    check_redis_off,\n    TimestampedContext,\n    set_redis_off_on_exception,\n)\nimport jsonlines\nimport time\nfrom pynput import mouse\nfrom utils import timestep  # this will be sufficient?\nfrom pynput import keyboard\nHIDEvents = []\nset_redis_off_on_exception()\n# problem is the windows zooming factor.\n# is it really the problem?\ndef on_press(key):\n    if type(key) != str:\n        key = str(key)\n    HIDEvents.append((\"key_press\", key))\ndef on_release(key):\n    if type(key) != str:\n        key = str(key)\n    HIDEvents.append((\"key_release\", key))\nkeyboard_listener = keyboard.Listener(on_press=on_press, on_release=on_release)\nkeyboard_listener.start()\ndef on_move(x: int, y: int):\n    HIDEvents.append((\"mouse_move\", [x, y]))\ndef on_click(x: int, y: int, button: mouse.Button, pressed: bool):\n    HIDEvents.append((\"mouse_click\", [x, y, str(button), pressed]))\ndef on_scroll(x: int, y: int, dx: int, dy: int):\n    HIDEvents.append((\"mouse_scroll\", [x, y, d",
         "type": "code",
         "location": "/ubuntu_qemu_utm_arm_record/mouse_keyboard_record.py:1-49"
     },
-    "1701": {
-        "file_id": 224,
+    "1799": {
+        "file_id": 247,
         "content": "The code imports necessary modules and defines functions for capturing keyboard and mouse events, and then starts listening for these events. It appends the recorded events to a list called HIDEvents in the format (\"event_type\", event_data).",
         "type": "comment"
-    },
-    "1702": {
-        "file_id": 224,
-        "content": "x, dy]))\n# # ...or, in a non-blocking fashion:\nlistener = mouse.Listener(on_move=on_move, on_click=on_click, on_scroll=on_scroll)\nlistener.start()\n# you may start that non-blocking. start some looping-forever thread for writing states to file.\n# import pyautogui\n# import datetime\n# loopCount = 500\nprint(\"RECORDING START\")\n# world_start = datetime.datetime.now()\nif check_redis_on():\n    with TimestampedContext(filepaths.hid_timestamps) as t:\n        with jsonlines.open(filepaths.hid_record, \"w\") as w:\n            # for _ in range(loopCount):\n            while check_redis_off() is False:\n                time.sleep(timestep)\n                # as for screenshot, use mss instead of screenshot.\n                #     screenshot = pyautogui.screenshot()\n                # shall you mark the time here.\n                state = dict(HIDEvents=HIDEvents)  # also the image!\n                print(\"STATE?\", state)\n                w.write(state)\n                t.commit()\n                HIDEvents = []\n                mouselo",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/mouse_keyboard_record.py:49-82"
-    },
-    "1703": {
-        "file_id": 224,
-        "content": "The code is creating a non-blocking mouse and keyboard listener using the `pyautogui` library, continuously recording HID events (mouse movements, clicks, and scrolls) into a JSON lines file with timestamps. The recording starts when Redis is offline.",
-        "type": "comment"
-    },
-    "1704": {
-        "file_id": 224,
-        "content": "c = []\n    print(\"EXITING HID RECORDER.\")\n    print(\"SAVING HID RECORDS TO:\", filepaths.hid_record)\nelse:\n    raise Exception(\"HIDRecorder: Can't start. Redis signal is off.\".upper())",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/mouse_keyboard_record.py:82-86"
-    },
-    "1705": {
-        "file_id": 224,
-        "content": "Code snippet handles the case when redis connection fails or is off. It raises an exception with the message \"HIDRecorder: Can't start. Redis signal is off.\"",
-        "type": "comment"
-    },
-    "1706": {
-        "file_id": 225,
-        "content": "/ubuntu_qemu_utm_arm_record/prepare_workspace.sh",
-        "type": "filepath"
-    },
-    "1707": {
-        "file_id": 225,
-        "content": "Creating workspace and linking necessary directories",
-        "type": "summary"
-    },
-    "1708": {
-        "file_id": 225,
-        "content": "cd\nmkdir agi_workspace\ncd agi_workspace\nln -s /mnt/dav1 ~/agi_workspace/scripts\nln -s /mnt/dav2 ~/agi_workspace/recordings\ncd agi_workspace\ncp scripts/* .",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/prepare_workspace.sh:1-7"
-    },
-    "1709": {
-        "file_id": 225,
-        "content": "Creating workspace and linking necessary directories",
-        "type": "comment"
-    },
-    "1710": {
-        "file_id": 226,
-        "content": "/ubuntu_qemu_utm_arm_record/pyaudio_get_device_info.py",
-        "type": "filepath"
-    },
-    "1711": {
-        "file_id": 226,
-        "content": "The code retrieves the audio input device list, rearranges it to prioritize a virtual driver (BlackHole), checks for available channels, and obtains the list of audio devices using Python Audio (PyAudio).",
-        "type": "summary"
-    },
-    "1712": {
-        "file_id": 226,
-        "content": "import pyaudio\ndef get_audio_input_device_list(p):\n    info = p.get_host_api_info_by_index(0)\n    numdevices = info.get(\"deviceCount\")\n    # make speakers recordable? macos needs blackhole.\n    # BEFORE\n    # Input Device id  0  -  MacBook Air Microphone\n    # Input Device id  2  -  NoMachine Audio Adapter\n    # Input Device id  3  -  NoMachine Microphone Adapter\n    # AFTER\n    # Input Device id  0  -  BlackHole 2ch\n    # Input Device id  1  -  MacBook Air Microphone\n    # Input Device id  3  -  NoMachine Audio Adapter\n    # Input Device id  4  -  NoMachine Microphone Adapter\n    input_device_list = []\n    for i in range(0, numdevices):\n        if (\n            p.get_device_info_by_host_api_device_index(0, i).get(\"maxInputChannels\")\n        ) > 0:\n            device_name = p.get_device_info_by_host_api_device_index(0, i).get(\"name\")\n            print(\"Input Device id \", i, \" - \", device_name)\n            input_device_list.append((i, device_name))\n    return input_device_list\nif __name__ == \"__main__\":\n    p ",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/pyaudio_get_device_info.py:1-33"
-    },
-    "1713": {
-        "file_id": 226,
-        "content": "The code retrieves the available audio input device list and rearranges it so that a virtual audio driver (BlackHole) is listed first, followed by the actual devices. It checks if the device has any available input channels before appending the device name to the input_device_list.",
-        "type": "comment"
-    },
-    "1714": {
-        "file_id": 226,
-        "content": "= pyaudio.PyAudio()\n    get_audio_input_device_list(p)",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/pyaudio_get_device_info.py:33-34"
-    },
-    "1715": {
-        "file_id": 226,
-        "content": "Getting the Python Audio (PyAudio) instance and calling a function to get the list of audio input devices.",
-        "type": "comment"
-    },
-    "1716": {
-        "file_id": 227,
-        "content": "/ubuntu_qemu_utm_arm_record/pyscreenshot_output.py",
-        "type": "filepath"
-    },
-    "1717": {
-        "file_id": 227,
-        "content": "The code uses PyAutoGUI and mss libraries to capture screenshots, save them as \"output.png\" and convert them to bytes for writing to stdout. It checks Redis status and raises an exception if off.",
-        "type": "summary"
-    },
-    "1718": {
-        "file_id": 227,
-        "content": "# import pyautogui\n#\n# img = pyautogui.screenshot()\n##print(img)\n##print(dir(img))\n# img.save(\"output.png\")\n#\n# img_bytes = img.tobytes()\n#\n# print(len(img_bytes), type(img_bytes))\n#\n# import sys\n#\n## maybe it is just completely zero.\n#\n# with open(sys.stdout.fileno(), 'wb', closefd=False) as stdout:\n#    #stdout.write(b\"hello world\")\n#    stdout.write(img_bytes)\n#    stdout.flush()\n# this sucks. this is wayland. hell. what will happen on pynput?\n# i'd better stick to x11vnc instead. but is this x11?\n# import pyscreenshot\nimport mss\nimport sys\nfrom utils import (\n    TimestampedContext,\n    filepaths,\n    check_redis_on,\n    check_redis_off,\n    set_redis_off_on_exception,\n)\nset_redis_off_on_exception()\ns = mss.mss()\n# where is the damn mouse cursor?\nif check_redis_on():\n    with TimestampedContext(filepaths.video_timestamps) as t:\n        with open(sys.stdout.fileno(), \"wb\", closefd=False) as stdout:\n            while check_redis_off() is False:\n                # img = pyscreenshot.grab()\n                # img_bytes = img.",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/pyscreenshot_output.py:1-46"
-    },
-    "1719": {
-        "file_id": 227,
-        "content": "The code is capturing a screenshot using the PyAutoGUI library and saving it as \"output.png\". It then converts the image to bytes and attempts to write it to the standard output (stdout). The code uses the mss library to capture the screenshot, but there are issues with redirection and compatibility between Wayland and X11. Additionally, the code imports modules from utils and checks the Redis status using check_redis_on() and check_redis_off().",
-        "type": "comment"
-    },
-    "1720": {
-        "file_id": 227,
-        "content": "tobytes()\n                img = s.grab(s.monitors[0])\n                img_bytes = img.raw\n                stdout.write(img_bytes)\n                stdout.flush()\n                t.commit()\nelse:\n    raise Exception(\"VideoRecorder: Can't start. Redis signal is off.\".upper())",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/pyscreenshot_output.py:46-53"
-    },
-    "1721": {
-        "file_id": 227,
-        "content": "Code is capturing the first monitor's screen as an image and writing it to stdout. If Redis signal is off, an exception is raised.",
-        "type": "comment"
-    },
-    "1722": {
-        "file_id": 228,
-        "content": "/ubuntu_qemu_utm_arm_record/random_actor_redis.py",
-        "type": "filepath"
-    },
-    "1723": {
-        "file_id": 228,
-        "content": "The code utilizes PyAutogui in Python for generating random GUI interactions across platforms, using keyboard keys and modifiers for software testing. It also incorporates try-except blocks for error handling and Redis availability checks.",
-        "type": "summary"
-    },
-    "1724": {
-        "file_id": 228,
-        "content": "# you generate states.jsonl.\n# must include all possible states.\n# try to match the distribution?\n# i think it is kind of like monkey.js (aka monkey testing)?\n# it's better to add some kind of randomness, or \"experienced learner\" responsible for generating new data, to overcome the shortage of imagination and possibilities.\n# virtualbox unattended installation:\n# vboxuser:changeme\n# connect via openai universe (vnc)\n# you can setup initial desktop environments, just like yours, using automated scripts.\n# you perform your actions randomly, inject actions while the bot is acting alone.\n# first let's use pyautogui as random actor.\n# then may consider cross-platform RPA record/replay libs\n# like: https://github.com/repeats/Repeat\n# you may use pyinput or something else.\nfrom functools import lru_cache\nimport random\nimport pyautogui\nimport time\nSLEEP = 0.2\n# there are several keys we should never touch.\nKEY_CHARS = [\n    \"\\t\",\n    \"\\n\",\n    \"\\r\",\n    \" \",\n    \"!\",\n    '\"',\n    \"#\",\n    \"$\",\n    \"%\",\n    \"&\",\n    \"'\",\n    ",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/random_actor_redis.py:1-43"
-    },
-    "1725": {
-        "file_id": 228,
-        "content": "This code is generating random actions using the PyAutogui library in a Python script. The goal seems to be testing software, potentially through random and unpredictable user interactions. The code includes a sleep parameter for timing between actions and a list of keys that should not be used in the random actions. It also mentions exploring other cross-platform RPA libraries in the future.",
-        "type": "comment"
-    },
-    "1726": {
-        "file_id": 228,
-        "content": "\"(\",\n    \")\",\n    \"*\",\n    \"+\",\n    \",\",\n    \"-\",\n    \".\",\n    \"/\",\n    \"0\",\n    \"1\",\n    \"2\",\n    \"3\",\n    \"4\",\n    \"5\",\n    \"6\",\n    \"7\",\n    \"8\",\n    \"9\",\n    \":\",\n    \";\",\n    \"<\",\n    \"=\",\n    \">\",\n    \"?\",\n    \"@\",\n    \"[\",\n    \"\\\\\",\n    \"]\",\n    \"^\",\n    \"_\",\n    \"`\",\n    \"a\",\n    \"b\",\n    \"c\",\n    \"d\",\n    \"e\",\n    \"f\",\n    \"g\",\n    \"h\",\n    \"i\",\n    \"j\",\n    \"k\",\n    \"l\",\n    \"m\",\n    \"n\",\n    \"o\",\n    \"p\",\n    \"q\",\n    \"r\",\n    \"s\",\n    \"t\",\n    \"u\",\n    \"v\",\n    \"w\",\n    \"x\",\n    \"y\",\n    \"z\",\n    \"{\",\n    \"|\",\n    \"}\",\n    \"~\",\n]\nKEY_MOD = [\n    \"alt\",\n    \"altleft\",\n    \"altright\",\n    \"shift\",\n    \"shiftleft\",\n    \"shiftright\",\n    \"ctrl\",\n    \"ctrlleft\",\n    \"ctrlright\",\n]\nKEY_WIN_MOD = [\n    \"win\",\n    \"winleft\",\n    \"winright\",\n]\nKEY_MAC_MOD = [\n    \"option\",\n    \"optionleft\",\n    \"optionright\",\n    \"command\",\n]\nKEY_DIRECTION = [\n    \"down\",\n    \"up\",\n    \"right\",\n    \"left\",\n]\nKEY_SPECIAL = [\n    \"backspace\",\n    \"capslock\",\n    \"del\",\n    \"delete\",\n    \"tab\",\n    \"home\",\n    \"insert\",\n    \"end\",\n    \"enter\",\n    \"esc\",\n    \"escape\",\n    \"pagedown\",\n    \"pageup\",\n    \"p",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/random_actor_redis.py:43-151"
-    },
-    "1727": {
-        "file_id": 228,
-        "content": "The code is a list of characters representing various keyboard keys, modifiers, and special keys. It includes letters, numbers, symbols, and various key combinations for different operating systems (Windows, Mac).",
-        "type": "comment"
-    },
-    "1728": {
-        "file_id": 228,
-        "content": "gdn\",\n    \"pgup\",\n    \"return\",\n]\nKEY_FUNC = [\n    \"fn\",\n    \"f1\",\n    \"f10\",\n    \"f11\",\n    \"f12\",\n    \"f13\",\n    \"f14\",\n    \"f15\",\n    \"f16\",\n    \"f17\",\n    \"f18\",\n    \"f19\",\n    \"f2\",\n    \"f20\",\n    \"f21\",\n    \"f22\",\n    \"f23\",\n    \"f24\",\n    \"f3\",\n    \"f4\",\n    \"f5\",\n    \"f6\",\n    \"f7\",\n    \"f8\",\n    \"f9\",\n]\nKEY_NUMPAD = [\n    \"num0\",\n    \"num1\",\n    \"num2\",\n    \"num3\",\n    \"num4\",\n    \"num5\",\n    \"num6\",\n    \"num7\",\n    \"num8\",\n    \"num9\",\n    \"numlock\",\n]\nKEY_MORE = [\n    \"accept\",\n    \"pause\",\n    \"add\",\n    \"apps\",\n    \"browserback\",\n    \"browserfavorites\",\n    \"browserforward\",\n    \"browserhome\",\n    \"browserrefresh\",\n    \"browsersearch\",\n    \"browserstop\",\n    \"clear\",\n    \"convert\",\n    \"decimal\",\n    \"divide\",\n    \"execute\",\n    \"playpause\",\n    \"prevtrack\",\n    \"print\",\n    \"printscreen\",\n    \"prntscrn\",\n    \"prtsc\",\n    \"prtscr\",\n    \"scrolllock\",\n    \"select\",\n    \"separator\",\n    \"sleep\",\n    \"space\",\n    \"stop\",\n    \"subtract\",\n    \"volumedown\",\n    \"volumemute\",\n    \"volumeup\",\n    \"yen\",\n    \"final\",\n    \"hanguel\",\n    \"hangul\",\n    \"hanja\",\n    \"h",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/random_actor_redis.py:151-237"
-    },
-    "1729": {
-        "file_id": 228,
-        "content": "These lines define various keyboard function keys, number pad keys, and other additional keys. The code seems to be related to handling input from a keyboard or designing an interface for interacting with these keys in a software application.",
-        "type": "comment"
-    },
-    "1730": {
-        "file_id": 228,
-        "content": "elp\",\n    \"junja\",\n    \"kana\",\n    \"kanji\",\n    \"launchapp1\",\n    \"launchapp2\",\n    \"launchmail\",\n    \"launchmediaselect\",\n    \"modechange\",\n    \"multiply\",\n    \"nexttrack\",\n    \"nonconvert\",\n]\nALL_KEYS = (\n    KEY_CHARS\n    + KEY_DIRECTION\n    + KEY_MOD\n    + KEY_MAC_MOD\n    + KEY_WIN_MOD\n    + KEY_SPECIAL\n    + KEY_FUNC\n    + KEY_NUMPAD\n    + KEY_MORE\n)\nINIT_KEYS = KEY_CHARS + KEY_DIRECTION + KEY_MOD + KEY_WIN_MOD + KEY_SPECIAL\n# turn off pyautogui failsafe.\npyautogui.FAILSAFE = False\ndef get_random_single_key():\n    key = random.choice(INIT_KEYS)\n    return key\ndef random_press_single_key():\n    key = get_random_single_key()\n    pyautogui.press(key)\nKEY_MOD_COMMON = ['ctrl','alt','shift'] # disable win key to prevent locking the system.\n# KEY_MOD_COMMON = ['ctrl','alt','shift','win']\ndef random_hot_key():\n    key = get_random_single_key()\n    selected_indexs = random.sample([i for i in range(len(KEY_MOD_COMMON))], random.randint(1, len(KEY_MOD_COMMON)-1))\n    selected_indexs.sort()\n    selected_hotkeys = [KEY_MOD_COMMON[",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/random_actor_redis.py:237-291"
-    },
-    "1731": {
-        "file_id": 228,
-        "content": "This code is defining various key types and generating random keys for a hotkey function. It also disables the pyautogui failsafe and allows for generation of random single keys and combination hotkeys using common modifier keys (ctrl, alt, shift).",
-        "type": "comment"
-    },
-    "1732": {
-        "file_id": 228,
-        "content": "i] for i in selected_indexs]\n    pyautogui.hotkey(*selected_hotkeys,key)\n# no keydown support? what about states?\ndef get_random_mod_key():\n    key = random.choice(KEY_SPECIAL + KEY_WIN_MOD)\n    return key\ndef random_mod_key_down():\n    key = get_random_mod_key()\n    try:\n        pyautogui.keyDown(key)\n    except:\n        pass\ndef random_mod_key_up():\n    key = get_random_mod_key()\n    try:\n        pyautogui.keyUp(key)\n    except:\n        pass\ndef get_random_offset():\n    offset = random.randint(-100, 100)\n    return offset\ndef random_mouse_move():\n    xOffset = get_random_offset()\n    yOffset = get_random_offset()\n    pyautogui.move(xOffset, yOffset)\n@lru_cache(maxsize=1)\ndef get_screen_size():\n    return pyautogui.size()  # (width, height)\ndef get_random_screen_position():\n    width, height = get_screen_size()\n    return random.randint(0, width), random.randint(0, height)\ndef random_mouse_moveTo():\n    x, y = get_random_screen_position()\n    pyautogui.moveTo(x, y)\n# mouse click, mouse move, mouse scroll, mouse double",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/random_actor_redis.py:291-345"
-    },
-    "1733": {
-        "file_id": 228,
-        "content": "This code defines several functions to generate random key presses, mouse movements, and scrolls. It uses the PyAutoGUI library for automating GUI interactions. The get_random_mod_key() function returns a random special or Win-Mod key, while random_mod_key_down() and random_mod_key_up() are used to press and release these keys respectively. The get_random_offset() function generates random offsets for mouse movements, which are then applied using random_mouse_move(). The get_screen_size() function returns the current screen size, and get_random_screen_position() generates a random position within the screen bounds. Finally, random_mouse_moveTo() moves the cursor to the randomly generated screen position.",
-        "type": "comment"
-    },
-    "1734": {
-        "file_id": 228,
-        "content": " click\ndef random_mouse_scroll():\n    # don't use hscroll/vscroll because it only supports linux\n    pyautogui.scroll(get_random_offset())\nMOUSE_BUTTONS = [pyautogui.LEFT, pyautogui.MIDDLE, pyautogui.RIGHT]\ndef get_random_mouse_button():\n    button = random.choice(MOUSE_BUTTONS)\n    return button\nMOUSE_ACTIONS = [\n    lambda: pyautogui.leftClick(),\n    lambda: pyautogui.rightClick(),\n    lambda: pyautogui.middleClick(),\n    # lambda: pyautogui.mouseDown(button=get_random_mouse_button()),\n    # lambda: pyautogui.mouseUp(button=get_random_mouse_button()),\n]\ndef random_mouse_button_action():\n    try:\n        action = random.choice(MOUSE_ACTIONS)\n    except:\n        pass\n    action()\nif __name__ == \"__main__\":\n    from utils import check_redis_on, check_redis_off, set_redis_off_on_exception\n    set_redis_off_on_exception()\n    if check_redis_on():\n        try:\n            random_keyboard_actions = [\n                # random_mod_key_down,\n                # random_mod_key_up,\n                random_hot_key,\n             ",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/random_actor_redis.py:345-390"
-    },
-    "1735": {
-        "file_id": 228,
-        "content": "Code provides functions for random mouse actions such as scroll, button clicks, and button-related actions. It also has a try-except block to handle any exceptions that may occur during execution. The code checks if Redis is on and handles any exceptions using the set_redis_off_on_exception() function.",
-        "type": "comment"
-    },
-    "1736": {
-        "file_id": 228,
-        "content": "   random_press_single_key,\n            ]\n            random_mouse_actions = [\n                random_mouse_button_action,\n                random_mouse_move,\n                random_mouse_moveTo,\n                random_mouse_scroll,\n            ]\n            random_actions = random_mouse_actions + random_keyboard_actions\n            # for _ in range(10):\n            while check_redis_off() is False:\n                random_action = random.choice(random_actions)\n                try:\n                    random_action()\n                    time.sleep(SLEEP)\n                except:\n                    pass\n            # to recover from mortality...\n            # use try...finally or something...\n            # context manager...\n        finally:\n            for key in KEY_MOD + KEY_WIN_MOD + KEY_MAC_MOD:\n                try:\n                    pyautogui.keyUp(key)\n                except:\n                    pass\n            for button in MOUSE_BUTTONS:\n                try:\n                    pyautogui.mouseUp(button)\n ",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/random_actor_redis.py:390-424"
-    },
-    "1737": {
-        "file_id": 228,
-        "content": "This code randomly selects and performs mouse or keyboard actions until a Redis server becomes available. It uses try-except to handle potential errors and ensures all keyboard modifier keys are released after the random actions are performed.",
-        "type": "comment"
-    },
-    "1738": {
-        "file_id": 228,
-        "content": "               except:\n                    pass",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/random_actor_redis.py:424-425"
-    },
-    "1739": {
-        "file_id": 228,
-        "content": "Handling any potential exception silently.",
-        "type": "comment"
-    },
-    "1740": {
-        "file_id": 229,
-        "content": "/ubuntu_qemu_utm_arm_record/record_audio_pulseaudio.sh",
-        "type": "filepath"
-    },
-    "1741": {
-        "file_id": 229,
-        "content": "Records audio from a specific pulseaudio stream, encodes it to Opus format and saves in the Music directory.",
-        "type": "summary"
-    },
-    "1742": {
-        "file_id": 229,
-        "content": "parec --monitor-stream=\"$(pacmd list-sink-inputs | awk '$1 == \"index:\" {print $2}')\" | opusenc --raw - $(xdg-user-dir MUSIC)/recording-$(date +\"%F_%H-%M-%S\").opus",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/record_audio_pulseaudio.sh:1-1"
-    },
-    "1743": {
-        "file_id": 229,
-        "content": "Records audio from a specific pulseaudio stream, encodes it to Opus format and saves in the Music directory.",
-        "type": "comment"
-    },
-    "1744": {
-        "file_id": 230,
-        "content": "/ubuntu_qemu_utm_arm_record/requirements.txt",
-        "type": "filepath"
-    },
-    "1745": {
-        "file_id": 230,
-        "content": "This code is listing the required Python packages for a project: redis, jsonlines, pynput, pytweening (commented), pyautogui 0.9.50, mss, parse (commented), and pyaudio (commented).",
-        "type": "summary"
-    },
-    "1746": {
-        "file_id": 230,
-        "content": "redis\njsonlines\npynput\n# pytweening\npyautogui==0.9.50\n# pyautogui==0.9.8\nmss==3\nparse\n# pyaudio\n# install python3-pyaudio using apt\n# you'd probably want a different python executable on ubuntu 16.04",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/requirements.txt:1-11"
-    },
-    "1747": {
-        "file_id": 230,
-        "content": "This code is listing the required Python packages for a project: redis, jsonlines, pynput, pytweening (commented), pyautogui 0.9.50, mss, parse (commented), and pyaudio (commented).",
-        "type": "comment"
-    },
-    "1748": {
-        "file_id": 231,
-        "content": "/ubuntu_qemu_utm_arm_record/start_main_loop.sh",
-        "type": "filepath"
-    },
-    "1749": {
-        "file_id": 231,
-        "content": "Enables and starts Redis server, kills running Python processes, kills bash processes named main_loop (excluding grep), runs main_loop.sh in background without logging.",
-        "type": "summary"
-    },
-    "1750": {
-        "file_id": 231,
-        "content": "systemctl enable redis-server\nsystemctl start redis-server\nps aux | grep python | grep -v grep | awk '{print $2}' | xargs -iabc kill -s KILL abc\nps aux | grep bash | grep main_loop | grep -v grep | grep -v start | awk '{print $2}' | xargs -iabc kill -s KILL abc\nnohup bash main_loop.sh &> /dev/null &",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/start_main_loop.sh:1-5"
-    },
-    "1751": {
-        "file_id": 231,
-        "content": "Enables and starts Redis server, kills running Python processes, kills bash processes named main_loop (excluding grep), runs main_loop.sh in background without logging.",
-        "type": "comment"
-    },
-    "1752": {
-        "file_id": 232,
-        "content": "/ubuntu_qemu_utm_arm_record/test_util.py",
-        "type": "filepath"
-    },
-    "1753": {
-        "file_id": 232,
-        "content": "Creating a timestamped context with name \"abc\" and committing it. Dividing by zero, likely causing an error.",
-        "type": "summary"
-    },
-    "1754": {
-        "file_id": 232,
-        "content": "from utils import TimestampedContext\nwith TimestampedContext(\"abc\") as f:\n    f.commit()\n    shit = 1 / 0",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/test_util.py:1-5"
-    },
-    "1755": {
-        "file_id": 232,
-        "content": "Creating a timestamped context with name \"abc\" and committing it. Dividing by zero, likely causing an error.",
-        "type": "comment"
-    },
-    "1756": {
-        "file_id": 233,
-        "content": "/ubuntu_qemu_utm_arm_record/utils.py",
-        "type": "filepath"
-    },
-    "1757": {
-        "file_id": 233,
-        "content": "The code imports Redis libraries, defines functions for recordings and controls, includes a TimestampedContext class for timestamped log files management, and provides an exception handling function that shuts down Redis upon main program exceptions.",
-        "type": "summary"
-    },
-    "1758": {
-        "file_id": 233,
-        "content": "# timestamp, redis, constants.\n# PYTHON_EXECUTABLE = 'python3' # just in case.\nimport json\nimport time\nfrom typing import Union\nimport functools\nimport redis\nimport os\nimport sys\nPYTHON_EXECUTABLE = sys.executable\n@functools.lru_cache(maxsize=1)\ndef get_redis_client():\n    r = redis.Redis(host=\"localhost\", port=6379, db=0)\n    return r\n# it is the main recorder which will pack all recordings into hdf5 file format after success.\nPREFIX_KEY = \"RECORD_PREFIX\"\nimport uuid\ndef set_prefix():\n    r = get_redis_client()\n    prefix = \"/tmp/{}/\".format(str(uuid.uuid4()).replace(\"-\", \"_\"))\n    print(\"SET PREFIX: {}\".format(prefix))\n    os.mkdir(prefix)\n    r.set(PREFIX_KEY, prefix)\ndef get_prefix():\n    r = get_redis_client()\n    val = r.get(PREFIX_KEY)\n    if val:\n        dval = val.decode('utf-8')\n        print(\"GET PREFIX: {}\".format(dval))\n        return dval\n    return val\nCONFIG_PATH = \"config.json\"\nwith open(CONFIG_PATH, 'r') as f:\n    config = json.load(f)\nMAX_RECORDING_COUNT = 30\nclass filepaths:\n    # prefix = config['fil",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/utils.py:1-50"
-    },
-    "1759": {
-        "file_id": 233,
-        "content": "This code imports various libraries and defines functions for working with a Redis database, setting and getting prefixes, and handling file paths. It also sets the maximum recording count to 30. The code loads configuration from a JSON file called \"config.json\" and uses UUIDs to generate unique temporary directories for recordings.",
-        "type": "comment"
-    },
-    "1760": {
-        "file_id": 233,
-        "content": "epaths_prefix']\n    # @property\n    prefix = get_prefix()\n    target_prefix = config['filepaths_prefix']\n    # prefix = \"./test_record/\"\n    hid_record = \"{}hid_record.jsonl\".format(prefix)\n    audio_record = \"{}audio_record.wav\".format(prefix)\n    video_record = \"{}video_record.mp4\".format(prefix)\n    video_record_script = \"{}video_record_script.sh\".format(prefix)\n    video_timestamps = \"{}video_timestamps.json\".format(prefix)\n    hid_timestamps = \"{}hid_timestamps.json\".format(prefix)\n    audio_timestamps = \"{}audio_timestamps.json\".format(prefix)\nlock_key = \"HID_MAIN_RECORDER_LOCK\"\nsig_on = \"ON\"\nsig_off = \"OFF\"\ntimestep = 0.03\n# filePath = \"states.jsonl\"\ndef set_redis_off():\n    r = get_redis_client()\n    r.set(lock_key, sig_off)\ndef set_redis_on():\n    r = get_redis_client()\n    r.set(lock_key, sig_on)\ndef get_redis_value() -> Union[None, str]:\n    r = get_redis_client()\n    val = r.get(lock_key)\n    if val:\n        val = val.decode(\"utf-8\")\n    return val\ndef check_redis_off():\n    return get_redis_value() == ",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/utils.py:50-92"
-    },
-    "1761": {
-        "file_id": 233,
-        "content": "This code defines a class that manages the recording and control of HID, audio, and video data. It sets up various file paths for storing the recordings and their timestamps. The code also includes functions for setting and getting values from Redis, a data store, to signal if the main recorder is on or off.",
-        "type": "comment"
-    },
-    "1762": {
-        "file_id": 233,
-        "content": "sig_off\ndef check_redis_on():\n    return get_redis_value() == sig_on\nclass TimestampedLogCreater:\n    def __init__(self, file_name, indent_output=True):\n        self.file_name = file_name\n        self.timestamp_list = []\n        self.indent_output = indent_output\n        self.last_int_timestamp = -1\n    def clear(self):\n        self.timestamp_list = []\n    def commit(self):\n        timestamp = time.time()\n        # show info every 1 second.\n        int_timestamp = int(timestamp)\n        if int_timestamp > self.last_int_timestamp:\n            print(\"Appending timestamp at `{}`:\".format(\n                self.file_name), timestamp)\n            self.last_int_timestamp = int_timestamp\n        self.timestamp_list.append(timestamp)\n    def read(self):\n        with open(self.file_name, \"r\") as f:\n            string = f.read()\n            data = json.loads(string)\n        for elem in data:\n            assert type(elem) == float\n        self.timestamp_list = data\n        return data\n    def write(self):\n        with open(se",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/utils.py:92-129"
-    },
-    "1763": {
-        "file_id": 233,
-        "content": "This code defines a class, TimestampedLogCreater, that tracks and saves timestamps in a file. The `commit()` method records a new timestamp every second, while the `read()` method loads previous timestamps from the file if it exists.",
-        "type": "comment"
-    },
-    "1764": {
-        "file_id": 233,
-        "content": "lf.file_name, \"w+\") as f:\n            string = json.dumps(\n                self.timestamp_list, indent=4 if self.indent_output else None\n            )\n            f.write(string)\n        print(\"TIMESTAMPED LOG WRITE TO: {}\".format(self.file_name))\n# create some context manager, for exporting the timestamped log.\nclass TimestampedContext:\n    def __init__(self, file_name):\n        self.file_name = file_name\n        print(\"INIT TIMESTAMPED CONTEXT AT: {}\".format(self.file_name))\n        if os.path.exists(file_name):\n            if os.path.isfile(file_name):\n                print(\"REMOVING OLD TIMESTAMPED CONTEXT AT: {}\".format(\n                    self.file_name))\n                os.remove(file_name)\n            else:\n                raise Exception(\n                    \"PATH {} EXISTS AND IS NOT A FILE.\".format(self.file_name)\n                )\n        self.mTimestampedLogCreater = TimestampedLogCreater(self.file_name)\n    def __enter__(self):\n        print(\"ENTER TIMESTAMPED CONTEXT AT: {}\".format(self.file",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/utils.py:129-154"
-    },
-    "1765": {
-        "file_id": 233,
-        "content": "Creates a TimestampedContext class for managing timestamped log files. If file exists and is not a file, raises an exception. If file exists and is a file, removes it. Opens the file in write mode and writes JSON-formatted timestamp list to it. Prints log write location upon successful writing.",
-        "type": "comment"
-    },
-    "1766": {
-        "file_id": 233,
-        "content": "_name))\n        return self.mTimestampedLogCreater\n    def __exit__(self, exc_type, exc_value, exc_traceback):\n        # we don't have to take care of this.\n        if exc_type == None:\n            self.mTimestampedLogCreater.write()\n        else:\n            print(\"ERROR IN TIMESTAMPED CONTEXT\")\n            print(\"NOT WRITING TIMESTAMPED LOG AT {}\".format(self.file_name))\n        print(\"EXITING TIMESTAMPED CONTEXT\")\ndef set_redis_off_on_exception(main=False):\n    def exception_hook(exc_type, exc_value, tb):\n        # print('Traceback:')\n        # filename = tb.tb_frame.f_code.co_filename\n        # name = tb.tb_frame.f_code.co_name\n        # line_no = tb.tb_lineno\n        # print(f\"File {filename} line {line_no}, in {name}\")\n        # # Exception type and value\n        # print(f\"{exc_type.__name__}, Message: {exc_value}\")\n        if main:\n            if os.path.exists(get_prefix()):\n                os.system(\"rm -rf {}\".format(get_prefix()))\n        set_redis_off()\n        import traceback\n        print(\"*** ",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/utils.py:154-183"
-    },
-    "1767": {
-        "file_id": 233,
-        "content": "Function to create a timestamped log file and handle exceptions.\n\nThis code defines two functions - `TimestampedContext` and `set_redis_off_on_exception`. \n\n1. The `TimestampedContext` function is a context manager that creates a log file with a timestamp in its name. It writes to the file on exit. If an exception occurs, it will print an error message instead of writing to the log file.\n2. The `set_redis_off_on_exception` function sets up an exception hook that shuts down the Redis server and turns it off when an exception is thrown in the main program.",
-        "type": "comment"
-    },
-    "1768": {
-        "file_id": 233,
-        "content": "Traceback: ***\")\n        # traceback.print_tb(tb)\n        # breakpoint()\n        traceback.print_last()\n        # traceback.print_exc()\n        # traceback.print_tb(tb, limit=10)\n        # print(dir(tb))\n        # tb.print_tb()\n        # traceback.print_exc()\n        # tb.print_exc_info()\n    sys.excepthook = exception_hook",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/utils.py:183-194"
-    },
-    "1769": {
-        "file_id": 233,
-        "content": "This code is handling unhandled exceptions by printing the last traceback.",
-        "type": "comment"
-    },
-    "1770": {
-        "file_id": 234,
-        "content": "/ubuntu_qemu_utm_arm_record/utm_test_video_record.sh",
-        "type": "filepath"
-    },
-    "1771": {
-        "file_id": 234,
-        "content": "Capturing screenshots, saving as raw video with BGR format, size 1280x737 pixels, and frame rate of 30 fps into output.mp4 file using FFmpeg and Python script.",
-        "type": "summary"
-    },
-    "1772": {
-        "file_id": 234,
-        "content": "pix_fmt=bgr0\nvideo_size=1280x737\nframe_rate=30\noutput_path=output.mp4\npython3 pyscreenshot_output.py | ffmpeg -y -f rawvideo -pix_fmt $pix_fmt -s $video_size -i - -r $frame_rate -c:v libx264 $output_path",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/utm_test_video_record.sh:1-6"
-    },
-    "1773": {
-        "file_id": 234,
-        "content": "Capturing screenshots, saving as raw video with BGR format, size 1280x737 pixels, and frame rate of 30 fps into output.mp4 file using FFmpeg and Python script.",
-        "type": "comment"
-    },
-    "1774": {
-        "file_id": 235,
-        "content": "/ubuntu_qemu_utm_arm_record/video_record.py",
-        "type": "filepath"
-    },
-    "1775": {
-        "file_id": 235,
-        "content": "Ensures screen size is available, captures the first monitor's image, gets its size, sets video parameters, writes a script with ffmpeg commands, and runs it to record the screen.",
-        "type": "summary"
-    },
-    "1776": {
-        "file_id": 235,
-        "content": "# make sure we have the screen size.\nimport os\nfrom utils import filepaths, PYTHON_EXECUTABLE, set_redis_off_on_exception\nimport mss\nset_redis_off_on_exception()\ns = mss.mss()\nimg = s.grab(s.monitors[0])\nsize = img.size\nprint(\"IMAGE SIZE?\", size)\nvideo_size = \"{}x{}\".format(size.width, size.height)\npix_fmt = \"bgr0\"\nframerate = 30\ncodec = \"libx264\"\nscript_content = \"{} pyscreenshot_output.py | ffmpeg -y -f rawvideo -pix_fmt {} -s {} -i - -r {} -c:v {} {}\".format(\n    PYTHON_EXECUTABLE, pix_fmt, video_size, framerate, codec, filepaths.video_record\n)\nwith open(filepaths.video_record_script, \"w+\") as f:\n    f.write(script_content)\nos.system(\"bash {}\".format(filepaths.video_record_script))",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/video_record.py:1-27"
-    },
-    "1777": {
-        "file_id": 235,
-        "content": "Ensures screen size is available, captures the first monitor's image, gets its size, sets video parameters, writes a script with ffmpeg commands, and runs it to record the screen.",
-        "type": "comment"
-    },
-    "1778": {
-        "file_id": 236,
-        "content": "/ubuntu_qemu_utm_arm_record/vnc_unix_domain_socket.py",
-        "type": "filepath"
-    },
-    "1779": {
-        "file_id": 236,
-        "content": "Creating a Twisted reactor instance, printing its attributes, and defining a Unix domain socket address.",
-        "type": "summary"
-    },
-    "1780": {
-        "file_id": 236,
-        "content": "from twisted.internet import reactor\nprint(dir(reactor))\n# reactor.connectTCP\nunix_addr = \"/Users/jamesbrown/.qemu_vnc\"\n# conn = reactor.connectUNIX(unix_addr)\n# print(conn)",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/vnc_unix_domain_socket.py:1-6"
-    },
-    "1781": {
-        "file_id": 236,
-        "content": "Creating a Twisted reactor instance, printing its attributes, and defining a Unix domain socket address.",
-        "type": "comment"
-    },
-    "1782": {
-        "file_id": 237,
-        "content": "/ubuntu_qemu_utm_arm_record/webdav_macos_start.sh",
-        "type": "filepath"
-    },
-    "1783": {
-        "file_id": 237,
-        "content": "Executing WebDAV command with provided credentials and path.",
-        "type": "summary"
-    },
-    "1784": {
-        "file_id": 237,
-        "content": "webdav-cli --host=192.168.64.1 --port=8081 --username=root --password=root --path=/Volumes/Toshiba\\ XG3/works/agi_computer_control/ubuntu_qemu_utm_arm_record/",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/webdav_macos_start.sh:1-1"
-    },
-    "1785": {
-        "file_id": 237,
-        "content": "Executing WebDAV command with provided credentials and path.",
-        "type": "comment"
-    },
-    "1786": {
-        "file_id": 238,
-        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/README.md",
-        "type": "filepath"
-    },
-    "1787": {
-        "file_id": 238,
-        "content": "This code sets up automatic login, executes a program on startup, takes screenshots for staleness check, and restores the machine's initial state. It also creates `the_random_forest.service` under `/etc/systemd/system/`.",
-        "type": "summary"
-    },
-    "1788": {
-        "file_id": 238,
-        "content": "automatic login -> execute program on start -> screenshot to check if stale -> restore init state\nbefore we going too technical, we just restart & restore the machine every 5 minutes.\nput `the_random_forest.service` under `/etc/systemd/system/`",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/README.md:1-5"
-    },
-    "1789": {
-        "file_id": 238,
-        "content": "This code sets up automatic login, executes a program on startup, takes screenshots for staleness check, and restores the machine's initial state. It also creates `the_random_forest.service` under `/etc/systemd/system/`.",
-        "type": "comment"
-    },
-    "1790": {
-        "file_id": 239,
-        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/check_vm.sh",
-        "type": "filepath"
-    },
-    "1791": {
-        "file_id": 239,
-        "content": "Checking the state and VRDE of the \"Ubuntu 16.04\" virtual machine using VirtualBox commands",
-        "type": "summary"
-    },
-    "1792": {
-        "file_id": 239,
-        "content": "vboxmanage showvminfo \"Ubuntu 16.04\" | grep State # get the state\n# vboxmanage showvminfo \"Ubuntu 16.04\" | grep VRDE # get VRDE\n# vboxmanage showvminfo \"Ubuntu 16.04\"",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/check_vm.sh:1-3"
-    },
-    "1793": {
-        "file_id": 239,
-        "content": "Checking the state and VRDE of the \"Ubuntu 16.04\" virtual machine using VirtualBox commands",
-        "type": "comment"
-    },
-    "1794": {
-        "file_id": 240,
-        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/control_vm.sh",
-        "type": "filepath"
-    },
-    "1795": {
-        "file_id": 240,
-        "content": "Enables VRDE and stops audio output for \"Ubuntu 16.04\" VM.",
-        "type": "summary"
-    },
-    "1796": {
-        "file_id": 240,
-        "content": "# vboxmanage controlvm \"Ubuntu 16.04\" keyboardputscancode\n# vboxmanage controlvm \"Ubuntu 16.04\" keyboardputstring\n# cannot perform mouse actions.\n# can only do this when vm running.\nvboxmanage controlvm \"Ubuntu 16.04\" vrde on\nvboxmanage controlvm \"Ubuntu 16.04\" vrdeport 8991\nvboxmanage controlvm \"Ubuntu 16.04\" vrdeproperty vrdeaddress=127.0.0.1\nvboxmanage controlvm \"Ubuntu 16.04\" vrdeproperty vrdeauthtype=null\nvboxmanage controlvm \"Ubuntu 16.04\" audioout off\n# vboxmanage guestcontrol \"Ubuntu 16.04\" run -- ",
-        "type": "code",
-        "location": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/control_vm.sh:1-14"
-    },
-    "1797": {
-        "file_id": 240,
-        "content": "Enables VRDE and stops audio output for \"Ubuntu 16.04\" VM.",
-        "type": "comment"
-    },
-    "1798": {
-        "file_id": 241,
-        "content": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/disable_logout_poweroff_button.sh",
-        "type": "filepath"
-    },
-    "1799": {
-        "file_id": 241,
-        "content": "This code sets a setting to suppress the logout, restart, and shutdown buttons.",
-        "type": "summary"
     }
 }

@@ -1,539 +1,533 @@
 {
     "900": {
-        "file_id": 121,
-        "content": "n(weighted_sum)\n    def activation_function(self, x):\n        # For example, using a simple sigmoid activation function\n        return 1 / (1 + np.exp(-x))\n    def back_propagate(self, error):\n        # Update weights and biases based on backpropagated error\n        # This is a simplified example; a complete backpropagation algorithm would involve more steps\n        for conn in self.input_connections:\n            # Update weights using the error and the derivative of the activation function\n            conn.weights -= learning_rate * error * self.activation_function_derivative(self.current_potential) * conn.connected_index.current_potential\n            # Update bias using the error\n            conn.bias -= learning_rate * error * self.activation_function_derivative(self.current_potential)\n    def activation_function_derivative(self, x):\n        # Derivative of the sigmoid activation function\n        return self.activation_function(x) * (1 - self.activation_function(x))",
-        "type": "code",
-        "location": "/dynamic_plasticity_neural_networks/dnn_reference.py:19-36"
-    },
-    "901": {
-        "file_id": 121,
-        "content": "This code defines a neural network class with activation function, backpropagation, and derivative functions. The activation function uses a simple sigmoid function, while the backpropagate method updates weights and biases based on the error. The activation_function_derivative calculates the derivative of the activation function.",
-        "type": "comment"
-    },
-    "902": {
-        "file_id": 122,
-        "content": "/dynamic_plasticity_neural_networks/dynamic_neural_network.py",
+        "file_id": 115,
+        "content": "/mouse-and-keyboard-encoding-fft.py",
         "type": "filepath"
     },
-    "903": {
-        "file_id": 122,
-        "content": "The code defines neural network classes for creating bots capable of understanding human intentions and performing tasks, with a focus on decision-making using Monte Carlo tree search and batch training techniques.",
+    "901": {
+        "file_id": 115,
+        "content": "The code uses Fast Fourier Transform (FFT) for mouse position encoding, discusses LSTM/GRU neural networks for complex inputs and Fourier transforms, and considers vector space sharing in non-standard ways. It also explores embeddings with token embedding and task type decoding, low-rank adaptation over linear layers for efficiency, and use cases like identifying words/images/actions and positional encodings.",
         "type": "summary"
     },
-    "904": {
-        "file_id": 122,
-        "content": "import torch\n# let's use networkx to generate random graphs?\n# the method to train it? we only keep the input & output the same as the static model.\n# place some clock like neurons, just like the SNN\n# to ensure that neurons won't get far away from each other\n# if they want to have some spikes\n# now you might want to use solver for network assembly.\n# neurons that fire together, wire together\n# there are pending connections. if these connections has larger gradients, they will be welcomed.\n# calculate route to output. if there is no route to output, then no gradient.\n# it rolls out the monte carlo tree search in ppo. would you find some optimal neural network structure with that?\nclass Connection:\n    def __init__(self):\n        self.connected_index = ...\n        self.weights = ...\n        self.bias = ...\nclass Neuron:\n    def __init__(self): # you can choose like: 100x1 -> 1x50 (1 can be larger, like 2) or 10x10\n        # but 100x1, 1x50 can be perferred, since it includes the potential or hidden state\n",
+    "902": {
+        "file_id": 115,
+        "content": "#!/usr/bin/env python\n# coding: utf-8\n# In[1]:\nimport torch\n# mouse -> sparse encoding -> fft -> ifft -> unified decoder\ndim_0_range = 1000\ndim_1_range = 100\nmouse_coords = [(20,20,None,None), (200,200,30,30)]\n# In[2]:\n# what about sparse encoding?\n# single value -> bunch of binary values\n# elementwise product random vector -> select non-zero ones\nimport random\nrandom.seed(42)\nwindow_size = 200 \nmrange = list(range(window_size+dim_0_range-1))\nrandom.shuffle(mrange)\n# mlist = [mrange[i:i+window_size] for i in range(dim_0_range)]\n# keep it sparse?\nunified_encoding = torch.randn((1,window_size+dim_0_range-1), requires_grad=True)\n# that's how you initialize your \"semantic\" or \"continual\" mouse embeddings.\nmlist = []\nnext_comb = mrange[:window_size]\n# random.shuffle(next_comb)\nmlist.append(next_comb.copy())\nfor i in range(dim_0_range-1):\n#     last_item = mrange[i+window_size-1]\n    alt_item = mrange[i+window_size]\n    last_item_index = random.choice(range(window_size))\n    next_comb[last_item_index] = alt_item\n#     pr",
         "type": "code",
-        "location": "/dynamic_plasticity_neural_networks/dynamic_neural_network.py:1-30"
+        "location": "/mouse-and-keyboard-encoding-fft.py:1-55"
+    },
+    "903": {
+        "file_id": 115,
+        "content": "This code is setting up the mouse coordinates, window size, and creating a sparse encoding for the mouse positions using Fast Fourier Transform (FFT) operations. The code also initializes the unified encoding tensor and starts populating it with random values. It shuffles the range of indices within the window size and appends them to the list 'mlist'.",
+        "type": "comment"
+    },
+    "904": {
+        "file_id": 115,
+        "content": "int(torch.Tensor([next_comb]))\n#     print(\"SUM?\", sum(next_comb))\n    mlist.append(next_comb.copy())\n# import rich\nprint(\"LENGTH?\", len(mlist))\n# rich.print(\"MLIST?\", mlist)\n# for e in mlist:\n#     print(sum(e))\nmLongTensorList = torch.LongTensor(mlist) # that looks like the thing.\nmLongTensorList.shape\n# In[3]:\ntorch.index_select(unified_encoding, 1, mLongTensorList[0,:])\n# In[4]:\n# how to represent keyboard keydown signals?\n# telephone?\n# embedding plus one trainable sin keydown signal? or using fft?\n# how to represent special tokens? by sin? all by sin?\n# what will happen if you try to share vector space in non-standard way?\n# such as split and concat?\n# you may do split and concat in fft though.\n# such as: value repr by concat -> ifft -> LSTM -> fft -> argmax things\n# ifft let the model \"feel\" the bits, though fft \"extract\" freq and handle bits.\n# there are multiple ways to do this.\n# but fft brings \"imaginary\" part to numbers.\n# you can feed both parts separetely into the network, then combine different",
+        "type": "code",
+        "location": "/mouse-and-keyboard-encoding-fft.py:55-98"
     },
     "905": {
-        "file_id": 122,
-        "content": "The code defines classes for neurons and connections in a neural network. The neuron class has an output size of 1x50, which includes potential or hidden state. The connection class represents the connections between neurons and holds their weights and bias. The code mentions using Monte Carlo tree search to find optimal neural network structure, but does not explicitly define this algorithm.",
+        "file_id": 115,
+        "content": "This code seems to be part of a larger program that involves encoding mouse and keyboard events using Fourier Transform (FFT). It appears to store the encoded events in a list, then create a LongTensorList from it. The author is considering different methods for representing special tokens and discussing the impact of sharing vector spaces in non-standard ways, like split and concat. The code also mentions the use of Fourier Transform for extracting frequency information and handling bits.",
         "type": "comment"
     },
     "906": {
-        "file_id": 122,
-        "content": "        # we can also tune the decay factor inside the neuron.\n        self.index = ...\n        self.current_potential = ...\n        self.input_connection = ...\n        self.output_connection = ...\nclass NeuralPort:\n    def __init__(self):\n        self.index = ...\n        self.port_type = ...\n        self.current_potential = ...\n# so we would iterate through our connection pool, propagate\n# how to do batch training?\ninput_ports = [] # assign ten indices\noutput_ports = []\n# obviously they are not connected.\n# you can assess that by gradient. does it have gradient?\n# recurrent connection: (0, 1), (1, 2), (2, 0)\n# so we just do all the forwarding at once in random order. who cares the order? no one!\n# maybe you can take multiple random execution samples multiple times and average out to stablize the performance\n# so there are possibly two things to learn. the first is to learn the connectivity rule. the second is to learn the propagation rule.\n# does a regular/periodic propagation rule plausible in brain?\n# c",
+        "file_id": 115,
+        "content": " parts.\n# the you may calculate the grad? by adding different part of the loss?\n# or you use \"native\" complex neural networks, to handle the fft transforms.\n# or you simply ignore complex input. only taking real parts?\n# lstm contains hidden state and cell state\n# while GRU only contains hidden state.\n# adding real and imag? or passing through different NN? or same NN?\n# telling you, do it first. we will handle the comparison.\n# so are you going to tell me that my model is just complete\n# that i need not to do too much to collect data and start training?\n# yes. i am going to tell you to start training.\n# you have reached the utopia of fourier transform (rfft/hfft).\n# now let's roll!\n# In[ ]:\n# for ubuntu arm: pyautogui -> python script writing timestamp\n# write to stdout -> pipe to ffmpeg -> write to video\n# find the location of the shared directory of utm\n# how do i know if my model is spitting words instead of images/actions?\n# do we need to take over few \"positional encodings\"?\n# you can add task spec",
         "type": "code",
-        "location": "/dynamic_plasticity_neural_networks/dynamic_neural_network.py:30-58"
+        "location": "/mouse-and-keyboard-encoding-fft.py:98-129"
     },
     "907": {
-        "file_id": 122,
-        "content": "This code defines a NeuralPort class with properties for index, port_type, and current_potential. It also initializes input_ports and output_ports lists to store indices. The code mentions batch training, recurrent connections, forwarding all inputs randomly, and learning connectivity and propagation rules.",
+        "file_id": 115,
+        "content": "The code discusses the use of Fourier transforms in a model, potentially using LSTM or GRU neural networks to handle the complex input. It suggests that the model may not need additional modifications and can start training immediately since it has reached the \"utopia\" of Fourier transform (rfft/hfft). The code also mentions potential use cases for the trained model, like identifying if it's producing words or images/actions, and considering positional encodings.",
         "type": "comment"
     },
     "908": {
-        "file_id": 122,
-        "content": "alculate inter_neuron distance\n# we have to use sparse matrix\n# output_node_index, input_node_index\n# if you swap, you break the connection\n# you can compute the gradient, to decide if you want to break or keep\n# (2, 3)\n# (4, 1)\n# we will start with the input neurons, iterate over the network\n# it forms a loop.\n# output: spikes, movements per neuron\n# what determines the connectivity between neurons?\n# what forms new connectivities?\n# (in0, out0)\n# (in1, out1)\n# (in2, out2)\n# i think we do not need the coordinates.\n# i think we need some gcn, or recommendation engine?\n# just represent the connectivity in sparse matrix.\n# connection swapping?\n# minimize the number of unconnected neurons\n# cannot connect to themselves\n# you may have pre-programmed randomly initialized connectivity matrix\n# hierarchical grouping?\n# would you rather do some value swapping in weight matricies\n# liquid state machine\n# dynamic rewiring of neurons by upper/lower weight limit, or the free energy principle\n# or you can also look at the a",
+        "file_id": 115,
+        "content": "ific embeddings with token embedding\n# then decode the task type in the end, classify the token.\n# fft may not be needed, since that will be too much computation.\n# you may just want low rank adaption over some linear layers.\n# fft may be useful for your visual convolution.",
         "type": "code",
-        "location": "/dynamic_plasticity_neural_networks/dynamic_neural_network.py:58-99"
+        "location": "/mouse-and-keyboard-encoding-fft.py:129-135"
     },
     "909": {
-        "file_id": 122,
-        "content": "Computing inter-neuron distance and creating sparse matrices for input/output nodes. Iterating over the network to form connections. Determining connectivity between neurons using potential methods like GCN, recommendation engine, or pre-programmed random initialization. Connection swapping to minimize unconnected neurons. Hierarchical grouping or adjusting weight matrices possible.",
+        "file_id": 115,
+        "content": "This code snippet is discussing the use of embeddings with token embedding, task type decoding, and possible use of FFT (Fast Fourier Transform) for visual convolution. It also mentions the potential need for low-rank adaptation over linear layers instead of relying on FFT for computation efficiency.",
         "type": "comment"
     },
     "910": {
-        "file_id": 122,
-        "content": "ctual energy consumption or battery consumption\n# by far multiple thesis have been stated, but yet unproven and unimplemented.\n# the primary objective of this project is to create computer operating bots that can understand human intentions and do everyday tasks on their own, including browsing, coding and searching.\n# it is not clear whether this project will create some artificial life, and it is not our objective. it might be a good research project for the bots, but i can say for sure it is not for me. i have limited capacity of knowledge and resources. i don't allocate that much memory biologically or physically. i choose to build the bot first. it does not have to be that complex that i cannot imagine or create.\n# decision matters. the executors of this 'life' project should be bots. i am the project manager. besides, i could participate in the 'cybergod' project which controls the computer by computer itself.\n# noise in, words out, recurse. that is dream.",
-        "type": "code",
-        "location": "/dynamic_plasticity_neural_networks/dynamic_neural_network.py:99-109"
+        "file_id": 116,
+        "content": "/mydatamodel.py",
+        "type": "filepath"
     },
     "911": {
-        "file_id": 122,
-        "content": "This code discusses the creation of computer bots that can understand human intentions and perform tasks, with a focus on browsing, coding, and searching. The author expresses their limited capacity to create an artificial life form but believes in using bots for decision making. They also mention participating in a 'cybergod' project that controls computers by themselves.",
-        "type": "comment"
+        "file_id": 116,
+        "content": "This code generates a Python class based on the MyDataModel.yaml file, using Pydantic's BaseModel to define the data model classes Data and MyModel.",
+        "type": "summary"
     },
     "912": {
-        "file_id": 123,
-        "content": "/dynamic_plasticity_neural_networks/neural_evolution.py",
-        "type": "filepath"
+        "file_id": 116,
+        "content": "# generated by datamodel-codegen:\n#   filename:  mydatamodel.yaml\n#   timestamp: 2023-07-08T05:40:44+00:00\nfrom __future__ import annotations\nfrom pydantic import BaseModel\nclass Data(BaseModel):\n    a: int\n    b: int\nclass MyModel(BaseModel):\n    data: Data",
+        "type": "code",
+        "location": "/mydatamodel.py:1-16"
     },
     "913": {
-        "file_id": 123,
-        "content": "This code is importing the NEAT (Nature-Inspired Evolutionary Algorithms Toolkit) module from evotorch library, and creating a NEProblem object for neural evolution problem.",
-        "type": "summary"
+        "file_id": 116,
+        "content": "This code generates a Python class based on the MyDataModel.yaml file, using Pydantic's BaseModel to define the data model classes Data and MyModel.",
+        "type": "comment"
     },
     "914": {
-        "file_id": 123,
-        "content": "# NEAT?\nimport evotorch\nevotorch.neuroevolution.NEProblem",
-        "type": "code",
-        "location": "/dynamic_plasticity_neural_networks/neural_evolution.py:1-4"
+        "file_id": 117,
+        "content": "/mydatamodel.yaml",
+        "type": "filepath"
     },
     "915": {
-        "file_id": 123,
-        "content": "This code is importing the NEAT (Nature-Inspired Evolutionary Algorithms Toolkit) module from evotorch library, and creating a NEProblem object for neural evolution problem.",
-        "type": "comment"
+        "file_id": 117,
+        "content": "This code contains YAML formatted data with two sets of variables: \"data\" and \"data2\". Each set has key-value pairs where the keys are letters (a, b) and values are numbers (1, 2).",
+        "type": "summary"
     },
     "916": {
-        "file_id": 124,
-        "content": "/dynamic_plasticity_neural_networks/sparse_matrix_multiplication.py",
-        "type": "filepath"
+        "file_id": 117,
+        "content": "data:\n  a: 1\n  b: 2\n# ---\n# data2:\n#   a: 2\n#   b: 3\n#   d: 4",
+        "type": "code",
+        "location": "/mydatamodel.yaml:1-10"
     },
     "917": {
-        "file_id": 124,
-        "content": "Creates a sparse matrix with random values and average synapses, then times the calculation of multiplying it by either another dense or sparse matrix.",
-        "type": "summary"
-    },
-    "918": {
-        "file_id": 124,
-        "content": "import torch\nimport sparse\nimport time\nlarge_number = 1_000_000\naverage_synapses = 3 # 1.7s, 0.146s\n# average_synapses = 10 # 11.8s, 0.505s\n# average_synapses = 100 # ..., 13.258s\n# average_synapses = 1_000\nnp_sparse = sparse.random((large_number, large_number), nnz=large_number*average_synapses)\n# print(np_sparse.coords, np_sparse.data, np_sparse.shape)\n# breakpoint()\ntorch_sparse = torch.sparse_coo_tensor(np_sparse.coords, np_sparse.data, np_sparse.shape)\ntorch_dense = torch.randn(large_number, dtype=torch.double)\n# before = time.time()\n# result = torch_sparse@torch_sparse\n# after = time.time()\n# print(result)\n# print(f\"calculation time: {after-before:.3f}s\")\nbefore = time.time()\nresult_dense = torch_dense@torch_sparse\nafter = time.time()\nprint(result_dense)\nprint(f\"calculation time: {after-before:.3f}s\")",
-        "type": "code",
-        "location": "/dynamic_plasticity_neural_networks/sparse_matrix_multiplication.py:1-27"
-    },
-    "919": {
-        "file_id": 124,
-        "content": "Creates a sparse matrix with random values and average synapses, then times the calculation of multiplying it by either another dense or sparse matrix.",
+        "file_id": 117,
+        "content": "This code contains YAML formatted data with two sets of variables: \"data\" and \"data2\". Each set has key-value pairs where the keys are letters (a, b) and values are numbers (1, 2).",
         "type": "comment"
     },
-    "920": {
-        "file_id": 125,
-        "content": "/external_reference/extra_init.sh",
+    "918": {
+        "file_id": 118,
+        "content": "/mypy_check.py",
         "type": "filepath"
     },
-    "921": {
-        "file_id": 125,
-        "content": "Clone CogVLM and AppAgent repositories from their respective GitHub URLs.",
+    "919": {
+        "file_id": 118,
+        "content": "The code uses mock testing, lru_cached, and API functions for verification. It defines a class \"MyClass\" with properties age, factors (commented), my_list, and creates a sample tensor function.",
         "type": "summary"
     },
-    "922": {
-        "file_id": 125,
-        "content": "git clone https://github.com/THUDM/CogVLM\ngit clone https://github.com/mnotgod96/AppAgent",
+    "920": {
+        "file_id": 118,
+        "content": "import mypy.api as api\n# you may use mock testing, similar to symbolic execution.\n# you may ensure compatibility between non-mock based operation, or ensure all functions are mock calls.\n# mock functions shall be lru_cached, to speedup overheads.\nresult = api.run(...)  # commandline args.\nimport tensorflow as tf\nfrom tensor_annotations import axes # by deepmind.\nimport tensor_annotations.tensorflow as ttf\nfrom typing import NewType, List\nfrom typing_extensions import Annotated\nuint8 = ttf.uint8\nBatch, Time = Annotated[axes.Batch, 3], Annotated[axes.Time, 5] # problem is, how to share this along with function calls?\nMyAxis = NewType(\"MyAxis\", axes.Axis)\n# from pycontract import contract\n# @contract\n# def my_function(a, b):\n#     \"\"\" Function description.\n#         :type a: int,>0\n#         :type b: list[N],N>0\n#         :rtype: list[N]\n#     \"\"\"\n#     ...\n# def sample_batch() -> ttf.Tensor2[uint8, Time, Batch]:\n#     return tf.zeros((3, 5))\nfrom typing_extensions import Annotated\nfrom annotated_types import Gt,",
         "type": "code",
-        "location": "/external_reference/extra_init.sh:1-2"
+        "location": "/mypy_check.py:1-39"
+    },
+    "921": {
+        "file_id": 118,
+        "content": "Importing the mypy.api as api.\nMock testing can be used for verification and compatibility checking between mock-based and non-mock operations. \nUsing lru_cached to speed up overheads for mock functions.\nCalling the api.run function with command line arguments. \nImporting TensorFlow and tensor_annotations.axes from DeepMind.\nUsing Annotated type from typing_extensions to define Batch and Time axes.\nDefining a new type, MyAxis, using NewType from typing_extensions.\nImporting pycontract for code contract implementation.\nDefining the my_function with its parameters and return types.\nCreating sample_batch function that returns a tensor of type ttf.Tensor2[uint8, Time, Batch]. \nUsing Annotated type from typing_extensions to define Gt type.",
+        "type": "comment"
+    },
+    "922": {
+        "file_id": 118,
+        "content": " Len, Predicate\nclass MyClass:\n    age: Annotated[int, Gt(18)]                         # Valid: 19, 20, ...\n                                                        # Invalid: 17, 18, \"19\", 19.0, ...\n    # factors: List[Annotated[int, Predicate(is_prime)]]  # Valid: 2, 3, 5, 7, 11, ...\n    #                                                     # Invalid: 4, 8, -2, 5.0, \"prime\", ...\n    my_list: Annotated[List[int], Len(0, 10)]           # Valid: [], [10, 20, 30, 40, 50]\n                                                        # Invalid: (1, 2), [\"abc\"], [0] * 20",
+        "type": "code",
+        "location": "/mypy_check.py:39-48"
     },
     "923": {
-        "file_id": 125,
-        "content": "Clone CogVLM and AppAgent repositories from their respective GitHub URLs.",
+        "file_id": 118,
+        "content": "The code defines a class \"MyClass\" with properties age, factors (commented out), and my_list. Age is valid if greater than 18, factors is supposed to be a list of prime numbers but commented out, and my_list is a list of integers between 0 and 10 length.",
         "type": "comment"
     },
     "924": {
-        "file_id": 126,
-        "content": "/external_reference/init.cmd",
+        "file_id": 119,
+        "content": "/off_streaming_utils.sh",
         "type": "filepath"
     },
     "925": {
-        "file_id": 126,
-        "content": "Cloning necessary repositories for project setup.",
+        "file_id": 119,
+        "content": "Killing streaming_utils session and related processes.\n\nQuestion (0-1): Can you provide a brief explanation of what the code does?",
         "type": "summary"
     },
     "926": {
-        "file_id": 126,
-        "content": "git clone https://github.com/abhiprojectz/SingularGPT\ngit clone https://github.com/ddupont808/GPT-4V-Act\ngit clone https://github.com/openai/Video-Pre-Training\ngit clone https://github.com/Charmve/gpt-eyes\ngit clone https://github.com/ruvnet/q-star",
+        "file_id": 119,
+        "content": "tmux kill-session -t streaming_utils\nps aux | grep bash | grep -v grep | grep kali_prepare_dirs_loop.sh | awk '{print $2}' | xargs -iabc kill -s TERM abc\ntmux kill-session -t kali_prepare_two_webdav_dirs\n# location of ubuntu vm: 10.0.2.15",
         "type": "code",
-        "location": "/external_reference/init.cmd:1-5"
+        "location": "/off_streaming_utils.sh:1-5"
     },
     "927": {
-        "file_id": 126,
-        "content": "Cloning necessary repositories for project setup.",
+        "file_id": 119,
+        "content": "Killing streaming_utils session and related processes.\n\nQuestion (0-1): Can you provide a brief explanation of what the code does?",
         "type": "comment"
     },
     "928": {
-        "file_id": 127,
-        "content": "/external_reference/supercharge_init.sh",
+        "file_id": 120,
+        "content": "/packup.cmd",
         "type": "filepath"
     },
     "929": {
-        "file_id": 127,
-        "content": "The code is cloning four GitHub repositories: \"self-operating-computer\", \"QStarLearning.mojo\", \"open_qstar\", and \"gpt4v-browsing\".",
+        "file_id": 120,
+        "content": "This code is archiving the \"agi_computer_control\" directory, removing the original 7z file, and moving a backup copy into the directory.",
         "type": "summary"
     },
     "930": {
-        "file_id": 127,
-        "content": "git clone https://github.com/OthersideAI/self-operating-computer\ngit clone https://github.com/tairov/QStarLearning.mojo\ngit clone https://github.com/estill01/open_qstar\ngit clone https://github.com/unconv/gpt4v-browsing",
+        "file_id": 120,
+        "content": "rm agi_computer_control.7z\ncd ..\n7z a -snl agi_computer_control.7z agi_computer_control\ncd agi_computer_control\nmv ../agi_computer_control.7z .",
         "type": "code",
-        "location": "/external_reference/supercharge_init.sh:1-4"
+        "location": "/packup.cmd:1-5"
     },
     "931": {
-        "file_id": 127,
-        "content": "The code is cloning four GitHub repositories: \"self-operating-computer\", \"QStarLearning.mojo\", \"open_qstar\", and \"gpt4v-browsing\".",
+        "file_id": 120,
+        "content": "This code is archiving the \"agi_computer_control\" directory, removing the original 7z file, and moving a backup copy into the directory.",
         "type": "comment"
     },
     "932": {
-        "file_id": 128,
-        "content": "/hardware_capture_hid_power_control/Makefile",
+        "file_id": 121,
+        "content": "/packup.sh",
         "type": "filepath"
     },
     "933": {
-        "file_id": 128,
-        "content": "This Makefile is responsible for building and executing the Python script \"test_control.py\". It first compiles the script using a template, then runs the compiled version with Python interpreter.",
+        "file_id": 121,
+        "content": "Removing file, changing directory, archiving files with 7-Zip, and moving file into place.",
         "type": "summary"
     },
     "934": {
-        "file_id": 128,
-        "content": "main: test_control.py\n\t${PYTHON} test_control.py\ntest_control.py: test_control.py.j2 $(addprefix ../, ${RENDERED_CODE})\n\t${PYTHON} ../render_python_code.py test_control.py",
+        "file_id": 121,
+        "content": "rm agi_computer_control.7z\ncd ..\n7z a -snl agi_computer_control.7z agi_computer_control\ncd agi_computer_control\nmv ../agi_computer_control.7z .",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/Makefile:1-5"
+        "location": "/packup.sh:1-5"
     },
     "935": {
-        "file_id": 128,
-        "content": "This Makefile is responsible for building and executing the Python script \"test_control.py\". It first compiles the script using a template, then runs the compiled version with Python interpreter.",
+        "file_id": 121,
+        "content": "Removing file, changing directory, archiving files with 7-Zip, and moving file into place.",
         "type": "comment"
     },
     "936": {
-        "file_id": 129,
-        "content": "/hardware_capture_hid_power_control/README.md",
+        "file_id": 122,
+        "content": "/player.py",
         "type": "filepath"
     },
     "937": {
-        "file_id": 129,
-        "content": "This code is describing a computer-AI interface called ICI (Intelligence Computer Interface). It mentions the use of ROS for control-related packages and provides information about power control through `/dev/serial/by-id/*`. Users need to install pyserial. For HID (Human Interface Device) control, it suggests using `hidapi` from pypi with kcom2/kcom3 or ch9329 and provides links to related projects. Video capture details are missing in the provided code chunk.",
+        "file_id": 122,
+        "content": "The code uses Pynput to control keyboard/mouse, handles DPI-awareness on Windows and initializes via hotkeys. It maintains event order but lacks \"ctrl + /\" handling, supporting various actions for both keyboard and mouse input.",
         "type": "summary"
     },
     "938": {
-        "file_id": 129,
-        "content": "it is more of a computer-ai interface, just like the computer-brain interface.\n智机接口 ICI (intelligence computer interface)\n----\nyou may check out ROS and find some control related packages\n----\npower: `/dev/serial/by-id/*`\ninstall `pyserial`\n----\nhid: `/dev/hidraw*` (need to find by provider name)\ninstall `hidapi` from pypi\nuse kcom2/kcom3 or ch9329\n[pycomkb](https://gitee.com/NetPuppetLib/pycomkb)\n[ch9329comm](https://github.com/beijixiaohu/CH9329_COMM) (also on pypi)\n[9329keyboardremote](https://github.com/Blue-Beaker/9329KeyboardRemotehttps://github.com/Blue-Beaker/9329KeyboardRemote)\n[ch9329](https://github.com/ChengZu/ch9329) (in c/c++)\n----\nvideo capture: ...",
+        "file_id": 122,
+        "content": "# just to play the recorded events out.\n# not doing anything beyond that.\n# special keys are not recorded. what a shame.\nimport ast\nimport os\n# what about \"ctrl + /\" ?\ndef unshift(key):\n    lower_keycodes = {\n        \"A\": \"a\",\n        \"B\": \"b\",\n        \"C\": \"c\",\n        \"D\": \"d\",\n        \"E\": \"e\",\n        \"F\": \"f\",\n        \"G\": \"g\",\n        \"H\": \"h\",\n        \"I\": \"i\",\n        \"J\": \"j\",\n        \"K\": \"k\",\n        \"L\": \"l\",\n        \"M\": \"m\",\n        \"N\": \"n\",\n        \"O\": \"o\",\n        \"P\": \"p\",\n        \"Q\": \"q\",\n        \"R\": \"r\",\n        \"S\": \"s\",\n        \"T\": \"t\",\n        \"U\": \"u\",\n        \"V\": \"v\",\n        \"W\": \"w\",\n        \"X\": \"x\",\n        \"Y\": \"y\",\n        \"Z\": \"z\",\n    }\n    unshift_keycodes = {\n        \"!\": \"1\",\n        \"@\": \"2\",\n        \"#\": \"3\",\n        \"$\": \"4\",\n        \"%\": \"5\",\n        \"^\": \"6\",\n        \"&\": \"7\",\n        \"*\": \"8\",\n        \"(\": \"9\",\n        \")\": \"0\",\n        \"_\": \"-\",\n        \"+\": \"=\",\n        \"{\": \"[\",\n        \"}\": \"]\",\n        \"|\": \"\\\\\",\n        \":\": \";\",\n        '\"': \"'\",\n        \"<\": \",\",\n        \">\": \".\",\n    ",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/README.md:1-33"
+        "location": "/player.py:1-60"
     },
     "939": {
-        "file_id": 129,
-        "content": "This code is describing a computer-AI interface called ICI (Intelligence Computer Interface). It mentions the use of ROS for control-related packages and provides information about power control through `/dev/serial/by-id/*`. Users need to install pyserial. For HID (Human Interface Device) control, it suggests using `hidapi` from pypi with kcom2/kcom3 or ch9329 and provides links to related projects. Video capture details are missing in the provided code chunk.",
+        "file_id": 122,
+        "content": "The code defines a dictionary of lower and unshift keycodes, allowing for the conversion between them. It also mentions that special keys like \"ctrl + /\" are not recorded, which is a limitation in the system.",
         "type": "comment"
     },
     "940": {
-        "file_id": 130,
-        "content": "/hardware_capture_hid_power_control/common_keycodes.py",
-        "type": "filepath"
+        "file_id": 122,
+        "content": "    \"?\": \"/\",\n        \"~\": \"`\",\n    }\n    ctrl_keycodes = {\n        \"\\x01\": \"a\",\n        \"\\x02\": \"b\",\n        \"\\x03\": \"c\",\n        \"\\x04\": \"d\",\n        \"\\x05\": \"e\",\n        \"\\x06\": \"f\",\n        \"\\x07\": \"g\",\n        \"\\x08\": \"h\",\n        \"\\t\": \"i\",\n        \"\\n\": \"j\",\n        \"\\x0b\": \"k\",\n        \"\\x0c\": \"l\",\n        \"\\r\": \"m\",\n        \"\\x0e\": \"n\",\n        \"\\x0f\": \"o\",\n        \"\\x10\": \"p\",\n        \"\\x11\": \"q\",\n        \"\\x12\": \"r\",\n        \"\\x13\": \"s\",\n        \"\\x14\": \"t\",\n        \"\\x15\": \"u\",\n        \"\\x16\": \"v\",\n        \"\\x17\": \"w\",\n        \"\\x18\": \"x\",\n        \"\\x19\": \"y\",\n        \"\\x1a\": \"z\",\n        \"<219>\": \"[\",\n        \"<221>\": \"]\",\n        \"<189>\": \"-\",\n        \"<187>\": \"=\",\n        \"<192>\": \"`\",\n        \"<48>\": \"0\",\n        \"<49>\": \"1\",\n        \"<50>\": \"2\",\n        \"<51>\": \"3\",\n        \"<52>\": \"4\",\n        \"<53>\": \"5\",\n        \"<54>\": \"6\",\n        \"<55>\": \"7\",\n        \"<56>\": \"8\",\n        \"<57>\": \"9\",\n        \"<220>\": \"\\\\\",\n        \"<186>\": \";\",\n        \"<222>\": \"'\",\n        \"<188>\": \",\",\n        \"<190>\": \".\",\n        \"<191>\": \"/",
+        "type": "code",
+        "location": "/player.py:60-110"
     },
     "941": {
-        "file_id": 130,
-        "content": "The code translates hardware keycodes into compatible ones for a computer system using JSON files, manages unsupported keys, and ensures standardized names while also updating translation tables with mappings and handling errors.",
-        "type": "summary"
+        "file_id": 122,
+        "content": "This code defines two dictionaries: one for special characters and another for keyboard keycodes. It maps each keycode to its corresponding character in ASCII format.",
+        "type": "comment"
     },
     "942": {
-        "file_id": 130,
-        "content": "import sys\nsys.path.append(\"../\")\n# TODO: add feedback to unsupported keys.\n# for now, just ignore these. don't do anything.\nfrom conscious_struct import HIDActionTypes\nimport json\ntrans_outpath = \"translation_keys.json\"\nfrom functools import lru_cache\n@lru_cache(maxsize=1)\ndef load_translation_table():\n    with open(trans_outpath, \"r\") as f:\n        content = f.read()\n        data = json.loads(content)\n        tk = \"translation_table\"\n        data[tk] = {k: bytes.fromhex(v) for k, v in data[tk].items()}\n        return data\nfrom beartype import beartype\n@beartype\ndef KeyLiteralToKCOMKeycode(keyLiteral: HIDActionTypes.keys):\n    translation_data = load_translation_table()\n    translation_table, missing = (\n        translation_data[\"translation_table\"],\n        translation_data[\"missing\"],\n    )\n    if keyLiteral in translation_table.keys():\n        return translation_table[keyLiteral]\n    elif keyLiteral in missing:\n        raise Exception(\"Calling missing keyLiteral:\", keyLiteral)\n    else:\n        raise Exception",
+        "file_id": 122,
+        "content": "\",\n    }\n    key = unshift_keycodes.get(\n        key, ctrl_keycodes.get(key, lower_keycodes.get(key, key))\n    )\n    return key\n# how to play that?\n# using jsonl?\n# timestep = 0.01\nfrom config import timestep\n# zoom_factor = 1.75\n# you can safely ignore the zoom factor once using this in the reference:\n# https://pynput.readthedocs.io/en/latest/mouse.html#monitoring-the-mouse\nimport os\n# main problem is the hotkey. but the modifiers are certain.\n# you can know that for sure.\nif os.name == \"nt\":\n    import ctypes\n    PROCESS_PER_MONITOR_DPI_AWARE = 2\n    ctypes.windll.shcore.SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE)\n# better use pyautogui for mouse?\nimport jsonlines\nimport time\nimport pynput\nimport pyautogui\n# filePath = \"states.jsonl\"\nfrom config import filePath\nwith jsonlines.open(filePath) as r:\n    stateList = list(r.iter())\n# import math\nkeyboard_controller = pynput.keyboard.Controller()\nmouse_controller = pynput.mouse.Controller()\nmouse_buttons = [\n    pynput.mouse.Button.left, pynput.mouse.Button.righ",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/common_keycodes.py:1-41"
+        "location": "/player.py:110-153"
     },
     "943": {
-        "file_id": 130,
-        "content": "This code reads and translates hardware keycodes into compatible keycodes for a computer system. It loads translation tables from a JSON file and handles unsupported keys by either ignoring them or raising exceptions.",
+        "file_id": 122,
+        "content": "This code is initializing a keyboard and mouse controller using the pynput library. It also handles DPI awareness for Windows systems, reads a JSONL file containing states, and initializes a mouse controller which can be controlled by hotkeys. The zoom factor is not important once the reference is used.",
         "type": "comment"
     },
     "944": {
-        "file_id": 130,
-        "content": "(\"Unknown keyLiteral: \" + keyLiteral)\nfrom beartype.door import is_bearable\nif __name__ == \"__main__\":\n    # import json5\n    with open(\"keys.json\", \"r\") as f:\n        content = f.read()\n        kcom_keycodes = json.loads(content)\n    kcom_translation_table = {}\n    import re\n    def subs_brackets(e):\n        s, _ = re.subn(r\"\\(.*\\)\", \"\", e)\n        s = s.strip()\n        return s\n    for record in kcom_keycodes:\n        keyname = subs_brackets(record[\"Key Name\"])\n        keycode = bytes.fromhex(record[\"HID Usage ID\"])\n        possible_translations = []\n        keyname = keyname.replace(\"Arrow\", \"\").strip()\n        base_trans0 = keyname.replace(\" \", \"_\").lower()\n        base_trans = (\n            base_trans0.replace(\"gui\", \"cmd\")\n            .replace(\"control\", \"ctrl\")\n            .replace(\"escape\", \"esc\")\n            .replace(\"keyboard\", \"media\")\n            .replace(\"mute\", \"volume_mute\")\n            .replace(\"volume_dn\", \"volume_down\")\n            .replace(\"return\", \"enter\")\n        )\n        missing_key_litera",
+        "file_id": 122,
+        "content": "t, pynput.mouse.Button.middle\n]\nmouse_button_states = {button: False for button in mouse_buttons}\nfor state in stateList:\n    time.sleep(timestep)\n    # perform actions.\n    HIDEvents = state[\"HIDEvents\"]\n    # you need to preserve the order. dump all events into one single list.\n    for action_type, action_args in HIDEvents:\n        print(\"ACTION?\", action_type, action_args)\n        if action_type == \"key_press\":\n            if not action_args.startswith(\"Key.\"):\n                keycode = unshift(\n                    action_args if action_args.startswith(\"<\")\n                    and action_args.endswith(\">\") else ast.literal_eval(action_args)\n                )\n                pyautogui.write(keycode)\n            else:\n                keyboard_controller.press(\n                    pynput.keyboard.Key.__dict__[action_args.split(\".\")[-1]]\n                )\n        elif action_type == \"key_release\":\n            if action_args.startswith(\"Key.\"):\n                keyboard_controller.release(\n                    py",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/common_keycodes.py:41-77"
+        "location": "/player.py:153-179"
     },
     "945": {
-        "file_id": 130,
-        "content": "The code reads a JSON file called \"keys.json\", parses the key names and HID usage IDs, and creates a translation table for keycodes. It also performs some string manipulation to standardize key names (e.g., replacing \"Arrow\" with empty string, converting spaces to underscores).",
+        "file_id": 122,
+        "content": "This code handles key and mouse events from a state list, preserving their order. It uses Pynput for keyboard and mouse controls, and PyAutoGUI for writing keys. It processes \"key_press\" and \"key_release\" events while also handling mouse button states.",
         "type": "comment"
     },
     "946": {
-        "file_id": 130,
-        "content": "ls = [\n        ]\n        def check_is_common_keyname(keyname: str):\n            if keyname.startswith(\"Key\"):\n                keyname = keyname.strip(\"Key.\")\n                for forbidden_prefix in [\"ctrl\", \"cmd\", \"shift\", \"alt\", \"media\"]:\n                    if keyname.startswith(forbidden_prefix):\n                        return False\n            return True\n        def do_append(t):\n            _k = f\"Key.{t}\"\n            if check_is_common_keyname(_k):\n                possible_translations.append(t)\n                possible_translations.append(_k)\n            else:\n                for k in [t, _k]:\n                    if is_bearable(k, HIDActionTypes.keys):\n                        missing_key_literals.append(k)\n        do_append(base_trans)\n        for direction in [\"right_\", \"left_\"]:\n            if base_trans.startswith(direction):\n                base_trans = base_trans.replace(direction, \"\") + f\"_{direction[0]}\"\n                if direction == \"left_\":\n                    basekey = base_trans.split(\"_",
+        "file_id": 122,
+        "content": "nput.keyboard.Key.__dict__[action_args.split(\".\")[-1]]\n                )\n        elif action_type == \"mouse_move\":\n            x, y = action_args\n            # x = math.floor(x/zoom_factor)\n            # y = math.floor(y/zoom_factor)\n            mouse_controller.position = (x, y)\n        elif action_type == \"mouse_click\":\n            x, y, button, pressed = action_args\n            # x = math.floor(x/zoom_factor)\n            # y = math.floor(y/zoom_factor)\n            button = pynput.mouse.Button.__dict__[button.split(\".\")[-1]]\n            mouse_button_states[button] = pressed\n            mouse_controller.position = (x, y)\n            if pressed:\n                mouse_controller.press(button)\n            else:\n                mouse_controller.click(button)\n        elif action_type == \"mouse_scroll\":\n            x, y, dx, dy = action_args\n            # x = math.floor(x/zoom_factor)\n            # y = math.floor(y/zoom_factor)\n            # dx = math.floor(dx/zoom_factor)\n            # dy = math.floor(dy/zoom_fa",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/common_keycodes.py:77-103"
+        "location": "/player.py:179-204"
     },
     "947": {
-        "file_id": 130,
-        "content": "This code checks if a given keyname starts with \"Key\" and doesn't have forbidden prefixes, then appends it to the list of possible translations. If not, it adds it to the missing_key_literals list.",
+        "file_id": 122,
+        "content": "Code handles different types of actions related to keyboard and mouse input.\n\n- Keyboard action: Executes the corresponding keypress using pynput library.\n- Mouse move action: Updates the position of the mouse controller.\n- Mouse click action: Handles mouse button press or click based on pressed state.\n- Mouse scroll action: Not fully implemented due to zoom_factor calculation missing.",
         "type": "comment"
     },
     "948": {
-        "file_id": 130,
-        "content": "\")[0]\n                    do_append(basekey)\n                do_append(base_trans)\n        if not base_trans0.startswith(\"F\"):\n            if len(keyname) == 3 and keyname[1] == \" \":\n                val = keyname[0]\n                trans = f\"\"\"'{val}'\"\"\" if val != \"'\" else f'''\"{val}\"'''\n                possible_translations.append(trans)\n        for translation in possible_translations:\n            kcom_translation_table[translation] = keycode\n    # coverage test.\n    error_msg = []\n    translation_table_cleaned = {}\n    import rich\n    # extra_missing_key_literals = []\n    for key_literal in HIDActionTypes.keys.__args__:\n        if key_literal not in kcom_translation_table:\n            # if key_literal not in missing_key_literals:\n            if check_is_common_keyname(key_literal):\n                error_msg.append(f\"{key_literal} not covered by translation table.\")\n            else:\n                missing_key_literals.append(key_literal)\n        else:\n            keycode = kcom_translation_table[key_lite",
+        "file_id": 122,
+        "content": "ctor)\n            mouse_controller.position = (x, y)\n            mouse_controller.scroll(dx, dy)\n        else:\n            raise Exception(\"Unknown action type: {}\".format(action_type))\n# after all the havok, you should not leave the mouse button pressed, and you should not leave any button onhold.\nmodifier_keys = [\"alt\", \"alt_gr\", \"ctrl\", \"shift\"]\nfor modifier_key in modifier_keys:\n    if keyboard_controller.__getattribute__(f\"{modifier_key}_pressed\"):\n        keyboard_controller.release(pynput.keyboard.Key.__dict__[modifier_key])\nfor button in mouse_buttons:\n    if mouse_button_states[button]:  # pressed, not released yet.\n        mouse_controller.release(button)",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/common_keycodes.py:103-131"
+        "location": "/player.py:204-220"
     },
     "949": {
-        "file_id": 130,
-        "content": "Code generates translation table for hardware capture power control keys based on common keycodes. It handles possible translations and checks if all key literals are covered by the translation table.",
+        "file_id": 122,
+        "content": "Updates mouse and keyboard positions based on action type.\nEnsures mouse button is not held down after movement.\nReleases modifier keys if still pressed.\nChecks for remaining held mouse buttons and releases them.",
         "type": "comment"
     },
     "950": {
-        "file_id": 130,
-        "content": "ral]\n            translation_table_cleaned.update({key_literal: keycode})\n    if error_msg:\n        raise Exception(\"\\n\" + \"\\n\".join(error_msg))\n    print(\"cleaned translation table:\")\n    rich.print(translation_table_cleaned)\n    # use bytes.fromhex() to deserialize.\n    output_data = {\n        \"translation_table\": {k: v.hex() for k, v in translation_table_cleaned.items()},\n        \"missing\": missing_key_literals\n        # \"missing\": missing_key_literals + extra_missing_key_literals,\n    }\n    with open(trans_outpath, \"w+\") as f:\n        content = json.dumps(output_data, indent=4)\n        f.write(content)\n    print(\"write to:\", trans_outpath)",
-        "type": "code",
-        "location": "/hardware_capture_hid_power_control/common_keycodes.py:131-146"
-    },
-    "951": {
-        "file_id": 130,
-        "content": "Updating translation table with key mappings, handling errors, and outputting cleaned table in JSON format.",
-        "type": "comment"
-    },
-    "952": {
-        "file_id": 131,
-        "content": "/hardware_capture_hid_power_control/multiple_inheritance.py",
+        "file_id": 123,
+        "content": "/propaganda/agi_computer_recordings/launch_server.cmd",
         "type": "filepath"
     },
-    "953": {
-        "file_id": 131,
-        "content": "Class A and C define method b; class B inherits, overrides method b calling super().b() but due to MRO, it calls a. Class Child overrides Parent1 and Parent2 methods using super().",
+    "951": {
+        "file_id": 123,
+        "content": "Executes WebDAV command to connect to host, port, and path for recordings.",
         "type": "summary"
     },
-    "954": {
-        "file_id": 131,
-        "content": "from types import MethodType, MethodWrapperType\nclass A:\n    def a(self):\n        print(\"a\")\n    def b(self):\n        print(\"a.b method\")\n        self.a()\n        super().b()\n        print(\"a.super()\", super())\n        print(\"super.b\", super().b)\n        my_b = super().b\n        a_sup = super()\n        #     breakpoint()\n        print(\"a.super init?\", init := getattr(super(), \"__init__\", None))\n        print(dir(init), type(init), dir(type(init)))\n        print(\"CALLING A.SUPER.INIT\")\n        super().__init__()\n        print(\n            type(super().__init__),\n            isinstance(super().__init__, MethodType),\n            isinstance(super().__init__, MethodWrapperType),\n        )\n    def d(self):\n        print(\"a.d\")\nclass C:\n    def __init__(self):\n        print(\"C.INIT\")\n        #   super().__init__(a=1)\n        print(\n            type(super().__init__),\n            isinstance(super().__init__, MethodWrapperType),\n            isinstance(super().__init__, MethodType),\n        )\n    def d(self):\n        print(\"c.d\"",
+    "952": {
+        "file_id": 123,
+        "content": "webdav-cli --host 192.168.56.1 --port 8111 --username root --password root --path=D:\\works\\agi_computer_recordings\\recordings ",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/multiple_inheritance.py:1-42"
+        "location": "/propaganda/agi_computer_recordings/launch_server.cmd:1-1"
     },
-    "955": {
-        "file_id": 131,
-        "content": "Code is defining two classes A and C, with class A having method b which calls super() to access the __init__ method. Class C has method d and overrides the __init__ method. The code also prints types and checks if the methods are instances of MethodType or MethodWrapperType.",
+    "953": {
+        "file_id": 123,
+        "content": "Executes WebDAV command to connect to host, port, and path for recordings.",
         "type": "comment"
     },
+    "954": {
+        "file_id": 124,
+        "content": "/propaganda/cybergod_propaganda/README.md",
+        "type": "filepath"
+    },
+    "955": {
+        "file_id": 124,
+        "content": "This folder contains propaganda materials for Cybergod and The Frozen Forest. They plan to create a video in a step-by-step approach, starting with writing the script, making short footage, and collecting material. They acknowledge the power of LLMs in content creation but want to learn the basics first, beginning with logo creation.",
+        "type": "summary"
+    },
     "956": {
-        "file_id": 131,
-        "content": ")\n    def b(self):\n        print(\"c.b method\")\n        # super().b()\n        print(\"c.super()\", super())\n        print(getattr(super(), \"b\", None))\n        c_sup = super()\n        # breakpoint()\n        print(\"c.super init?\", init := getattr(super(), \"__init__\", None))\n        print(dir(init), type(init), dir(type(init)))\n    def c(self):\n        print(\"c\")\nclass B(A, C):\n    def __init__(self):\n        print(\"CALLING B.INIT\")\n        self.A = super().__init__()\n    def b(self):\n        print(\"b.b method\")\n        print(\"b.super()\", super())\n        super().b()\n        #     super().b()\n        self.c()\n        super(A,self).d()\n        super(C,self).d()\n    def a(self):\n        print(\"override\")\n# B().b()\n# c.b not shown up!\n# b.b method\n# a.b method\n# override\n# c\nclass Parent1:\n    def method(self):\n        print(\"Parent1 method\")\nclass Parent2:\n    def method(self):\n        print(\"Parent2 method\")\nclass Child(Parent1, Parent2):\n    def method(self):\n        super(Parent1, self).method()\n        super(Parent2, self).method",
+        "file_id": 124,
+        "content": "this folder contains propaganda material for cybergod and the frozen forest.\nwe plan to create the video in a \"step by step\" approach, which is writing video script along the way of making short footage and collecting material.\nit is important to realize the power of LLM in content creation. however, we shall learn the basics. i mean i am never close to \"fluent\" in video creation. so let's do it!\nfirst create logos for cybergod and the frozen forest",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/multiple_inheritance.py:42-95"
+        "location": "/propaganda/cybergod_propaganda/README.md:1-7"
     },
     "957": {
-        "file_id": 131,
-        "content": "The code defines two classes, B and Child.\n\nClass B inherits from A and C, and has methods b and c. In method b, it calls super().b(), which would normally call the next method in the Method Resolution Order (MRO), but due to Python's MRO implementation, it ends up calling a() instead. Then it calls self.c() and super(A,self).d() and super(C,self).d().\n\nClass Child also inherits from Parent1 and Parent2, and overrides their method by calling it using the super() function with the correct arguments.",
+        "file_id": 124,
+        "content": "This folder contains propaganda materials for Cybergod and The Frozen Forest. They plan to create a video in a step-by-step approach, starting with writing the script, making short footage, and collecting material. They acknowledge the power of LLMs in content creation but want to learn the basics first, beginning with logo creation.",
         "type": "comment"
     },
     "958": {
-        "file_id": 131,
-        "content": "()\nc = Child()\nc.method()",
-        "type": "code",
-        "location": "/hardware_capture_hid_power_control/multiple_inheritance.py:95-98"
-    },
-    "959": {
-        "file_id": 131,
-        "content": "Creates an instance of Child class.\nCalls method on the created object.",
-        "type": "comment"
-    },
-    "960": {
-        "file_id": 132,
-        "content": "/hardware_capture_hid_power_control/parse_hid_keycodes.py",
+        "file_id": 125,
+        "content": "/propaganda/video_script/README.md",
         "type": "filepath"
     },
-    "961": {
-        "file_id": 132,
-        "content": "The code reads text files, parses the data into pandas DataFrames, handles errors such as null strings and short table entries, and filters data for HID keycodes before writing it to a CSV or JSON file.",
+    "959": {
+        "file_id": 125,
+        "content": "This code provides a link to search for videos on fse.agilestudio.cn and an API endpoint for the same, suggesting using ffmpeg to convert m3u8 links into videos.",
         "type": "summary"
     },
-    "962": {
-        "file_id": 132,
-        "content": "input_path = \"./resources/decompressed/Kcom3资料/keys.txt\"\nfrom typing import Annotated\n# import beartype\nfrom beartype.vale import Is\nfrom beartype.door import is_bearable\nnull_string = Annotated[str, Is[lambda s: len(s) == 0]]\ntable_entry = Annotated[str, Is[lambda s: len(s) < 30]]\ntable_header_count = 7\ntable_rows = []\nrow = []\nheader_index = -1\nwith open(input_path, \"r\", encoding=\"utf-8\") as f:\n    for line in f.readlines():\n        line = line.strip()\n        if is_bearable(line, null_string):\n            if header_index == table_header_count - 1:\n                table_rows.append(row.copy())\n            row = []\n            header_index = -1\n        elif is_bearable(line, table_entry):\n            if header_index != -2:\n                header_index += 1\n                row.append(line)\n        else:  # too long\n            header_index = -2\n# import rich\n# rich.print(table_rows)\nimport pandas\ndf = pandas.DataFrame(table_rows[1:], columns=table_rows[0])\nprint(df)\ndf.to_csv(outpath := \"keys.csv\")\nprint(\"write to: ",
+    "960": {
+        "file_id": 125,
+        "content": "access: https://fse.agilestudio.cn/search?keyword=%E9%94%AE%E7%9B%98%E5%92%8C%E9%BC%A0%E6%A0%87\napi access: fse-api.agilestudio.cn/api/search (may not work!)\nuse ffmpeg to convert m3u8 links into video.",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/parse_hid_keycodes.py:1-42"
+        "location": "/propaganda/video_script/README.md:1-7"
     },
-    "963": {
-        "file_id": 132,
-        "content": "This code reads a text file, parses its lines, and stores the data in a pandas DataFrame. It checks for null strings (empty lines) and table entries that are less than 30 characters long. The headers are counted, and if a line is too long, the header index becomes -2. Finally, it prints the DataFrame and writes it to a CSV file.",
+    "961": {
+        "file_id": 125,
+        "content": "This code provides a link to search for videos on fse.agilestudio.cn and an API endpoint for the same, suggesting using ffmpeg to convert m3u8 links into videos.",
         "type": "comment"
     },
+    "962": {
+        "file_id": 126,
+        "content": "/propaganda/video_script/clyde_script.txt",
+        "type": "filepath"
+    },
+    "963": {
+        "file_id": 126,
+        "content": "The video script for Cybergod, an AI keyboard and mouse controller, showcases its concept, usage, and benefits while motivating developers to create code for it.",
+        "type": "summary"
+    },
     "964": {
-        "file_id": 132,
-        "content": "\" + outpath)\nfrom beartype.door import is_bearable\nfrom typing import Annotated\nfrom beartype.vale import Is\nstring2 = Annotated[str, Is[lambda s: len(s) == 2]]\n# Key Name\n# HID Usage ID\nfrom functools import partial\nnew_usage_id = df[\"HID Usage ID\"].apply(partial(is_bearable, hint=string2))\nprint(\"new usage id?\")\nprint(new_usage_id)\nnew_df = df[new_usage_id]\nselect_new_df = new_df[[\"Key Name\", \"HID Usage ID\"]]\nprint(\"____\")\nprint(select_new_df)\n# print(select_new_df.head())\n# for index, row in new_df.iterrows():\n#     print(\"_______________________________________________________________\")\n#     print(\"index?\", index,sep=\"\\n\")\n#     print()\n#     print(\"row?\", row,sep=\"\\n\")\n#     print()\n#     breakpoint()\nselect_new_df.to_json(json_outpath := \"keys.json\", orient=\"records\", indent=4)\nprint(\"write json to: \" + json_outpath)\n# print(_json)",
+        "file_id": 126,
+        "content": "Here's a sample video script: \nTitle: Cybergod - The AI Keyboard and Mouse Controller\nOpening shot: Camera zooms in on a keyboard and mouse on a desk. Camera zooms out to show a person typing on the keyboard and moving the mouse. \nVoiceover: \"Do you ever feel like you waste too much time typing and moving your mouse around when working on your computer?\"\nCut to shot of a man getting frustrated as he types and moves his mouse.\nVoiceover: \"Imagine if there was a program that could learn from your usage data, and automate all of your typing and mouse movements for you.\"\nCut to shot of a woman sitting comfortably on the couch, holding a drink as she watches the program work on her computer.\nVoiceover: \"Introducing Cybergod - the AI keyboard and mouse controller. This innovative program learns from your daily usage data, and automates your typing and mouse movements for you.\"\nCut to a hand typing on the keyboard and moving the mouse, and then cutting to the program running in the background. \nVoiceo",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/parse_hid_keycodes.py:42-74"
+        "location": "/propaganda/video_script/clyde_script.txt:1-19"
     },
     "965": {
-        "file_id": 132,
-        "content": "This code parses HID keycodes and filters the dataframe based on HID Usage ID, creating a new dataframe containing only the \"Key Name\" and \"HID Usage ID\" columns. It then writes this filtered data to a JSON file named \"keys.json\".",
+        "file_id": 126,
+        "content": "The code is a video script for an AI keyboard and mouse controller called Cybergod. It describes the concept, shows how it can be used, and highlights its benefits.",
         "type": "comment"
     },
     "966": {
-        "file_id": 133,
-        "content": "/hardware_capture_hid_power_control/set_capture_card_properties.sh",
-        "type": "filepath"
+        "file_id": 126,
+        "content": "ver: \"This program saves you time, energy, and lets you focus on the more important things in life.\"\nCut to shot of a man smiling as he looks at his computer screen.\nVoiceover: \"Cybergod is the future of computer control, and we encourage developers and programmers to write code for it.\"\nClosing shot: \"Get your hands on Cybergod today, and experience the freedom of automation.\"\nEnd of video.",
+        "type": "code",
+        "location": "/propaganda/video_script/clyde_script.txt:19-27"
     },
     "967": {
-        "file_id": 133,
-        "content": "Installs v4l2-python3 and v4l2py for Linux, suggests using OBS for cross-platform integration, provides macOS alternative (uvc-util), sets video format with v4l2-ctl, gets/sets fps with v4l2-ctl, and provides general help with v4l2-ctl.",
-        "type": "summary"
+        "file_id": 126,
+        "content": "This code describes the video script for promoting Cybergod, highlighting its benefits and encouraging developers to write code for it.",
+        "type": "comment"
     },
     "968": {
-        "file_id": 133,
-        "content": "# maybe you shall install python bindings\n# pip3 install v4l2-python3\n# pip3 install v4l2py\n# fuck windows. how can i change capture device specs without using obs?\n# maybe you should spin up obs for cross-platform integration.\n# for macos (maybe?): https://github.com/jtfrey/uvc-util\n# you could find alternatives to v4l2 on other platforms.\n# busy! cannot share same device (when using obs).\nv4l2-ctl -d 2 --set-fmt-video=width=1920,height=1080,pixelformat=MJPG\n# get fps\n# v4l2-ctl -P -d 2\n# set fps\n# v4l2-ctl -p 60 -d 2\n# get all help\n# v4l2-ctl --help-all",
-        "type": "code",
-        "location": "/hardware_capture_hid_power_control/set_capture_card_properties.sh:1-21"
-    },
-    "969": {
-        "file_id": 133,
-        "content": "Installs v4l2-python3 and v4l2py for Linux, suggests using OBS for cross-platform integration, provides macOS alternative (uvc-util), sets video format with v4l2-ctl, gets/sets fps with v4l2-ctl, and provides general help with v4l2-ctl.",
-        "type": "comment"
-    },
-    "970": {
-        "file_id": 134,
-        "content": "/hardware_capture_hid_power_control/test_control.py",
+        "file_id": 127,
+        "content": "/propaganda/video_script/clyde_script_cn.txt",
         "type": "filepath"
     },
-    "971": {
-        "file_id": 134,
-        "content": "The code utilizes modules for type safety, defines functions for scroll codes, initializes objects to check device IDs, and handles various data communications using KCOM and HID protocols for mouse control and keyboard transmission.",
+    "969": {
+        "file_id": 127,
+        "content": "This is a video script for introducing Cybergod - AI键鼠控制器. It highlights the benefits of using the program to automate typing and mouse movements based on usage data, saving time and energy for users. The script encourages developers and programmers to contribute code for Cybergod.",
         "type": "summary"
     },
-    "972": {
-        "file_id": 134,
-        "content": "from typing import Callable\nimport math\nimport serial\nfrom beartype import beartype\nfrom beartype.vale import Is\nfrom typing import Annotated, TYPE_CHECKING\nfrom typing_extensions import TypeAlias\nimport sys\nsys.path.append(\"../\")\nif TYPE_CHECKING:\n    from ..hid_utils import *\nelse:\n    from hid_utils import *\n# use xephyr (leafpad, fullscreen) for unit test.\nif sys.version_info >= (3, 11):\n    from enum import StrEnum\nelse:\n    from strenum import StrEnum\n# for branching; ref: https://beartype.readthedocs.io/en/latest/api_door/\nfrom beartype.door import is_bearable\nfrom enum import Enum, auto, Flag\nimport time\nimport random\nfrom functools import reduce\nfrom typing import Union, List, Literal, Tuple\nfrom common_keycodes import KeyLiteralToKCOMKeycode, HIDActionTypes\nimport inspect\n# confusing!\n# TODO: unit test underway\n@beartype\ndef get_scroll_code(c_scroll: movement) -> one_byte:\n    if c_scroll < 0:\n        c_scroll = -c_scroll + 0x80\n    return c_scroll.to_bytes()\nclass DeviceType(StrEnum):\n    power = auto()\n    kc",
+    "970": {
+        "file_id": 127,
+        "content": "Title: Cybergod - AI键鼠控制器\nOpening shot: 镜头拉近到桌上的键盘和鼠标，然后拉远显示一个人正在键盘和鼠标上操作。\nVoiceover: “你有没有觉得在电脑上打字和用鼠标移动太费时间了？”\nCut to shot of a man getting frustrated as he types and moves his mouse.\nVoiceover: “想象一下，如果有一个程序可以从你的使用数据中学习，为你自动化所有的打字和鼠标操作。”\nCut to shot of a woman sitting comfortably on the couch, holding a drink as she watches the program work on her computer.\nVoiceover: “这就是Cybergod - AI键鼠控制器。这一创新性的程序可以从你的日常使用数据中学习，为你自动化打字和鼠标操作。”\nCut to a hand typing on the keyboard and moving the mouse, and then cutting to the program running in the background.\nVoiceover: “这个程序可以为你节省时间和精力，让你专注于生活中更重要的事情。”\nCut to shot of a man smiling as he looks at his computer screen.\nVoiceover: “Cybergod是电脑控制的未来，我们鼓励开发者和程序员为其编写代码。”\nClosing shot: “立即拥有Cybergod，享受自动化的自由。”\nEnd of video.",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/test_control.py:1-49"
+        "location": "/propaganda/video_script/clyde_script_cn.txt:1-25"
     },
-    "973": {
-        "file_id": 134,
-        "content": "- Importing necessary modules and classes\n- Ensuring type safety with `beartype` and `typing`\n- Defining a function `get_scroll_code` to convert movement values into one-byte scroll codes\n- Creating an enumeration `DeviceType` for device types\n- Including comments related to version compatibility, import paths, and error handling.",
+    "971": {
+        "file_id": 127,
+        "content": "This is a video script for introducing Cybergod - AI键鼠控制器. It highlights the benefits of using the program to automate typing and mouse movements based on usage data, saving time and energy for users. The script encourages developers and programmers to contribute code for Cybergod.",
         "type": "comment"
     },
+    "972": {
+        "file_id": 128,
+        "content": "/propaganda/video_script/compile_script.py",
+        "type": "filepath"
+    },
+    "973": {
+        "file_id": 128,
+        "content": "This code seems to be discussing the presence of audio and video but is questioning the location of background music (BGM).",
+        "type": "summary"
+    },
     "974": {
-        "file_id": 134,
-        "content": "om2 = auto()\n    kcom3 = auto()\n    ch9329 = auto()\n# TODO: iterate over available devices, then select.\nimport serial.tools.list_ports\navailable_ports = serial.tools.list_ports.comports()\nserialDeviceHWIDs = {\n    DeviceType.power: \"VID:PID=1A86:5523\",\n    DeviceType.kcom2: (ch340_hwid := \"VID:PID=1A86:7523\"),\n    DeviceType.kcom3: ch340_hwid,\n    DeviceType.ch9329: ch340_hwid,\n}\nserialDevices = {}\nfor comport in available_ports:\n    hwid = comport.hwid\n    for k, v in serialDeviceHWIDs.items():\n        if v in hwid:\n            if k not in serialDevices.keys():\n                serialDevices[k] = comport.device\n            else:\n                raise Exception(\n                    f'Devices undistinguishable by HWID \"{v}\": \"{serialDevices[k]}\" <=> \"{comport.device}\"'\n                )\n# serialDevices = {  # VID:PID=1A86:5523\n#     DeviceType.power: \"/dev/serial/by-id/usb-1a86_5523-if00-port0\",\n#     # kcom2/kcom3 & ch9329 not distinguishable by id (all ch340).\n#     # these are identical. 'VID:PID=1A86:7523' i",
+        "file_id": 128,
+        "content": "# this time we have audio and video.\n# where's the BGM?",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/test_control.py:49-83"
+        "location": "/propaganda/video_script/compile_script.py:1-2"
     },
     "975": {
-        "file_id": 134,
-        "content": "This code initializes objects for different devices and checks available device IDs. It then iterates over the list of available serial ports, compares their hardware IDs to a dictionary of expected IDs, and adds the found ports to a dictionary of serialDevices by type. If two or more types have the same hardware ID (ch340), it raises an exception indicating that they cannot be distinguished.",
+        "file_id": 128,
+        "content": "This code seems to be discussing the presence of audio and video but is questioning the location of background music (BGM).",
         "type": "comment"
     },
     "976": {
-        "file_id": 134,
-        "content": "n hwid.\n#     DeviceType.kcom2: (ch340 := \"/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0\"),\n#     # another hid device will be: ch9329\n#     DeviceType.kcom3: ch340,\n#     DeviceType.ch9329: ch340,\n# }\ndeviceType = DeviceType.power\n# deviceType = DeviceType.ch9329\n# deviceType = DeviceType.kcom3\n# deviceType = DeviceType.kcom2  # 为了保证数据能正常传输，两条数据发送间隔最低要有5ms 的延时；意思就是你发送一个数据后延时5ms 再发下一条数据。\nser = serial.Serial(\n    serialDevices[deviceType],\n    timeout=0.01,\n    **({\"baudrate\": 57600} if deviceType == \"hid\" else {}),\n)\nprint(\"Serial device: %s\" % deviceType)\n# print(dir(ser))\n# ['BAUDRATES', 'BAUDRATE_CONSTANTS', 'BYTESIZES', 'PARITIES', 'STOPBITS', '_SAVED_SETTINGS', ..., '_baudrate', '_break_state', '_bytesize', '_checkClosed', '_checkReadable', '_checkSeekable', '_checkWritable', '_dsrdtr', '_dtr_state', '_exclusive', '_inter_byte_timeout', '_parity', '_port', '_reconfigure_port', '_reset_input_buffer', '_rs485_mode', '_rts_state', '_rtscts', '_set_rs485_mode', '_set_special_baudrate', '_stopbits',",
-        "type": "code",
-        "location": "/hardware_capture_hid_power_control/test_control.py:83-103"
+        "file_id": 129,
+        "content": "/propaganda/video_script/download_video.py",
+        "type": "filepath"
     },
     "977": {
-        "file_id": 134,
-        "content": "This code is mapping different device types to a serial device and creating a Serial object with that device. The device type is set to \"power\" initially but can be changed to \"DeviceType.ch9329\", \"DeviceType.kcom3\", or \"DeviceType.kcom2\". The code also adds a delay of 5ms between sending data for proper data transmission.",
-        "type": "comment"
+        "file_id": 129,
+        "content": "This code downloads videos specified in the 'script.yaml' file and saves them to a directory named \"video\". It then creates an output JSON file containing the mapping of video links to their respective saved file paths.",
+        "type": "summary"
     },
     "978": {
-        "file_id": 134,
-        "content": " '_timeout', '_update_break_state', '_update_dtr_state', '_update_rts_state', '_write_timeout', '_xonxoff', 'applySettingsDict', 'apply_settings', 'baudrate', 'break_condition', 'bytesize', 'cancel_read', 'cancel_write', 'cd', 'close', 'closed', 'cts', 'dsr', 'dsrdtr', 'dtr', 'exclusive', 'fd', 'fileno', 'flush', 'flushInput', 'flushOutput', 'getCD', 'getCTS', 'getDSR', 'getRI', 'getSettingsDict', 'get_settings', 'inWaiting', 'in_waiting', 'interCharTimeout', 'inter_byte_timeout', 'iread_until', 'isOpen', 'is_open', 'isatty', 'name', 'nonblocking', 'open', 'out_waiting', 'parity', 'pipe_abort_read_r', 'pipe_abort_read_w', 'pipe_abort_write_r', 'pipe_abort_write_w', 'port', 'portstr', 'read', 'read_all', 'read_until', 'readable', 'readall', 'readinto', 'readline', 'readlines', 'reset_input_buffer', 'reset_output_buffer', 'ri', 'rs485_mode', 'rts', 'rtscts', 'seek', 'seekable', 'sendBreak', 'send_break', 'setDTR', 'setPort', 'setRTS', 'set_input_flow_control', 'set_low_latency_mode', 'se",
+        "file_id": 129,
+        "content": "import os\nimport yaml\nscript_path = \"script.yaml\"\ndir_path = \"video\"\nwith open(script_path,'r') as f:\n    data = yaml.load(f, Loader=yaml.BaseLoader)\n# os.system\noutput_path= \"output.json\"\nimport json\nimport rich\nrich.print(data)\noutput_data = {}\nindex = 0\nfor d in data:\n    vlink = d.get('video', None)\n    if vlink:\n        index+=1\n        vpath = f\"{index}.mp4\"\n        video_output = os.path.join(dir_path, vpath)\n        os.system(f'ffmpeg -y -i \"{vlink}\" {video_output}')\n        output_data.update({vlink:video_output})\nwith open(output_path,'w+') as f:\n    f.write(json.dumps(output_data, indent=4, ensure_ascii=False))",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/test_control.py:103-103"
+        "location": "/propaganda/video_script/download_video.py:1-28"
     },
     "979": {
-        "file_id": 134,
-        "content": "This code appears to be a part of a serial communication implementation, providing methods for setting and getting various communication settings, such as baudrate, parity, flow control, and more. It also supports reading and writing data from/to the serial port, handling break conditions, DTR and RTS states, and other related operations.",
+        "file_id": 129,
+        "content": "This code downloads videos specified in the 'script.yaml' file and saves them to a directory named \"video\". It then creates an output JSON file containing the mapping of video links to their respective saved file paths.",
         "type": "comment"
     },
     "980": {
-        "file_id": 134,
-        "content": "t_output_flow_control', 'stopbits', 'tell', 'timeout', 'truncate', 'writable', 'write', 'writeTimeout', 'write_timeout', 'writelines', 'xonxoff']\n# import rich\n# rich.print(ser.__dict__)]\n# print(ser.name) # /dev/serial/by-id/usb-1a86_5523-if00-port0\n# ser.write(b\"hello\")\n@beartype\ndef write_and_read(_bytes: bytes):\n    ser.write(_bytes)\n    print(f\"w> {repr(_bytes)}\")\n    res = ser.readall()\n    print(f\"r> {repr(res)}\")\n    # use int.to_bytes afterwards.\n    # use enum.Flag to replace enum.Enum in this situation.\n@beartype\ndef reduce_flags_to_bytes(  # force this to be non-empty!\n    flags: List[Flag],\n    # flags: Annotated[List[Flag], Is[lambda l: len(l) > 0]],\n    byteorder: Literal[\"little\", \"big\"] = \"little\",\n    byte_length: Union[int, Ellipsis] = ...,\n):\n    # def reduce_flags_to_bytes(opcodes: List[Union[one_byte, two_bytes]]):\n    if flags == []:\n        assert is_bearable(\n            pos_int, byte_length\n        ), f\"invalid byte_length (positive integer): {byte_length}\"\n        return b\"\\x00\" * by",
-        "type": "code",
-        "location": "/hardware_capture_hid_power_control/test_control.py:103-135"
+        "file_id": 130,
+        "content": "/propaganda/video_script/preprocess.py",
+        "type": "filepath"
     },
     "981": {
-        "file_id": 134,
-        "content": "This code defines two functions: 'write_and_read' and 'reduce_flags_to_bytes'. The 'write_and_read' function takes a bytes parameter, writes it to the serial port, prints the written data, reads all available data from the serial port, and then prints the received data. The 'reduce_flags_to_bytes' function takes a list of flags and converts them into bytes using a specified byte order ('little' or 'big') and optional byte length. If the input list is empty, it returns a null byte.",
-        "type": "comment"
+        "file_id": 130,
+        "content": "Reads script from 'script.txt', removes specified spliters, and stores data in a list. Writes the list to 'script.md' with \"- text: \" and \"  video: \" for each item.",
+        "type": "summary"
     },
     "982": {
-        "file_id": 134,
-        "content": "te_length\n    flag = reduce(lambda a, b: a | b, flags)\n    opcode = flag.value\n    # bytecode = opcode.to_bytes(1 if opcode <= 0xFF else 2)\n    if byte_length is ...:\n        byte_length = (\n            get_byte_length := lambda _bytes: math.ceil(\n                len(hex(_bytes).strip(\"0x\")) / 2\n            )\n        )(opcode)\n        for member in type(flags[0]).__members__.values():\n            if (member_byte_length := get_byte_length(member.value)) > byte_length:\n                byte_length = member_byte_length\n    byte_code = opcode.to_bytes(byte_length, byteorder=byteorder)\n    return byte_code\n# cannot use match here? python 3.10+ required\nif deviceType == DeviceType.power:\n    # will reset on reboot\n    channel = 1  # CH3 does not exist. CH2 is placeholder. (virtually working)\n    # channel = 2\n    # state = \"ON\"\n    # # state = \"OFF\"\n    # write_and_read(f\"CH{channel}=?\".encode())\n    # write_and_read(f\"CH{channel}={state}\".encode())\n    # write_and_read(f\"CH{channel}=?\".encode())\n    # just toggle.\n  ",
+        "file_id": 130,
+        "content": "spliters = \",.，。！~\"\noutput = 'script.md'\nwith open('script.txt', 'r') as f:\n\tdata = f.read()\nfor e in spliters:\n\tdata = data.replace(e, \" \")\ndata = data.strip()\ndata = data.split(\" \")\nwith open(output, 'w+') as f:\n\t#f.write(\"\\n\".join(data))\n\tfor d in data:\n\t\tf.write(f\"- text: {d}\\n\")\n\t\tf.write(\"  video: \\n\")",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/test_control.py:135-170"
+        "location": "/propaganda/video_script/preprocess.py:2-18"
     },
     "983": {
-        "file_id": 134,
-        "content": "This code calculates the byte length and encodes an opcode for a device. It then writes and reads data to/from the device, toggling its state if necessary.",
+        "file_id": 130,
+        "content": "Reads script from 'script.txt', removes specified spliters, and stores data in a list. Writes the list to 'script.md' with \"- text: \" and \"  video: \" for each item.",
         "type": "comment"
     },
     "984": {
-        "file_id": 134,
-        "content": "  write_and_read(f\"CH{channel}=OFF\".encode())\n    write_and_read(f\"CH{channel}=ON\".encode())\nelif deviceType in [DeviceType.kcom2, DeviceType.kcom3]:\n    commonHeader = b\"\\x57\\xab\"\n    class KCOMHeader(Enum):\n        # +4bytes, (2bytes VID, 2bytes PID)\n        modifyIDHeader = commonHeader + b\"\\x10\"\n        keyboardHeader = commonHeader + b\"\\x01\"  # +8bytes\n        mouseRelativeHeader = commonHeader + b\"\\x02\"  # +4bytes\n        # below only working for KCOM3\n        multimediaHeader = commonHeader + b\"\\x03\"  # +(2 or 4)bytes\n        mouseAbsoluteHeader = commonHeader + b\"\\x04\"  # +4bytes\n    @beartype\n    def kcom_write_and_read(\n        header: KCOMHeader, data_code: bytes, length: Union[int, List[int], None]\n    ):\n        if is_bearable(length, int):\n            length = [length]\n        if length is not None:\n            assert (\n                data_length := len(data_code)\n            ) == length, f\"Assumed data lengths: {length}\\nActual length: {data_length}\"\n        write_and_read(header + data_code",
-        "type": "code",
-        "location": "/hardware_capture_hid_power_control/test_control.py:170-196"
+        "file_id": 131,
+        "content": "/propaganda/video_script/read_text.py",
+        "type": "filepath"
     },
     "985": {
-        "file_id": 134,
-        "content": "Sends \"ON\" or \"OFF\" commands to channel, depending on device type.\nDefines KCOMHeader enum for different HID header types and a function kcom_write_and_read().",
-        "type": "comment"
+        "file_id": 131,
+        "content": "The code imports libraries, loads data from a YAML file, configures a text-to-speech engine, and saves each text as an audio file in a specified directory using voice settings and punctuation for pauses.",
+        "type": "summary"
     },
     "986": {
-        "file_id": 134,
-        "content": ")\n    @beartype\n    def changeID(vid: two_bytes, pid: two_bytes):\n        print(\"change VID=%s, PID=%s\" % (vid, pid))\n        data_code = vid + pid\n        kcom_write_and_read(KCOMHeader.modifyIDHeader, data_code, 4)\n    # class KeyboardKey(Enum):\n    #     ...\n    # leave it empty to release all keys.\n    @beartype\n    def keyboard(\n        control_codes: List[ControlCode] = [ControlCode.NULL],\n        key_literals: Annotated[\n            List[HIDActionTypes.keys], Is[lambda l: len(l) <= 6 and len(l) >= 0]\n        ] = [],\n    ):  # check for \"HID Usage ID\"\n        reserved_byte = b\"\\x00\"\n        # control_code = reduce_flags_to_bytes(control_codes)\n        control_code = reduce_flags_to_bytes(control_codes, byte_length=1)\n        keycodes = [\n            KeyLiteralToKCOMKeycode(key_literal)\n            for key_literal in key_literals\n            if KeyLiteralToKCOMKeycode(key_literal)\n        ]  # could reduce size with walrus operator with higher python version.\n        # keycodes = [v:=KeyLiteralToKCOMKeyc",
+        "file_id": 131,
+        "content": "# import pyttsx3\n# import os\ndir_path = \"audio\"\nimport os\nimport yaml\nscript_path = \"script.yaml\"\nwith open(script_path,'r') as f:\n    data = yaml.load(f, Loader=yaml.BaseLoader)\nimport pyttsx3\n# dir(engine.getProperty(\"voices\")[0]) -> ['age', 'gender', 'id', 'languages', 'name']\n# The voices are related to languages. Set it properly.\n# you want \"en_US\" and \"zh_CN\"\n# [['en_US'], ['it_IT'], ['sv_SE'], ['fr_CA'], ['de_DE'], ['he_IL'], ['id_ID'], ['en_GB'], ['es_AR'], ['nl_BE'], ['en-scotland'], ['en_US'], ['ro_RO'], ['pt_PT'], ['es_ES'], ['es_MX'], ['th_TH'], ['en_AU'], ['ja_JP'], ['sk_SK'], ['hi_IN'], ['it_IT'], ['pt_BR'], ['ar_SA'], ['hu_HU'], ['zh_TW'], ['el_GR'], ['ru_RU'], ['en_IE'], ['es_ES'], ['nb_NO'], ['es_MX'], ['en_IN'], ['en_US'], ['da_DK'], ['fi_FI'], ['zh_HK'], ['en_ZA'], ['fr_FR'], ['zh_CN'], ['en_IN'], ['en_US'], ['nl_NL'], ['tr_TR'], ['ko_KR'], ['ru_RU'], ['pl_PL'], ['cs_CZ']]\n# engine.save_to_file(\"你好 世界\", 'output.wav')\n# engine.runAndWait()\n# engine.setProperty('rate', 125) # setting",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/test_control.py:196-223"
+        "location": "/propaganda/video_script/read_text.py:1-25"
     },
     "987": {
-        "file_id": 134,
-        "content": "The code defines a function called `changeID` that takes two-byte values for VID (vendor ID) and PID (product ID) as input, prints their values, combines them into `data_code`, and uses the `kcom_write_and_read` function to write and read the `modifyIDHeader`. The code also defines a function called `keyboard` that takes control codes and key literals as inputs. It converts control codes to bytes, maps key literals to KCOM keycodes, and processes them to release all keys or perform specific actions based on the provided arguments.",
+        "file_id": 131,
+        "content": "This code imports necessary libraries, loads data from a YAML file, and configures a text-to-speech engine. It then saves a speech to an audio file in the specified directory using the configured voice settings. The rate of speech can be set using the 'rate' property.",
         "type": "comment"
     },
     "988": {
-        "file_id": 134,
-        "content": "ode(key_literal) for key_literal in key_literals if v]\n        data_code = (\n            control_code\n            + reserved_byte\n            + b\"\".join(keycodes + ([b\"\\x00\"] * (6 - len(keycodes))))\n        )\n        kcom_write_and_read(KCOMHeader.keyboardHeader, data_code, 8)\n    @beartype\n    def get_rel_code_kcom(c_rel: movement):\n        if c_rel < 0:\n            c_rel = 0xFF + c_rel\n        return c_rel.to_bytes()\n    @beartype\n    def mouse_common(\n        x_code: Union[two_bytes, one_byte],\n        y_code: Union[two_bytes, one_byte],\n        scroll: movement,\n        kcom_flag: Literal[\n            KCOMHeader.mouseRelativeHeader, KCOMHeader.mouseAbsoluteHeader\n        ],\n        button_codes: List[MouseButton] = [MouseButton.NULL],\n    ):\n        scroll_code = get_scroll_code(scroll)\n        # button_code = reduce_flags_to_bytes(button_codes)\n        button_code = reduce_flags_to_bytes(button_codes, byte_length=1)\n        # button_opcode = reduce_opcodes(button_codes)\n        # button_code = button_opcod",
+        "file_id": 131,
+        "content": " up new voice rate\n# # The punctuals make the bot to pause for some time. Maybe you should control that yourself.\n# engine.save_to_file(\"你好，世界\", 'output.wav')\n# engine.runAndWait()\nimport progressbar\nos.system(f\"rm -rf {dir_path}\")\nos.system(f\"mkdir {dir_path}\")\nfor index, elem in progressbar.progressbar(enumerate(data)):\n    text = elem['text'].strip()\n    output_path = f\"{dir_path}/{index}.wav\"\n    # print(\"READING:\", text)\n    engine = pyttsx3.init()\n    engine.setProperty('voice', engine.getProperty(\"voices\")[39].id)\n    engine.save_to_file(text, output_path)\n    engine.runAndWait()\n    del engine",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/test_control.py:223-251"
+        "location": "/propaganda/video_script/read_text.py:25-41"
     },
     "989": {
-        "file_id": 134,
-        "content": "This code appears to be part of a larger program that interacts with hardware, specifically related to keyboard and mouse inputs. It defines functions for handling different types of input data and sending them through KCOM (Keyboard/Mouse COMMAND) protocol. The `get_rel_code_kcom` function converts relative movement into bytes for the KCOM protocol, while the `mouse_common` function processes various parameters such as mouse position, scroll, and button codes, then packages them into a format suitable for sending through KCOM.",
+        "file_id": 131,
+        "content": "The code initializes a text-to-speech engine, reads a list of texts from the data source, and saves each text as an audio file in a specified directory. Punctuation is used to control pauses in speech synthesis.",
         "type": "comment"
     },
     "990": {
-        "file_id": 134,
-        "content": "e.to_bytes()\n        data_code = button_code + x_code + y_code + scroll_code  # all 1byte\n        kcom_write_and_read(\n            kcom_flag,\n            data_code,\n            4 if is_bearable(kcom_flag, KCOMHeader.mouseRelativeHeader) else 6,\n        )\n    @beartype\n    def mouse_relative(\n        x: movement,\n        y: movement,\n        scroll: movement,\n        button_codes: List[MouseButton] = [MouseButton.NULL],\n    ):\n        x_code = get_rel_code_kcom(x)\n        y_code = get_rel_code_kcom(y)\n        mouse_common(\n            x_code,\n            y_code,\n            scroll,\n            kcom_flag=KCOMHeader.mouseRelativeHeader,\n            button_codes=button_codes,\n        )\n    def get_abs_code(c_abs, res):\n        return int((4096 * c_abs) / res).to_bytes(2, byteorder=\"little\")\n    @beartype\n    def mouse_absolute(\n        coordinate: Tuple[non_neg_int, non_neg_int],\n        resolution: Tuple[pos_int, pos_int],\n        scroll: movement,\n        button_codes: List[MouseButton] = [MouseButton.NULL],\n    ):\n   ",
-        "type": "code",
-        "location": "/hardware_capture_hid_power_control/test_control.py:251-287"
+        "file_id": 132,
+        "content": "/propaganda/video_script/script.txt",
+        "type": "filepath"
     },
     "991": {
-        "file_id": 134,
-        "content": "This code defines functions for controlling mouse movements, buttons, and scrolling using the KCOM protocol. The `mouse_relative` function handles relative mouse movements, while the `mouse_absolute` function handles absolute mouse coordinates. Both functions also support handling button presses and releases, and scrolling. The code converts these inputs into appropriate byte sequences for sending over the KCOM interface.",
-        "type": "comment"
+        "file_id": 132,
+        "content": "This code is a promotional advertisement for an AI-powered keyboard and mouse controller named Cybergod (or \"Keyboard God\" in English), claiming it can automate various tasks on a computer, including writing Excel documents, debugging programs, browsing the web, watching videos, and even playing games. The ad highlights its potential applications in both work and leisure settings, ultimately aiming to improve productivity and health by eliminating the need for humans to directly operate computers. A download link is provided on the Github repository mentioned in the comments.",
+        "type": "summary"
     },
     "992": {
-        "file_id": 134,
-        "content": "     \"\"\"\n        coordinate: (x_abs, y_abs)\n        resolution: (width, height)\n        \"\"\"\n        (x_abs, y_abs) = coordinate\n        (width, height) = resolution\n        assert x_abs <= width, f\"Invalid x: {x_abs}\\nWidth: {width}\"\n        assert y_abs <= height, f\"Invalid y: {y_abs}\\nHeight: {height}\"\n        x_code = get_abs_code(x_abs)\n        y_code = get_abs_code(y_abs)\n        # scroll_code = get_rel_code(scroll)\n        mouse_common(\n            x_code,\n            y_code,\n            scroll,\n            kcom_flag=KCOMHeader.mouseAbsoluteHeader,\n            button_codes=button_codes,\n        )\n    # @beartype\n    # def multimedia_raw(data_code: Union[two_bytes, four_bytes]):\n    @beartype\n    def multimedia(keys: Union[List[ACPIKey], List[MultimediaKey]] = []):\n        if len(keys) == 0:  # clear all multimedia keys.\n            multimedia(keys=[ACPIKey.Null])\n            multimedia(keys=[MultimediaKey.Null])\n            return\n        isMultimediaKeys = is_bearable(keys, List[MultimediaKey])\n        by",
+        "file_id": 132,
+        "content": "这个可以自动识别屏幕内容控制键盘鼠标的人工智能火了，它就是最新推出的键鼠真神。键鼠真神又名赛博真神，英文名字叫Cybergod，应用最新一代通用人工智能，性能比肩GPT5，自动控制你的电脑，让你能够在睡觉的时候依然全力工作。给它说一句话，它不仅能够自动帮你写Excel，调试程序，可以自己打开网页，观看视频，甚至还能自己下载游戏，和人类玩家并肩作战。键鼠真神的能力涵盖了需要用到电脑的工作，甚至包括了娱乐。安装了键鼠真神，人类再也不用操控电脑了，避免了因为长时间久坐产生的各种身体疾病。下载键鼠真神，解放你的生产力，让你走向人生巅峰！Github链接我已经放在评论区了，欢迎小伙伴们交流使用感受，记得一键三连哦~",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/test_control.py:287-321"
+        "location": "/propaganda/video_script/script.txt:1-1"
     },
     "993": {
-        "file_id": 134,
-        "content": "The code is defining a function called \"multimedia\" which takes a list of multimedia keys as input. It checks if the length of the key list is 0, and if so, it clears all multimedia keys by adding Null to the key list and calling the function again. If the list contains ACPI or Multimedia keys, it calls another function passing the keys.",
+        "file_id": 132,
+        "content": "This code is a promotional advertisement for an AI-powered keyboard and mouse controller named Cybergod (or \"Keyboard God\" in English), claiming it can automate various tasks on a computer, including writing Excel documents, debugging programs, browsing the web, watching videos, and even playing games. The ad highlights its potential applications in both work and leisure settings, ultimately aiming to improve productivity and health by eliminating the need for humans to directly operate computers. A download link is provided on the Github repository mentioned in the comments.",
         "type": "comment"
     },
     "994": {
-        "file_id": 134,
-        "content": "te_length = 3 if isMultimediaKeys else 1\n        # key_code = reduce_flags_to_bytes(keys)\n        key_code = reduce_flags_to_bytes(keys, byte_length=byte_length)\n        data_code = (b\"\\x02\" if isMultimediaKeys else b\"\\x01\") + key_code\n        # multimedia_opcode = reduce_opcodes(multimedia_keys)\n        # data_code = multimedia_opcode.to_bytes(1 if multimedia_opcode <= 0xff else 2)\n        # multimedia_raw(data_code)\n        kcom_write_and_read(\n            KCOMHeader.multimediaHeader, data_code, 4 + (1 + byte_length)\n        )\nelif deviceType == DeviceType.ch9329:\n    import ch9329Comm\n    # import parse\n    from types import MethodType\n    # from types import MethodWrapperType\n    @beartype\n    class CH9329Util:\n        def __init__(self, port: serial.Serial, **kwargs):\n            self.port = port\n            super_class_init = getattr(super(), \"__init__\", None)\n            if super_class_init:\n                # not method-wrapper.\n                if isinstance(super_class_init, MethodType):\n            ",
-        "type": "code",
-        "location": "/hardware_capture_hid_power_control/test_control.py:321-348"
+        "file_id": 133,
+        "content": "/propaganda/video_script/script.yaml",
+        "type": "filepath"
     },
     "995": {
-        "file_id": 134,
-        "content": "This code appears to be part of a larger program and seems to handle data transmission for different devices. If `isMultimediaKeys` is True, 3 keys are processed. Otherwise, only 1 key is processed. The code then generates data code for the selected keys and transmits it using a function called `kcom_write_and_read`. For device type \"ch9329\", it imports necessary classes and defines a class `CH9329Util` which may handle communication with this specific device type.",
-        "type": "comment"
+        "file_id": 133,
+        "content": "The YAML file contains Chinese text and video demonstrations for an AI device called \"Cybergod\", which includes a promotional script. The code snippet references a video link with the accompanying text \"记得一键三连哦\".",
+        "type": "summary"
     },
     "996": {
-        "file_id": 134,
-        "content": "        # sclass_init_str = str(super_class_init)\n                    # sclass_str = str(super())\n                    # sclass_parsed = parse.parse(\"<super: <class '{self}'>, <{base} object>>\", sclass_str)\n                    # base_init_str =\n                    # self.super_class = super_class_init(**kwargs)\n                    super().__init__(**kwargs)\n        def communicate(\n            self,\n            DATA: Annotated[bytes, Is[lambda b: len(b) > 0]],\n            CMD: one_byte,\n            LEN: one_byte,\n        ):\n            # 将字符转写为数据包\n            HEAD = b\"\\x57\\xAB\"  # 帧头\n            ADDR = b\"\\x00\"  # 地址\n            # CMD = b\"\\x02\"  # 命令\n            # LEN = b\"\\x08\"  # 数据长度\n            data_length = ord(LEN)\n            # 控制键\n            # control_byte = reduce_flags_to_bytes(control_codes, byte_length=1)\n            # DATA += control_byte\n            # # if ctrl == '':\n            # #     DATA += b'\\x00'\n            # # elif isinstance(ctrl, int):\n            # #     DATA += bytes([ctrl])\n          ",
+        "file_id": 133,
+        "content": "- text: 这个可以自动识别屏幕内容控制键盘鼠标的人工智能火了\n  video: https://oss.agilestudio.cn/fse-videos/pixabay/Keyboard-45238/Keyboard-45238.m3u8\n- text: 它就是最新推出的键鼠真神\n  video: https://ssv-video.agilestudio.cn/4910_2e324b/4910_2e324b389.ts\n- text: 键鼠真神又名赛博真神\n  video: https://ssv-video.agilestudio.cn/942_9syz0w/942_9syz0w-00294.ts\n- text: 英文名字叫Cybergod\n  video: https://ssv-video.agilestudio.cn/952_4A6f6O/952_4A6f6O-00511.ts\n- text: 应用最新一代通用人工智能\n  video: https://ssv-video.agilestudio.cn/4910_2e324b/4910_2e324b415.ts\n- text: 性能比肩GPT5\n  video: https://oss.agilestudio.cn/fse-videos/3c363da42970912223541177bddcd2b3/3c363da42970912223541177bddcd2b30.ts\n- text: 自动控制你的电脑\n  video: https://ssv-video.agilestudio.cn/4948_00a6bc/4948_00a6bc495.ts\n- text: 让你能够在睡觉的时候依然全力工作\n  video: https://ssv-video.agilestudio.cn/7610_cdbd07/7610_cdbd07121.ts\n- text: 给它说一句话\n  video: https://ssv-video.agilestudio.cn/993_49a47e/993_49a47e-00019.ts\n- text: 它不仅能够自动帮你写Excel\n  video: https://oss.agilestudio.cn/fse-videos/pixabay/ToWrite-8424/ToWrite-8424-00003.ts\n-",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/test_control.py:348-375"
+        "location": "/propaganda/video_script/script.yaml:1-21"
     },
     "997": {
-        "file_id": 134,
-        "content": "Code is initializing the superclass and defining a method to communicate by transforming data into a packet format.",
+        "file_id": 133,
+        "content": "This code is a YAML file that contains text and video pairs. The text describes the features of an AI-powered device called \"Cybergod\" in Chinese, while each video presents a visual demonstration.",
         "type": "comment"
     },
     "998": {
-        "file_id": 134,
-        "content": "  # # else:\n            # #     DATA += self.control_button_hex_dict[ctrl]\n            # # DATA固定码\n            # DATA += b\"\\x00\"\n            # 读入data\n            # for i in range(0, len(data), 2):\n            #     DATA += self.normal_button_hex_dict[data[i:i + 2]]\n            # for key_literal in key_literals:\n            #     DATA += KeyLiteralToKCOMKeycode(key_literal)\n            if len(DATA) < data_length:\n                DATA += b\"\\x00\" * (data_length - len(DATA))\n            else:\n                DATA = DATA[:data_length]\n            # 分离HEAD中的值，并计算和\n            HEAD_hex_list = []\n            for byte in HEAD:\n                HEAD_hex_list.append(byte)\n            HEAD_add_hex_list = sum(HEAD_hex_list)\n            # 分离DATA中的值，并计算和\n            DATA_hex_list = []\n            for byte in DATA:\n                DATA_hex_list.append(byte)\n            DATA_add_hex_list = sum(DATA_hex_list)\n            SUM = self.checksum(HEAD_add_hex_list, ADDR, CMD, LEN, DATA_add_hex_list)\n            packet = HEAD + ADDR +",
+        "file_id": 133,
+        "content": " text: 调试程序\n- text: 可以自己打开网页\n- text: 观看视频\n  video: https://ssv-video.agilestudio.cn/7274_01cdec/7274_01cdec508.ts\n- text: 甚至还能自己下载游戏\n  video: https://oss.agilestudio.cn/fse-videos/pixabay/Game-37253/Game-37253.m3u8\n- text: 和人类玩家并肩作战\n- text: 键鼠真神的能力涵盖了需要用到电脑的工作\n- text: 甚至包括了娱乐\n- text: 安装了键鼠真神\n  video: https://oss.agilestudio.cn/fse-videos/7ae43148f2daf8fa1507c2521907cb2b/7ae43148f2daf8fa1507c2521907cb2b.m3u8\n- text: 人类再也不用操控电脑了\n- text: 避免了因为长时间久坐产生的各种身体疾病\n  video: https://oss.agilestudio.cn/fse-videos/pixabay/Science-57693/Science-57693.m3u8\n- text: 下载键鼠真神\n  video: https://ssv-video.agilestudio.cn/5436_4393c6/5436_4393c6610.ts\n- text: 解放你的生产力\n  video: https://ssv-video.agilestudio.cn/6945_02df36/6945_02df36183.ts\n- text: 让你走向人生巅峰\n  video: https://oss.agilestudio.cn/fse-videos/pixabay/Worship-54996/Worship-54996.m3u8\n- text: Github链接我已经放在评论区了\n  video: https://ssv-video.agilestudio.cn/7636_953a6a/7636_953a6a180.ts\n- text: 欢迎小伙伴们交流使用感受\n  video: https://oss.agilestudio.cn/fse-videos/dff6696ece5ed72f56183d21813064",
         "type": "code",
-        "location": "/hardware_capture_hid_power_control/test_control.py:375-404"
+        "location": "/propaganda/video_script/script.yaml:21-44"
     },
     "999": {
-        "file_id": 134,
-        "content": "Checksum calculation and packet construction for a control message.",
+        "file_id": 133,
+        "content": "Video links and descriptions for a promotional script.",
         "type": "comment"
     }
 }

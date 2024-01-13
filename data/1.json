@@ -1,549 +1,542 @@
 {
     "100": {
-        "file_id": 9,
-        "content": "   logger.warning(f\"Value {result} smaller than 0\")\n            return 0\n        return result\n    def to_ndarray(\n        self,\n    ) -> np.ndarray:\n        action_type_ndarray = np.zeros((len(self.action_types), 1))\n        action_type_ndarray[self.action_types.index(self.action_type)] = 1\n        key_ndarray = np.zeros((len(self.keys), 1))\n        if self.key:\n            key_ndarray[self.keys.index(self.key)] = 1\n        mouse_button_ndarray = np.zeros((len(self.mouse_buttons), 1))\n        if self.mouse_button:\n            mouse_button_ndarray[self.mouse_buttons.index(self.mouse_button)] = 1\n        mouse_pressed_array = np.zeros((1, 1))\n        if self.mouse_pressed:\n            mouse_pressed_array[0] = 1\n        x_ndarray = np.zeros((self.mouse_resolution, 1))\n        if self.x:\n            x_ndarray[\n                self.round_within(self.mouse_resolution * self.x / self.max_x, \"X\")\n            ] = 1\n        y_ndarray = np.zeros((self.mouse_resolution, 1))\n        if self.y:\n            y_ndarray[\n     ",
+        "file_id": 12,
+        "content": "beat_server_address = dict(\n    host=\"0.0.0.0\",\n    port=(server_port := 8771),\n    beat_url=\"/beat_request\",\n    info_url=\"/info\",\n    url_prefix=f\"http://localhost:{server_port}\",\n)\nbeat_client_data = dict(\n    url=(f\"{beat_server_address['url_prefix']}{beat_server_address['beat_url']}\"),\n    info_url=f\"{beat_server_address['url_prefix']}{beat_server_address['info_url']}\",\n    timeout=2,\n    access_time_key=\"access_time\",\n)\n# BEAT_FAILED = 255\nfrom functools import lru_cache, wraps\nfrom time import monotonic_ns\n# use cacheout instead.\n# ref: https://github.com/dgilland/cacheout\ndef timed_lru_cache(\n    _func=None, *, seconds: int = 7000, maxsize: int = 128, typed: bool = False\n):\n    \"\"\"Extension over existing lru_cache with timeout\n    :param seconds: timeout value\n    :param maxsize: maximum size of the cache\n    :param typed: whether different keys for different types of cache keys\n    \"\"\"\n    def wrapper_cache(f):\n        # create a function wrapped with traditional lru_cache\n        f = lru_cache(maxsize=m",
         "type": "code",
-        "location": "/conscious_struct.py:477-508"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_common.py:1-32"
     },
     "101": {
-        "file_id": 9,
-        "content": "Creates a numpy array for each action type, key, mouse button, and coordinates, with 1's at their respective indices if they are not None.",
+        "file_id": 12,
+        "content": "beat_server_address is defined with host, port, beat_url, info_url, and url_prefix.\nbeat_client_data contains the URL for beat_server_address and other parameters like timeout and access_time_key.\ntimed_lru_cache is a function that extends lru_cache with timeout, maxsize, and typed parameters.",
         "type": "comment"
     },
     "102": {
-        "file_id": 9,
-        "content": "           self.round_within(self.mouse_resolution * self.y / self.max_y, \"Y\")\n            ] = 1\n        dx_ndarray = np.zeros((self.mouse_resolution, 1))\n        if self.dx:\n            dx_ndarray[\n                self.round_within(\n                    self.mouse_resolution * (self.dx + self.max_x) / (2 * self.max_x),\n                    \"DX\",\n                )\n            ] = 1\n        dy_ndarray = np.zeros((self.mouse_resolution, 1))\n        if self.dy:\n            dy_ndarray[\n                self.round_within(\n                    self.mouse_resolution * (self.dy + self.max_y) / (2 * self.max_y),\n                    \"DY\",\n                )\n            ] = 1\n        ndarray = np.concatenate(\n            [\n                action_type_ndarray,\n                key_ndarray,\n                mouse_button_ndarray,\n                mouse_pressed_array,\n                x_ndarray,\n                y_ndarray,\n                dx_ndarray,\n                dy_ndarray,\n            ]\n        )\n        return ndarray\n    def to_actio",
+        "file_id": 12,
+        "content": "axsize, typed=typed)(f)\n        # convert seconds to nanoseconds to set the expiry time in nanoseconds\n        f.delta = seconds * 10**9\n        f.expiration = monotonic_ns() + f.delta\n        @wraps(f)  # wraps is used to access the decorated function attributes\n        def wrapped_f(*args, **kwargs):\n            if monotonic_ns() >= f.expiration:\n                # if the current cache expired of the decorated function then\n                # clear cache for that function and set a new cache value with new expiration time\n                f.cache_clear()\n                f.expiration = monotonic_ns() + f.delta\n            return f(*args, **kwargs)\n        wrapped_f.cache_info = f.cache_info\n        wrapped_f.cache_clear = f.cache_clear\n        return wrapped_f\n    # To allow decorator to be used without arguments\n    if _func is None:\n        return wrapper_cache\n    else:\n        return wrapper_cache(_func)\nimport requests\n# from frozendict import frozendict\n# create a session object\nsession = requests.Sessio",
         "type": "code",
-        "location": "/conscious_struct.py:508-543"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_common.py:32-61"
     },
     "103": {
-        "file_id": 9,
-        "content": "The code initializes and concatenates multiple numpy arrays representing various actions and parameters (action type, key pressed, mouse button, mouse position, etc.). It then returns the concatenated array.",
+        "file_id": 12,
+        "content": "This code defines a function decorator that adds caching functionality to the decorated function, with expiration time in nanoseconds. If the cache has expired, it clears the cache and sets a new expiration time.",
         "type": "comment"
     },
     "104": {
-        "file_id": 9,
-        "content": "n_json(\n        self,\n    ) -> Union[list, None]:\n        action_type = self.action_type\n        if action_type:\n            if action_type == \"key_press\":\n                assert self.key in self.keys\n                action_args = self.key\n            elif action_type == \"key_release\":\n                assert self.key in self.keys\n                action_args = self.key\n            elif action_type == \"mouse_move\":\n                assert self.x >= 0 and self.x <= self.max_x\n                assert self.y >= 0 and self.y <= self.max_y\n                action_args = [self.x, self.y]\n            elif action_type == \"mouse_click\":\n                assert self.x >= 0 and self.x <= self.max_x\n                assert self.y >= 0 and self.y <= self.max_y\n                assert self.mouse_button in self.mouse_buttons\n                assert type(self.mouse_pressed) == bool\n                action_args = [self.x, self.y, self.mouse_button, self.mouse_pressed]\n            elif action_type == \"mouse_scroll\":\n                as",
+        "file_id": 12,
+        "content": "n()  # effectively faster. really?\n@timed_lru_cache(seconds=1, maxsize=1)\ndef heartbeat_base(uuid: str, action: str, pid: int, role: str):\n    return heartbeat_base_nocache(uuid, action, pid, role)\ndef heartbeat_base_nocache(uuid: str, action: str, pid: int, role: str):\n    params = dict(uuid=uuid, action=action, pid=pid, role=role)\n    url = beat_client_data[\"url\"]\n    data = request_with_timeout_and_get_json_data(params, url)\n    access_time = data[beat_client_data[\"access_time_key\"]]\n    return access_time\ndef query_info():\n    return request_with_timeout_and_get_json_data(dict(), beat_client_data[\"info_url\"])\nfrom log_common import log_and_print_unknown_exception\nimport os\nimport signal\nimport func_timeout\ndef request_with_timeout_and_get_json_data(params: dict, url: str, success_code=200):\n    try:\n        r = session.get(url, params=params, timeout=beat_client_data[\"timeout\"])\n        assert r.status_code == success_code\n        data = r.json()\n    except func_timeout.dafunc.FunctionTimedOut as exc:\n ",
         "type": "code",
-        "location": "/conscious_struct.py:543-569"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_common.py:61-90"
     },
     "105": {
-        "file_id": 9,
-        "content": "This function checks the action type and constructs appropriate arguments for each type of action (key press/release, mouse move/click/scroll). It asserts that all required conditions are met before constructing the action_args.",
+        "file_id": 12,
+        "content": "The code contains a function heartbeat_base that caches the result for 1 second and retrieves it from a server. It also has a query_info function to get information from the server, and request_with_timeout_and_get_json_data function that handles HTTP GET requests with timeout handling.",
         "type": "comment"
     },
     "106": {
-        "file_id": 9,
-        "content": "sert self.x >= 0 and self.x <= self.max_x\n                assert self.y >= 0 and self.y <= self.max_y\n                assert self.dx >= -self.max_x and self.dx <= self.max_x\n                assert self.dy >= -self.max_y and self.dy <= self.max_y\n                action_args = [self.x, self.y, self.dx, self.dy]\n            else:\n                raise Exception(\"Unknown action_type: %s\" % action_type)\n            action_json = [action_type, action_args]\n        else:\n            action_json = None\n        return action_json\n#########################\n#  HID DATA VALIDATION  #\n#########################\nfrom pydantic import confloat\nclass KeyPress(BaseModel):\n    _action_type = \"key_press\"\n    key: HIDActionTypes.keys\n    def to_list(self) -> List:\n        return [self._action_type, self.key]\n    @classmethod\n    def from_list(cls, lst: List):\n        action_type = lst[0]\n        action_args = [lst[1]]\n        assert len(action_args) == 1\n        assert action_type == cls._action_type\n        assert isinstance(action",
+        "file_id": 12,
+        "content": "       print(exc)\n        print(\"timed out by external wrapper\")\n    except:\n        log_and_print_unknown_exception()\n        print(\"fatal error. cannot beat.\")\n        self_pid = os.getpid()\n        print(f'suicide now. (pid: {self_pid})')\n        kill_by_pid(self_pid)\n    return data\ndef kill_by_pid(pid):\n    kill_signal = getattr(signal, 'SIGKILL', signal.SIGTERM) # adaption for windows\n    os.kill(pid, kill_signal)",
         "type": "code",
-        "location": "/conscious_struct.py:569-605"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_common.py:90-102"
     },
     "107": {
-        "file_id": 9,
-        "content": "Code is validating input values and converting them into JSON format for use in the application. It also handles exceptions for unknown action types and ensures proper data structure.",
+        "file_id": 12,
+        "content": "This code handles exceptions and potential timeouts in a program. It prints the exception, indicates a fatal error, logs an unknown exception, and then attempts to kill the process with `os.kill()` function.",
         "type": "comment"
     },
     "108": {
-        "file_id": 9,
-        "content": "_args[0], HIDActionTypes.keys)\n        return cls(key=action_args[0])\nclass KeyRelease(BaseModel):\n    _action_type = \"key_release\"\n    key: HIDActionTypes.keys\n    def to_list(self) -> List:\n        return [self._action_type, self.key]\n    @classmethod\n    def from_list(cls, lst: List):\n        action_type = lst[0]\n        action_args = [lst[1]]\n        assert len(action_args) == 1\n        assert action_type == cls._action_type\n        assert isinstance(action_args[0], HIDActionTypes.keys)\n        return cls(key=action_args[0])\nclass MouseClick(BaseModel):\n    _action_type = \"mouse_click\"\n    x: confloat(ge=0)\n    y: confloat(ge=0)\n    button: HIDActionTypes.mouse_buttons\n    pressed: bool\n    def to_list(self) -> List:\n        return [self._action_type, [self.x, self.y, self.button, self.pressed]]\n    @classmethod\n    def from_list(cls, lst: List):\n        action_type = lst[0]\n        action_args = lst[1]\n        assert len(action_args) == 4\n        assert action_type == cls._action_type\n        assert isinstanc",
-        "type": "code",
-        "location": "/conscious_struct.py:605-648"
+        "file_id": 13,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_server.py",
+        "type": "filepath"
     },
     "109": {
-        "file_id": 9,
-        "content": "This code defines two classes, KeyRelease and MouseClick, that inherit from BaseModel. Both classes have methods to convert objects to a list and vice versa. The to_list method returns a list representing the action type and relevant parameters (key for KeyRelease, coordinates, button, and press state for MouseClick). The from_list classmethod parses a list and creates an instance of the respective class with the correct values.",
-        "type": "comment"
+        "file_id": 13,
+        "content": "The code initializes a FastAPI app with timezone, roles, and PIDs, manages UUIDs, handles HTTP requests, updates statuses, raises exceptions for mismatches, calculates client status in a network, tracks alive/dead counts, schedules tasks to monitor status, and runs the app using uvicorn.",
+        "type": "summary"
     },
     "110": {
-        "file_id": 9,
-        "content": "e(action_args[0], confloat(ge=0))\n        assert isinstance(action_args[1], confloat(ge=0))\n        assert isinstance(action_args[2], HIDActionTypes.mouse_buttons)\n        assert isinstance(action_args[3], bool)\n        return cls(\n            x=action_args[0],\n            y=action_args[1],\n            button=action_args[2],\n            pressed=action_args[3],\n        )\nclass MouseMove(BaseModel):\n    _action_type = \"mouse_move\"\n    x: confloat(ge=0)\n    y: confloat(ge=0)\n    def to_list(self) -> List:\n        return [self._action_type, [self.x, self.y]]\n    @classmethod\n    def from_list(cls, lst: List):\n        action_type = lst[0]\n        action_args = lst[1]\n        assert len(action_args) == 2\n        assert action_type == cls._action_type\n        assert isinstance(action_args[0], confloat(ge=0))\n        assert isinstance(action_args[1], confloat(ge=0))\n        return cls(x=action_args[0], y=action_args[1])\nclass MouseScroll(BaseModel):\n    _action_type = \"mouse_scroll\"\n    x: confloat(ge=0)\n    y: confloat(",
+        "file_id": 13,
+        "content": "import fastapi\n# TODO: replace this with gui-attached panel & advanced rescue/countermeasures\napp = fastapi.FastAPI()\nimport datetime\nfrom beat_common import beat_server_address, beat_client_data\nimport pytz\n# with respect to our dearly Py3.6\ntimezone_str = \"Asia/Shanghai\"\n# timezone = pytz.timezone(timezone_str:='Asia/Shanghai')\ntimezone = pytz.timezone(timezone_str)\nimport schedule\n# import threading\nfrom typing import Literal\ndef get_now_and_timestamp():\n    now = get_now()\n    timestamp = now.timestamp()\n    return now, timestamp\nUUID_TO_TIMESTAMP = {}\nUUID_TO_REGISTERED_TIMESTAMP = {}\nUUID_TO_STATUS = {}  # alive -> True; dead -> False\nUUID_TO_PID = {}\nUUID_TO_ROLE = {}\nALIVE_THRESHOLD = 30 * 2  # 30 is a bit of low.\n@app.get(beat_server_address[\"info_url\"])\ndef get_info():\n    schedule.run_pending()\n    _, timestamp = get_now_and_timestamp()\n    return {\n        \"info\": {\n            k: {\n                \"status\": v,\n                \"pid\": UUID_TO_PID[k],\n                \"role\": UUID_TO_ROLE[k],\n                ",
         "type": "code",
-        "location": "/conscious_struct.py:648-687"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_server.py:1-45"
     },
     "111": {
-        "file_id": 9,
-        "content": "This code defines two classes, `MouseMove` and `MouseScroll`, which inherit from the `BaseModel` class. Both classes represent different types of mouse actions. The constructor for each class takes arguments representing the x and y coordinates (both expected to be non-negative floats) and a boolean indicating whether a button is pressed or not. The `to_list()` method converts an instance of these classes into a list, while the `from_list()` classmethod recreates an instance from a list representation.",
+        "file_id": 13,
+        "content": "Imports necessary packages and initializes a FastAPI application with timezone and scheduling functionalities.",
         "type": "comment"
     },
     "112": {
-        "file_id": 9,
-        "content": "ge=0)\n    dx: float\n    dy: float\n    def to_list(self) -> List:\n        return [self._action_type, [self.x, self.y, self.dx, self.dy]]\n    @classmethod\n    def from_list(cls, lst: List):\n        action_type = lst[0]\n        action_args = lst[1]\n        assert len(action_args) == 4\n        assert action_type == cls._action_type\n        assert isinstance(action_args[0], confloat(ge=0))\n        assert isinstance(action_args[1], confloat(ge=0))\n        assert isinstance(action_args[2], float)\n        assert isinstance(action_args[3], float)\n        return cls(\n            x=action_args[0], y=action_args[1], dx=action_args[2], dy=action_args[3]\n        )\n#################\n# VIDEO CONTEXT #\n#################\nclass VideoCaptureContextManager:\n    def __init__(self, videoPath):\n        self.videoPath = videoPath\n    def __enter__(self):\n        logger.info(\"Entering the context...\")\n        self.cap = cv2.VideoCapture(self.videoPath)\n        return self.cap\n    def __exit__(self, exc_type, exc_value, exc_tb):\n        try",
+        "file_id": 13,
+        "content": "\"timestamp\": UUID_TO_TIMESTAMP[k],\n            }\n            for k, v in UUID_TO_STATUS.items()\n        },\n        \"timestamp\": timestamp,\n    }\n# TODO: delegate this kill signal to other process\n# TODO: pass pid with uuid\n# TODO: get unassigned uuid from here, instead of anywhere else\n# TODO: distributed watchdog & recursive keep alive signal mechanism\n# TODO: count revive time & frequencies\n@app.get(beat_server_address[\"beat_url\"])\ndef beat_request(\n    uuid: str,\n    action: Literal[\"hello\", \"heartbeat\", \"kill\"],\n    role: Literal[\"killer\", \"client\", \"server\"],  # can also be server?\n    pid: int,\n):\n    # start = time.time()\n    strtime, timestamp = get_strtime_and_timestamp()\n    if action != \"kill\":\n        for data_dict, it, it_name in [\n            (UUID_TO_PID, pid, \"PID\"),\n            (UUID_TO_ROLE, role, \"ROLE\"),\n        ]:\n            if uuid not in data_dict.keys():\n                data_dict[uuid] = it\n            elif (old_it := data_dict[uuid]) != it:\n                raise Exception(f\"{it_name} mis",
         "type": "code",
-        "location": "/conscious_struct.py:687-726"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_server.py:45-75"
     },
     "113": {
-        "file_id": 9,
-        "content": "This code defines a class for storing x and y coordinates, along with dx and dy values. It has methods to convert the object into a list of its attributes and vice versa. Additionally, it includes assertions to ensure that the input list conforms to certain data types and conditions. The code also includes the definition of a VideoCaptureContextManager class for working with video capture contexts using OpenCV's VideoCapture API.",
+        "file_id": 13,
+        "content": "This code handles HTTP requests for a beat server, which seems to involve managing UUIDs, roles, and PIDs. It receives requests with specific actions (hello, heartbeat, or kill) and from certain roles (killer, client, or possibly server). It updates the status of the UUID accordingly and raises an exception if there's a mismatch in PID or role values.",
         "type": "comment"
     },
     "114": {
-        "file_id": 9,
-        "content": ":\n            self.cap.release()\n        finally:\n            import gc\n            gc.collect()\n            logger.info(\"Leaving the context...\")\n        #  print(exc_type, exc_value, exc_tb, sep=\"\\n\")\n##################\n# CONSCIOUS BASE #\n##################\nclass ConsciousBase:\n    data_types = [\"image\", \"HIDAction\"]\n    special_tokens = [\"image_newline\", \"image_end\", \"action_end\", None]\n    #     vector_size = 1+2+1000+4110 # visual things are pre-encoded. no raw image here!\n    # vector size is \"length\" now\n    image_dim = 224\n    image_channels = 3\n    data_type_length = len(data_types)\n    special_token_length = len(special_tokens)\n    image_length = image_dim * image_dim * image_channels  # obviously flattened.\n    # FIX 1: plus to colon.\n    split_sizes = [\n        len(data_types),\n        len(special_tokens),\n        image_length,  # FIX 9: change to flattened image bits count\n        HIDActionBase.length,  # 4110?\n    ]\n    length = sum(split_sizes)\n    # you cannot easily revert this compression by arg",
+        "file_id": 13,
+        "content": "match! (old: {old_it}, new: {it})\")\n    if action == \"hello\":\n        print(f\"client {uuid} hello at:\", strtime)\n        UUID_TO_REGISTERED_TIMESTAMP[uuid] = timestamp\n    elif action == \"kill\":\n        print(f\"client {uuid} killed at:\", strtime)\n        for data_dict in [\n            UUID_TO_TIMESTAMP,\n            UUID_TO_REGISTERED_TIMESTAMP,\n            UUID_TO_STATUS,\n            UUID_TO_PID,\n            UUID_TO_ROLE,\n        ]:\n            if uuid in data_dict.keys():\n                del data_dict[uuid]\n    elif action == \"heartbeat\":\n        print(f\"received heartbeat from {uuid} at time {strtime}\")\n    else:\n        raise Exception(f\"client {uuid} with unknown action:\" + action)\n    # end = time.time()\n    if action != \"kill\":\n        if uuid not in UUID_TO_REGISTERED_TIMESTAMP.keys():\n            print(f\"client {uuid} not registered. registering.\")\n            UUID_TO_REGISTERED_TIMESTAMP[uuid] = timestamp\n            # raise Exception(f\"client {uuid} not registered.\")\n        UUID_TO_TIMESTAMP[uuid] =",
         "type": "code",
-        "location": "/conscious_struct.py:726-763"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_server.py:75-100"
     },
     "115": {
-        "file_id": 9,
-        "content": "This code defines a class called ConsciousBase, which has variables related to data types, special tokens, and image dimensions for image processing. It also calculates the length of the various components in the consciousness structure.",
+        "file_id": 13,
+        "content": "Code handles client actions (\"hello\", \"kill\", \"heartbeat\") and performs corresponding operations on the dictionaries. If an unknown action is received, it raises an exception.",
         "type": "comment"
     },
     "116": {
-        "file_id": 9,
-        "content": "max or something else.\n    # so you need the decoder.\n# can it be consciousnessless?\nclass ConsciousBlock(BaseModel, ConsciousBase):\n    data_type: Literal[\"image\", \"HIDAction\"]  # 2 bits, required\n    special_token: Union[\n        Literal[\n            \"image_newline\",\n            \"image_end\",\n            \"action_end\",  # change some of these bits into -torch.inf, so you won't have paradox like results.\n        ],\n        None,\n    ] = None  # 4 bits\n    image_data: Union[\n        None, NDArray\n    ] = None  # what is the shape of this image data? assume to be [3,224,224] (c h w) flattened\n    action_data: Union[None, NDArray] = None  # assume to be: (4110, )\n    # [1,1000] -> [3,1000,1000] -> [3,224,224]\n    #    einsum.repeat       conv2d\n    # so, maybe you still need some ViT decode layer.\n    @staticmethod\n    def from_json(data: Mapping):\n        mConsciousBlock = ConsciousBlock(**data)\n        return mConsciousBlock\n    def to_json(self) -> Mapping:\n        mJson = self.dict()\n        return mJson\n    @st",
+        "file_id": 13,
+        "content": " timestamp\n    # print(f'request processing time: {end-start} secs', )\n    return {beat_client_data[\"access_time_key\"]: strtime}\ndef get_strtime_and_timestamp():\n    now, timestamp = get_now_and_timestamp()\n    strtime = now.strftime(r\"%Y-%m-%d %H:%M:%S\")\n    return strtime, timestamp\ndef get_now():\n    now = datetime.datetime.now(tz=timezone)\n    return now\ndef check_alive():\n    now_strtime, now_timestamp = get_strtime_and_timestamp()\n    alive_roles = []\n    dead_roles = []\n    print(f\"checking clients at {now_strtime}\")\n    for uuid, registered_timestamp in UUID_TO_REGISTERED_TIMESTAMP.items():\n        timestamp = UUID_TO_TIMESTAMP.get(uuid, registered_timestamp)\n        role = UUID_TO_ROLE.get(uuid, \"unknown\")\n        pid = UUID_TO_PID.get(uuid, -1)\n        uptime = now_timestamp - registered_timestamp\n        alive = True\n        life = ALIVE_THRESHOLD - (now_timestamp - timestamp)\n        if life < 0:\n            alive = False\n        UUID_TO_STATUS[uuid] = alive\n        up_status = f\"up: {uptime:.3f} s",
         "type": "code",
-        "location": "/conscious_struct.py:763-798"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_server.py:100-131"
     },
     "117": {
-        "file_id": 9,
-        "content": "This code defines a class called \"ConsciousBlock\" which is derived from \"BaseModel\" and \"ConsciousBase\". It has attributes for data_type, special_token, image_data, and action_data. The class also includes methods to convert the object to JSON format and create an instance of the class from a dictionary representation of its fields.",
+        "file_id": 13,
+        "content": "Function get_strtime_and_timestamp():\n- Returns current date and time as a string and timestamp.\n\nFunction get_now():\n- Returns the current datetime object with the correct timezone.\n\nFunction check_alive():\n- Checks clients' statuses based on their uptime and remaining lifetimes.",
         "type": "comment"
     },
     "118": {
-        "file_id": 9,
-        "content": "aticmethod\n    def from_tensor(tensor: torch.Tensor):\n        # check its shape.\n        assert tensor.shape == (ConsciousBlock.length,)\n        split_sizes = ConsciousBase.split_sizes\n        data_bits, special_bits, image_data, action_data = einops.unpack(\n            tensor, [[s] for s in split_sizes], \"*\"\n        )\n        #         data_bits, special_bits, image_data, action_data = size_splits(tensor, split_sizes)\n        data_type = ConsciousBase.data_types[int(torch.argmax(data_bits))]\n        if data_type == \"image\":\n            special_bits[2] = -torch.inf\n            special_token = ConsciousBase.special_tokens[\n                int(torch.argmax(special_bits))\n            ]\n            mConsciousBlock = ConsciousBlock(\n                data_type=data_type, special_token=special_token, image_data=image_data\n            )\n        elif data_type == \"HIDAction\":\n            special_bits[0:2] = -torch.inf\n            special_token = ConsciousBase.special_tokens[\n                int(torch.argmax(special_",
+        "file_id": 13,
+        "content": "ecs\"\n        pid_info = f\"pid: {pid}\"\n        if alive:\n            print(\n                f\"client {uuid} alive ({pid_info}, {life:.3f} secs to death, {up_status})\"\n            )\n            alive_roles.append(role)\n        else:\n            print(\n                f\"client {uuid} ({pid_info}, {up_status}) dead for {-life:.3f} seconds\"\n            )\n            dead_roles.append(role)\n    status_list = UUID_TO_STATUS.values()\n    print(\"summary\".center(60, \"=\"))\n    print(\"total clients:\", len(status_list))\n    print(\"alive clients:\", *role_statistics(alive_roles))\n    print(\"dead clients:\", *role_statistics(dead_roles))\nfrom typing import List\ndef role_statistics(roles: List[str]):\n    details = \", \".join([f\"{r}: {roles.count(r)}\" for r in set(roles)])\n    return len(roles), f\"({details})\" if details else \"\"\n# import time\nschedule.every(int(ALIVE_THRESHOLD / 3)).seconds.do(check_alive)\n# def check_alive_thread():\n#     while True:\n#         time.sleep(1)\n#         schedule.run_pending()\nif __name__ == \"__main__",
         "type": "code",
-        "location": "/conscious_struct.py:798-821"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_server.py:131-169"
     },
     "119": {
-        "file_id": 9,
-        "content": "Converts a tensor into a ConsciousBlock instance by splitting based on provided sizes and assigning appropriate data types.",
+        "file_id": 13,
+        "content": "Code snippet is checking the status of clients in a network and providing summary statistics. It tracks the client's uuid, role, pid (Process ID), if it's alive or dead, and how many seconds remaining/dead for. The code also calculates and prints the total number of alive and dead clients. It schedules tasks to check alive status every 1/3 of ALIVE_THRESHOLD time interval.",
         "type": "comment"
     },
     "120": {
-        "file_id": 9,
-        "content": "bits))\n            ]\n            mConsciousBlock = ConsciousBlock(\n                data_type=data_type,\n                special_token=special_token,\n                action_data=action_data,\n            )\n        else:\n            raise Exception(\"Unknown data_type:\", data_type)\n        return mConsciousBlock\n    def to_tensor(self) -> torch.Tensor:\n        mTensorBase = torch.zeros((ConsciousBase.length))\n        # BUG 1: not enough values to unpack\n        #         print(ConsciousBase.length)\n        #         print(ConsciousBase.split_sizes)\n        data_bits, special_bits, image_data, action_data = einops.unpack(\n            mTensorBase, [[s] for s in ConsciousBase.split_sizes], \"*\"\n        )\n        #         data_bits, special_bits, image_data, action_data = size_splits(mTensorBase, ConsciousBase.split_sizes)\n        data_bits[ConsciousBase.data_types.index(self.data_type)] = 1\n        if self.data_type == \"image\":\n            # BUG 2: comparing ndarray to None\n            # FIX 2: change \"!=\" into \"i",
+        "file_id": 13,
+        "content": "\":\n    import uvicorn\n    # thread = threading.Thread(target=check_alive_thread, daemon=True)\n    # thread.start()\n    uvicorn.run(app, **{k: beat_server_address[k] for k in [\"host\", \"port\"]})",
         "type": "code",
-        "location": "/conscious_struct.py:821-845"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_server.py:169-174"
     },
     "121": {
-        "file_id": 9,
-        "content": "The code defines a class called ConsciousBlock which has a constructor and a method to convert the object into a Tensor. The constructor takes in data_type, special_token, and action_data as parameters. If an unknown data_type is provided, it raises an exception. The to_tensor() method converts the ConsciousBlock object into a tensor using Einops library's unpack function, then sets the bit corresponding to the data_type of the ConsciousBlock to 1. There are two bugs in this code: BUG 1 - not enough values to unpack; BUG 2 - comparing ndarray to None.",
+        "file_id": 13,
+        "content": "Importing uvicorn and running the app with specific host and port values.",
         "type": "comment"
     },
     "122": {
-        "file_id": 9,
-        "content": "s not\"\n            assert self.image_data is not None\n            logger.debug(\"Image data shape: %s\", self.image_data.shape)\n            logger.debug(\n                \"Expected data shape: %s\",\n                expected_data_shape := (ConsciousBase.image_length,),\n            )\n            assert self.image_data.shape == expected_data_shape\n            assert self.special_token != \"action_end\"\n            image_data = torch.Tensor(self.image_data)\n            special_bits[ConsciousBase.special_tokens.index(self.special_token)] = 1\n        elif self.data_type == \"HIDAction\":\n            assert self.action_data is not None\n            if len(self.action_data.shape) > 1:\n                self.action_data = self.action_data.reshape((-1,))\n            logger.debug(\"Action data shape: %s\", self.action_data.shape)\n            # BUG: actual: (4110, 1)\n            # shall we reshape this.\n            logger.debug(\n                \"Expected data shape: %s\",\n                expected_data_shape := (HIDActionBase.lengt",
-        "type": "code",
-        "location": "/conscious_struct.py:845-867"
+        "file_id": 14,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/bytes_actor.py",
+        "type": "filepath"
     },
     "123": {
-        "file_id": 9,
-        "content": "Ensures image data and action data are not None, checks shapes, and converts to torch.Tensor.",
-        "type": "comment"
+        "file_id": 14,
+        "content": "Imports NaiveActor and defines BytesActor, using write_method to send messages. Runs the main loop with run_naive.",
+        "type": "summary"
     },
     "124": {
-        "file_id": 9,
-        "content": "h,),\n            )  # TODO: expected shape is (4110, )? how to make this typed?\n            assert self.action_data.shape == expected_data_shape\n            assert self.special_token not in [\"image_newline\", \"image_end\"]\n            action_data = torch.Tensor(self.action_data)\n            special_bits[ConsciousBase.special_tokens.index(self.special_token)] = 1\n        else:\n            # FIX: found by pyright (UndefinedVariable)\n            raise Exception(\"Unknown data_type:\", self.data_type)\n        mTensor, _ = einops.pack(\n            (data_bits, special_bits, image_data, action_data), \"*\"\n        )\n        #         mTensor = torch.concat((data_bits, special_bits, image_data, action_data))\n        del mTensorBase\n        return mTensor\nclass ConsciousFlow(BaseModel, ConsciousBase):\n    consciousBlocks: List[ConsciousBlock]\n    @staticmethod\n    def from_json(data: List[Mapping]):\n        mList = [ConsciousBlock.from_json(j) for j in data]\n        mConsciousFlow = ConsciousFlow(consciousBlocks=mList)\n ",
+        "file_id": 14,
+        "content": "from naive_actor import NaiveActor, run_naive\nclass BytesActor(NaiveActor):\n    write_method = lambda proc: proc.send\nif __name__ == \"__main__\":\n    run_naive(BytesActor)",
         "type": "code",
-        "location": "/conscious_struct.py:867-893"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/bytes_actor.py:1-9"
     },
     "125": {
-        "file_id": 9,
-        "content": "Creates a tensor from various data types, checking their shapes and handling special tokens.",
+        "file_id": 14,
+        "content": "Imports NaiveActor and defines BytesActor, using write_method to send messages. Runs the main loop with run_naive.",
         "type": "comment"
     },
     "126": {
-        "file_id": 9,
-        "content": "       return mConsciousFlow\n    def to_json(self) -> List[Mapping]:\n        mJson = [c.to_json() for c in self.consciousBlocks]\n        return mJson\n    @staticmethod\n    def from_tensor(tensor: torch.Tensor):\n        consciousBlockCount, vector_length = tensor.shape\n        assert vector_length == ConsciousBase.length\n        mConsciousBlocks = []\n        for i in range(consciousBlockCount):\n            arr = tensor[i, :]  # dimension reduction.\n            mConsciousBlock = ConsciousBlock.from_tensor(arr)\n            mConsciousBlocks.append(mConsciousBlock)\n        mConsciousFlow = ConsciousFlow(consciousBlocks=mConsciousBlocks)\n        return mConsciousFlow\n    def to_tensor(self) -> torch.Tensor:\n        mTensor, _ = einops.pack([c.to_tensor() for c in self.consciousBlocks], \"* d\")\n        return mTensor\nclass ConsciousStream(BaseModel, ConsciousBase):\n    consciousFlows: List[ConsciousFlow]\n    @staticmethod\n    def from_json(data: List[Mapping]):\n        mList = [ConsciousFlow.from_json(j) for j in d",
-        "type": "code",
-        "location": "/conscious_struct.py:893-921"
+        "file_id": 15,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/dependent_task_timeout_exec.py",
+        "type": "filepath"
     },
     "127": {
-        "file_id": 9,
-        "content": "This code defines classes for representing and manipulating conscious data in the form of flows and streams. The ConsciousFlow class has methods to convert between JSON and tensors, while the ConsciousStream class represents a list of such flows with methods to convert from JSON as well.",
-        "type": "comment"
+        "file_id": 15,
+        "content": "This code sets a future with \"hello\" after 1 second, waits for the result (expected \"hello world\"), and if the timeout expires before setting, prints \"unset future\".",
+        "type": "summary"
     },
     "128": {
-        "file_id": 9,
-        "content": "ata]\n        mConsciousStream = ConsciousStream(consciousFlows=mList)\n        return mConsciousStream\n    def to_json(self) -> List[Mapping]:\n        mJson = [c.to_json() for c in self.consciousFlows]\n        return mJson\n    @staticmethod\n    def from_tensor(tensor: torch.Tensor):\n        consciousFlowCount, _, vector_length = tensor.shape\n        assert vector_length == ConsciousBase.length\n        mConsciousFlows = []\n        for i in range(consciousFlowCount):\n            arr = tensor[i, :, :]  # dimension reduction.\n            mConsciousFlow = ConsciousFlow.from_tensor(arr)\n            mConsciousFlows.append(mConsciousFlow)\n        mConsciousStream = ConsciousStream(consciousFlows=mConsciousFlows)\n        return mConsciousStream\n    def to_tensor(self) -> torch.Tensor:\n        mTensor, _ = einops.pack([c.to_tensor() for c in self.consciousFlows], \"* s d\")\n        return mTensor\n#####################\n# TRAINER & DATASET #\n#####################\nclass Trainer:\n    def __init__(self, model, loss_fn, optimiz",
+        "file_id": 15,
+        "content": "import asyncio\nimport os\n# import multitasking\n# after all, we are single threaded\nimport time\nfrom timeout_utils import *\n@retrying_timeout_func(1, 11)  # passed\ndef os_sleep():\n    print(\"running os sleep\")\n    os.system(\"sleep 10\")\n    os.system(\"echo hello world\")\n    print(\"exit os sleep\")\n@retrying_timeout_func(3, 2)  # not pass, fail attempts count: 3\ndef time_sleep():\n    print(\"running time sleep\")\n    time.sleep(3)\n    print(\"exit time sleep\")\nasync def set_after(fut, delay, value):\n    # Sleep for *delay* seconds.\n    await asyncio.sleep(delay)\n    # Set *value* as a result of *fut* Future.\n    fut.set_result(value)\nasync def main():\n    # Get the current event loop.\n    loop = asyncio.get_running_loop()\n    # Create a new Future object.\n    fut = loop.create_future()\n    # Run \"set_after()\" coroutine in a parallel Task.\n    # We are using the low-level \"loop.create_task()\" API here because\n    # we already have a reference to the event loop at hand.\n    # Otherwise we could have just used \"asyncio.creat",
         "type": "code",
-        "location": "/conscious_struct.py:921-952"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/dependent_task_timeout_exec.py:1-44"
     },
     "129": {
-        "file_id": 9,
-        "content": "This code defines a class called ConsciousStream which represents a stream of conscious flows. It has methods for creating an instance from a list of conscious flows, converting the stream to JSON format, converting it to a tensor, and converting individual conscious flows to tensors. The class also mentions Trainer and Dataset but they are not defined in this code snippet.",
+        "file_id": 15,
+        "content": "Code snippet imports necessary libraries, defines a function for OS sleep, a function for time sleep, and two async functions. The async main function creates a new Future object and runs a set_after coroutine in parallel Task using the event loop.",
         "type": "comment"
     },
     "130": {
-        "file_id": 9,
-        "content": "er):\n        self.model = model\n        self.loss_fn = loss_fn\n        self.optimizer = optimizer  # shall be registered to model parameters.\n    def step(self, batched_input, batched_output=None):\n        # BUG 8: model forward keyword error\n        # FIX 8: fixing keyword, adding default keyword argument\n        model_output = self.model.forward(batched_input, target_output=batched_output)\n        loss = self.loss_fn(model_output, batched_output)\n        logger.debug(\"LOSS? %s\", loss)\n        # this loss is incorrect. shall use some argmax stuff.\n        # to ensure that this thing is the thing that we want.\n        loss.backward()\n        self.optimizer.step()\n        self.optimizer.zero_grad()\nfrom typing import Protocol\nclass Enqueue(Protocol):\n    def enqueue(self, data, /):\n        ...\n    def clear(self):\n        ...\nclass TestEnqueue(Enqueue):\n    def __init__(self):\n        ...\n        # self.queue = []\n    def enqueue(self, data):\n        logger.debug(\"DATA QUEUE: %s\", data)\n        # may you print th",
+        "file_id": 15,
+        "content": "e_task()\".\n    loop.create_task(set_after(fut, 1, \"... world\"))\n    print(\"hello ...\")\n    # Wait until *fut* has a result (1 second) and print it.\n    # print(await asyncio.wait_for(fut, timeout=1.5))\n    print(await asyncio.wait_for(fut, timeout=0.5))\nif __name__ == \"__main__\":\n    os_sleep()\n    time_sleep()\n    # asyncio.run(main())",
         "type": "code",
-        "location": "/conscious_struct.py:952-989"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/dependent_task_timeout_exec.py:44-57"
     },
     "131": {
-        "file_id": 9,
-        "content": "This code defines a class that represents a conscious structure. It initializes the model, loss function, and optimizer in its constructor. The step method performs forward pass on the input data using the model's forward method, calculates the loss, and applies backpropagation to update the model's parameters. This conscious structure also includes an Enqueue class that can enqueue data and clear the queue.",
+        "file_id": 15,
+        "content": "This code is creating a task that sets a future with the string \"hello\" after 1 second, and then waits for the result of the future (expected to be \"hello world\") before printing it. If the timeout of 0.5 seconds expires before the future is set, it will print \"unset future\".",
         "type": "comment"
     },
     "132": {
-        "file_id": 9,
-        "content": "e data shape.\n        if data.action_data is not None:\n            logger.debug(\"ACTION DATA SHAPE: %s\", data.action_data.shape)\n        elif data.image_data is not None:\n            logger.debug(\"IMAGE DATA SHAPE: %s\", data.image_data.shape)\n        logger.debug(\"\")\n    def clear(self):\n        ...\nclass SequentialTrainingQueue:\n    def __init__(self, context_length: int, batch_size: int, trainer: Trainer):\n        self.context_length = context_length\n        self.batch_size = batch_size\n        self.trainer = trainer\n        self.max_critical_length = self.context_length + self.batch_size\n        self.min_critical_length = self.context_length + 1\n        self.consciousVectors = []\n    def enqueue(self, consciousBlock: ConsciousBlock, clear: bool = False):\n        # change that into some tensor first.\n        # BUG 3: consciousBlock has tensor output but not numpy ndarray\n        # FIX 3: find and replace all \"consciousBlock.to_nparray()\" with \"consciousBlock.to_tensor()\"\n        #         print(consciou",
-        "type": "code",
-        "location": "/conscious_struct.py:989-1017"
+        "file_id": 16,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/entropy_utils.py",
+        "type": "filepath"
     },
     "133": {
-        "file_id": 9,
-        "content": "Checking data shape for action_data and image_data.\nCreating a SequentialTrainingQueue object with context_length, batch_size, and trainer.\nEnqueuing consciousBlock into the queue, optionally clearing it after enqueueing.",
-        "type": "comment"
+        "file_id": 16,
+        "content": "The code defines classes `EntropyCalculator` and `ContentEntropyCalculator` to calculate entropy of categorical data using context managers, histograms, and compares results for different test cases.",
+        "type": "summary"
     },
     "134": {
-        "file_id": 9,
-        "content": "sBlock)\n        #         print(type(consciousBlock))\n        consciousVector = consciousBlock.to_tensor()\n        logger.debug(\n            \"CONSCIOUS VECTOR [TYPE: %s SHAPE: %s]\",\n            type(consciousVector),\n            consciousVector.shape,\n        )\n        self.consciousVectors.append(consciousVector)\n        if not clear:\n            # BUG 5: no \"max_critical_point\"\n            # FIX 5: replace it with \"max_critical_length\"\n            if len(self.consciousVectors) == self.max_critical_length:\n                self.train()\n        else:\n            self.clear()\n    def train(self, clear: bool = False):\n        # TODO: use `ConsciousFlow` to replace logic here.\n        # train the model and clear the queue.\n        # size of queue before: self.context_length+self.batch_size (should be? at least geq to self.length+1)\n        # size of queue after training: self.context_length\n        if len(self.consciousVectors) >= self.min_critical_length:\n            batch_size = len(self.consciousVectors) - s",
+        "file_id": 16,
+        "content": "from contextlib import contextmanager\nimport numpy as np\nfrom scipy.stats import entropy\nclass EntropyCalculator:\n    def __init__(self, base=2):\n        self.cats_to_count = {}\n        self.base = base\n    def count(self, elem):\n        self._count(elem)\n    def _count(self, elem):\n        self.cats_to_count[elem] = self.cats_to_count.get(elem, 0) + 1\n    @property\n    def entropy(self):\n        vals = list(self.cats_to_count.values())\n        if vals != []:\n            hist = np.array(vals)\n            total_count = sum(hist)\n            hist = hist / total_count\n        else:\n            hist = []\n        ent = entropy(hist, base=self.base)\n        return ent\nclass ContentEntropyCalculator(EntropyCalculator):\n    def count(self, content):\n        if isinstance(content, str):\n            content = content.encode()\n        if not isinstance(content, bytes):\n            raise Exception(\"unknown content type:\", type(content))\n        content_int_arr = list(content)\n        for i in content_int_arr:\n            self.",
         "type": "code",
-        "location": "/conscious_struct.py:1017-1042"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/entropy_utils.py:1-39"
     },
     "135": {
-        "file_id": 9,
-        "content": "This function is appending conscious vectors to a queue, and if the maximum critical length is reached, it trains the model. If \"clear\" is True, it clears the queue instead of training.",
+        "file_id": 16,
+        "content": "The code defines a class `EntropyCalculator` that calculates the entropy of categorical data and a subclass `ContentEntropyCalculator` for calculating content entropy. The `EntropyCalculator` has methods to count categories, and the `ContentEntropyCalculator` extends this by counting bytes in content data. Both classes use numpy and scipy for efficient calculations.",
         "type": "comment"
     },
     "136": {
-        "file_id": 9,
-        "content": "elf.context_length\n            # BUG 6: missing self.\n            # FIX 6: adding self.\n            # BUG 7: torch.Tensor conversion error\n            # FIX 7: change \"torch.Tensor([])\" into einops.pack\n            #             print(self.consciousVectors)\n            batched_input = ConsciousStream(\n                consciousFlows=[\n                    ConsciousFlow(\n                        consciousBlocks=self.consciousVectors[\n                            i : i + self.context_length\n                        ]\n                    )\n                    for i in range(batch_size)\n                ]\n            ).to_tensor()\n            batched_output = ConsciousFlow(\n                consciousBlocks=[\n                    self.consciousVectors[self.context_length + i]\n                    for i in range(batch_size)\n                ]\n            )\n            self.trainer.step(batched_input, batched_output)\n            if not clear:\n                # now remove some elements.\n                self.consciousVectors = s",
+        "file_id": 16,
+        "content": "_count(i)\n@contextmanager\ndef entropyContext(is_content=False):\n    if is_content:\n        calc = ContentEntropyCalculator()\n    else:\n        calc = EntropyCalculator()\n    try:\n        yield calc\n    finally:\n        del calc\ndef calculate_content_entropy(content):\n    with entropyContext(is_content=True) as calc:\n        calc.count(content)\n        return calc.entropy\n# def calculate_content_entropy(content, full=False):\n# if isinstance(content, str):\n#     content = content.encode()\n# if not isinstance(content,bytes):\n#     raise Exception(\"unknown content type:\", type(content))\n# content_int_arr = list(content)\n# if full:\n#     # use 256-1 bins\n#     hist, _ = np.histogram(content_int_arr, bins=255, range=(0,255))\n# else:\n#     cats = list(set(content_int_arr))\n#     cat_to_index = {cat:i for i, cat in enumerate(cats)}\n#     hist = np.zeros(len(cats))\n#     for elem in content_int_arr:\n#         index = cat_to_index[elem]\n#         hist[index] += 1\n# # normalize histogram.\n# hist = hist.astype(float)\n# norm_hist ",
         "type": "code",
-        "location": "/conscious_struct.py:1042-1073"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/entropy_utils.py:39-78"
     },
     "137": {
-        "file_id": 9,
-        "content": "The code segment is part of a class that appears to be working with conscious vectors and flows. It initializes batched_input and batched_output by slicing self.consciousVectors into chunks based on the context length. These chunks are then passed to the trainer's step method for further processing. If clear is not set, it then removes some elements from self.consciousVectors.",
+        "file_id": 16,
+        "content": "This code defines a function `calculate_content_entropy` that calculates the entropy of content data. It uses a context manager `entropyContext` to create an instance of either `ContentEntropyCalculator` or `EntropyCalculator` based on whether the input is content or not. The function then counts the occurrences of different values in the content using histograms and returns the entropy value.",
         "type": "comment"
     },
     "138": {
-        "file_id": 9,
-        "content": "elf.consciousVectors[-self.context_length :]\n            else:\n                self.consciousVectors = []\n    def clear(self):\n        # check if anything left in queue. call at the end of queue.\n        self.train(clear=True)\n###############\n# IMAGE UTILS #\n###############\ndef resizeImage(im, desired_size):\n    # im = cv2.imread(im_pth)\n    old_size = im.shape[:2]  # old_size is in (height, width) format\n    ratio = float(desired_size) / max(old_size)\n    new_size = tuple([int(x * ratio) for x in old_size])\n    # new_size should be in (width, height) format\n    im = cv2.resize(im, (new_size[1], new_size[0]))\n    delta_w = desired_size - new_size[1]\n    delta_h = desired_size - new_size[0]\n    top, bottom = delta_h // 2, delta_h - (delta_h // 2)\n    left, right = delta_w // 2, delta_w - (delta_w // 2)\n    color = [0, 0, 0]\n    new_im = cv2.copyMakeBorder(\n        im, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color\n    )\n    return new_im\nclass SequentialEvalQueue:\n    # loop: init data (visual+hid ac",
+        "file_id": 16,
+        "content": "= hist/len(content_int_arr)\n# # print('normalized histogram:', norm_hist)\n# ent = entropy(norm_hist, base=2)\n# return ent\nif __name__ == \"__main__\":\n    testcases = [\"aa\", \"ab\", \"abcdesd\", \"def\", \"hijklmn\", bytes(range(256))]\n    # the more chars the more entropy.\n    for case in testcases:\n        ent = calculate_content_entropy(case)\n        # ent_full = calculate_content_entropy(case, full=True)\n        print(\"testcase:\", case)\n        # identical!\n        print(\"entropy:\", ent)\n        # print(\"local entropy:\", ent)\n        # print(\"global entropy:\", ent_full)\n        print()",
         "type": "code",
-        "location": "/conscious_struct.py:1073-1111"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/entropy_utils.py:78-97"
     },
     "139": {
-        "file_id": 9,
-        "content": "The code defines a class `SequentialEvalQueue` that handles evaluation tasks sequentially, has methods to add data (images and hidden activations), clear the queue, and resize images. It also includes a utility function `resizeImage()` to resize input images to desired size by preserving aspect ratio.",
+        "file_id": 16,
+        "content": "This code calculates the entropy of different test cases and prints the results. The more characters in the test case, the higher the entropy.",
         "type": "comment"
     },
     "140": {
-        "file_id": 9,
-        "content": "tions) -> predict till end or limit -> update visual and action data\n    # visual data are inserted in a regular basis.\n    # human action data/bot action data will be inserted in between visual data.\n    # limit max machine predict token count per interval to 5. forcing it to end anyway.\n    # what about the machine trying to spit out some visual prediction?\n    # we just shadow it. (do not act! just dream. compare to current visual ground truth and perform gradient descent. maybe you can use that as continuous training basis? or redesign the model so it can choose to skip (by retrievable positional encoding) some blocks of visual data and perform descent only on selected area?)\n    ...\n################\n# READING DATA #\n################\ndesired_size = 224 * 4\n# get perspective width/height with:\n# pyautogui.size()\n# must be on the same machine.\n# with VideoCaptureContextManager(videoPath) as cap:\nfrom recording_train_parse import getTrainingData\nimport json\nimport re\nimport parse\nimport random\n# this pro",
-        "type": "code",
-        "location": "/conscious_struct.py:1111-1137"
+        "file_id": 17,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/get_pid_of_self.py",
+        "type": "filepath"
     },
     "141": {
-        "file_id": 9,
-        "content": "This code appears to be part of a larger program that involves image processing and model training. It seems to handle visual data, human/bot action data, and machine predictions. The code is designed to limit the maximum number of tokens for machine predictions per interval to 5, forcing it to end if necessary. It also suggests the possibility of using this as a continuous training basis or redesigning the model for skipping visual data blocks and performing descent only on selected areas.",
-        "type": "comment"
+        "file_id": 17,
+        "content": "Gets the PID of the current interpreter.",
+        "type": "summary"
     },
     "142": {
-        "file_id": 9,
-        "content": "cess is actually training it.\ndef trainModelWithDataBasePath(\n    basePath: str,\n    sequentialTrainingQueue: Enqueue,\n    shuffle_for_test: bool = False,\n    random_seed: int = 43  # pass hypothesis param here!\n    # sequentialTrainingQueue: SequentialTrainingQueue\n):\n    if shuffle_for_test:\n        random.seed(random_seed)\n    # read perspective width & height from basepath.\n    fpath = os.path.join(basePath, \"video_record_script.sh\")\n    with open(fpath, \"r\") as f:\n        data = f.read()\n        # data = json.load(f)\n        parse_target = re.finditer(r\"\\b\\d+x\\d+\\b\", data).__next__().group()\n        parsed_data = parse.parse(\n            \"{perspective_width:d}x{perspective_height:d}\", parse_target\n        )\n        if parsed_data:\n            perspective_width, perspective_height = (\n                parsed_data[\"perspective_width\"],\n                parsed_data[\"perspective_height\"],\n            )\n        else:\n            raise Exception(f\"Cannot parse perspective size from file: {fpath}\")\n    trainingData",
+        "file_id": 17,
+        "content": "import os\npid = os.getpid()\nprint(\"PID of the current interpreter is: \", pid)",
         "type": "code",
-        "location": "/conscious_struct.py:1137-1163"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/get_pid_of_self.py:1-4"
     },
     "143": {
-        "file_id": 9,
-        "content": "This function trains a model using data from a database path, with optional shuffling for testing. It reads perspective width and height from the file \"video_record_script.sh\" in the basePath. If shuffle_for_test is true, it sets a random seed for shuffling. It then parses perspective size information from the data read from the file and returns trainingData.",
+        "file_id": 17,
+        "content": "Gets the PID of the current interpreter.",
         "type": "comment"
     },
     "144": {
-        "file_id": 9,
-        "content": "Generator = getTrainingData(basePath)\n    if shuffle_for_test:\n        myGenerator = list(trainingDataGenerator)\n        random.shuffle(myGenerator)\n    for trainingDataFrame in trainingDataGenerator:\n        if trainingDataFrame.datatype == \"hid\":\n            encoded_actions = []\n            actions = trainingDataFrame.data[\"HIDEvents\"]\n            if shuffle_for_test:\n                random.shuffle(actions)\n            for action in actions:\n                action_type, action_args = action\n                if action_type in HIDActionBase.keyboard_action_types:\n                    action_args = HIDActionBase.uncover_keycode(action_args)\n                    if action_args is None:\n                        logger.warning(\"Skipping: %s\", action)\n                        continue\n                mHIDAction = HIDAction.from_action_json(\n                    [action_type, action_args],\n                    max_x=perspective_width,\n                    max_y=perspective_height,\n                )  # related to mouse c",
-        "type": "code",
-        "location": "/conscious_struct.py:1163-1186"
+        "file_id": 18,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/kill_server.py",
+        "type": "filepath"
     },
     "145": {
-        "file_id": 9,
-        "content": "Creates a generator for training data and shuffles if necessary. Then, iterates through the generated frames, and if it's a hidden action type, shuffles actions within that frame, decodes keyboard actions if applicable, and creates an instance of HIDAction class.",
-        "type": "comment"
+        "file_id": 18,
+        "content": "The code manages client processes and communicates with a server, monitoring their status, killing dead clients, logging actions, and sending heartbeats.",
+        "type": "summary"
     },
     "146": {
-        "file_id": 9,
-        "content": "oordinates.\n                mHIDActionNDArray = mHIDAction.to_ndarray()\n                logger.debug(\"HID NDArray shape: %s\", mHIDActionNDArray.shape)\n                encoded_actions.append(mHIDActionNDArray)\n            for index, EA in enumerate(encoded_actions):\n                st = None\n                if index + 1 == len(encoded_actions):\n                    st = \"action_end\"\n                consciousBlock = ConsciousBlock(\n                    data_type=\"HIDAction\", special_token=st, action_data=EA\n                )\n                sequentialTrainingQueue.enqueue(consciousBlock)\n        elif trainingDataFrame.datatype == \"image\":\n            image = trainingDataFrame.data\n            image_resized = resizeImage(image, desired_size)\n            image_reshaped = einops.rearrange(image_resized, \"h w c -> c h w\")\n            #             image_reshaped = np.rollaxis(image_resized, 2, 0) # (3, 896, 896)\n            image_sliced = [\n                image_reshaped[:, x * 224 : (x + 1) * 224, y * 224 : (y",
+        "file_id": 18,
+        "content": "# kill dead process by pid and remove them from beat server\n# the kill server must emit beat signals, and can kill other processes to prove its effectiveness\n# maybe we need to elevate\n# import elevate\nfrom beat_common import *\nimport os\nimport signal\nimport uuid\nfrom log_common import *\nkiller_pid = os.getpid()\nkiller_uuid = str(uuid.uuid4())\ndef commit_kill(client_uuid: str, client_pid: int, client_role:str):\n    kill_time = heartbeat_base_nocache(client_uuid, \"kill\", client_pid, client_role)\n    print(f\"commit kill for client {client_uuid} (pid: {client_pid}) at {kill_time}\")\ndef kill_dead_process():\n    dead_clients = []\n    info = query_info()\n    client_info= info['info']\n    for client_uuid, client_info_dict in client_info.items():\n        client_status = client_info_dict['status']\n        client_pid = client_info_dict['pid']\n        client_role = client_info_dict['role']\n        if client_status is False:\n            print(f\"client {client_uuid} is dead.\")\n            if client_pid == killer_pid:\n     ",
         "type": "code",
-        "location": "/conscious_struct.py:1186-1206"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/kill_server.py:1-30"
     },
     "147": {
-        "file_id": 9,
-        "content": "Creating conscious blocks from HID actions and image data.\nThe code is creating 'consciousBlocks' for both HID action and image data, if the datatype of trainingDataFrame is either \"HIDAction\" or \"image\". It converts the HID action to a numpy array, checks if it's the last encoded action in the list, creates the ConsciousBlock with the appropriate special_token, appends the encoded action to the sequentialTrainingQueue. For image data, resizes and rearranges the image, slices the image into multiple blocks of size 224x224 for further processing.",
+        "file_id": 18,
+        "content": "This code is a part of a kill server that monitors running processes and can terminate them if necessary. It checks the status of clients, their PIDs, and roles, and kills any dead clients. It also logs relevant information for each client.",
         "type": "comment"
     },
     "148": {
-        "file_id": 9,
-        "content": " + 1) * 224]\n                for x in range(4)\n                for y in range(4)\n            ]  # ) # c h w\n            # IMAGE RESHAPED: (896, 3, 896)?\n            # IMAGE RESHAPED: (896, 896, 3)\n            #             print('IMAGE RESHAPED:', image_reshaped.shape)\n            #             print('IMAGE SLICED:', image_sliced.shape)\n            #     (16, 3, 224, 224)\n            # hell?\n            consciousBlocks = []\n            for index, im in enumerate(image_sliced):\n                im = einops.rearrange(im, \"c h w -> (c h w)\")\n                st = None\n                if index == 15:\n                    st = \"image_end\"\n                elif index != 0 and (index + 1) % 4 == 0:\n                    st = \"image_newline\"\n                # BUG 4: tuple\n                # FIX 4: remove .to_tensor() method call\n                consciousBlock = ConsciousBlock(\n                    data_type=\"image\", special_token=st, image_data=im\n                )\n                if shuffle_for_test:\n                    con",
+        "file_id": 18,
+        "content": "           print(\"cannot suicide\")\n                continue\n            dead_clients.append((client_uuid, client_pid, client_role))\n    for client_uuid, client_pid, client_role in dead_clients:\n        print(\"killing client:\", client_uuid)\n        try:\n            kill_by_pid(client_pid)\n        except ProcessLookupError:\n            print(f'client {client_uuid} (pid: {client_pid}) is already killed')\n        except:\n            log_and_print_unknown_exception()\n        # remove from history.\n        commit_kill(client_uuid, client_pid, client_role)\ndef kill_server_beat(action = 'heartbeat'):\n    atime = heartbeat_base(killer_uuid, action, killer_pid, 'killer')\n    print(f\"killer {killer_uuid} beat at:\", atime)\nimport time\nif __name__ == \"__main__\":\n    print(f\"killer {killer_uuid} started (pid: {killer_pid})\")\n    kill_server_beat('hello')\n    while True:\n        kill_dead_process()\n        time.sleep(1)\n        kill_server_beat()",
         "type": "code",
-        "location": "/conscious_struct.py:1206-1232"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/kill_server.py:30-57"
     },
     "149": {
-        "file_id": 9,
-        "content": "Reshaping image, slicing into 16 chunks, creating ConsciousBlock objects with image data and special tokens.",
+        "file_id": 18,
+        "content": "Code is for managing client processes and communicating with a server. It keeps track of dead clients, attempts to kill them using their PIDs, and logs the actions. The `kill_server_beat()` function sends heartbeats to the server and the main loop continuously kills dead processes and sends heartbeats.",
         "type": "comment"
     },
     "150": {
-        "file_id": 9,
-        "content": "sciousBlocks.append(consciousBlock)\n                else:\n                    #                 print(consciousBlock)\n                    sequentialTrainingQueue.enqueue(consciousBlock)\n            #             last_output = torch.zeros(1, output_size)\n            if shuffle_for_test:\n                for consciousBlock in consciousBlocks:\n                    sequentialTrainingQueue.enqueue(consciousBlock)\n            del image\n            del image_reshaped\n            del image_resized\n        else:\n            assert False, f\"wrong datatype: {trainingDataFrame.datatype}\"\n    sequentialTrainingQueue.clear()\n#########################################\n#  CONSISTENCY WITH RECORDER AND ACTOR  #\n#########################################\n# import ctypes\n# PROCESS_PER_MONITOR_DPI_AWARE = 2\n# ctypes.windll.shcore.SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE)\n#########\n# MODEL #\n#########\n# notice: when in online mode only image will be backpropagated.\n# like using some upside down mirror.\nclass CustomModel(to",
-        "type": "code",
-        "location": "/conscious_struct.py:1232-1266"
+        "file_id": 19,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/log_common.py",
+        "type": "filepath"
     },
     "151": {
-        "file_id": 9,
-        "content": "Appending consciousBlock to consciousBlocks list if not else enqueueing it to sequentialTrainingQueue.\nChecks if the datatype is correct and clears sequentialTrainingQueue if shuffle_for_test is True.\nEnsures consistency with recorder and actor by setting process DPI awareness.\nDefines a class CustomModel for the model.",
-        "type": "comment"
+        "file_id": 19,
+        "content": "Imports necessary libraries and sets up a logger with rotating file handler, debug level logging to a file and console in case of exceptions. Provides a function for logging and printing unknown exceptions.",
+        "type": "summary"
     },
     "152": {
-        "file_id": 9,
-        "content": "rch.nn.Module):\n    def __init__(self, vit_model, hidden_size_vit=1000, vit_block_size=228):\n        #     def __init__(self, rwkv_model, vit_model, tokenizer, hidden_size_rwkv, hidden_size_vit, output_size, vit_times = 4, vit_block_size=228):\n        super(CustomModel, self).__init__()\n        #         self.rwkv_model = rwkv_model # processing language, generate actions.\n        self.vit_model = vit_model\n        self.vit_block_size = vit_block_size  # this is default.\n        #         self.vit_times = vit_times\n        # seq2seq alike.\n        #         self.hidden_size = hidden_size_rwkv+hidden_size_vit\n        self.hidden_size = hidden_size_vit\n        self.HIDEncoder = torch.nn.Linear(HIDActionBase.length, 1000)\n        self.HIDDecoder = torch.nn.Linear(\n            1000, HIDActionBase.length\n        )  # use torch.where or something\n        # sparse matrix?\n        # some magic going elsewhere.\n        self.ViTDecoder = torch.nn.Conv2d(\n            in_channels=9, out_channels=3, kernel_size=22, ",
+        "file_id": 19,
+        "content": "import sys\nimport logging\nfrom logging.handlers import RotatingFileHandler\nimport better_exceptions\nlog_filename = \"actors.log\"\nrthandler = RotatingFileHandler(\n    log_filename, maxBytes=1024 * 1024 * 15, backupCount=3, encoding=\"utf-8\"\n)\nlogger = logging.getLogger(\"actors\")\nlogger.setLevel(logging.DEBUG)\nlogger.addHandler(rthandler)\nlogger.addHandler(logging.StreamHandler(sys.stderr))\nbetter_exceptions.SUPPORTS_COLOR = False\ndef log_and_print_unknown_exception():\n    exc_type, exc_info, exc_tb = sys.exc_info()\n    # traceback.print_exc()\n    if exc_type is not None:\n        exc_str = \"\\n\".join(\n            better_exceptions.format_exception(exc_type, exc_info, exc_tb)\n        )\n        logger.debug(exc_str)\n        print(exc_str)",
         "type": "code",
-        "location": "/conscious_struct.py:1266-1287"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/log_common.py:2-30"
     },
     "153": {
-        "file_id": 9,
-        "content": "The code defines a class called `CustomModel` that inherits from `torch.nn.Module`. It has an initializer method that takes `vit_model`, `hidden_size_vit`, and `vit_block_size` as input parameters. The class also includes `HIDEncoder` and `HIDDecoder` linear layers, and a `ViTDecoder` convolutional layer with specific in_channels, out_channels, and kernel_size values.",
+        "file_id": 19,
+        "content": "Imports necessary libraries and sets up a logger with rotating file handler, debug level logging to a file and console in case of exceptions. Provides a function for logging and printing unknown exceptions.",
         "type": "comment"
     },
     "154": {
-        "file_id": 9,
-        "content": "stride=4, dilation=5\n        )  # n c h w\n        # FIX 13: change 1000 to ConsciousBase.data_type_length+ConsciousBase.special_token_length+1000\n        io_h_size = (\n            ConsciousBase.data_type_length + ConsciousBase.special_token_length + 1000\n        )\n        self.rnn = torch.nn.LSTM(\n            input_size=io_h_size, hidden_size=io_h_size, batch_first=True\n        )\n        # use tensor.\n    def forward(\n        self,\n        conscious_stream: torch.Tensor,\n        target_output: Union[None, torch.Tensor] = None,\n    ):\n        # if have target, and our datatype bits are wrong, we only optimize the datatype bits, making image/action bits identical\n        # otherwise just calculate all bits from the model.\n        # conscious_stream: [batch_size, (ConsciousBase.length) data_type+special_tokens+image_bits+action_bits]\n        # you need another pydantic model for it.\n        # BUG 9: input shape error\n        # FIX 9: check input and output shape\n        #         print(conscious_stream.shape,",
-        "type": "code",
-        "location": "/conscious_struct.py:1287-1313"
+        "file_id": 20,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/loop_forever.py",
+        "type": "filepath"
     },
     "155": {
-        "file_id": 9,
-        "content": "This code defines a class that contains an LSTM (Long Short-Term Memory) network. The LSTM network takes in a tensor of data called \"conscious_stream\" which has a specific shape and type defined in the ConsciousBase class. If a target output is provided, the network will only optimize the data type bits, making image/action bits identical. Otherwise, it calculates all bits from the model. There are also fixes for Bug 9 and Fix 13 mentioned in comments.",
-        "type": "comment"
+        "file_id": 20,
+        "content": "Infinite loop, continuously adds 1 to 'a'.",
+        "type": "summary"
     },
     "156": {
-        "file_id": 9,
-        "content": " ConsciousBase.length, )\n        #         if target_output is not None:\n        #             print(target_output.shape)\n        batch_size, seq_length, dim_block = conscious_stream.shape\n        assert dim_block == ConsciousBase.length\n        conscious_stream_reshaped = einops.rearrange(\n            conscious_stream, \"b s d -> (b s) d\"\n        )\n        datatype_bits, special_bits, image_bits, action_bits = einops.unpack(\n            conscious_stream_reshaped, [[s] for s in ConsciousBase.split_sizes], \"b *\"\n        )\n        #         datatype_bits, special_bits, image_bits, action_bits = size_splits(conscious_stream_reshaped, ConsciousBase.split_sizes,dim=1)\n        #         desired_size = self.vit_block_size*self.vit_times\n        datatypes = torch.argmax(datatype_bits, dim=1)\n        image_indexs = datatypes == 0\n        action_indexs = datatypes == 1\n        special_tokens = torch.argmax(special_bits, dim=1)\n        image_newline_indexs = special_tokens == 0\n        image_end_indexs = special_to",
+        "file_id": 20,
+        "content": "while True:\n    a = 1 + 1",
         "type": "code",
-        "location": "/conscious_struct.py:1313-1335"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/loop_forever.py:1-2"
     },
     "157": {
-        "file_id": 9,
-        "content": "This code appears to be part of a neural network model that is processing data and extracting information from it. It's reshaping the input data, unpacking it into different components, and then performing actions on these different components based on their indexes. The purpose of this specific section may be to identify specific types of data within the input, such as images, special tokens, and actions.",
+        "file_id": 20,
+        "content": "Infinite loop, continuously adds 1 to 'a'.",
         "type": "comment"
     },
     "158": {
-        "file_id": 9,
-        "content": "kens == 1\n        action_end_indexs = special_tokens == 2\n        nop_indexs = special_tokens == 3\n        # 4+2+1000\n        # you are gonna take actions.\n        # prepare some zeros.\n        # BUG 10: len() on int\n        # FIX 10: find and fix incorrect len() calls\n        batched_rnn_input = torch.zeros(\n            (\n                batch_size * seq_length,\n                ConsciousBase.data_type_length\n                + ConsciousBase.special_token_length\n                + 1000,\n            )\n        )\n        batched_rnn_input[image_indexs, 0] = 1\n        batched_rnn_input[action_indexs, 1] = 1\n        # BUG 11: indexs not defined\n        # FIX 11: indexes -> indexs\n        batched_rnn_input[image_newline_indexs, 2] = 1\n        batched_rnn_input[image_end_indexs, 3] = 1\n        batched_rnn_input[action_end_indexs, 4] = 1\n        batched_rnn_input[nop_indexs, 5] = 1\n        # process this.\n        datatype_and_special_token_length = (\n            ConsciousBase.data_type_length + ConsciousBase.special_toke",
-        "type": "code",
-        "location": "/conscious_struct.py:1335-1367"
+        "file_id": 21,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py",
+        "type": "filepath"
     },
     "159": {
-        "file_id": 9,
-        "content": "Code creates a tensor with initial values of zeros for batch_size x seq_length x (data_type_length + special_token_length + 1000). It then sets certain elements to 1 based on image_indexs, action_indexs, etc.",
-        "type": "comment"
+        "file_id": 21,
+        "content": "The code introduces a metaheuristic predictive actor class, incorporates kernel weight updates and average performance refreshes, but the scoring criteria remain unclear. The score is calculated using loop count and MetaheuristicPredictiveWrapper to generate an actor for predictive_alpine_actor module, running it forever with run_actor_forever function.",
+        "type": "summary"
     },
     "160": {
-        "file_id": 9,
-        "content": "n_length\n        )\n        # BUG 12: unannotated unknown axes in einops.rearrange\n        # FIX 12: annotate these axes\n        selected_image_bits = image_bits[image_indexs, :]\n        transformed_image_bits = einops.rearrange(\n            selected_image_bits,\n            \"b (c h w) -> b c h w\",\n            h=ConsciousBase.image_dim,\n            w=ConsciousBase.image_dim,\n            c=ConsciousBase.image_channels,\n        )\n        processed_image_bits = self.vit_model(transformed_image_bits)\n        batched_rnn_input[\n            image_indexs, datatype_and_special_token_length:\n        ] = processed_image_bits\n        selected_action_bits = action_bits[action_indexs, :]\n        processed_action_bits = self.HIDEncoder(selected_action_bits)\n        batched_rnn_input[\n            action_indexs, datatype_and_special_token_length:\n        ] = processed_action_bits\n        batched_rnn_input_reshaped = einops.rearrange(\n            batched_rnn_input, \"(b s) d -> b s d\", b=batch_size, s=seq_length\n        )\n      ",
+        "file_id": 21,
+        "content": "import math\n# TODO: rerun the same kernel for several times and get average performance (to eliminate residual errors)\n# extract the kernel from the dead ones.\n# the new kernel will be added to the random kernel.\n# import copy\nimport weakref\nfrom typing import Callable, List\nimport numpy as np\nfrom typing_extensions import Literal\nfrom alpine_actor import run_actor_forever\nfrom naive_actor import ActorStats\nfrom sequence_learner import PredictorWrapper\nACTIVATION_FUNCMAP = {\n    \"atan\": lambda n: math.atan(n) / math.pi * 2,\n    \"tanh\": math.tanh,\n}  # input: -oo, oo; output: -1, 1\nclass MetaheuristicActorStats(ActorStats):\n    ...\nimport copy\nclass MetaheuristicPredictiveWrapper:\n    top_k = 100\n    def __init__(\n        self,\n        ksize: int,\n        predictiveActorClass,\n        # predictorClass,\n        activation: Literal[\"atan\", \"tanh\"],\n        eps=1e-5,\n        trials_on_same_kernel=3,\n    ):\n        class MetaheuristicPredictiveActor(predictiveActorClass):\n            actorStatsClass = MetaheuristicActorS",
         "type": "code",
-        "location": "/conscious_struct.py:1367-1395"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py:1-44"
     },
     "161": {
-        "file_id": 9,
-        "content": "This code is preparing the input data for a Recurrent Neural Network (RNN) by selecting image and action bits, transforming them, and then reshaping the batched input. The code annotates unknown axes to fix bug 12, selects image and action bits based on indexes, processes the selected bits using a Vision Transformer model and HID Encoder respectively, and finally reshapes the batched RNN input for further processing.",
+        "file_id": 21,
+        "content": "This code defines a class `MetaheuristicPredictiveWrapper` that extends an existing predictive actor with additional metaheuristics. It takes in parameters such as kernel size, predictive actor class, activation function (\"atan\" or \"tanh\"), and other settings. It also creates a new class `MetaheuristicPredictiveActor` that inherits from the specified predictive actor class and uses the defined metaheuristics.",
         "type": "comment"
     },
     "162": {
-        "file_id": 9,
-        "content": "  # BUG 13: mismatched shape for rnn\n        _, (h1, c1) = self.rnn(batched_rnn_input_reshaped)\n        # shape of h1: [batch_size, dim_block]\n        if target_output is not None:\n            (\n                target_datatype_bits,\n                target_special_bits,\n                target_image_bits,\n                target_action_bits,\n            ) = einops.unpack(\n                target_output, [[s] for s in ConsciousBase.split_sizes], \"b *\"\n            )\n        output_datatype_bits, output_special_bits, output_data_bits = einops.unpack(\n            einops.rearrange(h1, \"b s d -> (b s) d\"),\n            [\n                [s]\n                for s in [\n                    ConsciousBase.data_type_length,\n                    ConsciousBase.special_token_length,\n                    1000,\n                ]\n            ],\n            \"b *\",\n        )\n        #         output_datatype_bits, output_special_bits, output_data_bits = size_splits(h1, [ConsciousBase.data_type_length, ConsciousBase.special_token_length",
+        "file_id": 21,
+        "content": "tats\n            def __init__(\n                self,\n                *args,\n                metaWrapperWeakref: Callable[[], MetaheuristicPredictiveWrapper] = ...,\n                # metaInfo: List[List[str]] = ...,\n                **kwargs,\n            ):\n                self.metaWrapperWeakref = metaWrapperWeakref\n                super().__init__(*args, **kwargs)\n            def setMetaInfo(self, metaInfo):\n                setattr(self, \"metaInfo\", metaInfo)\n            def __del__(self):\n                metaWrapper = self.metaWrapperWeakref()\n                trial_count = metaWrapper.trial_count\n                average_performance = metaWrapper.average_performance\n                metaInfo = copy.deepcopy(getattr(self, \"metaInfo\", []))\n                try:\n                    super().__del__()\n                finally:\n                    print(\"metaheuristic\".center(50, \"=\"))\n                    print(\"trial count:\", trial_count)\n                    print(\"average performance:\", average_performance)\n       ",
         "type": "code",
-        "location": "/conscious_struct.py:1395-1422"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py:44-70"
     },
     "163": {
-        "file_id": 9,
-        "content": "Unpacks RNN output, reshapes and assigns values to specific variables for data types, special tokens, and other data.",
+        "file_id": 21,
+        "content": "The code defines a class with an optional metaWrapperWeakref, sets metaInfo using setMetaInfo method and deletes the instance by calling its parent's del method after logging trial count and average performance.",
         "type": "comment"
     },
     "164": {
-        "file_id": 9,
-        "content": ", 1000] ,dim=1)\n        output_datatypes = torch.argmax(output_datatype_bits, dim=1)\n        output_image_indexs = output_datatypes == 0\n        output_action_indexs = output_datatypes == 1\n        if target_output is not None:\n            target_output_datatypes = torch.argmax(target_datatype_bits, dim=1)\n            target_output_image_indexs = target_output_datatypes == 0\n            target_output_action_indexs = target_output_datatypes == 1\n            common_output_image_indexs = torch.logical_and(\n                target_output_image_indexs, output_image_indexs\n            )\n            common_output_action_indexs = torch.logical_and(\n                target_output_action_indexs, output_action_indexs\n            )\n            common_output_indexs = torch.logical_or(\n                common_output_image_indexs, common_output_action_indexs\n            )\n            target_exclusive_output_image_indexs = torch.logical_and(\n                target_output_image_indexs, torch.logical_not(output_image_indexs",
+        "file_id": 21,
+        "content": "             for print_params in metaInfo:\n                        if len(print_params) > 1:\n                            print(print_params[0] + \":\", *print_params[1:])\n                        elif len(print_params) == 1:\n                            print(print_params[0])\n                        else:\n                            print()\n            def getStatsDict(self):\n                statsDict = super().getStatsDict()\n                statsDict.update(dict())\n                return statsDict\n        self.predictiveActorClass = MetaheuristicPredictiveActor\n        # self.predictorClass = predictorClass\n        self.ksize = ksize\n        self.trial_count = 0\n        self.trials_on_same_kernel = trials_on_same_kernel\n        self.average_performance = 0\n        self.activation = ACTIVATION_FUNCMAP[activation]\n        self.eps = eps\n        self.new()\n    def __next__(self):\n        # use inheritance instead of this!\n        # use weakref of self\n        self.remix()\n        return self.actor\n        # actor_in",
         "type": "code",
-        "location": "/conscious_struct.py:1422-1446"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py:70-98"
     },
     "165": {
-        "file_id": 9,
-        "content": "This code calculates the common output indexes between target and actual outputs for image and action indexes.",
+        "file_id": 21,
+        "content": "This code is defining a class with methods to create and manage a predictive actor. It has methods for getting statistics, updating the actor, and remixing the actor. It also initializes class variables such as trial count and average performance.",
         "type": "comment"
     },
     "166": {
-        "file_id": 9,
-        "content": ")\n            )\n            target_exclusive_output_action_indexs = torch.logical_and(\n                target_output_action_indexs, torch.logical_not(output_action_indexs)\n            )\n            target_exclusive_output_indexs = torch.logical_or(\n                target_exclusive_output_image_indexs,\n                target_exclusive_output_action_indexs,\n            )\n        if target_output is not None:\n            selected_output_image_bits = output_data_bits[common_output_image_indexs, :]\n        else:\n            selected_output_image_bits = output_data_bits[output_image_indexs, :]\n        processed_output_image_bits = einops.repeat(\n            selected_output_image_bits, \"b d -> b d 9\"\n        )\n        processed_output_image_bits = einops.einsum(\n            processed_output_image_bits,\n            processed_output_image_bits,\n            \"b h c, b w c -> b c h w\",\n        )\n        processed_output_image_bits = self.ViTDecoder(processed_output_image_bits)\n        processed_output_image_bits = eino",
+        "file_id": 21,
+        "content": "stance = self.actorClass()\n        # actor_instance.metaWrapperWeakref = weakref.ref(self)\n        # return actor_instance\n    def new(self):\n        if hasattr(self, \"actor\"):\n            delattr(self, \"actor\")\n        actor = self.predictiveActorClass(\n            metaWrapperWeakref=weakref.ref(self), ksize=self.ksize\n        )\n        setattr(self, \"actor\", actor)\n    def get_kernel(self) -> np.ndarray:\n        return self.actor.predictorWrapper.predictor.kernel.copy()\n    def set_kernel(self, kernel: np.ndarray):\n        kernel_shape = kernel.shape\n        desired_shape = (self.ksize,)\n        assert (\n            kernel_shape == desired_shape\n        ), f\"kernel shape mismatch: {kernel_shape} != {desired_shape}\"\n        self.actor.predictorWrapper.predictor.kernel = kernel\n    kernel = property(fget=get_kernel, fset=set_kernel)\n    def remix(self):\n        old_kernel = self.kernel\n        old_score = self.score()\n        avg_performance = self.refresh_average_performance(\n            old_score\n        )  ",
         "type": "code",
-        "location": "/conscious_struct.py:1446-1470"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py:98-128"
     },
     "167": {
-        "file_id": 9,
-        "content": "This code is part of a larger neural network. It checks if the target output is not None, and based on that, selects either common or specific output image indexes to process. Then it repeats and rearranges the selected image bits using Einops library. After this, it passes these processed image bits through a ViTDecoder module and continues processing in the next chunk of code.",
+        "file_id": 21,
+        "content": "This code is related to an actor class in a metaheuristic predictive model. The \"new\" function initializes the actor, the \"get_kernel\" and \"set_kernel\" functions retrieve or update the kernel, and the \"remix\" function keeps track of performance while refreshing the average performance.",
         "type": "comment"
     },
     "168": {
-        "file_id": 9,
-        "content": "ps.rearrange(\n            processed_output_image_bits, \"b c h w -> b (c h w)\"\n        )\n        if target_output is not None:\n            selected_output_action_bits = output_data_bits[\n                common_output_action_indexs, :\n            ]\n        else:\n            selected_output_action_bits = output_data_bits[output_action_indexs, :]\n        processed_output_action_bits = self.HIDDecoder(selected_output_action_bits)\n        # preparing blank output\n        output_0 = torch.zeros((batch_size, ConsciousBase.length))\n        (\n            output_datatype_bits_0,\n            output_special_token_bits_0,\n            output_image_bits_0,\n            output_action_bits_0,\n        ) = einops.unpack(output_0, [[s] for s in ConsciousBase.split_sizes], \"b *\")\n        #         output_datatype_bits_0, output_special_token_bits_0, output_image_bits_0, output_action_bits_0 = size_splits(output, ConsciousBase.split_sizes, dim=1)\n        if target_output is not None:\n            output_datatype_bits_0[\n          ",
+        "file_id": 21,
+        "content": "# warning! base shall never be 1\n        # log (avg performance as base) & tanh/atan\n        old_add_weight = math.log(old_score / avg_performance, avg_performance)\n        old_add_weight = self.activation(old_add_weight) / 2\n        # old_add_weight = self.activation(old_add_weight*self.trial_count) / 2\n        # old_add_weight = self.activation(old_add_weight*(1+math.log(self.trial_count)) / 2\n        new_kernel_weight = 0.5 - old_add_weight\n        old_kernel_weight = 0.5 + old_add_weight\n        self.actor.setMetaInfo(\n            [\n                (\"score\", old_score),\n                (\"old kernel weight\", old_kernel_weight),\n                (\"new kernel weight\", new_kernel_weight),\n            ]\n        )\n        self.new()\n        new_kernel = self.kernel\n        # emit noise if not doing well?\n        # harmony vice versa?\n        if (repeat_times := self.trial_count % self.trials_on_same_kernel) == 0:\n            print(f\"refreshing kernel (every {self.trials_on_same_kernel} time(s))\")\n            ",
         "type": "code",
-        "location": "/conscious_struct.py:1470-1495"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py:128-151"
     },
     "169": {
-        "file_id": 9,
-        "content": "Rearranging processed output image bits and preparing blank output.",
+        "file_id": 21,
+        "content": "Updating kernel weights and setting meta information.\n\nThis code snippet updates the old and new kernel weights based on the old_score, activates them using a specific activation function, and sets the actor's meta information with the updated scores. If the trial count is a multiple of trials_on_same_kernel, it prints a message indicating that the kernel is being refreshed.",
         "type": "comment"
     },
     "170": {
-        "file_id": 9,
-        "content": "      target_exclusive_output_indexs, :\n            ] = target_datatype_bits[target_exclusive_output_indexs, :]\n            output_datatype_bits_0[common_output_indexs, :] = output_datatype_bits[\n                common_output_indexs, :\n            ]\n            output_special_token_bits_0[\n                target_exclusive_output_indexs, :\n            ] = output_special_bits[target_exclusive_output_indexs, :]\n            output_special_token_bits_0[common_output_indexs, :] = output_special_bits[\n                common_output_indexs, :\n            ]\n            output_special_token_bits_0[common_output_image_indexs, 2] = 0\n            output_special_token_bits_0[common_output_action_indexs, :2] = 0\n            output_image_bits_0[\n                target_exclusive_output_image_indexs, :\n            ] = target_image_bits[target_exclusive_output_image_indexs, :]\n            output_action_bits_0[\n                target_exclusive_output_action_indexs, :\n            ] = target_action_bits[target_exclusive_outpu",
+        "file_id": 21,
+        "content": "self.kernel = (\n                new_kernel * new_kernel_weight + old_kernel * old_kernel_weight\n            )\n        else:\n            print(f\"using old kernel (repeat: {repeat_times} time(s))\")\n            self.kernel = old_kernel\n    def refresh_average_performance(self, score: float):\n        self.average_performance = (\n            self.average_performance * self.trial_count + score\n        ) / (self.trial_count + 1)\n        self.trial_count += 1\n        if self.average_performance == 1:\n            self.average_performance += self.eps\n        return self.average_performance\n    def score(self):\n        stats: ActorStats = self.actor.stats\n        # score by what?\n        # example:\n        \"\"\"\n        =====================summary======================\n        start time:     2023-09-01T09:54:11.270057+08:00\n        end time:       2023-09-01T09:54:43.327770+08:00\n        up time:        32.05771350860596\n        loop count:     290\n        total bytes read:       237\n        total bytes write:      2476\n ",
         "type": "code",
-        "location": "/conscious_struct.py:1495-1516"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py:151-179"
     },
     "171": {
-        "file_id": 9,
-        "content": "Copying target data to output arrays based on exclusive and common indices.",
+        "file_id": 21,
+        "content": "Code is initializing the kernel value based on new and old kernel weights.\nIt refreshes the average performance by adding the current score to the previous average and updates trial count.\nThe score function calculates the score based on actor's stats, but it's not clear what the scoring criteria are.",
         "type": "comment"
     },
     "172": {
-        "file_id": 9,
-        "content": "t_action_indexs, :]\n            output_image_bits_0[\n                common_output_image_indexs, :\n            ] = processed_output_image_bits\n            output_action_bits_0[\n                common_output_action_indexs, :\n            ] = processed_output_action_bits\n        else:\n            output_datatype_bits_0 = output_datatype_bits\n            output_special_bits_0 = output_special_bits\n            output_special_bits_0[output_image_indexs, 2] = 0\n            output_special_bits_0[output_action_indexs, :2] = 0\n            output_image_bits_0[output_image_indexs, :] = processed_output_image_bits\n            output_action_bits_0[output_action_indexs, :] = processed_output_action_bits\n        output, _ = einops.pack(\n            (\n                output_datatype_bits_0,\n                output_special_token_bits_0,\n                output_image_bits_0,\n                output_action_bits_0,\n            ),\n            \"b *\",\n        )\n        #         output = torch.concat((output_datatype_bits_0, output_sp",
+        "file_id": 21,
+        "content": "       r/w ratio: 0.09571890145395799\n        w/r ratio: 10.447257383966244\n        read bytes entropy: 4.946365138818157\n        write bytes entropy: 6.148352516530523\n        r/w entropy ratio: 0.8045025273875089\n        w/r entropy ratio: 1.2430041745764768\n        \"\"\"\n        # for now, just take the up time\n        # uptime seems to be less universal.\n        # let's use loop count for now.\n        score = stats.loop_count + self.eps\n        # score = stats.up_time + self.eps\n        return score\nif __name__ == \"__main__\":\n    # from alpine_actor import AlpineActor\n    from predictive_alpine_actor import PredictiveAlpineActor  # PredictorWrapper\n    actor_generator = MetaheuristicPredictiveWrapper(\n        ksize=256,  # too small!\n        # ksize=100,\n        predictiveActorClass=PredictiveAlpineActor,\n        # predictorClass=PredictorWrapper,\n        activation=\"tanh\",\n    )\n    # breakpoint()\n    run_actor_forever(actor_generator)",
         "type": "code",
-        "location": "/conscious_struct.py:1516-1544"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/metaheuristic_predictive_actor.py:179-206"
     },
     "173": {
-        "file_id": 9,
-        "content": "This code is assigning values to different parts of the output based on a condition. If the condition is true, it assigns processed_output_image_bits and processed_output_action_bits to their respective locations in the output arrays. Otherwise, it sets certain bits to 0 and then concatenates output_datatype_bits_0, output_special_token_bits_0, output_image_bits_0, and output_action_bits_0 into the final output using einops.pack.",
+        "file_id": 21,
+        "content": "This code calculates the score based on loop count and uses MetaheuristicPredictiveWrapper to generate an actor for the predictive_alpine_actor module. It then runs the actor forever using run_actor_forever function.",
         "type": "comment"
     },
     "174": {
-        "file_id": 9,
-        "content": "ecial_token_bits_0, output_image_bits_0, output_action_bits_0), dim=1)\n        return output",
-        "type": "code",
-        "location": "/conscious_struct.py:1544-1546"
-    },
-    "175": {
-        "file_id": 9,
-        "content": "Performs 1D convolution with given filters and input data, returning the output.",
-        "type": "comment"
-    },
-    "176": {
-        "file_id": 10,
-        "content": "/decorator_method_registry.py",
+        "file_id": 22,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py",
         "type": "filepath"
     },
-    "177": {
-        "file_id": 10,
-        "content": "MyDecorator is a function decorator that executes code before and after the decorated function, while MyMeta adds code execution right after the 'def' block of the decorated function. A decorator function \"my_decorator\" is defined which executes code before and after the decorated function by using \"@\" syntax to decorate the function \"my_function\".",
+    "175": {
+        "file_id": 22,
+        "content": "The code performs performance benchmarking on actor processes using non-blocking socket readers, measures execution time, and outputs results in tabular format. It also defines a class-based actor running until a condition is met and serves as the main program.",
         "type": "summary"
     },
-    "178": {
-        "file_id": 10,
-        "content": "class MyDecorator:\n    def __init__(self, func):\n        self.func = func\n        self.invoke_decorated_function()\n    def invoke_decorated_function(self):\n        # Code to execute after the 'def' block of the decorated function\n        print(\"Executing code right after the 'def' block\")\n        self.func()\n# Decorate a function with the decorator\n@MyDecorator\ndef my_function():\n    print(\"Executing the decorated function\")\nprint(\"-\" * 40)\nclass MyMeta(type):\n    def __new__(cls, name, bases, attrs):\n        # Code to execute right after the 'def' block of the decorated function\n        print(\"Executing code right after the 'def' block\")\n        return super().__new__(cls, name, bases, attrs)\n# Define the metaclass for the decorator\nclass MyDecorator(metaclass=MyMeta):\n    def __call__(self, func):\n        print(\"Executing code before the function is invoked\")\n        def wrapper(*args, **kwargs):\n            # Code to execute before invoking the decorated function\n            # Invoke the decorated function\n",
+    "176": {
+        "file_id": 22,
+        "content": "# import twisted\n# this could be used as test case.\n# TODO: survive reopening the laptop lid\n# TODO: improve task execution logic, eliminate long running blocking tasks.\n# TODO: use celery to schedule tasks\nimport datetime\nfrom beat_common import heartbeat_base\nimport os\nimport sys\nimport time\nimport copy\nimport traceback\nfrom cmath import nan\nfrom log_common import *\nimport uuid\ncurrent_pid = os.getpid()\nprint(\"current_pid:\", current_pid)\nactor_uuid = str(uuid.uuid4())\nstrtime = heartbeat_base(uuid=actor_uuid, action = 'hello', pid=current_pid, role='client')\nprint('beat server hello: %s' % strtime)\nclass InteractiveChallengeFailed(Exception):\n    \"\"\"\n    If \"expect\" like challenge failed for some reason, raise this exception.\n    \"\"\"\n    ...\n# https://code.activestate.com/recipes/440554/\n# wxpython, wexpect/winpexpect, pexpect\n# https://peps.python.org/pep-3145/\n# https://peps.python.org/pep-3156/\nfrom collections import deque\nimport func_timeout\nimport pytz\nfrom pydantic import BaseModel\nfrom entropy_utils import C",
         "type": "code",
-        "location": "/decorator_method_registry.py:1-38"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:1-40"
+    },
+    "177": {
+        "file_id": 22,
+        "content": "The code is importing various libraries and modules such as Twisted, beat_common, log_common, entropy_utils, and pydantic. It also defines a class InteractiveChallengeFailed for handling failed challenges. The code sets up variables and imports other collections and functions. It seems to be related to interactive programs, challenges, and time-related tasks.",
+        "type": "comment"
+    },
+    "178": {
+        "file_id": 22,
+        "content": "ontentEntropyCalculator\nfrom type_utils import *\nfrom vocabulary import NaiveVocab\ndef unicodebytes(string: str):\n    return bytes(string, encoding=\"utf8\")\nclass ActorStats(BaseModel):\n    start_time: float\n    end_time: float\n    up_time: float\n    loop_count: int\n    read_bytes: int\n    write_bytes: int\n    read_ent: float\n    write_ent: float\n    rw_ratio: float\n    wr_ratio: float\n    rw_ent_ratio: float\n    wr_ent_ratio: float\ndef safeDiv(a, b):\n    \"\"\"\n    Return a/b if no exception is raised, otherwise nan.\n    \"\"\"\n    ret = nan\n    try:\n        ret = a / b\n    except ZeroDivisionError:\n        pass\n    return ret\ndef leftAndRightSafeDiv(a, b):\n    \"\"\"\n    Return a/b and b/a, in safe division manner.\n    \"\"\"\n    left_div = safeDiv(a, b)\n    right_div = safeDiv(b, a)\n    return left_div, right_div\nREAD_KNOWN_EXCEPTIONS = []\n# SOCKET_TIMEOUT = .2\n# SOCKET_TIMEOUT = .01\nSOCKET_TIMEOUT = 0.001\nfrom contextlib import contextmanager\nif os.name == \"nt\":\n    NT_CONTEXT = dict(NT_READ_NONBLOCKING_DECODE=False, NT_ENCODING=\"utf-",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:40-92"
     },
     "179": {
-        "file_id": 10,
-        "content": "MyDecorator class is a function decorator that executes code before and after the decorated function.\nMetaclass MyMeta adds code execution right after the 'def' block of the decorated function.",
+        "file_id": 22,
+        "content": "The code is defining an ActorStats class that stores various statistics about the actor's performance, such as start and end times, up-time, loop count, read/write bytes, entropy of read/write data, and ratios between these values. The code also includes a safeDiv function for safe division operations, and a context manager that sets specific properties when running on Windows (NT_READ_NONBLOCKING_DECODE and NT_ENCODING).",
         "type": "comment"
     },
     "180": {
-        "file_id": 10,
-        "content": "            return func(*args, **kwargs)\n        return wrapper\n# Decorate a function with the decorator\n@MyDecorator()\ndef my_function():\n    print(\"Executing the decorated function\")\nprint(\"-\" * 20)\ndef my_decorator(func):\n    print(\"Executing code before the function is invoked.\")\n    print(\"Function name:\", func.__name__)\n    def wrapper(*args, **kwargs):\n        # Code to execute before the invocation of the decorated function\n        # Invoke the decorated function\n        return func(*args, **kwargs)\n    # Return the wrapper function\n    return wrapper\n# Decorate a function with the decorator\n@my_decorator\ndef my_function():\n    print(\"Executing the decorated function.\")",
+        "file_id": 22,
+        "content": "8\")\n    @contextmanager\n    def nt_read_nonblocking_decode_context():\n        NT_CONTEXT[\"NT_READ_NONBLOCKING_DECODE\"] = True\n        try:\n            yield\n        finally:\n            NT_CONTEXT[\"NT_READ_NONBLOCKING_DECODE\"] = False\n    import wexpect as pexpect\n    expected_wexpect_version = \"4.0.0\"\n    wexp_version = pexpect.__version__\n    assert (\n        wexp_version == expected_wexpect_version\n    ), \"wexpected version should be: {}\\ncurrently: {}\".format(\n        expected_wexpect_version, wexp_version\n    )\n    import wexpect.host as host\n    import socket\n    def spawnsocket_connect_to_child(self):\n        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n        self.sock.connect((self.host, self.port))\n        self.sock.settimeout(SOCKET_TIMEOUT)\n    def spawnsocket_read_nonblocking(self, size=1):\n        \"\"\"This reads at most size characters from the child application. If\n        the end of file is read then an EOF exception will be raised.\n        This is not effected by the 'size' pa",
         "type": "code",
-        "location": "/decorator_method_registry.py:38-68"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:92-123"
     },
     "181": {
-        "file_id": 10,
-        "content": "Defines a decorator function \"my_decorator\" that executes code before and after the decorated function. Uses the \"@\" syntax to decorate the function \"my_function\".",
+        "file_id": 22,
+        "content": "This code defines a context manager for non-blocking reading and a function to connect to a child application via socket, checking the wexpect version.",
         "type": "comment"
     },
     "182": {
-        "file_id": 11,
-        "content": "/generate_datamodel_code.sh",
-        "type": "filepath"
+        "file_id": 22,
+        "content": "rameter, so if you call\n        read_nonblocking(size=100, timeout=30) and only one character is\n        available right away then one character will be returned immediately.\n        It will not wait for 30 seconds for another 99 characters to come in.\n        This is a wrapper around Wtty.read().\"\"\"\n        logger = host.logger\n        EOF_CHAR = host.EOF_CHAR\n        EOF = host.EOF\n        if self.closed:\n            logger.info(\"I/O operation on closed file in read_nonblocking().\")\n            raise ValueError(\"I/O operation on closed file in read_nonblocking().\")\n        try:\n            s = self.sock.recv(size)\n            if s:\n                logger.debug(f\"Readed: {s}\")\n            else:\n                logger.spam(f\"Readed: {s}\")\n            if EOF_CHAR in s:\n                self.flag_eof = True\n                logger.info(\"EOF: EOF character has been arrived\")\n                s = s.split(EOF_CHAR)[0]\n        except ConnectionResetError:\n            self.flag_eof = True\n            logger.info(\"EOF(",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:123-153"
     },
     "183": {
-        "file_id": 11,
-        "content": "Generating Python code from a YAML datamodel file, with class name \"MyModel\".",
-        "type": "summary"
+        "file_id": 22,
+        "content": "This code snippet is a part of the `naive_actor.py` file and it's a function called `read_nonblocking()`. It reads data from a socket in non-blocking mode, returns one character immediately if available, and doesn't wait for additional characters to reach the timeout limit. If an EOF (End of File) character is detected, it sets the `flag_eof` flag and removes the EOF character from the received data before returning it.",
+        "type": "comment"
     },
     "184": {
-        "file_id": 11,
-        "content": "datamodel-codegen --input mydatamodel.yaml --output mydatamodel.py --class-name MyModel\n# cannot process multiple instances of datamodel.",
+        "file_id": 22,
+        "content": "'ConnectionResetError')\")\n            raise EOF(\"ConnectionResetError\")\n        except socket.timeout:\n            return \"\" if NT_CONTEXT[\"NT_READ_NONBLOCKING_DECODE\"] else b\"\"\n        return (\n            s.decode(NT_CONTEXT[\"NT_ENCODING\"])\n            if NT_CONTEXT[\"NT_READ_NONBLOCKING_DECODE\"]\n            else s\n        )\n    def spawnpipe_read_nonblocking(self, size=1):\n        \"\"\"This reads at most size characters from the child application. If\n        the end of file is read then an EOF exception will be raised.\n        This is not effected by the 'size' parameter, so if you call\n        read_nonblocking(size=100, timeout=30) and only one character is\n        available right away then one character will be returned immediately.\n        It will not wait for 30 seconds for another 99 characters to come in.\n        This is a wrapper around Wtty.read().\"\"\"\n        logger = host.logger\n        EOF_CHAR = host.EOF_CHAR\n        EOF = host.EOF\n        if self.closed:\n            logger.warning(\"I/O operatio",
         "type": "code",
-        "location": "/generate_datamodel_code.sh:1-3"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:153-180"
     },
     "185": {
-        "file_id": 11,
-        "content": "Generating Python code from a YAML datamodel file, with class name \"MyModel\".",
+        "file_id": 22,
+        "content": "This function reads at most \"size\" characters from the child application. If it reaches the end of file, an EOF exception is raised. The function does not wait for more characters based on the specified timeout. This uses the Wtty.read() method as a wrapper.",
         "type": "comment"
     },
     "186": {
-        "file_id": 12,
-        "content": "/hid_utils.py",
-        "type": "filepath"
+        "file_id": 22,
+        "content": "n on closed file in read_nonblocking().\")\n            raise ValueError(\"I/O operation on closed file in read_nonblocking().\")\n        try:\n            s = host.win32file.ReadFile(self.pipe, size)[1]\n            if s:\n                logger.debug(f\"Readed: {s}\")\n            else:\n                logger.spam(f\"Readed: {s}\")\n            if EOF_CHAR in s:\n                self.flag_eof = True\n                logger.info(\"EOF: EOF character has been arrived\")\n                s = s.split(EOF_CHAR)[0]\n            # return s\n            return (\n                s.decode(NT_CONTEXT[\"NT_ENCODING\"])\n                if NT_CONTEXT[\"NT_READ_NONBLOCKING_DECODE\"]\n                else s\n            )\n            # return s.decode()\n        except host.pywintypes.error as e:\n            if e.args[0] == host.winerror.ERROR_BROKEN_PIPE:  # 109\n                self.flag_eof = True\n                logger.info(\"EOF('broken pipe, bye bye')\")\n                raise EOF(\"broken pipe, bye bye\")\n            elif e.args[0] == host.winerror",
+        "type": "code",
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:180-208"
     },
     "187": {
-        "file_id": 12,
-        "content": "This code defines classes and functions for input operations, specifically handling mouse scroll events and translating key literals to XK_KEYSYMs using abstract methods. It checks the starting key and sorts the XK_KEYSYMs based on distance before storing the translation in a dictionary and writing it to a file.",
-        "type": "summary"
+        "file_id": 22,
+        "content": "Reading non-blocking data from a pipe, handling EOF and error cases.",
+        "type": "comment"
     },
     "188": {
-        "file_id": 12,
-        "content": "# TODO: display grabbing abstract class\n# TODO: for relative control apis, use them as fallback for absolute apis (somehow calibrated, with feedback) when possible\n# TODO: check out ROS package index: https://index.ros.org/packages/\nfrom enum import Enum, auto, Flag\nfrom beartype.vale import Is\nfrom typing_extensions import Annotated, TypeAlias\nfrom conscious_struct import HIDActionTypes, HIDActionBase\nfrom log_utils import logger_print\nfrom typing import Dict, Tuple, Union\nfrom abc import ABC, abstractmethod\n# TODO: use abstract implementation pattern (template)\nclass HIDInterface(ABC):\n    def key_press(self, key_literal: HIDActionTypes.keys):\n        \"\"\"\n        Press one of key literals.\n        \"\"\"\n        return self._key_press(key_literal=key_literal)\n    @abstractmethod\n    def _key_press(self, key_literal: HIDActionTypes.keys):\n        ...\n    def key_release(self, key_literal: HIDActionTypes.keys):\n        \"\"\"\n        Release one of key literals.\n        \"\"\"\n        return self._key_release(key_lite",
+        "file_id": 22,
+        "content": ".ERROR_NO_DATA:\n                \"\"\"232 (0xE8): The pipe is being closed.\"\"\"\n                self.flag_eof = True\n                logger.info(\"EOF('The pipe is being closed.')\")\n                raise EOF(\"The pipe is being closed.\")\n            else:\n                raise\n    host.SpawnSocket.connect_to_child = spawnsocket_connect_to_child\n    host.SpawnSocket.read_nonblocking = spawnsocket_read_nonblocking\n    host.SpawnPipe.read_nonblocking = spawnpipe_read_nonblocking\n    def spawnbase_sendline(self, s=b\"\"):\n        s = enforce_bytes(s)\n        n = self.send(s + b\"\\r\\n\")\n        return n\n    host.SpawnBase.sendline = spawnbase_sendline\nelse:\n    import pexpect\n    # let's skip version check, for kail.\n    # expected_pexpect_version = \"4.6.0\"\n    # pexp_version = pexpect.__version__\n    # assert (\n    #     pexp_version == expected_pexpect_version\n    # ), \"pexpected version should be: {}\\ncurrently: {}\".format(\n    #     expected_pexpect_version, pexp_version\n    # )\n    READ_KNOWN_EXCEPTIONS.append(pexpect.",
         "type": "code",
-        "location": "/hid_utils.py:1-30"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:208-239"
     },
     "189": {
-        "file_id": 12,
-        "content": "Code is importing required modules and defining an abstract class called HIDInterface with methods for key press and release.",
+        "file_id": 22,
+        "content": "Raises EOF error when pipe is closed and defines functions for sending data.",
         "type": "comment"
     },
     "190": {
-        "file_id": 12,
-        "content": "ral=key_literal)\n    @abstractmethod\n    def _key_release(self, key_literal: HIDActionTypes.keys):\n        ...\n    def mouse_move(self, x: Union[int, float], y: Union[int, float]):\n        \"\"\"\n        Move mouse to absolute position (x, y).\n        \"\"\"\n        return self._mouse_move(x=x, y=y)\n    @abstractmethod\n    def _mouse_move(self, x: Union[int, float], y: Union[int, float]):\n        ...\n    def mouse_click(\n        self,\n        x: Union[int, float],\n        y: Union[int, float],\n        button_literal: HIDActionTypes.mouse_buttons,\n        pressed: bool,\n    ):\n        \"\"\"\n        Press or release one of mouse button literals at absolute position (x, y).\n        \"\"\"\n        return self._mouse_click(\n            x=x, y=y, button_literal=button_literal, pressed=pressed\n        )\n    @abstractmethod\n    def _mouse_click(\n        self,\n        x: Union[int, float],\n        y: Union[int, float],\n        button_literal: HIDActionTypes.mouse_buttons,\n        pressed: bool,\n    ):\n        ...\n    def mouse_scroll(\n    ",
+        "file_id": 22,
+        "content": "pty_spawn.TIMEOUT)\n    READ_KNOWN_EXCEPTIONS.append(pexpect.spawnbase.EOF)  # are you sure?\n    def spawn_sendline(self, s=b\"\"):\n        s = enforce_bytes(s)\n        return self.send(s + unicodebytes(os.linesep))\n    pexpect.spawn.sendline = spawn_sendline\n    def spawnbase_read_nonblocking(self, size=1, timeout=None):\n        \"\"\"This reads data from the file descriptor.\n        This is a simple implementation suitable for a regular file. Subclasses using ptys or pipes should override it.\n        The timeout parameter is ignored.\n        \"\"\"\n        try:\n            s = os.read(self.child_fd, size)\n        except OSError as err:\n            if err.args[0] == pexpect.spawnbase.errno.EIO:\n                # Linux-style EOF\n                self.flag_eof = True\n                raise pexpect.spawnbase.EOF(\n                    \"End Of File (EOF). Exception style platform.\"\n                )\n            raise\n        if s == b\"\":\n            # BSD-style EOF\n            self.flag_eof = True\n            raise pexpect.s",
         "type": "code",
-        "location": "/hid_utils.py:30-71"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:239-269"
     },
     "191": {
-        "file_id": 12,
-        "content": "This code defines abstract methods for mouse movement, click actions, and key releases in a HID (Human Interface Device) interface. The class must implement these methods to interact with the device. The methods take parameters like position (x, y), button literal, and whether to press or release.",
+        "file_id": 22,
+        "content": "This code modifies the `spawnbase_read_nonblocking` function to handle different types of EOF. It also adds a new function `spawn_sendline` that sends data with OS line separator and overrides `spawn_sendline` in `pexpect.spawn`. The code also includes an exception handling block for OSError.",
         "type": "comment"
     },
     "192": {
-        "file_id": 12,
-        "content": "    self,\n        x: Union[int, float],\n        y: Union[int, float],\n        dx: Union[int, float],\n        dy: Union[int, float],\n    ):\n        \"\"\"\n        Scroll mouse (dx, dy) at absolute position (x, y).\n        \"\"\"\n        return self._mouse_scroll(x=x, y=y, dx=dx, dy=dy)\n    @abstractmethod\n    def _mouse_scroll(\n        self,\n        x: Union[int, float],\n        y: Union[int, float],\n        dx: Union[int, float],\n        dy: Union[int, float],\n    ):\n        ...\ndef length_limit(l):\n    return Is[lambda b: len(b) == l]\n# import Xlib\n# python-xlib\nimport os\nsourcefile_dirname = os.path.dirname(os.path.abspath(__file__))\nkey_literal_to_xk_keysym_translation_table_path = os.path.join(\n    sourcefile_dirname, \"KL2XKS.json\"\n)\nfrom functools import lru_cache\nimport json\n@lru_cache\ndef getKL2XKS() -> Dict[str, str]:\n    with open(key_literal_to_xk_keysym_translation_table_path, \"r\") as f:\n        KL2XKS = json.loads(f.read())\n    return KL2XKS\nfrom beartype import beartype\n@beartype\ndef strip_key_literal(key_literal: ",
+        "file_id": 22,
+        "content": "pawnbase.EOF(\n                \"End Of File (EOF). Empty string style platform.\"\n            )\n        # s = self._decoder.decode(s, final=False)\n        self._log(s, \"read\")\n        return s\n    pexpect.spawnbase.SpawnBase.read_nonblocking = spawnbase_read_nonblocking\ndef get_repr(content):\n    if isinstance(content, str):\n        content = content.encode()\n    repr_content = content.hex()\n    len_content = len(repr_content) / 2\n    assert (\n        len_content % 1 == 0.0\n    ), f\"possible counting mechanism failure\\nnon-integral content length detected: {len_content}\"\n    len_content = int(len_content)\n    cut_len = 10\n    return f\"[{len_content}\\tbyte{'s' if len_content != 0 else ''}] {repr_content[:cut_len*2]}{'...' if len_content > cut_len else ''}\"\ntimezone_str = \"Asia/Shanghai\"\ntimezone = pytz.timezone(timezone_str)\ndef formatTimeAtShanghai(timestamp):\n    dt = datetime.datetime.fromtimestamp(timestamp, tz=timezone)\n    return dt.isoformat()\nclass NaiveActor:\n    write_method = lambda proc: proc.sendlin",
         "type": "code",
-        "location": "/hid_utils.py:71-121"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:269-303"
     },
     "193": {
-        "file_id": 12,
-        "content": "The code appears to be part of a larger module and seems to define functions for handling mouse scroll events. It first defines an abstract method for the `_mouse_scroll` function, which takes in x and y coordinates along with dx and dy (amount of scroll) as parameters. The `length_limit` function is defined as a helper function that checks if a byte-like object's length equals to specified length. Additionally, there are imports from Xlib and other modules, but the exact functionality of these is not clear without more context.",
+        "file_id": 22,
+        "content": "- EOF: End Of File, empty string style platform\n- read_nonblocking: function to read from a spawned process non-blockingly\n- get_repr: convert content to hex representation with byte count and truncation if needed\n- formatTimeAtShanghai: convert Unix timestamp to ISO format with Shanghai timezone\n- NaiveActor: class with write_method as proc.sendline lambda function",
         "type": "comment"
     },
     "194": {
-        "file_id": 12,
-        "content": "HIDActionTypes.keys) -> Tuple[bool, bool, str]:\n    # defer strip/lstrip.\n    # it is not a bug. do not report.\n    is_special, is_media = False, False\n    keychar = ...\n    if key_literal.startswith(prefix := \"Key.\"):\n        is_special = True\n        keychar = key_literal.replace(prefix, \"\")\n        if keychar.startswith(prefix := \"media_\"):\n            is_media = True\n            keychar = keychar.replace(prefix, \"\")\n    if len(key_literal) == 3:\n        if not (key_literal[0] == key_literal[2] != (keychar := key_literal[1])):\n            raise Exception(f\"Abnormal enclosed keychar: {repr(key_literal)}\")\n    if keychar == Ellipsis:\n        raise Exception(f\"Unable to strip key literal: {repr(key_literal)}\")\n    else:\n        return is_special, is_media, keychar\n@beartype\ndef key_literal_to_xk_keysym(key_literal: HIDActionTypes.keys) -> Union[None, str]:\n    # is_special, is_media, stripped_key_literal = strip_key_literal(key_literal)\n    KL2XKS = getKL2XKS()\n    xk_keysym = KL2XKS.get(key_literal, None)\n ",
+        "file_id": 22,
+        "content": "e\n    actorStatsClass = ActorStats\n    @staticmethod\n    def timeit(func):\n        def inner_func(self):\n            start_time = time.time()\n            # func(self)\n            try:\n                ret = func_timeout.func_timeout(self.max_loop_time, func, args=(self,))\n            except func_timeout.FunctionTimedOut:\n                print(\"Loop timeout %d exceeded.\" % self.max_loop_time)\n                return\n            finally:\n                end_time = time.time()\n                rw_time = end_time - start_time\n                print(\"rw time:\", rw_time, sep=\"\\t\")\n                if rw_time > self.max_rwtime:\n                    print(\n                        \"exit because of long rw time.\\nmax rw time:\", self.max_rwtime\n                    )\n                    return\n            return ret\n        return inner_func\n    def __init__(self, cmd, encoding=\"utf-8\"):\n        self.process = self.spawn(cmd)\n        self.encoding = encoding\n        if os.name == 'nt':\n            NT_CONTEXT['NT_ENCODING'] = enco",
         "type": "code",
-        "location": "/hid_utils.py:121-146"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:303-334"
     },
     "195": {
-        "file_id": 12,
-        "content": "Function \"strip_key_literal\" checks if the given key literal is a special or media key and returns its stripped name. If the key literal has an abnormal enclosed keychar, it raises an exception. If the keychar is Ellipsis, it raises an exception as well. Otherwise, it returns a tuple of whether it's a special or media key, the stripped key character if it is a special key with a \"media_\" prefix, and the original key literal without prefixes if not special.",
+        "file_id": 22,
+        "content": "This code defines a class with a method called \"timeit\" that measures the execution time of another function. It also initializes an instance variable \"process\" by spawning a new process using the provided command and encoding. If running on Windows (os.name == 'nt'), it sets NT_CONTEXT['NT_ENCODING'] to enco.",
         "type": "comment"
     },
     "196": {
-        "file_id": 12,
-        "content": "   if xk_keysym is None:\n        print(f\"skipping translating key literal {repr(key_literal)} to xk_keysym.\")\n    return xk_keysym\n    # Xlib.XK.string_to_keysym(stripped_key_literal)\n    # generate this translation table statically, then we will review.\ndef byte_with_length_limit(l):\n    return Annotated[bytes, length_limit(l)]\none_byte: TypeAlias = byte_with_length_limit(1)\ntwo_bytes: TypeAlias = byte_with_length_limit(2)\nfour_bytes: TypeAlias = byte_with_length_limit(4)\nsix_bytes: TypeAlias = byte_with_length_limit(6)\neight_bytes: TypeAlias = byte_with_length_limit(8)\nnon_neg_int: TypeAlias = Annotated[int, Is[lambda i: i >= 0]]\npos_int: TypeAlias = Annotated[int, Is[lambda i: i > 0]]\nmovement: TypeAlias = Annotated[\n    int, Is[lambda i: i >= -126 and i <= 126]\n]  # this is hardware limit. software might not be limited. (shall we adapt to software limit instead of hardware)\nclass ControlCode(Flag):\n    # @staticmethod\n    # def _generate_next_value_(name, start, count, last_values):\n    #     return 2",
+        "file_id": 22,
+        "content": "ding\n            win_expect_old = copy.copy(self.process.expect)\n            def win_expect_new(*args, **kwargs):\n                with nt_read_nonblocking_decode_context():\n                    return win_expect_old(*args, **kwargs)\n            self.process.expect = win_expect_new\n        self.timeout = SOCKET_TIMEOUT\n        self.max_loop_time = 3\n        self.max_init_time = 12\n        self.max_rwtime = 0.5\n        # self.timeout = 0.2 # equivalent to wexpect\n        # self.timeout = 0.001\n        # self.timeout = 1 # will cause havoc if set it too long\n        self.read_bytes = 0\n        self.write_bytes = 0\n        self.loop_count = 0\n        self.start_time = time.time()\n        self.read_head_bytes = 200\n        self.read_tail_bytes = 200\n        self.read_entropy_calc = ContentEntropyCalculator()\n        self.write_entropy_calc = ContentEntropyCalculator()\n        self._stats = ...\n        self.recent_loop_threshold = 300\n        \"\"\"\n        To limiting history data size for calculating recent statistic",
         "type": "code",
-        "location": "/hid_utils.py:146-174"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:334-358"
     },
     "197": {
-        "file_id": 12,
-        "content": "This code defines several type aliases for different byte lengths and some integer ranges. It also has a class called ControlCode which is defined as a Flag. The code seems to be related to handling key literals, XK keysyms, and potentially input validation based on these types.",
+        "file_id": 22,
+        "content": "The code sets various attributes for managing timeouts, byte counts, and entropy calculations for an actor process. It also includes a comment explaining the purpose of one attribute to limit history data size for calculating recent statistics.",
         "type": "comment"
     },
     "198": {
-        "file_id": 12,
-        "content": " ** (count)\n    NULL = 0\n    LEFT_CONTROL = auto()\n    LEFT_SHIFT = auto()\n    LEFT_ALT = auto()\n    LEFT_GUI = auto()\n    RIGHT_CONTROL = auto()\n    RIGHT_SHIFT = auto()\n    RIGHT_ALT = auto()\n    RIGHT_GUI = auto()\nclass MouseButton(Flag):\n    # class MouseButton(Enum):\n    # @staticmethod\n    # def _generate_next_value_(name, start, count, last_values):\n    #     return 2 ** (count)\n    NULL = 0\n    LEFT = auto()\n    RIGHT = auto()\n    MIDDLE = auto()\nclass MultimediaKey(Flag):\n    # class MultimediaKey(Enum):\n    # @staticmethod\n    # def _generate_next_value_(name, start, count, last_values):\n    #     return 2 ** (count)\n    Null = 0\n    # row 1\n    VolumeUp = auto()\n    VolumeDown = auto()\n    Mute = auto()\n    PlayPause = auto()\n    NextTrack = auto()\n    PreviousTrack = auto()\n    CDStop = auto()\n    Eject = auto()\n    # row 2\n    EMail = auto()\n    WWWSearch = auto()\n    WWWFavourites = auto()\n    WWWHome = auto()\n    WWWBack = auto()\n    WWWForward = auto()\n    WWWStop = auto()\n    Refresh = auto()\n    # row 3\n    Med",
+        "file_id": 22,
+        "content": "s.\n        \"\"\"\n    def spawn(self, cmd):\n        return pexpect.spawn(cmd)\n        # return pexpect.spawn(cmd, interact=True)  # will display\n    def write(self, content):\n        # if isinstance(content, bytes):\n        #     content = content.decode()\n        content = enforce_bytes(content)\n        print(\"write:\", get_repr(content), sep=\"\\t\")\n        self.write_bytes += len(content)\n        write_method = self.__class__.write_method(self.process)\n        write_method(content)\n        self.write_entropy_calc.count(content)\n        return content\n    def read(self):\n        # cannot read.\n        head_content = b\"\"\n        tail_content = deque([], maxlen=self.read_tail_bytes)\n        read_byte_len = 0\n        while True:\n            try:\n                kwargs = {}\n                if os.name == \"posix\":\n                    kwargs[\"timeout\"] = self.timeout\n                char = self.process.read_nonblocking(1, **kwargs)\n                # print('char:', char)\n                if isinstance(char, str):\n            ",
         "type": "code",
-        "location": "/hid_utils.py:174-229"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/naive_actor.py:358-391"
     },
     "199": {
-        "file_id": 12,
-        "content": "This code defines classes for different types of buttons (MouseButton, MultimediaKey) using the Flag and Enum classes. It represents each button as a power of 2, with NULL or Null being 0. The code also includes definitions for various multimedia keys organized into three rows.",
+        "file_id": 22,
+        "content": "This code defines a class with three methods: spawn, write, and read. The spawn method starts a new process using pexpect's spawn function with the given command. The write method writes content to the process' stdin, keeping track of the total bytes written, updating entropy calculation, and displaying the content being written. The read method attempts to continuously read nonblocking bytes from the process' stdout until a timeout or EOF is reached.",
         "type": "comment"
     }
 }

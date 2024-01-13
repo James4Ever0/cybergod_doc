@@ -1,536 +1,537 @@
 {
     "800": {
-        "file_id": 105,
-        "content": "from __future__ import unicode_literals\nimport ptyprocess\n# this module is exclusive for windows. to port to linux there should be extra steps.\n# i mean, android.\n# hey! do not run this shit outside of sandbox, unless you want to get me killed.\nimport threading\nimport pyte\n# can you format things into colorful output?\n# or just raw terminal string which can be transformed into html.\nimport traceback\nimport tornado.ioloop\nimport tornado.web\nimport requests\nimport base64\nimport signal\n# no watchdog for this?\nLF_CRLF = b\"\\n\"\nmaxbark = 2\nmaxbark_granual = 5\nmaxterm = 3\nmaxterm_granual = 5\nbark = 0\nterm = 0\nfrom port_util import port\nprint(\"server running on port %d\" % port)\n# you can turn off the barking dog sometimes.\n# we can use a big dog every since then.\ndef kill(pipe):\n    try:\n        pipe.terminate()\n        # here.\n        pipe.kill(signal.SIGKILL)\n    except:\n        print(\"_____process kill error_____\")\n        traceback.print_exc()\n# signal.signal(signal.SIGINT, signal_handler)\ndisplay = \"\"\nlag = 0.05\nexecutable = ",
+        "file_id": 99,
+        "content": "# deprecated. use serial for both controllers\nfrom __future__ import print_function\nimport hid\nimport time\n# enumerate USB devices\n# manufacturer_string -> \"winkeyless.kr\"\n# shall be what we expect.\nfor d in hid.enumerate():\n    keys = list(d.keys())\n    keys.sort()\n    for key in keys:\n        print(\"%s : %s\" % (key, d[key]))\n    print()\ndevices = {\n    0: {\n        \"vendor_id\": 8352,\n        \"product_id\": 16941,\n    },  # 0, could be mouse.\n    1: {\n        \"vendor_id\": 8352,\n        \"product_id\": 16941,\n    },  # 1\n}\n# the same!\n# try opening a device, then perform write and read\n# may you write keyboard and mouse commands to different devices, by using `h.open(d)` (may still be the same as below)\nh = hid.device()\ntry:\n    print(\"Opening the device\")\n    h.open(devices[0][\"vendor_id\"], devices[0][\"product_id\"])\n    # h.open(0x534C, 0x0001)  # TREZOR VendorID/ProductID\n    # print(dir(h))\n    # 'get_feature_report', 'get_indexed_string', 'get_input_report', 'get_manufacturer_string', 'get_product_string', 'get_seri",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/ptyproc.py:1-46"
+        "location": "/hardware_capture_hid_power_control/test_hidraw.py:1-41"
     },
     "801": {
-        "file_id": 105,
-        "content": "This code is a Python module for creating a chat server that is containerized using Docker or similar technology. The code uses the ptyprocess library and Tornado web framework, and includes features like a barking dog sound effect to signal when new messages are received. It also has a termination function, display variable for output, and adjustable settings for the maximum number of barks and terms.",
+        "file_id": 99,
+        "content": "Enumerating USB devices with specified manufacturer string, comparing expected devices, and attempting to open a device for further operations.",
         "type": "comment"
     },
     "802": {
-        "file_id": 105,
-        "content": "\"bash\"  # this is wrong. could get your computer in danger.\n# unless you want to take the risk. everything worth the try?\nfrom terminal_config import cols, rows\nimport time\nwatch_rate = 0.5\nscreen = pyte.Screen(cols, rows)\nstream = pyte.ByteStream(screen)\nprocess = ptyprocess.PtyProcess.spawn([executable], dimensions=(rows, cols))\ndef read_to_term():\n    global display, stream, screen\n    # read a global list?\n    # you can start another server. not quite like terminal. like execution shell.\n    noerr = True\n    while noerr:\n        try:\n            reading = process.read()\n            # will block.\n            # will raise error if not good.\n            stream.feed(reading)\n            display = \"\\n\".join(screen.display)\n        except:\n            noerr = False\n            break\nt0 = threading.Thread(target=read_to_term, args=())\nt0.setDaemon(True)\nt0.start()\ndef barkdog():\n    global bark, maxbark_granual\n    while True:\n        bark = 0\n        time.sleep(maxbark_granual)\ntb = threading.Thread(target=barkdog, ar",
+        "file_id": 99,
+        "content": "al_number_string',\n    # print(h.open_path)\n    print(\"Manufacturer: %s\" % h.get_manufacturer_string())\n    print(\"Product: %s\" % h.get_product_string())\n    print(\"Serial No: %s\" % h.get_serial_number_string())\n    # enable non-blocking mode\n    h.set_nonblocking(1)\n    # write some data to the device\n    # what data is this anyway?\n    print(\"Write the data\")\n    h.write([0, 63, 35, 35] + [0] * 61)\n    # wait\n    time.sleep(0.05)\n    # read back the answer\n    print(\"Read the data\")\n    while True:\n        d = h.read(64)\n        if d:\n            print(d)\n        else:\n            break\n    print(\"Closing the device\")\n    h.close()\nexcept IOError as ex:\n    print(ex)\n    print(\"hid error:\")\n    print(h.error())\n    print(\"\")\n    print(\"You probably don't have the hard-coded device.\")\n    print(\"Update the h.open() line in this script with the one\")\n    print(\"from the enumeration list output above and try again.\")\nprint(\"Done\")",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/ptyproc.py:46-86"
+        "location": "/hardware_capture_hid_power_control/test_hidraw.py:41-80"
     },
     "803": {
-        "file_id": 105,
-        "content": "This code spawns a new process using ptyprocess and reads from it to display in a terminal-like interface. It also has two threads, one for reading input from the child process and another for periodically updating the displayed output.",
+        "file_id": 99,
+        "content": "This code tests the interaction with a USB device using HID API. It prints manufacturer, product, and serial number. Writes data to the device, waits for response, reads back the data, and closes the device connection. Code may require adjustment for specific devices as it uses hard-coded device path.",
         "type": "comment"
     },
     "804": {
-        "file_id": 105,
-        "content": "gs=())\ntb.setDaemon(True)\ntb.start()\ndef termdog():\n    global term, maxterm_granual\n    while True:\n        term = 0\n        time.sleep(maxterm_granual)\ntx = threading.Thread(target=termdog, args=())\ntx.setDaemon(True)\ntx.start()\ndef watchdog():\n    global process, watch_rate, port, bark, maxbark\n    alive = True\n    while alive:\n        alive = process.isalive()\n        #        print(\"alive?\",alive)\n        time.sleep(watch_rate)\n    #    print(\"bark\")\n    bark += 1\n    if bark > maxbark:\n        print(\"max bark exceed.\", bark)\n        # what the heck?\n        pass\n    else:\n        #        print(\"did get to here\")\n        # if server is down this will cause dead shit.\n        requests.get(\n            \"http://localhost:{}/restart\".format(port),\n            stream=False,\n            verify=False,\n            timeout=1,\n        )\n# does that work?\n# if not, call the handler. use requests.\nt1 = threading.Thread(target=watchdog, args=())\nt1.setDaemon(True)\nt1.start()\nclass RHandler(tornado.web.RequestHandler):\n    def get(",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/ptyproc.py:86-135"
+        "file_id": 100,
+        "content": "/hardware_capture_hid_power_control/test_video_capture.py",
+        "type": "filepath"
     },
     "805": {
-        "file_id": 105,
-        "content": "This code is creating and managing multiple threads for a chatbot agent. The `termdog` function runs in the background to monitor the main process's termination, while the `watchdog` function checks if the process is still alive and restarts it if necessary using requests. A Tornado web RequestHandler named `RHandler` is also defined for handling GET requests. Threads are set as daemons to ensure they automatically exit when the main process ends.",
-        "type": "comment"
+        "file_id": 100,
+        "content": "The code snippet is attempting to configure a video capture device using OpenCV library, set up video properties, read frames from the camera, save them as images and display using ffplay. However, it's facing issues with not being able to faithfully configure the device.",
+        "type": "summary"
     },
     "806": {
-        "file_id": 105,
-        "content": "self):\n        global process, screen, stream, t0, t1, executable, display, term, maxterm\n        # print(type(process))\n        # print(dir(process))\n        term += 1\n        if term > maxterm:\n            self.write(\"exceeding max termination quota!\\n\")\n        else:\n            kill(process)\n            # did it stuck here?\n            # nope.\n            for x in [process, screen, stream, t0, t1]:\n                # print(\"deleting\")\n                del x\n            display = \"\"\n            screen = pyte.Screen(cols, rows)\n            stream = pyte.ByteStream(screen)\n            process = ptyprocess.PtyProcess.spawn([executable], dimensions=(rows, cols))\n            t0 = threading.Thread(target=read_to_term, args=())\n            t0.setDaemon(True)\n            t0.start()\n            t1 = threading.Thread(target=watchdog, args=())\n            t1.setDaemon(True)\n            t1.start()\n            self.write(\"terminal restart!\\n\")\nclass IHandler(tornado.web.RequestHandler):\n    def get(self):\n        global dis",
+        "file_id": 100,
+        "content": "# lsusb -v\n# Actions Microelectronics Co. Display capture-UVC05\n# ls /dev/video*\n# ls /sys/class/video4linux\n# v4l2-ctl --list-devices\n# get resolution/modes\n# v4l2-ctl --list-formats-ext\n# video2&3 are capture card.\nimport cv2\n# can't you reset?\ncamera_id = 2  # use the smallest camera id of particular device (the only working one)\n# without setting!\n# CV_CAP_PROP_FRAME_WIDTH: '640.0'\n# CV_CAP_PROP_FRAME_HEIGHT : '480.0'\n# CV_CAP_PROP_FRAME_FPS : '30.0'\n# CV_CAP_PROP_FRAME_FOURCC : '1196444237.0'\n# CV_CAP_PROP_FRAME_FORMAT : '16.0'\n# camera_id = 0\n# cam 1,3 not working.\ncap = cv2.VideoCapture(camera_id)\n# oops. not working for cam2, cause we are using it in obs? (yes! and cv2 will reset this thing to 640x480 just after opening the camera.)\n# resolution not right...\n# cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1080)\n# cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1920)\n# cv2 is not faithfully changing settings of the capture device.\n# cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)\n# cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1024)\n# cannot strent",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/ptyproc.py:135-164"
+        "location": "/hardware_capture_hid_power_control/test_video_capture.py:1-38"
     },
     "807": {
-        "file_id": 105,
-        "content": "This code is managing a terminal session within a web application. It resets the terminal after reaching a specified maximum termination quota, spawning a new PtyProcess each time. It uses threading to handle reading input and monitoring the process.",
+        "file_id": 100,
+        "content": "Code snippet is attempting to configure a video capture device using OpenCV (cv2) library. It's trying different resolution settings but encountering issues with the device not being faithfully configured.",
         "type": "comment"
     },
     "808": {
-        "file_id": 105,
-        "content": "play, process, lag\n        # print(\"type request received.\")\n        argument = self.get_argument(\"type\", None)\n        argumentx = self.get_argument(\"b64type\", None)\n        # that is for argument!\n        autoreturn = self.get_argument(\"autoreturn\", None) == \"true\"\n        # print(\"actual argument\",[argument],type(argument))\n        # string.\n        if not process.isalive():\n            self.write(\"process is dead.\\n\")\n        elif argument is not None:\n            # unicode.\n            # may encounter error.\n            if autoreturn:\n                process.write(argument.encode(\"utf8\") + b\"\\r\")\n            else:\n                process.write(argument.encode(\"utf8\"))\n            time.sleep(lag)\n            self.write(display)\n        elif argumentx is not None:\n            # check if correctly formed.\n            # check if not dead.\n            try:\n                arx = base64.b64decode(argumentx)\n                # the result is not right.\n                # cannot decode here.\n                if autoret",
+        "file_id": 100,
+        "content": "ch!\n# CV_CAP_PROP_FRAME_WIDTH: '1280.0'\n# CV_CAP_PROP_FRAME_HEIGHT : '1024.0'\n# showing values of the properties\nprint(\"CV_CAP_PROP_FRAME_WIDTH: '{}'\".format(cap.get(cv2.CAP_PROP_FRAME_WIDTH)))\nprint(\"CV_CAP_PROP_FRAME_HEIGHT : '{}'\".format(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))\nprint(\"CV_CAP_PROP_FRAME_FPS : '{}'\".format(cap.get(cv2.CAP_PROP_FPS)))\nprint(\"CV_CAP_PROP_FRAME_FOURCC : '{}'\".format(cap.get(cv2.CAP_PROP_FOURCC)))\nprint(\"CV_CAP_PROP_FRAME_FORMAT : '{}'\".format(cap.get(cv2.CAP_PROP_FORMAT)))\n# cv2.CAP_PROP_SETTINGS\nret, frame = cap.read()\n# Display the resulting frame\ncv2.imwrite(output_path := \"output.png\", frame)  # from \"no_signal\" to something!\nimport os\nos.system(f\"ffplay {output_path}\")\n# cv2.imshow('frame', frame)\n# cv2.waitKey(0)",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/ptyproc.py:164-190"
+        "location": "/hardware_capture_hid_power_control/test_video_capture.py:38-58"
     },
     "809": {
-        "file_id": 105,
-        "content": "Receives a type request, gets arguments, checks if the process is alive, writes to the process, and updates display.",
+        "file_id": 100,
+        "content": "Code snippet is setting up video capture properties, reading a frame from the camera and then saving it as an image. It also shows the values of various properties like width, height, FPS (frames per second), fourcc (a code that defines the pixel format) and format of the video stream. Finally, it displays the captured frame using ffplay (a media player).",
         "type": "comment"
     },
     "810": {
-        "file_id": 105,
-        "content": "urn:\n                    process.write(arx + b\"\\r\")\n                else:\n                    process.write(arx)\n                    # this is not unicode string.\n                time.sleep(lag)\n                self.write(display)\n            except:\n                self.write(\"incorrect format\\n\")\n                # pass\n                # D:\\Programs\\Python\\Python36\\lib\\site-packages\\winpty\\winpty_wrapper.py\n        else:\n            self.write(\"empty input\\n\")\n            # pass\nclass MainHandler(tornado.web.RequestHandler):\n    def get(self):\n        global display\n        self.write(display)\n    def make_app():\n        return tornado.web.Application(\n            [(r\"/display\", MainHandler), (r\"/restart\", RHandler), (r\"/input\", IHandler)]\n        )\n# get a window watcher. if want to lock the winsize better use that.\n# why the fuck that the code needs to be compiled? could we just examine the code and prepare for tested binaries?\napp = MainHandler.make_app()\napp.listen(port)\n# here's the shit.\ntornado.ioloop.IO",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/ptyproc.py:190-222"
+        "file_id": 101,
+        "content": "/hid_utils.py",
+        "type": "filepath"
     },
     "811": {
-        "file_id": 105,
-        "content": "The code defines a `MainHandler` class and a function `make_app()`. The `MainHandler` class has two methods: `get()` and `make_app()`. In the `get()` method, it writes the current display to the user. If an error occurs or the input is empty, it will write \"incorrect format\" or \"empty input\". The `make_app()` function returns a tornado web application with routes for \"/display\", \"/restart\", and \"/input\". The code also mentions getting a window watcher and using a compiled version of the code.",
-        "type": "comment"
+        "file_id": 101,
+        "content": "This code defines classes and functions for input operations, specifically handling mouse scroll events and translating key literals to XK_KEYSYMs using abstract methods. It checks the starting key and sorts the XK_KEYSYMs based on distance before storing the translation in a dictionary and writing it to a file.",
+        "type": "summary"
     },
     "812": {
-        "file_id": 105,
-        "content": "Loop.current().start()\n# register handler.\nexit()",
+        "file_id": 101,
+        "content": "# TODO: display grabbing abstract class\n# TODO: for relative control apis, use them as fallback for absolute apis (somehow calibrated, with feedback) when possible\n# TODO: check out ROS package index: https://index.ros.org/packages/\nfrom enum import Enum, auto, Flag\nfrom beartype.vale import Is\nfrom typing_extensions import Annotated, TypeAlias\nfrom conscious_struct import HIDActionTypes, HIDActionBase\nfrom log_utils import logger_print\nfrom typing import Dict, Tuple, Union\nfrom abc import ABC, abstractmethod\n# TODO: use abstract implementation pattern (template)\nclass HIDInterface(ABC):\n    def key_press(self, key_literal: HIDActionTypes.keys):\n        \"\"\"\n        Press one of key literals.\n        \"\"\"\n        return self._key_press(key_literal=key_literal)\n    @abstractmethod\n    def _key_press(self, key_literal: HIDActionTypes.keys):\n        ...\n    def key_release(self, key_literal: HIDActionTypes.keys):\n        \"\"\"\n        Release one of key literals.\n        \"\"\"\n        return self._key_release(key_lite",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/ptyproc.py:222-224"
+        "location": "/hid_utils.py:1-30"
     },
     "813": {
-        "file_id": 105,
-        "content": "The code starts the Loop, registers a handler, and then exits.",
+        "file_id": 101,
+        "content": "Code is importing required modules and defining an abstract class called HIDInterface with methods for key press and release.",
         "type": "comment"
     },
     "814": {
-        "file_id": 106,
-        "content": "/containerized_chatgpt_agent/run_autoexec.sh",
-        "type": "filepath"
+        "file_id": 101,
+        "content": "ral=key_literal)\n    @abstractmethod\n    def _key_release(self, key_literal: HIDActionTypes.keys):\n        ...\n    def mouse_move(self, x: Union[int, float], y: Union[int, float]):\n        \"\"\"\n        Move mouse to absolute position (x, y).\n        \"\"\"\n        return self._mouse_move(x=x, y=y)\n    @abstractmethod\n    def _mouse_move(self, x: Union[int, float], y: Union[int, float]):\n        ...\n    def mouse_click(\n        self,\n        x: Union[int, float],\n        y: Union[int, float],\n        button_literal: HIDActionTypes.mouse_buttons,\n        pressed: bool,\n    ):\n        \"\"\"\n        Press or release one of mouse button literals at absolute position (x, y).\n        \"\"\"\n        return self._mouse_click(\n            x=x, y=y, button_literal=button_literal, pressed=pressed\n        )\n    @abstractmethod\n    def _mouse_click(\n        self,\n        x: Union[int, float],\n        y: Union[int, float],\n        button_literal: HIDActionTypes.mouse_buttons,\n        pressed: bool,\n    ):\n        ...\n    def mouse_scroll(\n    ",
+        "type": "code",
+        "location": "/hid_utils.py:30-71"
     },
     "815": {
-        "file_id": 106,
-        "content": "Building and running a containerized Python agent with Docker. Stopping any existing container, cleaning up unused images, then running the main container (autoexec_container) with the environment file and two background processes (ptyproc.py and container_autoexec_example.py). Uncommented code shows an additional port mapping option.",
-        "type": "summary"
+        "file_id": 101,
+        "content": "This code defines abstract methods for mouse movement, click actions, and key releases in a HID (Human Interface Device) interface. The class must implement these methods to interact with the device. The methods take parameters like position (x, y), button literal, and whether to press or release.",
+        "type": "comment"
     },
     "816": {
-        "file_id": 106,
-        "content": "docker build -t autoexec -f Dockerfile_autoexec .\ndocker kill autoexec_container\ndocker image prune -f\ndocker run --network host --name autoexec_container --env-file=.env_autoexec -it --rm autoexec bash -c \"python3 ptyproc.py & python3 container_autoexec_example.py\"\n# docker run -p 11434:11434 --env-file=.env_autoexec -it --rm autoexec bash -c \"python3 ptyproc.py & python3 container_autoexec_example.py\"",
+        "file_id": 101,
+        "content": "    self,\n        x: Union[int, float],\n        y: Union[int, float],\n        dx: Union[int, float],\n        dy: Union[int, float],\n    ):\n        \"\"\"\n        Scroll mouse (dx, dy) at absolute position (x, y).\n        \"\"\"\n        return self._mouse_scroll(x=x, y=y, dx=dx, dy=dy)\n    @abstractmethod\n    def _mouse_scroll(\n        self,\n        x: Union[int, float],\n        y: Union[int, float],\n        dx: Union[int, float],\n        dy: Union[int, float],\n    ):\n        ...\ndef length_limit(l):\n    return Is[lambda b: len(b) == l]\n# import Xlib\n# python-xlib\nimport os\nsourcefile_dirname = os.path.dirname(os.path.abspath(__file__))\nkey_literal_to_xk_keysym_translation_table_path = os.path.join(\n    sourcefile_dirname, \"KL2XKS.json\"\n)\nfrom functools import lru_cache\nimport json\n@lru_cache\ndef getKL2XKS() -> Dict[str, str]:\n    with open(key_literal_to_xk_keysym_translation_table_path, \"r\") as f:\n        KL2XKS = json.loads(f.read())\n    return KL2XKS\nfrom beartype import beartype\n@beartype\ndef strip_key_literal(key_literal: ",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/run_autoexec.sh:1-5"
+        "location": "/hid_utils.py:71-121"
     },
     "817": {
-        "file_id": 106,
-        "content": "Building and running a containerized Python agent with Docker. Stopping any existing container, cleaning up unused images, then running the main container (autoexec_container) with the environment file and two background processes (ptyproc.py and container_autoexec_example.py). Uncommented code shows an additional port mapping option.",
+        "file_id": 101,
+        "content": "The code appears to be part of a larger module and seems to define functions for handling mouse scroll events. It first defines an abstract method for the `_mouse_scroll` function, which takes in x and y coordinates along with dx and dy (amount of scroll) as parameters. The `length_limit` function is defined as a helper function that checks if a byte-like object's length equals to specified length. Additionally, there are imports from Xlib and other modules, but the exact functionality of these is not clear without more context.",
         "type": "comment"
     },
     "818": {
-        "file_id": 107,
-        "content": "/containerized_chatgpt_agent/run_autogpt_in_container.sh",
-        "type": "filepath"
+        "file_id": 101,
+        "content": "HIDActionTypes.keys) -> Tuple[bool, bool, str]:\n    # defer strip/lstrip.\n    # it is not a bug. do not report.\n    is_special, is_media = False, False\n    keychar = ...\n    if key_literal.startswith(prefix := \"Key.\"):\n        is_special = True\n        keychar = key_literal.replace(prefix, \"\")\n        if keychar.startswith(prefix := \"media_\"):\n            is_media = True\n            keychar = keychar.replace(prefix, \"\")\n    if len(key_literal) == 3:\n        if not (key_literal[0] == key_literal[2] != (keychar := key_literal[1])):\n            raise Exception(f\"Abnormal enclosed keychar: {repr(key_literal)}\")\n    if keychar == Ellipsis:\n        raise Exception(f\"Unable to strip key literal: {repr(key_literal)}\")\n    else:\n        return is_special, is_media, keychar\n@beartype\ndef key_literal_to_xk_keysym(key_literal: HIDActionTypes.keys) -> Union[None, str]:\n    # is_special, is_media, stripped_key_literal = strip_key_literal(key_literal)\n    KL2XKS = getKL2XKS()\n    xk_keysym = KL2XKS.get(key_literal, None)\n ",
+        "type": "code",
+        "location": "/hid_utils.py:121-146"
     },
     "819": {
-        "file_id": 107,
-        "content": "Starts a continuous AutoGPT container with GPT3-only, using Baidu Cloud mirror and environment variables from .env_autogpt file.",
-        "type": "summary"
+        "file_id": 101,
+        "content": "Function \"strip_key_literal\" checks if the given key literal is a special or media key and returns its stripped name. If the key literal has an abnormal enclosed keychar, it raises an exception. If the keychar is Ellipsis, it raises an exception as well. Otherwise, it returns a tuple of whether it's a special or media key, the stripped key character if it is a special key with a \"media_\" prefix, and the original key literal without prefixes if not special.",
+        "type": "comment"
     },
     "820": {
-        "file_id": 107,
-        "content": "# let's try.\ndocker run -it --env-file=.env_autogpt --rm mirror.baidubce.com/significantgravitas/auto-gpt --gpt3only --continuous",
+        "file_id": 101,
+        "content": "   if xk_keysym is None:\n        print(f\"skipping translating key literal {repr(key_literal)} to xk_keysym.\")\n    return xk_keysym\n    # Xlib.XK.string_to_keysym(stripped_key_literal)\n    # generate this translation table statically, then we will review.\ndef byte_with_length_limit(l):\n    return Annotated[bytes, length_limit(l)]\none_byte: TypeAlias = byte_with_length_limit(1)\ntwo_bytes: TypeAlias = byte_with_length_limit(2)\nfour_bytes: TypeAlias = byte_with_length_limit(4)\nsix_bytes: TypeAlias = byte_with_length_limit(6)\neight_bytes: TypeAlias = byte_with_length_limit(8)\nnon_neg_int: TypeAlias = Annotated[int, Is[lambda i: i >= 0]]\npos_int: TypeAlias = Annotated[int, Is[lambda i: i > 0]]\nmovement: TypeAlias = Annotated[\n    int, Is[lambda i: i >= -126 and i <= 126]\n]  # this is hardware limit. software might not be limited. (shall we adapt to software limit instead of hardware)\nclass ControlCode(Flag):\n    # @staticmethod\n    # def _generate_next_value_(name, start, count, last_values):\n    #     return 2",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/run_autogpt_in_container.sh:1-2"
+        "location": "/hid_utils.py:146-174"
     },
     "821": {
-        "file_id": 107,
-        "content": "Starts a continuous AutoGPT container with GPT3-only, using Baidu Cloud mirror and environment variables from .env_autogpt file.",
+        "file_id": 101,
+        "content": "This code defines several type aliases for different byte lengths and some integer ranges. It also has a class called ControlCode which is defined as a Flag. The code seems to be related to handling key literals, XK keysyms, and potentially input validation based on these types.",
         "type": "comment"
     },
     "822": {
-        "file_id": 108,
-        "content": "/containerized_chatgpt_agent/run_llama2.sh",
-        "type": "filepath"
+        "file_id": 101,
+        "content": " ** (count)\n    NULL = 0\n    LEFT_CONTROL = auto()\n    LEFT_SHIFT = auto()\n    LEFT_ALT = auto()\n    LEFT_GUI = auto()\n    RIGHT_CONTROL = auto()\n    RIGHT_SHIFT = auto()\n    RIGHT_ALT = auto()\n    RIGHT_GUI = auto()\nclass MouseButton(Flag):\n    # class MouseButton(Enum):\n    # @staticmethod\n    # def _generate_next_value_(name, start, count, last_values):\n    #     return 2 ** (count)\n    NULL = 0\n    LEFT = auto()\n    RIGHT = auto()\n    MIDDLE = auto()\nclass MultimediaKey(Flag):\n    # class MultimediaKey(Enum):\n    # @staticmethod\n    # def _generate_next_value_(name, start, count, last_values):\n    #     return 2 ** (count)\n    Null = 0\n    # row 1\n    VolumeUp = auto()\n    VolumeDown = auto()\n    Mute = auto()\n    PlayPause = auto()\n    NextTrack = auto()\n    PreviousTrack = auto()\n    CDStop = auto()\n    Eject = auto()\n    # row 2\n    EMail = auto()\n    WWWSearch = auto()\n    WWWFavourites = auto()\n    WWWHome = auto()\n    WWWBack = auto()\n    WWWForward = auto()\n    WWWStop = auto()\n    Refresh = auto()\n    # row 3\n    Med",
+        "type": "code",
+        "location": "/hid_utils.py:174-229"
     },
     "823": {
-        "file_id": 108,
-        "content": "Executing Llama 2 in Docker container 'ollama'.",
-        "type": "summary"
+        "file_id": 101,
+        "content": "This code defines classes for different types of buttons (MouseButton, MultimediaKey) using the Flag and Enum classes. It represents each button as a power of 2, with NULL or Null being 0. The code also includes definitions for various multimedia keys organized into three rows.",
+        "type": "comment"
     },
     "824": {
-        "file_id": 108,
-        "content": "docker exec -it ollama ollama run llama2",
+        "file_id": 101,
+        "content": "ia = auto()\n    Explorer = auto()\n    Calculator = auto()\n    ScreenSave = auto()\n    MyComputer = auto()\n    Minimize = auto()\n    Record = auto()\n    Rewind = auto()\nassert len(MultimediaKey.__members__) == 3 * 8 + 1  # include \"Null\"\nclass ACPIKey(Flag):\n    Null = 0  # for clearing all \"ACPI\" keys.\n    Power = auto()\n    Sleep = auto()\n    Wakeup = auto()\nif __name__ == \"__main__\":\n    # generate that table.\n    import Levenshtein as L\n    import keysymdef\n    unicode_str_to_xk_keysym = {}\n    xk_keysyms = []\n    xk_keysyms_lut = {}\n    for xk_keysym, _, unicode_int in keysymdef.keysymdef:\n        unicode_str = None\n        as_unicode_char = False\n        if unicode_int:\n            try:\n                unicode_str = chr(unicode_int)\n                unicode_str_to_xk_keysym[unicode_str] = xk_keysym\n                as_unicode_char = True\n            except:\n                pass\n        xk_keysym_lower = xk_keysym.lower()\n        xk_keysyms_lut[xk_keysym_lower] = xk_keysym\n        # if not as_unicode_char:\n        xk",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/run_llama2.sh:1-1"
+        "location": "/hid_utils.py:229-273"
     },
     "825": {
-        "file_id": 108,
-        "content": "Executing Llama 2 in Docker container 'ollama'.",
+        "file_id": 101,
+        "content": "The code is defining classes and variables for handling various input operations. It creates classes like MultimediaKey, ACPIKey, Explorer, Calculator, etc., which are used to handle specific types of key inputs. It also generates a table mapping Unicode strings to xk_keysyms. The purpose seems to be related to handling different keys and their associated functions in an input-processing system.",
         "type": "comment"
     },
     "826": {
-        "file_id": 109,
-        "content": "/containerized_chatgpt_agent/run_visual_autoexec.sh",
-        "type": "filepath"
+        "file_id": 101,
+        "content": "_keysyms.append(xk_keysym_lower)  # for space.\n    KL2XKS = {}\n    # import rich\n    # rich.print(xk_keysyms_lut)\n    # breakpoint()\n    keywords_translation_table = dict(\n        cmd=\"super\",\n        ctrl=\"control\",\n        _left=\"_l\",\n        _right=\"_r\",\n        esc=\"escape\",\n        enter=\"return\",\n        # we do not use xf86 (multimedia) keys. or shall we? how to handle the play/pause button then?\n    )\n    def translate(string: str, translation_table: Dict[str, str]):\n        for k, v in translation_table.items():\n            string = string.replace(k, v)\n        return string\n    import re\n    for key_literal in HIDActionBase.keys:  # nearly instant. no need for progressbar.\n        is_special, is_media, stripped_key_literal = strip_key_literal(key_literal)\n        if is_media:\n            continue\n        # media prefix is removed.\n        # if \"eth\" in stripped_key_literal.lower():\n        #     breakpoint()\n        if stripped_key_literal in unicode_str_to_xk_keysym.keys():\n            keysym = unicod",
+        "type": "code",
+        "location": "/hid_utils.py:273-305"
     },
     "827": {
-        "file_id": 109,
-        "content": "Building and starting a containerized chatbot named \"visual_autoexec\". Cleaning up unused images, stopping the old container, and running the new one. Optional alternative command to expose port and use environment file is commented out.",
-        "type": "summary"
+        "file_id": 101,
+        "content": "The code defines a translation table for converting keyboard literals to their respective meanings. It then defines a function called `translate` that replaces the keywords in a string with their corresponding translations using a dictionary. The code also imports the `re` module and loops over each key literal, stripping any special or media prefixes before checking if it exists in the unicode-to-xk_keysym mapping. If it does, it breaks execution.",
+        "type": "comment"
     },
     "828": {
-        "file_id": 109,
-        "content": "docker build -t visual_autoexec -f Dockerfile_autoexec_visual .\ndocker kill visual_autoexec_container\ndocker image prune -f\ndocker run --name visual_autoexec_container --network host -it --rm visual_autoexec bash main.sh\n# docker run -p 11434:11434 --env-file=.env_autoexec -it --rm autoexec bash -c \"python3 ptyproc.py & python3 container_autoexec_example.py\"",
+        "file_id": 101,
+        "content": "e_str_to_xk_keysym[stripped_key_literal]\n        else:\n            # import humps\n            stripped_key_literal = translate(\n                re.sub(\n                    r\"^(alt|control|cmd|shift)$\", r\"\\1_l\", stripped_key_literal.lower()\n                ),\n                keywords_translation_table,\n            )\n            # if \"return\" in stripped_key_literal:\n            #     breakpoint()\n            xk_keysyms.sort(\n                key=lambda keysym: L.distance(keysym.lower(), stripped_key_literal)\n            )\n            keysym = xk_keysyms.pop(0)\n        KL2XKS.update(val := {key_literal: xk_keysyms_lut[keysym]})\n        print(val, key_literal, stripped_key_literal)\n    with open(key_literal_to_xk_keysym_translation_table_path, \"w+\") as f:\n        f.write(json.dumps(KL2XKS, ensure_ascii=False, indent=4))\n    logger_print(\"write to:\", key_literal_to_xk_keysym_translation_table_path)",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/run_visual_autoexec.sh:1-5"
+        "location": "/hid_utils.py:305-324"
     },
     "829": {
-        "file_id": 109,
-        "content": "Building and starting a containerized chatbot named \"visual_autoexec\". Cleaning up unused images, stopping the old container, and running the new one. Optional alternative command to expose port and use environment file is commented out.",
+        "file_id": 101,
+        "content": "This code is translating key literals to XK_KEYSYMs, storing the translation in a dictionary and writing it to a file. It first checks if the key literal starts with \"alt\", \"control\", \"cmd\", or \"shift\" and adds an underscore before the letter if it does. Then it sorts the XK_KEYSYMs based on the distance between their lowercase strings and the stripped_key_literal, selects the closest one and updates a dictionary of key literals to their respective XK_KEYSYMs. Finally, it writes this dictionary to a file.",
         "type": "comment"
     },
     "830": {
-        "file_id": 110,
-        "content": "/containerized_chatgpt_agent/startup_ollama_service.sh",
+        "file_id": 102,
+        "content": "/hotkey_listener.py",
         "type": "filepath"
     },
     "831": {
-        "file_id": 110,
-        "content": "Running Ollama in a containerized environment.\n\nStorage location: \"containerized_chatgpt_agent/startup_ollama_service.sh\":3-5\nCode:\n```\ndocker exec -it ollama bash\n# usage: https://docs.docker.com/engine/reference/commandline/dockerexec/#docker-exec--it\n```\nComment for code:\nStarting an interactive shell within the Ollama container.\n\nStorage location: \"containerized_chatgpt_agent/startup_ollama_service.sh\":6-7\nCode:\n```\nsource /root/.ollama/bin/activate && \\\nollama-admin create --name <CHATGPT_AGENT_NAME> --email <CHATGPT_AGENT_EMAIL>\n# usage: https://ollama.ai/docs/administration-guide/#creating-a-new-agent\n```\nComment for code:\nCreating a new ChatGPT agent using the Ollama admin command.",
+        "file_id": 102,
+        "content": "The code imports the keyboard module from pynput library, defines functions for handling key presses and releases, includes a dictionary mapping keyboard keys to ASCII codes or special characters, but the hotkey listener is not currently running.",
         "type": "summary"
     },
     "832": {
-        "file_id": 110,
-        "content": "docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama\n# usage: https://ollama.ai/blog/ollama-is-now-available-as-an-official-docker-image",
+        "file_id": 102,
+        "content": "from pynput import keyboard\ndef on_press(key):\n    if type(key) != str:\n        key = str(key)\n    print((\"key_press\", key))\ndef on_release(key):\n    if type(key) != str:\n        key = str(key)\n    print((\"key_release\", key))\n# keyboard_listener = keyboard.Listener(on_press=on_press, on_release=on_release)\n# keyboard_listener.run()\nkeycode_ctrl = {\n    \"a\": \"\\x01\",\n    \"b\": \"\\x02\",\n    \"c\": \"\\x03\",\n    \"d\": \"\\x04\",\n    \"e\": \"\\x05\",\n    \"f\": \"\\x06\",\n    \"g\": \"\\x07\",\n    \"h\": \"\\x08\",\n    \"i\": \"\\x09\",\n    \"j\": \"\\x0a\",\n    \"k\": \"\\x0b\",\n    \"l\": \"\\x0c\",\n    \"m\": \"\\x0d\",\n    \"n\": \"\\x0e\",\n    \"o\": \"\\x0f\",\n    \"p\": \"\\x10\",\n    \"q\": \"\\x11\",\n    \"r\": \"\\x12\",\n    \"s\": \"\\x13\",\n    \"t\": \"\\x14\",\n    \"u\": \"\\x15\",\n    \"v\": \"\\x16\",\n    \"w\": \"\\x17\",\n    \"x\": \"\\x18\",\n    \"y\": \"\\x19\",\n    \"z\": \"\\x1a\",\n    \"[\": \"\\x1b\",\n    \"[\": \"<219>\",\n    \"]\": \"\\x1d\",\n    \"]\": \"<221>\",\n    \"-\": \"\\x1f\",\n    \"-\": \"<189>\",\n    \"=\": \"<187>\",\n    \"`\": \"<192>\",\n    \"0\": \"<48>\",\n    \"1\": \"<49>\",\n    \"2\": \"<50>\",\n    \"3\": \"<51>\",\n    \"4\": \"<52>\",\n    \"5\": \"<53>\",\n    \"6\": \"<54>\",\n",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/startup_ollama_service.sh:1-3"
+        "location": "/hotkey_listener.py:1-61"
     },
     "833": {
-        "file_id": 110,
-        "content": "Running Ollama in a containerized environment.\n\nStorage location: \"containerized_chatgpt_agent/startup_ollama_service.sh\":3-5\nCode:\n```\ndocker exec -it ollama bash\n# usage: https://docs.docker.com/engine/reference/commandline/dockerexec/#docker-exec--it\n```\nComment for code:\nStarting an interactive shell within the Ollama container.\n\nStorage location: \"containerized_chatgpt_agent/startup_ollama_service.sh\":6-7\nCode:\n```\nsource /root/.ollama/bin/activate && \\\nollama-admin create --name <CHATGPT_AGENT_NAME> --email <CHATGPT_AGENT_EMAIL>\n# usage: https://ollama.ai/docs/administration-guide/#creating-a-new-agent\n```\nComment for code:\nCreating a new ChatGPT agent using the Ollama admin command.",
+        "file_id": 102,
+        "content": "This code imports the keyboard module from pynput library and defines two functions for handling key presses and releases. The hotkey listener is not running currently. It also contains a dictionary mapping keyboard keys to their corresponding ASCII codes or special characters.",
         "type": "comment"
     },
     "834": {
-        "file_id": 111,
-        "content": "/containerized_chatgpt_agent/terminal_config.py",
-        "type": "filepath"
+        "file_id": 102,
+        "content": "    \"7\": \"<55>\",\n    \"8\": \"<56>\",\n    \"9\": \"<57>\",\n    \"\\\\\": \"\\x1c\",\n    \"\\\\\": \"<220>\",\n    \";\": \"<186>\",\n    \"'\": \"<222>\",\n    \"<\": \"<188>\",\n    \">\": \"<190>\",\n    \"?\": \"<191>\",\n}\nprint({v: k for k, v in keycode_ctrl.items()})",
+        "type": "code",
+        "location": "/hotkey_listener.py:61-72"
     },
     "835": {
-        "file_id": 111,
-        "content": "Sets terminal window dimensions to 80 columns and 25 rows.",
-        "type": "summary"
+        "file_id": 102,
+        "content": "Mapping keycode to control dictionary.",
+        "type": "comment"
     },
     "836": {
-        "file_id": 111,
-        "content": "cols, rows = 80, 25",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/terminal_config.py:1-1"
+        "file_id": 103,
+        "content": "/hotkey_tester.py",
+        "type": "filepath"
     },
     "837": {
-        "file_id": 111,
-        "content": "Sets terminal window dimensions to 80 columns and 25 rows.",
-        "type": "comment"
+        "file_id": 103,
+        "content": "Code is disabling all hotkeys by pressing the Control key.",
+        "type": "summary"
     },
     "838": {
-        "file_id": 112,
-        "content": "/containerized_chatgpt_agent/test_image_to_ascii.py",
-        "type": "filepath"
+        "file_id": 103,
+        "content": "import pyautogui\nimport pynput\n# you simply deprecate all hotkeys.\nkeyboard_controller = pynput.keyboard.Controller()\nkeyboard_controller.press(pynput.keyboard.Key.ctrl)\npyautogui.typewrite('1')\nkeyboard_controller.release(pynput.keyboard.Key.ctrl)",
+        "type": "code",
+        "location": "/hotkey_tester.py:1-10"
     },
     "839": {
-        "file_id": 112,
-        "content": "The code takes an image file path, converts it to ASCII art using the AsciiArt library, and then prints the ASCII art. It also extracts text from the image using pytesseract and prints that extracted text.",
-        "type": "summary"
+        "file_id": 103,
+        "content": "Code is disabling all hotkeys by pressing the Control key.",
+        "type": "comment"
     },
     "840": {
-        "file_id": 112,
-        "content": "image_path = \"vscode_screenshot.png\"\nfrom ascii_magic import AsciiArt\ncolumns = 60\nmy_art = AsciiArt.from_image(image_path)\n# str_art = my_art.to_terminal(columns=columns, monochrome=True)\nstr_art = my_art._img_to_art(columns=columns, monochrome=True)\nprint('artwork:')\nprint()\nprint(str_art)\n# then we need to visualize it.\nimport pytesseract\nfrom PIL import Image\nimage = Image.open(image_path)\nextracted_text = pytesseract.image_to_string(image)\nprint(\"extracted text:\")\nprint(extracted_text)",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/test_image_to_ascii.py:1-23"
-    },
-    "841": {
-        "file_id": 112,
-        "content": "The code takes an image file path, converts it to ASCII art using the AsciiArt library, and then prints the ASCII art. It also extracts text from the image using pytesseract and prints that extracted text.",
-        "type": "comment"
-    },
-    "842": {
-        "file_id": 113,
-        "content": "/containerized_chatgpt_agent/visual_autoexec_example.py",
+        "file_id": 104,
+        "content": "/install_nvidia_container_toolkit.sh",
         "type": "filepath"
     },
-    "843": {
-        "file_id": 113,
-        "content": "The code imports utilities, defines variables, and outlines future development tasks for a multi-agent system. It initializes functions to interact with a visual model API, handles input actions and action types, escapes/unescapes text, and generates random commands like cursor movement. The program executes commands with error handling and interfaces with ChatGPT, continuously capturing screenshots, constructing prompts with random commands, sending them to ChatGPT for responses, executing the responses as commands, recording errors in lists.",
+    "841": {
+        "file_id": 104,
+        "content": "This code determines the Debian version for Kali 2022.2, checks for the kernel version (5.16), and sets the distribution to \"debian11\". It then installs the NVIDIA container toolkit by adding a GPG key, updating a source list, and installing the necessary packages from the specified repository.",
         "type": "summary"
     },
-    "844": {
-        "file_id": 113,
-        "content": "from port_util import port\nimport ollama_utils\n# TODO: multi-agent infrastructure, help each other to earn bucks\n# TODO: train the model on some 'visual' datasets\n# TODO: diff/diffuse (memory fading) the input\n# TODO: limit the output. prevent the ai from going too far (talkative), if it is not doing any valid operation\n# TODO: make the model 'error-free', that is, interpreting & executing the output no matter what it is\n# TODO: zoom in/out & move around the focus area\n# TODO: focus on the mouse when it is moved\n# TODO: correct mistakes, force it to learn random commands if not doing anything right\n# TODO: use utils designed for blind people to operate the GUI\n# TODO: make statistics on ai execution frequency & overall performance (including random commands), record every execution error and cause (who did it)\nurlbase = f\"http://localhost:{port}\"\nimport functools\ngenerate_command_pool = lambda: {\n    \"executed\": [],\n    \"not_executed\": [],\n    \"error\": [],\n}\nprev_command_pool = generate_command_pool()\nEXE",
+    "842": {
+        "file_id": 104,
+        "content": "# figure out what version of debian is for kali 2022.2\n# `uname -a` to get debian kernel version (5.16) -> bullseye (debian 11)\n# supported versions:\n# ref: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html\n# distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \\\ndistribution=\"debian11\" \\\n      && curl -fsSL -k https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \\\n      && curl -s -L -k https://nvidia.github.io/libnvidia-container/experimental/$distribution/libnvidia-container.list | \\\n         sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \\\n         sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/visual_autoexec_example.py:1-25"
+        "location": "/install_nvidia_container_toolkit.sh:1-12"
     },
-    "845": {
-        "file_id": 113,
-        "content": "This code imports functions from \"port_util\" and \"ollama_utils\", and defines a URL base, lambda function for generating command pools, and variables to track executed, not executed, and error commands. The code has various TODO items for future development such as multi-agent infrastructure, model training, input/output limitations, error correction, and performance statistics.",
+    "843": {
+        "file_id": 104,
+        "content": "This code determines the Debian version for Kali 2022.2, checks for the kernel version (5.16), and sets the distribution to \"debian11\". It then installs the NVIDIA container toolkit by adding a GPG key, updating a source list, and installing the necessary packages from the specified repository.",
         "type": "comment"
     },
+    "844": {
+        "file_id": 105,
+        "content": "/jinja_utils.py",
+        "type": "filepath"
+    },
+    "845": {
+        "file_id": 105,
+        "content": "This code imports modules, defines functions to manipulate Python code, performs type checks using pyright linter, handles file updates and outputs formatted code, uses Jinja2 templates for execution, and converts variables into Python.",
+        "type": "summary"
+    },
     "846": {
-        "file_id": 113,
-        "content": "C_DELAY = 0.5\n@functools.lru_cache()\ndef urlmake(path):\n    return f\"{urlbase}/{path}\"\nimport litellm\nimport requests\nmodel_name = \"ollama/autoexec_visual\"\nsess = requests.Session()\ndef perform_action(path: str, params: dict):\n    url = urlmake(path)\n    response = sess.get(url, params=params)\n    response_code = response.status_code\n    assert response_code == 200, f\"Error code: {response_code} {response.text}\"\n    return response\ndef get_info(path: str):\n    response = perform_action(path, {})\n    data = response.json()\n    return data\ndef get_resolution():\n    data = get_info(\"resolution\")\n    return data[\"width\"], data[\"height\"]\ndef get_position():\n    data = get_info(\"position\")\n    return data[\"x\"], data[\"y\"]\ndef get_text_screenshot():\n    data = get_info(\"text_screenshot\")\n    return data[\"text\"]\ndef move_abs_action(argument: str):\n    x, y = argument.split(\",\")\n    x, y = x.strip(), y.strip()\n    x, y = float(x), float(y)\n    perform_action(\"move_abs\", {\"x\": x, \"y\": y})\ndef type_action(argument: str):\n    argu",
+        "file_id": 105,
+        "content": "from log_utils import logger_print\nimport subprocess\nfrom tempfile import TemporaryDirectory\nimport black\n# from humps import kebabize\nimport jinja2\nimport shutil\nimport os\nimport pyright_utils  # for checking if really installed.\nimport re\n# live share's triple quote issue isn't fixed.\nimport humps  # default to snake case!\nimport ast\ndef remove_typehint(paramDef: str) -> str:\n    tree_def = ast.parse(\"def func({}): ...\".format(paramDef)).body[0]\n    args = []\n    for elem in ast.walk(tree_def):\n        if isinstance(elem, ast.arg):\n            argName = elem.arg  # str\n            args.append(argName)\n    return \",\".join([f\"{argName}={argName}\" for argName in args])\ndef camelize_with_space(string):\n    return humps.camelize(string.replace(\" \", \"-\"))\n# ref: https://www.geeksforgeeks.org/python-program-to-convert-camel-case-string-to-snake-case/\ndef c2s(_str):\n    \"\"\"\n    Camel case to snake case.\n    \"\"\"\n    # return humps.kebabize(_str).replace(\"-\", \"_\")\n    # res = [_str[0].lower()]\n    # for c in _str[1:]:\n    #",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/visual_autoexec_example.py:25-76"
+        "location": "/jinja_utils.py:1-43"
     },
     "847": {
-        "file_id": 113,
-        "content": "Code snippet initializes functions to interact with a visual model API. It retrieves information such as resolution, position, and allows moving the cursor and typing text using API requests.",
+        "file_id": 105,
+        "content": "This code imports various modules and defines functions to manipulate Python code, such as removing type hints and converting variable names between different cases. It also includes a function to convert camel case to snake case.",
         "type": "comment"
     },
     "848": {
-        "file_id": 113,
-        "content": "ment = unescape(argument)\n    perform_action(\"type\", {\"text\": argument})\ndef click_action(argument: str):\n    button = argument.strip()\n    params = {}\n    if argument:\n        params = {\"button\": button}\n    perform_action(\"click\", params)\naction_handlers = {\n    \"move_abs\": move_abs_action,\n    \"type\": type_action,\n    \"click\": click_action,\n}\nimport random\ndef move_abs_random_action(width, height):\n    x = random.randint(0, width)\n    y = random.randint(0, height)\n    action = f\"move_abs {x},{y}\"\n    return action\nimport ast\ndef unescape(text: str):\n    text = ast.literal_eval(repr(text).replace(\"\\\\\\\\\", \"\\\\\"))\n    return text\ndef escape(text: str):\n    text = text.encode(\"unicode_escape\").decode()\n    return text\ndef type_random_action(min_char=4, max_char=10):\n    text_length = random.randint(min_char, max_char)\n    text = \"\".join(chr(random.randint(0, 255)) for _ in range(text_length))\n    text = escape(text)\n    action = f\"type {text}\"\n    return action\ndef click_random_action():\n    button_choices = [\"left\", \"r",
+        "file_id": 105,
+        "content": "     if c in (\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"):\n    #         res.append(\"_\")\n    #         res.append(c.lower())\n    #     else:\n    #         res.append(c)\n    # return \"\".join(res)\n    return humps.decamelize(_str)\ndef s2c(_str, lower: bool):\n    \"\"\"\n    Snake case to camel case.\n    \"\"\"\n    # assert not _str.startswith(\"_\")\n    # lst = _str.split(\"_\")\n    # first_letter = lst[0][0]\n    # lst[0] = (first_letter.lower() if lower else first_letter.upper()) + lst[0][1:]\n    # for i in range(1, len(lst)):\n    #     lst[i] = lst[i].title()\n    # return \"\".join(lst)\n    return getattr(humps, \"camelize\" if lower else \"pascalize\")(_str)\ndef s2cl(_str):\n    \"\"\"\n    Snake case to camel case (starting with lower letter).\n    \"\"\"\n    return s2c(_str, True)\ndef s2cu(_str):\n    \"\"\"\n    Snake case to camel case (starting with upper letter).\n    \"\"\"\n    return s2c(_str, False)\nclass NeverUndefined(jinja2.StrictUndefined):\n    def __init__(self, *args, **kwargs):\n        # ARGS: (\"parameter 'myvar2' was not provided\",)\n        # KWAR",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/visual_autoexec_example.py:76-126"
+        "location": "/jinja_utils.py:43-84"
     },
     "849": {
-        "file_id": 113,
-        "content": "The code defines functions for various input actions such as typing and clicking, and action handlers based on different action types. It also includes functions to escape and unescape text, and generate random actions like moving the cursor and typing or clicking with random parameters.",
+        "file_id": 105,
+        "content": "Code comments:\n1. jinja_utils.py:42-83",
         "type": "comment"
     },
     "850": {
-        "file_id": 113,
-        "content": "ight\", \"middle\", None]\n    button = random.choice(button_choices)\n    if button:\n        action = f\"click {button}\"\n    else:\n        action = \"click\"\n    return action\nrandom_action_generators = {\n    \"move_abs\": move_abs_random_action,\n    \"type\": type_random_action,\n    \"click\": click_random_action,\n}\ndef random_actor(width, height, min_action=1, max_action=3):\n    random_actions = []\n    action_count = random.randint(min_action, max_action)\n    for _ in range(action_count):\n        action_name, action_generator = random.choice(\n            list(random_action_generators.items())\n        )\n        args = []\n        if action_name == \"move_abs\":\n            args.extend([width, height])\n        action = action_generator(*args)\n        random_actions.append(action)\n    return random_actions\nimport traceback\ndef action_executor(action_text: str):\n    action_text = action_text.lstrip()\n    err = None\n    executed = False\n    for action, handler in action_handlers.items():\n        if action_text.startswith(action):\n     ",
+        "file_id": 105,
+        "content": "GS: {'name': 'myvar2'}\n        if len(args) == 1:\n            info = args[0]\n        elif \"name\" in kwargs.keys():\n            info = f\"Undefined variable '{kwargs['name']}\"\n        else:\n            infoList = [\"Not allowing any undefined variable.\"]\n            infoList.append(f\"ARGS: {args}\")\n            infoList.append(f\"KWARGS: {kwargs}\")\n            info = \"\\n\".join(infoList)\n        raise Exception(info)\ndef load_render_and_format(\n    template_path: str,\n    output_path: str,\n    render_params: dict,\n    banner: str,\n    needFormat: bool = True,\n):\n    tpl = load_template(template_path)\n    result = tpl.render(**render_params)\n    logger_print()\n    logger_print(\"______________________[{}]\".format(banner))\n    logger_print(result)\n    # import black.Mode\n    output_path_elems = output_path.split(\".\")\n    output_path_elems.insert(-1, \"new\")\n    if os.path.exists(output_path):\n        with open(output_path, \"r\") as f:\n            backup_content = f.read()\n    else:\n        backup_content = \"\"\n    with open(tmp",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/visual_autoexec_example.py:126-166"
+        "location": "/jinja_utils.py:84-120"
     },
     "851": {
-        "file_id": 113,
-        "content": "This code defines a function `random_actor` that generates a list of random actions to be taken in a visual environment. The actions can be \"move_abs\", \"type\", or \"click\". The number of actions generated is randomly determined between the minimum and maximum values specified. The `action_executor` function takes an action text as input, strips any leading whitespace, and executes the action if it matches any defined action handlers. If an error occurs during execution, it will be stored in the `err` variable.",
+        "file_id": 105,
+        "content": "load_render_and_format function takes template path, output path, render params, banner and optional needFormat (default True) as input. It loads the template from the specified path, renders it with render params as arguments and prints the result to the logger with a banner separator. If output_path exists, it reads its content for backup, else sets backup content as an empty string.",
         "type": "comment"
     },
     "852": {
-        "file_id": 113,
-        "content": "       argument = action_text[len(action) + 1 :]\n            print(\"excuting:\", action, argument)\n            try:\n                handler(argument)\n                prev_command_pool[\"executed\"].append(action_text)\n            except:\n                err = traceback.format_exc(limit=1)\n                print(\"err:\", err)\n                prev_command_pool[\"error\"].append(action_text)\n            executed = True\n            break\n    if not executed:\n        prev_command_pool[\"not_executed\"].append(action_text)\n    time.sleep(EXEC_DELAY)\n    return err\n# at the same time, how do we visualize the current display?\n# you need to name that container.\ndef execute_command_list(cmd_list):\n    err_list = []\n    for cmd in cmd_list:\n        err = action_executor(cmd)\n        if err:\n            err_list.append(err)\n    return err_list\nimport time\nSLEEP_TIME = 3\ndef construct_prompt(\n    data: str, width: int, height: int, random_err_list: list[str], err_list: list[str]\n):\n    random_commands = random_actor(width, height)\n    x",
+        "file_id": 105,
+        "content": "_output_path := \".\".join(output_path_elems), \"w+\") as f:\n        f.write(result)\n    if not needFormat:\n        shutil.move(tmp_output_path, output_path)\n        return\n    try:\n        # TODO: add more test, like checking for undefined variables, before rewriting the source file.\n        # TODO: add rollback mechanism in makefile\n        result = black.format_str(result, mode=black.Mode())\n        logger_print(\"Formatter Ok.\")\n        # with TemporaryDirectory() as TP:\n        with open(output_path, \"w+\") as f:\n            f.write(result)\n        # do further type checking.\n        # typechecker_input_path = os.path.join(\n        #     TP, base_output_path := os.path.basename(output_path)\n        # )\n        # with open(typechecker_input_path, \"w+\") as f:\n        #     f.write(typechecker_input_path)\n        # output = subprocess.run(\n        #     [\"pyright\", typechecker_input_path],\n        #     capture_output=True,\n        #     encoding=\"utf-8\",\n        # )\n        run_result = pyright_utils.run(\n       ",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/visual_autoexec_example.py:166-205"
+        "location": "/jinja_utils.py:120-146"
     },
     "853": {
-        "file_id": 113,
-        "content": "1. Executes actions based on the given command list\n2. Handles success, error, and not executed commands separately\n3. Sleeps for a specified delay time after executing each action\n4. Returns a list of errors encountered",
+        "file_id": 105,
+        "content": "Writes formatted code to output file, optionally formats again if not needed format, and performs additional type checking.",
         "type": "comment"
     },
     "854": {
-        "file_id": 113,
-        "content": ", y = get_position()\n    random_commands_str = \"\\n\".join(random_commands)\n    last_random_errors = \"\\n\".join(random_err_list)\n    last_errors = \"\\n\".join(err_list)\n    previous_executed_repr = \"\\n\".join(prev_command_pool[\"executed\"])\n    previous_error_repr = \"\\n\".join(prev_command_pool[\"error\"])\n    previous_not_executed_repr = \"\\n\".join(prev_command_pool[\"not_executed\"])\n    prompt = f\"\"\"\n{data}\nPointer location: {x}, {y}\nResolution: {width}x{height}\nLast random command errors:\n{last_random_errors}\nLast errors:\n{last_errors}\nPrevious executed successfully:\n{previous_executed_repr}\nPrevious executed with error:\n{previous_error_repr}\nPrevious not executed:\n{previous_not_executed_repr}\nNext random commands:\n{random_commands_str}\nYour commands:\n\"\"\"\n    return prompt, random_commands\ndef get_reply_from_chatgpt(content: str, max_tokens=50):\n    messages = [{\"content\": content, \"role\": \"system\"}]\n    print(\"sending:\")\n    print(messages)\n    response = litellm.completion(\n        model_name, messages, api_base=\"http://lo",
+        "file_id": 105,
+        "content": "     output_path, capture_output=True, encoding=\"utf-8\"\n        )\n        typeErrors = [\n            e.strip().replace(\n                os.path.basename(output_path), os.path.basename(tmp_output_path)\n            )\n            for e in re.findall(\n                pyright_utils.errorRegex, run_result.stdout, re.MULTILINE\n            )\n        ]\n        # breakpoint()\n        if run_result.stderr:\n            typeErrors.append(\"\")\n            typeErrors.append(f\"Pyright error:\\n{run_result.stderr}\")\n        if typeErrors:\n            typeErrors.insert(0, f\"Type error found in file {repr(output_path)}\")\n            raise Exception(f\"\\n{' '*4}\".join(typeErrors))\n        logger_print(\"Pyright Ok.\")\n        os.remove(tmp_output_path)\n    except:\n        import traceback\n        traceback.print_exc()\n        # os.remove(tmp_output_path)\n        with open(output_path, \"w+\") as f:\n            f.write(backup_content)\n        # ref: https://www.geeksforgeeks.org/python-os-utime-method/\n        # do not set this to 0 or so",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/visual_autoexec_example.py:205-253"
+        "location": "/jinja_utils.py:146-173"
     },
     "855": {
-        "file_id": 113,
-        "content": "Line 204: Get the current position\nLine 205-209: Format random_commands, last_random_errors, last_errors, previous_executed_repr, and previous_error_repr into strings\nLine 210: Create a prompt for ChatGPT that includes the data, position, error logs, previous commands, and next commands\nLine 211-214: Return the prompt and random_commands\nLine 215-231: Send messages to OpenAI API, get reply from ChatGPT",
+        "file_id": 105,
+        "content": "This code is executing a type check on a Python file and handling any errors produced by the pyright linter. It first creates a temporary output path, captures all standard error messages, converts these messages to a list of strings, appends Pyright error content if applicable, and then raises an exception with the compiled error messages. If there are no errors, it prints \"Pyright Ok.\" Finally, if an error occurs during execution, it catches the error, prints the stack trace, writes the backup content into the output file, and removes the temporary output file.",
         "type": "comment"
     },
     "856": {
-        "file_id": 113,
-        "content": "calhost:11434\", max_tokens=max_tokens\n    )\n    choices = response[\"choices\"]\n    reply_content = choices[0][\"message\"][\"content\"]\n    print(\"reply:\")\n    print(reply_content)\n    return reply_content\ndef refresh_command_pool(command_pool, limit=3):\n    ret = {}\n    for k,v in command_pool.items():\n        new_v = v[-limit:]\n        ret[k] = new_v\n    return ret\nerr_list = []\nrandom_err_list = []\nwidth, height = get_resolution()\nwhile True:\n    data = get_text_screenshot()\n    prompt, random_commands = construct_prompt(\n        data.strip(), width, height, random_err_list, err_list\n    )\n    prev_command_pool = generate_command_pool()\n    # prev_command_pool = refresh_command_pool(prev_command_pool)\n    print(\"random commands:\", random_commands)\n    response = get_reply_from_chatgpt(prompt)\n    command_list = response.split(\"\\n\")\n    random_err_list = execute_command_list(random_commands)\n    err_list = execute_command_list(command_list)\n    time.sleep(SLEEP_TIME)",
+        "file_id": 105,
+        "content": "mething. will cause error.\n        os.utime(\n            output_path,\n            times=(\n                os.path.getatime(template_path) - 1000000,\n                os.path.getmtime(template_path) - 1000000,\n            ),\n        )  # to make this older than template, must update!\n        raise Exception(\n            f\"Code check failed.\\nTemporary cache saved to: '{tmp_output_path}'\"\n        )\n    logger_print(\"=\" * 40)\ndef lstrip(string: str):\n    lines = string.split(\"\\n\")\n    result_lines = []\n    for line in lines:\n        result_lines.append(line.lstrip())\n        # if stripped_line := line.lstrip():\n        # result_lines.append(stripped_line)\n    result = \"\\n\".join(result_lines).strip(\"\\n\")\n    return result\ndef code_and_template_path(base_name):\n    code_path = f\"{base_name}.py\"\n    template_path = f\"{code_path}.j2\"\n    return code_path, template_path\ndef load_template(template_path, extra_func_dict={}):\n    try:\n        assert template_path.endswith(\".j2\")\n    except:\n        Exception(f\"jinja template ",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/visual_autoexec_example.py:253-284"
+        "location": "/jinja_utils.py:173-209"
     },
     "857": {
-        "file_id": 113,
-        "content": "This code is continuously capturing a text screenshot, constructing a prompt with random commands, and sending the prompt to ChatGPT for replies. The replies are then executed as commands, and any errors generated are recorded in error lists.",
+        "file_id": 105,
+        "content": "The code is checking if the output file is older than the template, and if not, it raises an exception. It also includes functions for string lstrip operation, handling code and template paths, and loading a Jinja2 template.",
         "type": "comment"
     },
     "858": {
-        "file_id": 114,
-        "content": "/containerized_chatgpt_agent/visual_autoexec_main.sh",
-        "type": "filepath"
+        "file_id": 105,
+        "content": "path '{template_path}' is malformed.\")\n    env = jinja2.Environment(\n        loader=jinja2.FileSystemLoader(searchpath=[\"./\", \"../\"]),\n        extensions=[\n            \"jinja2_error.ErrorExtension\",\n            \"jinja2.ext.do\",\n            \"jinja2.ext.loopcontrols\",\n        ],\n        trim_blocks=True,\n        lstrip_blocks=True,\n        # undefined=jinja2.StrictUndefined,\n        undefined=NeverUndefined,\n    )\n    tpl = env.get_template(template_path)\n    # def myJoin(mstr, mlist):\n    #     logger_print(\"STR:\", repr(mstr))\n    #     logger_print(\"LIST:\", repr(mlist))\n    #     return mstr.join(mlist)\n    func_dict = dict(\n        list=list,\n        str=str,\n        _dict=dict,\n        _set=set,  # avoid name collision\n        tuple=tuple,\n        ord=ord,\n        len=len,\n        repr=repr,\n        c2s=c2s,\n        # s2c=s2c,\n        s2cl=s2cl,\n        s2cu=s2cu,\n        zip=zip,\n        cws=camelize_with_space,\n        lstrip=lstrip,\n        remove_typehint=remove_typehint,\n        kebabize=humps.kebabize,\n        pa",
+        "type": "code",
+        "location": "/jinja_utils.py:209-245"
     },
     "859": {
-        "file_id": 114,
-        "content": "Starts Xvfb with 99 display, launches Ubuntu visual server, and then runs an example script",
-        "type": "summary"
+        "file_id": 105,
+        "content": "Creates a Jinja2 environment with specified settings, loads template from given path.",
+        "type": "comment"
     },
     "860": {
-        "file_id": 114,
-        "content": "xvfb-run -n 99 -f ~/.Xauthority xfce4-session &\nsleep 2 && env DISPLAY=:99 python3 visual_server_on_ubuntu.py &\nsleep 5 && python3 visual_autoexec_example.py",
+        "file_id": 105,
+        "content": "scalize=humps.pascalize,\n        # enumerate=enumerate,\n        # eval=eval,\n        # join=myJoin\n        ** extra_func_dict,\n    )\n    tpl.globals.update(func_dict)\n    return tpl\ndef test(cmd: list, exec=\"python3\" if os.name != \"nt\" else \"python\"):\n    cmd = [exec] + cmd\n    p = subprocess.run(cmd)\n    p.check_returncode()",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/visual_autoexec_main.sh:1-3"
+        "location": "/jinja_utils.py:245-258"
     },
     "861": {
-        "file_id": 114,
-        "content": "Starts Xvfb with 99 display, launches Ubuntu visual server, and then runs an example script",
+        "file_id": 105,
+        "content": "This code is defining a function that converts Jinja template variables into executable Python code. It also imports and updates the template's globals with specified functions and executes it using subprocess.",
         "type": "comment"
     },
     "862": {
-        "file_id": 115,
-        "content": "/containerized_chatgpt_agent/visual_server_on_ubuntu.py",
+        "file_id": 106,
+        "content": "/keyboard_and_mouse.py",
         "type": "filepath"
     },
     "863": {
-        "file_id": 115,
-        "content": "The code is a Python script using PyAutoGUI and Tesseract OCR, enabling users to capture screenshots with cursor overlay, perform actions like moving, clicking, typing, and offers API endpoints for controlling the cursor and inputting text on a computer.",
+        "file_id": 106,
+        "content": "The code uses pynput library to set up listeners for keyboard and mouse events, storing them in a list called HIDEvents. It records the event details based on timestep configuration from a config file and writes them to a JSON lines file, but Windows' zooming factor may affect accuracy.",
         "type": "summary"
     },
     "864": {
-        "file_id": 115,
-        "content": "# you can input commands here.\n# after input, you may take screenshot and get it as text.\n# now you can move, click, and type.\nimport fastapi\nimport uvicorn\nfrom port_util import port\nimport pyautogui\nfrom PIL import Image\nfrom diff_utils import diff_methods\nfrom typing import Literal\npyautogui.FAILSAFE = False\ncursor_image = \"cursor.png\"\ncur = Image.open(cursor_image)\ndef screenshot_with_cursor():\n    shot = pyautogui.screenshot()\n    pos = pyautogui.position()\n    shot.paste(cur, pos, cur)\n    return shot\nfrom ascii_magic import AsciiArt\nimport pytesseract\ndef image_to_ascii(img: Image, columns=60):\n    art = AsciiArt.from_pillow_image(img)\n    ascii_text = art._img_to_art(columns=columns, monochrome=True)\n    return ascii_text.strip()\ndef image_to_words(img: Image):\n    words = pytesseract.image_to_string(img)\n    return words.strip()\nprev_registry = {\n    'ascii_text':'',\n    'words': ''\n}\ndef image_to_ascii_and_words(img: Image, method):\n    procedure = diff_methods.get(method, lambda prev_text, next_text: next_",
+        "file_id": 106,
+        "content": "from datetime import datetime\nfrom pynput import keyboard\nHIDEvents = []\nfrom config import timestep  # this will be sufficient?\n# problem is the windows zooming factor.\n# is it really the problem?\ndef on_press(key):\n    if type(key) != str:\n        key = str(key)\n    HIDEvents.append(('key_press', key))\ndef on_release(key):\n    if type(key) != str:\n        key = str(key)\n    HIDEvents.append(('key_release', key))\nkeyboard_listener = keyboard.Listener(on_press=on_press, on_release=on_release)\nkeyboard_listener.start()\nfrom pynput import mouse\ndef on_move(x: int, y: int):\n    HIDEvents.append((\"mouse_move\", [x, y]))\ndef on_click(x: int, y: int, button: mouse.Button, pressed: bool):\n    HIDEvents.append((\"mouse_click\", [x, y, str(button), pressed]))\ndef on_scroll(x: int, y: int, dx: int, dy: int):\n    HIDEvents.append((\"mouse_scroll\", [x, y, dx, dy]))\n# # ...or, in a non-blocking fashion:\nlistener = mouse.Listener(on_move=on_move, on_click=on_click, on_scroll=on_scroll)\nlistener.start()\n# you may start that non-b",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/visual_server_on_ubuntu.py:1-47"
+        "location": "/keyboard_and_mouse.py:1-44"
     },
     "865": {
-        "file_id": 115,
-        "content": "This code is a Python script that allows the user to input commands, take screenshots with cursor overlay, perform actions like moving, clicking, and typing, converts images to ASCII art or extracts text from images using Tesseract OCR. It also keeps track of previous ascii_text and words values in prev_registry.",
+        "file_id": 106,
+        "content": "This code sets up listeners for both keyboard and mouse events, storing the event details in a list called HIDEvents. It uses the pynput library to handle input from the keyboard and mouse. The timestep configuration is loaded from the config file to determine how frequently events are recorded. However, there seems to be a problem related to Windows' zooming factor which might affect the accuracy of the recorded events.",
         "type": "comment"
     },
     "866": {
-        "file_id": 115,
-        "content": "text)\n    ascii_text = image_to_ascii(img)\n    ascii_text_processed = process_and_update(procedure, ascii_text, 'ascii_text')\n    words = image_to_words(img)\n    words_processed = process_and_update(procedure, words, 'words')\n    text = f\"\"\"\nAscii image:\n{ascii_text_processed}\nText in image:\n{words_processed}\n\"\"\"\n    return text\ndef process_and_update(procedure, item, key):\n    output = procedure(prev_registry[key], item)\n    prev_registry[key] = item\n    return output\napp = fastapi.FastAPI()\n@app.get(\"/position\")\ndef get_position():\n    pos = pyautogui.position()\n    data = {\"x\": pos.x, \"y\": pos.y}\n    return data\n@app.get(\"/resolution\")\ndef get_resolution():\n    size = pyautogui.size()\n    data = {\"width\": size.width, \"height\": size.height}\n    return data\n@app.get(\"/text_screenshot\")\ndef get_text_screenshot(\n    method: Literal[\"git_style_diff\", \"char_diff\", \"line_indexed_diff\", 'no_diff'] = 'line_indexed_diff'\n):\n    shot = screenshot_with_cursor()\n    text = image_to_ascii_and_words(shot, method)\n    return {\"tex",
+        "file_id": 106,
+        "content": "locking. start some looping-forever thread for writing states to file.\nimport time\n# import pyautogui\n# import datetime\nloopCount = 500\nimport jsonlines\nprint(\"RECORDING START\")\nfrom config import filePath\nimport datetime\nworld_start = datetime.datetime.now()\nwith jsonlines.open(filePath, 'w') as w:\n    for _ in range(loopCount):\n        time.sleep(timestep)\n        # as for screenshot, use mss instead of screenshot.\n        #     screenshot = pyautogui.screenshot()\n        # shall you mark the time here.\n        state = dict(HIDEvents=HIDEvents)  # also the image!\n        print(\"STATE?\", state)\n        w.write(state)\n        HIDEvents = []\n        mouseloc = []",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/visual_server_on_ubuntu.py:47-95"
+        "location": "/keyboard_and_mouse.py:44-68"
     },
     "867": {
-        "file_id": 115,
-        "content": "Code is converting an image to ASCII text and words, then combining them into a formatted string. It also provides API endpoints for getting the position of the mouse and the resolution of the screen.",
+        "file_id": 106,
+        "content": "Starts a looping-forever thread for writing states to file. Imports required modules, sets the loop count, and opens a JSON lines file for writing. Within the loop, it waits for a certain period (timestep), captures the current state (HIDEvents dictionary), writes it to the file, and resets the HIDEvents and mouseloc variables.",
         "type": "comment"
     },
     "868": {
-        "file_id": 115,
-        "content": "t\": text}\n@app.get(\"/move_abs\")\ndef move_cursor_abs(x: int, y: int):\n    pyautogui.moveTo(x, y)\n@app.get(\"/move_rel\")\ndef move_cursor_rel(x: int, y: int):\n    pyautogui.moveRel(x, y)\nfrom typing import Literal\n@app.get(\"/click\")\ndef click_cursor(button: Literal[\"left\", \"right\", \"middle\"] = \"left\"):\n    params = {}\n    if button:\n        params = {\"button\": button}\n    pyautogui.click(**params)\n@app.get(\"/type\")\ndef type_text(text: str):\n    pyautogui.typewrite(text)\n@app.get(\"/write\")\ndef type_text(text: str):\n    pyautogui.write(text)\n@app.get(\"/scroll\")\ndef scroll_down(x: float, y: float, clicks: float):\n    pyautogui.scroll(clicks=clicks, x=x, y=y)\nif __name__ == \"__main__\":\n    host = \"0.0.0.0\"\n    print(\"gui server running at:\", f\"http://{host}:{port}\")\n    uvicorn.run(app, host=host, port=port)",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/visual_server_on_ubuntu.py:95-137"
-    },
-    "869": {
-        "file_id": 115,
-        "content": "This code defines several API endpoints that can be used to control the cursor and input text on a computer using Python's PyAutoGUI library. The endpoints include moving the cursor, clicking buttons, typing text, and scrolling down. The code also sets up an Uvicorn server to host these API endpoints.",
-        "type": "comment"
-    },
-    "870": {
-        "file_id": 116,
-        "content": "/directml_yolov5/test.py",
+        "file_id": 107,
+        "content": "/launch_docker_devicemapper_limit_storage.sh",
         "type": "filepath"
     },
-    "871": {
-        "file_id": 116,
-        "content": "The code modifies torch.cat to handle zero-sized arrays and enables DirectML compatibility for inference mode. It processes a filepath with the model multiple times using a loop, sets it to specified device, prints output for 1000 iterations, and disables automatic differentiation using torch.no_grad().",
+    "869": {
+        "file_id": 107,
+        "content": "This code is discussing various storage options for Docker, specifically focusing on the `--storage-opt` flag and how it interacts with different file systems. It mentions that `--storage-opt` is supported only for overlay over xfs with 'pquota' mount option, and provides examples of using different sizes and file systems like devmapper, LVM, ZFS, and vfs.",
         "type": "summary"
     },
-    "872": {
-        "file_id": 116,
-        "content": "import torch\nimport torch_directml\nimport contextlib\nimport copy\nfrom functools import reduce\n@contextlib.contextmanager\ndef null_inference_mode(*args, **kwargs):\n    try:\n        yield\n    finally:\n        pass\ntorch.inference_mode = null_inference_mode\nold_cat = copy.copy(torch.cat)\ndef smart_cat(arr, *args, **kwargs):\n    new_arr = []\n    for it in arr:\n        shape = it.shape\n        size = reduce(lambda x,y: x*y, shape)\n        if size >0:\n            new_arr.append(it)\n    ret = old_cat(new_arr, *args, **kwargs)\n    return ret\ntorch.cat = smart_cat\ndev = torch_directml.device()\nmodel = torch.hub.load(\"../yolov5\", \"yolov5m\", source='local')\n# get torch cache path?\n# model = torch.hub.load(\"ultralytics/yolov5\", \"yolov5m\")\nfilepath = \"./zidane.jpg\"\n# two issues:\n# 1. directml doesn't work with inference mode (yet), you can nullify it.\n# 2. torch.cat is not working properly, because we are passing zero size arrays into it. however, the cpu executor supports it.\n# with torch.inference_mode(mode=False):\nwith torch.n",
+    "870": {
+        "file_id": 107,
+        "content": "# --storage-opt is supported only for overlay over xfs with 'pquota' mount option.\n# change \"data-root\" to somewhere else in /etc/docker/daemon.json.\n# edit /etc/fstab and add our xfs block on new line (find uuid using blkid)\ndocker run  --storage-opt size=10M --rm -it alpine\n# when using devmapper, make sure size is greater than 10G (default)\n# https://docs.docker.com/storage/storagedriver/device-mapper-driver/#configure-direct-lvm-mode-for-production\n# docker run --storage-opt size=11G --rm -it alpine\n# zfs, vfs (not a unionfs, but for testing) supports disk quota.",
         "type": "code",
-        "location": "/directml_yolov5/test.py:1-41"
+        "location": "/launch_docker_devicemapper_limit_storage.sh:1-10"
     },
-    "873": {
-        "file_id": 116,
-        "content": "Code is modifying torch.cat to handle zero size arrays and nullifying inference mode for DirectML compatibility.",
+    "871": {
+        "file_id": 107,
+        "content": "This code is discussing various storage options for Docker, specifically focusing on the `--storage-opt` flag and how it interacts with different file systems. It mentions that `--storage-opt` is supported only for overlay over xfs with 'pquota' mount option, and provides examples of using different sizes and file systems like devmapper, LVM, ZFS, and vfs.",
         "type": "comment"
     },
+    "872": {
+        "file_id": 108,
+        "content": "/launch_streaming_utils.sh",
+        "type": "filepath"
+    },
+    "873": {
+        "file_id": 108,
+        "content": "Starting script to launch streaming utilities in new tmux sessions.",
+        "type": "summary"
+    },
     "874": {
-        "file_id": 116,
-        "content": "o_grad():\n    # for _ in range(1000):\n    print(model(filepath))\nmodel.to(dev)\n# with torch.inference_mode(mode=False):\nwith torch.no_grad():\n    # for _ in range(1000):\n    # amd yes!\n    print(model(filepath))",
+        "file_id": 108,
+        "content": "bash off_streaming_utils.sh\n# tmux kill-session -t streaming_utils\ngnome-terminal -- bash ubuntu_qemu_utm_arm_record/kali_prepare_dirs_loop.sh\ngnome-terminal -- tmuxp load streaming_utils.yaml",
         "type": "code",
-        "location": "/directml_yolov5/test.py:41-49"
+        "location": "/launch_streaming_utils.sh:2-6"
     },
     "875": {
-        "file_id": 116,
-        "content": "This code is using the \"model\" to process the \"filepath\" multiple times in a loop. It first sets the model to the specified device (dev), and then prints the output of the model for 1000 iterations. The \"torch.no_grad()\" context manager ensures that automatic differentiation is disabled, potentially improving performance during these model evaluations.",
+        "file_id": 108,
+        "content": "Starting script to launch streaming utilities in new tmux sessions.",
         "type": "comment"
     },
     "876": {
-        "file_id": 117,
-        "content": "/directml_yolov5/test_concat.py",
+        "file_id": 109,
+        "content": "/lego_mindstorm_physical_mouse_keyboard_control/README.md",
         "type": "filepath"
     },
     "877": {
-        "file_id": 117,
-        "content": "Code snippet for testing concatenation using torch library with directml acceleration.",
+        "file_id": 109,
+        "content": "Exploring an undetectable, cage-based method to control the bot without battery power using keyboard and mouse input.",
         "type": "summary"
     },
     "878": {
-        "file_id": 117,
-        "content": "import torch\nimport torch_directml\ndev = torch_directml.device()\na = torch.ones((20, 20))\na.to(dev)\nprint(torch.cat([a, a]))\nprint(torch.cat([a, a], dim=1))\nprint(torch.cat([a, a], 1))\nprint(torch.cat((a, a), 1))\nprint(torch.cat((a, a, a), 1))\nprint(torch.cat((a, a, a, a), 1))\nprint(torch.cat((a, a, a, a, a), 1))",
+        "file_id": 109,
+        "content": "And this thing is proposed by our fellows, which is absolutely undetectable by any anti-cheating software.\nIsolated in the cage, so our dataset is names as such.\nWe will try to explore something inside the cage and get interesting results, like using the keyboard and the mouse while looking at the computer screen.\nMost importantly, [how](https://www.eurobricks.com/forum/index.php?/forums/topic/195337-ev3-ac-power-adapter/) do we make it work [without battery power](https://bricksafe.com/pages/Heppu/wip-/ac-adapter), and how to send commands to the bot?\nIs there ssh access to the bot?\nWe can [control](https://github.com/ChristophGaukel/ev3-python3) the bot without ev3dev operate system",
         "type": "code",
-        "location": "/directml_yolov5/test_concat.py:1-14"
+        "location": "/lego_mindstorm_physical_mouse_keyboard_control/README.md:1-11"
     },
     "879": {
-        "file_id": 117,
-        "content": "Code snippet for testing concatenation using torch library with directml acceleration.",
+        "file_id": 109,
+        "content": "Exploring an undetectable, cage-based method to control the bot without battery power using keyboard and mouse input.",
         "type": "comment"
     },
     "880": {
-        "file_id": 118,
-        "content": "/directml_yolov5/test_nograd.py",
+        "file_id": 110,
+        "content": "/lego_mindstorm_physical_mouse_keyboard_control/test.py",
         "type": "filepath"
     },
     "881": {
-        "file_id": 118,
-        "content": "The code is importing necessary libraries and initializing a YOLOv5 model using the \"ultralytics/yolov5\" module. It then warns about two issues: DirectML not working with torch.inference_mode and potential problems with torch.cat due to passing zero-size arrays. The code finally runs inference on an image, first without and then with DirectML device.",
+        "file_id": 110,
+        "content": "This code is initializing an EV3 motor and sending a direct command to play a sound with a frequency of 440Hz, duration of 1000ms, and volume at level 1. It also defines a motor object for port D on the EV3 brick and starts moving the motor by 100 units at speed 100.",
         "type": "summary"
     },
     "882": {
-        "file_id": 118,
-        "content": "import torch\nimport torch_directml\ndev = torch_directml.device()\nmodel = torch.hub.load(\"ultralytics/yolov5\", \"yolov5m\")\n# two issues:\n# 1. directml doesn't work with torch.inference_mode. you can nullify it.\n# 2. torch.cat is not working properly, because we are passing zero size arrays into it. however, the cpu executor supports it.\nwith torch.no_grad():\n    print(model(\"C:/Users/z98hu/Desktop/zidane.jpg\"))\nmodel.to(dev)\nwith torch.no_grad():\n    print(model(\"C:/Users/z98hu/Desktop/zidane.jpg\"))",
+        "file_id": 110,
+        "content": "from usb_ev3 import *\nops = b\"\".join(\n    (\n        ev3.opSound,\n        ev3.TONE,\n        ev3.LCX(1),  # VOLUME\n        ev3.LCX(440),  # FREQUENCY\n        ev3.LCX(1000),  # DURATION\n    )\n)\nmy_ev3.send_direct_cmd(ops)\n# voice = ev3.Voice(ev3_obj=my_ev3, volume=100)\n# voice.speak(\"hello world\").start(thread=False) # gtts failed to start.\nmt1 = ev3.Motor(port=ev3.PORT_D, ev3_obj = my_ev3)\nprint(\"motor_type:\", mt1.motor_type ) # 7 -> large motor\n# mt1.start_move_by(10,speed = 100)\n# mt1.start_move_by(10,speed = 1)\nmt1.start_move_by(100,speed = 100)\n# you know it could have problems with the environment\n# when it will stop on bad things?",
         "type": "code",
-        "location": "/directml_yolov5/test_nograd.py:1-14"
+        "location": "/lego_mindstorm_physical_mouse_keyboard_control/test.py:1-27"
     },
     "883": {
-        "file_id": 118,
-        "content": "The code is importing necessary libraries and initializing a YOLOv5 model using the \"ultralytics/yolov5\" module. It then warns about two issues: DirectML not working with torch.inference_mode and potential problems with torch.cat due to passing zero-size arrays. The code finally runs inference on an image, first without and then with DirectML device.",
+        "file_id": 110,
+        "content": "This code is initializing an EV3 motor and sending a direct command to play a sound with a frequency of 440Hz, duration of 1000ms, and volume at level 1. It also defines a motor object for port D on the EV3 brick and starts moving the motor by 100 units at speed 100.",
         "type": "comment"
     },
     "884": {
-        "file_id": 119,
-        "content": "/dynamic_plasticity_neural_networks/MCTS_NAS.md",
+        "file_id": 111,
+        "content": "/lego_mindstorm_physical_mouse_keyboard_control/usb_ev3.py",
         "type": "filepath"
     },
     "885": {
-        "file_id": 119,
-        "content": "Monte Carlo Tree Search (MCTS) is used in Neural Architecture Search (NAS) to evaluate potential network structures. This process involves simulation, backpropagation, selection and repetition until a stopping criterion is met. Researchers continue to explore new methods for NAS efficiency and effectiveness.",
+        "file_id": 111,
+        "content": "Importing EV3 library and initializing an EV3 object with USB protocol.",
         "type": "summary"
     },
     "886": {
-        "file_id": 119,
-        "content": "Monte Carlo Tree Search (MCTS) is a heuristic search algorithm that's commonly used in decision-making processes, particularly in game-playing AI, where it evaluates possible moves and outcomes to make decisions. When it comes to using MCTS in neural architecture search (NAS), it typically involves using MCTS to explore the space of possible neural network architectures and evaluate their performance.\nHere's a high-level overview of how MCTS could be used in NAS:\n1. **Search Space Representation**: Define a representation of the neural network architecture space. This could involve defining different types of layers, their connections, hyperparameters, etc., that form the search space.\n2. **Tree Expansion**: Start with a root node representing the current state of the search (e.g., a randomly initialized neural network architecture). Use MCTS to iteratively expand the search tree by considering different possible architectures and their performance.\n3. **Simulation and Evaluation**: During",
+        "file_id": 111,
+        "content": "import ev3_dc as ev3\nprotocol_param = dict(protocol=ev3.USB)\nmy_ev3 = ev3.EV3(**protocol_param) # working!\nmy_ev3.verbosity = 1",
         "type": "code",
-        "location": "/dynamic_plasticity_neural_networks/MCTS_NAS.md:1-7"
+        "location": "/lego_mindstorm_physical_mouse_keyboard_control/usb_ev3.py:1-5"
     },
     "887": {
-        "file_id": 119,
-        "content": "Monte Carlo Tree Search (MCTS) is used in neural architecture search to explore and evaluate possible network architectures based on their performance.",
+        "file_id": 111,
+        "content": "Importing EV3 library and initializing an EV3 object with USB protocol.",
         "type": "comment"
     },
     "888": {
-        "file_id": 119,
-        "content": " the selection and expansion phase of MCTS, simulate the performance of different architectures by training them on a subset of data or using a proxy measure of performance. This helps in estimating the potential value of exploring a particular architecture.\n4. **Backpropagation**: Propagate the simulated performance results back up the tree to update the value estimates of different architectures and guide the search towards promising areas of the architecture space.\n5. **Selection**: Use the updated value estimates to guide the selection of architectures for further exploration, focusing on those with potentially higher performance.\n6. **Repeat and Refine**: Iterate the process of selection, expansion, simulation, and backpropagation for a certain number of iterations or until a stopping criterion is met.\nIt's important to note that the specific implementation of MCTS in NAS can vary depending on the exact problem setting, the search space representation, and the performance evaluation m",
-        "type": "code",
-        "location": "/dynamic_plasticity_neural_networks/MCTS_NAS.md:7-12"
+        "file_id": 112,
+        "content": "/lunar_lander_test/test.py",
+        "type": "filepath"
     },
     "889": {
-        "file_id": 119,
-        "content": "This code describes the process of using Monte Carlo Tree Search (MCTS) for Neural Architecture Search (NAS). It involves simulating performance, backpropagation, selection, and repeating until a stopping criterion is met. The implementation can vary based on problem setting and search space representation.",
-        "type": "comment"
+        "file_id": 112,
+        "content": "This code imports the gymnasium library and creates a LunarLander environment. It then resets the environment, takes 1000 random actions, steps through each action, checks for termination or truncation, and resets if necessary. The environment can be visualized using Pygame but the image saving is commented out in this code snippet.",
+        "type": "summary"
     },
     "890": {
-        "file_id": 119,
-        "content": "ethods used. Additionally, MCTS is just one of many approaches to NAS, and researchers continue to explore different methods to efficiently and effectively search the space of neural network architectures.",
+        "file_id": 112,
+        "content": "import gymnasium as gym\n# import pygame\nenv = gym.make(\"LunarLander-v2\", render_mode=\"human\")\nobservation, info = env.reset(seed=42)\nfor _ in range(1000):\n    action = env.action_space.sample()  # this is where you would insert your policy\n    observation, reward, terminated, truncated, info = env.step(action)\n    # let's check.\n    # pygame.image.save(env.screen, \"image.png\")  # type:ignore\n    # exit()\n    # observation: (8,)\n    # reward: float value\n    # no image?\n    if terminated or truncated:\n        observation, info = env.reset()\nenv.close()",
         "type": "code",
-        "location": "/dynamic_plasticity_neural_networks/MCTS_NAS.md:12-12"
+        "location": "/lunar_lander_test/test.py:1-21"
     },
     "891": {
-        "file_id": 119,
-        "content": "This code discusses the use of MCTS (Monte Carlo Tree Search) in NAS (Neural Architecture Search), mentioning that it's just one approach and researchers continue to explore new methods for efficient and effective neural network architecture search.",
+        "file_id": 112,
+        "content": "This code imports the gymnasium library and creates a LunarLander environment. It then resets the environment, takes 1000 random actions, steps through each action, checks for termination or truncation, and resets if necessary. The environment can be visualized using Pygame but the image saving is commented out in this code snippet.",
         "type": "comment"
     },
     "892": {
-        "file_id": 120,
-        "content": "/dynamic_plasticity_neural_networks/README.md",
+        "file_id": 113,
+        "content": "/metalearning_random_shuffle/README.md",
         "type": "filepath"
     },
     "893": {
-        "file_id": 120,
-        "content": "This code introduces the concept of creating artificial neurons that can move around and change connections. It first focuses on replicating a static classic neural network before moving to dynamic ones.",
+        "file_id": 113,
+        "content": "This code describes the goal of performing operations like copy, cut, and shuffle without relying on annotations while potentially reducing entropy.",
         "type": "summary"
     },
     "894": {
-        "file_id": 120,
-        "content": "We can create artificial neurons that can move around, form new connections, changing its overall shape.\nBut first we will replicate a common static classic neural network.",
+        "file_id": 113,
+        "content": "we want to learn the unspeakable. we want to be annotation free.\nso basically we can do following operations:\ncopy, cut, shuffle\nin which the entropy might be reduced.",
         "type": "code",
-        "location": "/dynamic_plasticity_neural_networks/README.md:1-3"
+        "location": "/metalearning_random_shuffle/README.md:1-7"
     },
     "895": {
-        "file_id": 120,
-        "content": "This code introduces the concept of creating artificial neurons that can move around and change connections. It first focuses on replicating a static classic neural network before moving to dynamic ones.",
+        "file_id": 113,
+        "content": "This code describes the goal of performing operations like copy, cut, and shuffle without relying on annotations while potentially reducing entropy.",
         "type": "comment"
     },
     "896": {
-        "file_id": 121,
-        "content": "/dynamic_plasticity_neural_networks/dnn_reference.py",
+        "file_id": 114,
+        "content": "/metalearning_random_shuffle/main.py",
         "type": "filepath"
     },
     "897": {
-        "file_id": 121,
-        "content": "This code defines classes for connections and neurons in a neural network, including forward propagation, activation function, backpropagation, and derivative functions using a sigmoid function.",
+        "file_id": 114,
+        "content": "Generating and printing all possible combinations of letters and digits, copying the dataset twice, cutting the dataset to create a new one, shuffling the dataset.",
         "type": "summary"
     },
     "898": {
-        "file_id": 121,
-        "content": "import numpy as np  # Import NumPy for mathematical operations\nclass Connection:\n    def __init__(self, connected_index, weights, bias):\n        self.connected_index = connected_index  # Index of the connected neuron\n        self.weights = weights  # Weights of the connection\n        self.bias = bias  # Bias of the connection\nclass Neuron:\n    def __init__(self, index, current_potential, input_connections, output_connections):\n        self.index = index  # Index of the neuron\n        self.current_potential = current_potential  # Current membrane potential\n        self.input_connections = input_connections  # List of input connections\n        self.output_connections = output_connections  # List of output connections\n    def forward_propagate(self, inputs):\n        # Perform weighted sum of inputs and apply activation function\n        weighted_sum = np.dot(inputs, [conn.weights for conn in self.input_connections]) + self.input_connections[0].bias\n        self.current_potential = self.activation_functio",
+        "file_id": 114,
+        "content": "import string\ndataset = list(string.ascii_letters + string.digits)\nprint(dataset)\n# copy\nprint(dataset * 2)\n# cut\nprint(dataset[0:5] + dataset[10:])\n# shuffle\nimport random\nrandom.shuffle(dataset)\nprint(dataset)\n# and this is what you must learn",
         "type": "code",
-        "location": "/dynamic_plasticity_neural_networks/dnn_reference.py:1-19"
+        "location": "/metalearning_random_shuffle/main.py:1-18"
     },
     "899": {
-        "file_id": 121,
-        "content": "The code defines two classes: \"Connection\" and \"Neuron\". The \"Connection\" class represents a connection between two neurons with properties like connected index, weights, and bias. The \"Neuron\" class represents a neuron with properties such as its index, current potential, input connections, and output connections. It also has a method called \"forward_propagate\" that performs weighted sum of inputs, adds the connection's bias, and applies an activation function to calculate the neuron's new potential.",
+        "file_id": 114,
+        "content": "Generating and printing all possible combinations of letters and digits, copying the dataset twice, cutting the dataset to create a new one, shuffling the dataset.",
         "type": "comment"
     }
 }

@@ -141,402 +141,399 @@
     },
     "26": {
         "file_id": 3,
-        "content": "/array_check_ast_parsing.py",
+        "content": "/action_state_machine/example.txt",
         "type": "filepath"
     },
     "27": {
         "file_id": 3,
-        "content": "Reading code and storing its content into a string variable. Parsing the code using ast and iterating through the body elements, printing their attributes and checking for annotations.",
+        "content": "The code is showing a terminal session where a user is inputting and receiving responses. It displays commands, system prompts, and cursor movements.",
         "type": "summary"
     },
     "28": {
         "file_id": 3,
-        "content": "code_path = \"array_static_typecheck.py\"\nimport ast\nimport rich\nwith open(code_path, \"r\") as f:\n    content = f.read()\n    tree = ast.parse(content)\n    for el in tree.body:\n        rich.print(el.__dict__)\n        # rich.print(dir(el))\n        print(ann:=getattr(el, \"annotation\", None))\n        if ann:\n            print(ast.unparse(el), el) # ast.AnnAssign",
+        "content": "<human>are you doing just fine?<self>i am fine.<terminal_read>100</terminal_read>root@localhost ~/<type>hello world/n<reply>i am doing just fine. are you ok?<terminal_cursor_back>100</terminal_cursor_back><type>hello world</type><terminal_read>100</terminal_read>root@localhost ~/hello world\\nno such command\\nhello world\\nno such command\\nroot@localhost ~/</terminal_read><read_around_cursor>root@localhost ~/<cursor><move_cursor_forward>10</move_cursor_forward><read_around_cursor>root@localhost ~/<cursor><move_cursor_back>10</move_cursor_back>10<read_around_cursor>root@localhost ~/<cursor><type>hello world<read_around_cursor>root@localhost ~/hello world<cursor>",
         "type": "code",
-        "location": "/array_check_ast_parsing.py:1-14"
+        "location": "/action_state_machine/example.txt:1-1"
     },
     "29": {
         "file_id": 3,
-        "content": "Reading code and storing its content into a string variable. Parsing the code using ast and iterating through the body elements, printing their attributes and checking for annotations.",
+        "content": "The code is showing a terminal session where a user is inputting and receiving responses. It displays commands, system prompts, and cursor movements.",
         "type": "comment"
     },
     "30": {
         "file_id": 4,
-        "content": "/array_shape_typecheck.py",
+        "content": "/array_check_ast_parsing.py",
         "type": "filepath"
     },
     "31": {
         "file_id": 4,
-        "content": "Code creates 2D arrays 'arr' and 'arr2', defines class 'Array' with addition and absolute value methods, and uses numpy and Literal casting. It retrieves annotations from 'myArr' and suggests using Jinja2 macros for type checking/annotation work to prevent errors.",
+        "content": "Reading code and storing its content into a string variable. Parsing the code using ast and iterating through the body elements, printing their attributes and checking for annotations.",
         "type": "summary"
     },
     "32": {
         "file_id": 4,
+        "content": "code_path = \"array_static_typecheck.py\"\nimport ast\nimport rich\nwith open(code_path, \"r\") as f:\n    content = f.read()\n    tree = ast.parse(content)\n    for el in tree.body:\n        rich.print(el.__dict__)\n        # rich.print(dir(el))\n        print(ann:=getattr(el, \"annotation\", None))\n        if ann:\n            print(ast.unparse(el), el) # ast.AnnAssign",
+        "type": "code",
+        "location": "/array_check_ast_parsing.py:1-14"
+    },
+    "33": {
+        "file_id": 4,
+        "content": "Reading code and storing its content into a string variable. Parsing the code using ast and iterating through the body elements, printing their attributes and checking for annotations.",
+        "type": "comment"
+    },
+    "34": {
+        "file_id": 5,
+        "content": "/array_shape_typecheck.py",
+        "type": "filepath"
+    },
+    "35": {
+        "file_id": 5,
+        "content": "Code creates 2D arrays 'arr' and 'arr2', defines class 'Array' with addition and absolute value methods, and uses numpy and Literal casting. It retrieves annotations from 'myArr' and suggests using Jinja2 macros for type checking/annotation work to prevent errors.",
+        "type": "summary"
+    },
+    "36": {
+        "file_id": 5,
         "content": "from typing_extensions import reveal_type\nimport numpy as np\n# from typing import Tuple\n# from numpy.typing import NDArray, DTypeLike\nfrom nptyping import NDArray, Shape, Float  # type: ignore\nfrom typing import Any\nM = 5\nN = 10\narr: NDArray[Shape[\"5, 10\"], Any] = np.zeros((M, N))\narr2: NDArray[Shape[\"10, 5\"], Any] = np.zeros((N, M))\n# no annotation!\nimport beartype  # type:ignore\n@beartype.beartype  # check before run?\ndef add_arrays(\n    arr1: NDArray[Shape[\"5, 10\"], Any], arr2: NDArray[Shape[\"5, 10\"], Any]\n) -> NDArray[Shape[\"5, 10\"], Any]:\n    result = arr1 + arr2\n    return result\nmyarr = add_arrays(arr, arr)  # no issue?\n# myarr = add_arrays(arr, arr2)  # only beartype shows issue.\nreveal_type(myarr)\n# from jaxtyping import Array\n# not typechecking. import from jax.\n# from jax import Array  # type: ignore\n# import jaxtyping  # type: ignore\n# from typing_extensions import TypeAlias\nfrom typing import cast\n# mTypeAlias: TypeAlias = jaxtyping.Float[Array, \"dim1 dim2\"]\n# arr3 = cast(mTypeAlias, np.array([[1, 2,",
         "type": "code",
         "location": "/array_shape_typecheck.py:1-38"
     },
-    "33": {
-        "file_id": 4,
-        "content": "Code is defining variables `arr` and `arr2` as numpy arrays with shapes 5x10 and 10x5 respectively.\nFunction `add_arrays` takes two numpy arrays of shape 5x10 as input and returns an output numpy array also of shape 5x10.\nVariable `myarr` is assigned the result of calling function `add_arrays` with arrays `arr` and `arr`.\nFunction `reveal_type(myarr)` reveals the actual type of variable `myarr`.",
-        "type": "comment"
-    },
-    "34": {
-        "file_id": 4,
-        "content": " 3]]))\n# # arr3: mTypeAlias = np.array([[1, 2, 3]])\n# arr4: jaxtyping.Float[Array, \"dim1 dim3\"] = np.array([[1, 2, 3, 5]])\n# @beartype.beartype\n# def add2(a: mTypeAlias, b: mTypeAlias) -> mTypeAlias:\n#     return a + b\n# # arr5 = add2(arr3, arr4)\n# arr5 = add2(arr3, arr3)  # still not working.\n# from typing import TypeVar, Generic\n# from typing_extensions import TypeVarTuple, Unpack\n# DType = TypeVar(\"DType\")\n# Shape = TypeVarTuple(\"Shape\")\n# class Array(Generic[DType, Unpack[Shape]]):\n#     def __abs__(self) -> Array[DType, Unpack[Shape]]:\n#         ...\n#     def __add__(\n#         self, other: Array[DType, Unpack[Shape]]\n#     ) -> Array[DType, Unpack[Shape]]:\n#         ...\n# from typing import Literal\n# arr9 = cast(Array[int, Literal[1], Literal[3]], np.array([[1, 2, 3]]))\n# arr10 = cast(Array[int, Literal[1], Literal[4]], np.array([[1, 2, 3, 4]]))\n# arr11 = arr9 + arr10  # checked!\n# arr11 = arr9+arr9\nfrom typing_extensions import Annotated\nmyType = Annotated[np.ndarray, 20, 30]\nmyArr: myType = np.zeros((20",
-        "type": "code",
-        "location": "/array_shape_typecheck.py:38-80"
-    },
-    "35": {
-        "file_id": 4,
-        "content": "37-46: Define 2D array 'arr3' with type 'mTypeAlias'.\n47-59: Define 2D array 'arr4' with type 'jaxtyping.Float[Array, \"dim1 dim3\"]'.\n60-68: Define a function 'add2' that takes two 'mTypeAlias' arguments and returns 'mTypeAlias'.\n69-72: Add arrays 'arr3' and 'arr4' using the 'add2' function, but the result is not working as expected.\n75-80: Define generic class 'Array' with type variables for data type and shape tuple.\n81-85: Define '__abs__' method in 'Array' class to return an array of the same data type and shape.\n86-90: Define '__add__' method in 'Array' class to perform addition of two arrays with matching data type and shape.\n92-100: Define 'arr9' as a casted 2D array using numpy and 'Literal' from typing for specific dimensions.\n101-111: Define 'arr10' as a casted 2D array using numpy and 'Literal' from typing for specific dimensions.\n112-114: Add 'arr9' and 'arr10', and store the result in 'arr11'.\n115-117: Add 'arr9' to itself, and store the result in 'arr11'.\n118-123: Define a new type 'myType' using Annotated from typing_extensions for np.ndarray with specific dimensions.\n124-126: Create an instance of 'myType', initialize it with zeros, and store the result in 'myArr'.",
-        "type": "comment"
-    },
-    "36": {
-        "file_id": 4,
-        "content": ", 30))\n# how to get that annotated value?\n# print('ANNOTATION?',myArr.__annotations__)\nprint(__annotations__)\n# {'arr': NDArray[Shape['5, 10'], Any], 'arr2': NDArray[Shape['10, 5'], Any], 'myArr': typing_extensions.Annotated[numpy.ndarray, 20, 30]}\n# one such way to prevent errors is to delegate some type checking/annotation work to jinja2. use macro to generate annotations.",
-        "type": "code",
-        "location": "/array_shape_typecheck.py:80-86"
-    },
     "37": {
-        "file_id": 4,
-        "content": "The code is attempting to retrieve annotations from a variable 'myArr'. It first prints the current annotations using `__annotations__` and then mentions the idea of preventing errors by delegating type checking/annotation work to Jinja2 using macros for generating annotations.",
+        "file_id": 5,
+        "content": "Code is defining variables `arr` and `arr2` as numpy arrays with shapes 5x10 and 10x5 respectively.\nFunction `add_arrays` takes two numpy arrays of shape 5x10 as input and returns an output numpy array also of shape 5x10.\nVariable `myarr` is assigned the result of calling function `add_arrays` with arrays `arr` and `arr`.\nFunction `reveal_type(myarr)` reveals the actual type of variable `myarr`.",
         "type": "comment"
     },
     "38": {
         "file_id": 5,
-        "content": "/array_static_typecheck.py",
-        "type": "filepath"
+        "content": " 3]]))\n# # arr3: mTypeAlias = np.array([[1, 2, 3]])\n# arr4: jaxtyping.Float[Array, \"dim1 dim3\"] = np.array([[1, 2, 3, 5]])\n# @beartype.beartype\n# def add2(a: mTypeAlias, b: mTypeAlias) -> mTypeAlias:\n#     return a + b\n# # arr5 = add2(arr3, arr4)\n# arr5 = add2(arr3, arr3)  # still not working.\n# from typing import TypeVar, Generic\n# from typing_extensions import TypeVarTuple, Unpack\n# DType = TypeVar(\"DType\")\n# Shape = TypeVarTuple(\"Shape\")\n# class Array(Generic[DType, Unpack[Shape]]):\n#     def __abs__(self) -> Array[DType, Unpack[Shape]]:\n#         ...\n#     def __add__(\n#         self, other: Array[DType, Unpack[Shape]]\n#     ) -> Array[DType, Unpack[Shape]]:\n#         ...\n# from typing import Literal\n# arr9 = cast(Array[int, Literal[1], Literal[3]], np.array([[1, 2, 3]]))\n# arr10 = cast(Array[int, Literal[1], Literal[4]], np.array([[1, 2, 3, 4]]))\n# arr11 = arr9 + arr10  # checked!\n# arr11 = arr9+arr9\nfrom typing_extensions import Annotated\nmyType = Annotated[np.ndarray, 20, 30]\nmyArr: myType = np.zeros((20",
+        "type": "code",
+        "location": "/array_shape_typecheck.py:38-80"
     },
     "39": {
         "file_id": 5,
-        "content": "The code defines a generic class for arrays, performs operations like absolute value and addition, uses NewType to define specific types, and employs annotations for operations and shape constraints. It also includes a variable 'val4' that can be simplified using SymPy.",
-        "type": "summary"
+        "content": "37-46: Define 2D array 'arr3' with type 'mTypeAlias'.\n47-59: Define 2D array 'arr4' with type 'jaxtyping.Float[Array, \"dim1 dim3\"]'.\n60-68: Define a function 'add2' that takes two 'mTypeAlias' arguments and returns 'mTypeAlias'.\n69-72: Add arrays 'arr3' and 'arr4' using the 'add2' function, but the result is not working as expected.\n75-80: Define generic class 'Array' with type variables for data type and shape tuple.\n81-85: Define '__abs__' method in 'Array' class to return an array of the same data type and shape.\n86-90: Define '__add__' method in 'Array' class to perform addition of two arrays with matching data type and shape.\n92-100: Define 'arr9' as a casted 2D array using numpy and 'Literal' from typing for specific dimensions.\n101-111: Define 'arr10' as a casted 2D array using numpy and 'Literal' from typing for specific dimensions.\n112-114: Add 'arr9' and 'arr10', and store the result in 'arr11'.\n115-117: Add 'arr9' to itself, and store the result in 'arr11'.\n118-123: Define a new type 'myType' using Annotated from typing_extensions for np.ndarray with specific dimensions.\n124-126: Create an instance of 'myType', initialize it with zeros, and store the result in 'myArr'.",
+        "type": "comment"
     },
     "40": {
         "file_id": 5,
+        "content": ", 30))\n# how to get that annotated value?\n# print('ANNOTATION?',myArr.__annotations__)\nprint(__annotations__)\n# {'arr': NDArray[Shape['5, 10'], Any], 'arr2': NDArray[Shape['10, 5'], Any], 'myArr': typing_extensions.Annotated[numpy.ndarray, 20, 30]}\n# one such way to prevent errors is to delegate some type checking/annotation work to jinja2. use macro to generate annotations.",
+        "type": "code",
+        "location": "/array_shape_typecheck.py:80-86"
+    },
+    "41": {
+        "file_id": 5,
+        "content": "The code is attempting to retrieve annotations from a variable 'myArr'. It first prints the current annotations using `__annotations__` and then mentions the idea of preventing errors by delegating type checking/annotation work to Jinja2 using macros for generating annotations.",
+        "type": "comment"
+    },
+    "42": {
+        "file_id": 6,
+        "content": "/array_static_typecheck.py",
+        "type": "filepath"
+    },
+    "43": {
+        "file_id": 6,
+        "content": "The code defines a generic class for arrays, performs operations like absolute value and addition, uses NewType to define specific types, and employs annotations for operations and shape constraints. It also includes a variable 'val4' that can be simplified using SymPy.",
+        "type": "summary"
+    },
+    "44": {
+        "file_id": 6,
         "content": "# link: https://taoa.io/posts/Shape-typing-numpy-with-pyright-and-variadic-generics\n# PEP 646: https://peps.python.org/pep-0646/\n# mypy --enable-incomplete-feature=Unpack --enable-incomplete-feature=TypeVarTuple  array_static_typecheck.py\nfrom typing import TypeVar, Generic, NewType, Literal\nfrom typing_extensions import TypeVarTuple, Unpack, Self, Annotated\nDType = TypeVar(\"DType\")\nShape = TypeVarTuple(\"Shape\")\nclass Array(Generic[DType, Unpack[Shape]]):\n    def __abs__(self) -> Self:\n        ...\n    def special_ops(self, a: Annotated[int, 2, 3]) -> Annotated[int, 1, 2]:\n        ...\n    def __add__(self, other: Self) -> Self:\n        ...\nHeight = NewType(\"Height\", int)\nWidth = NewType(\"Width\", int)\nx: Array[float, Height, Width] = Array()\ny: Array[float, Literal[1], Literal[1]] = Array()\nz = abs(y)\nh = x + y\na0: Annotated[float, 1, 2] = 1\nx.special_ops(a0)  # annotated will not be checked here.\nval: int\nval2: \"annotated_info\"  # <ast.Constant object at 0x101306290>\n# T = TypeVar(\"T\")\n# T2 = TypeVar(\"T2\")\nval3:",
         "type": "code",
         "location": "/array_static_typecheck.py:1-39"
     },
-    "41": {
-        "file_id": 5,
+    "45": {
+        "file_id": 6,
         "content": "This code is defining a generic class for arrays, implementing type checking using type variables, and performing array operations such as absolute value and addition. It also utilizes NewType to define specific types like Height and Width. The code includes annotations for specific operations and shape constraints.",
         "type": "comment"
     },
-    "42": {
-        "file_id": 5,
+    "46": {
+        "file_id": 6,
         "content": " Annotated[\n    int, T * T2\n]  # which can only be understood by some type checker. passing this to sympy will be much better.\nval4: Annotated[int, \"T*T2\"]\nval4: Annotated[int, \"T*T3\"] # this is valid, for now.",
         "type": "code",
         "location": "/array_static_typecheck.py:39-43"
     },
-    "43": {
-        "file_id": 5,
+    "47": {
+        "file_id": 6,
         "content": "The code defines a variable 'val4' annotated with types \"T*T2\" and later changes it to \"T*T3\". This variable is understood by some type checker and could be simplified using SymPy.",
         "type": "comment"
     },
-    "44": {
-        "file_id": 6,
+    "48": {
+        "file_id": 7,
         "content": "/autogui.py",
         "type": "filepath"
     },
-    "45": {
-        "file_id": 6,
+    "49": {
+        "file_id": 7,
         "content": "Both comments discuss Python scripts that utilize modules such as \"autogui\" or \"win32gui\" to capture and record GUI input, simulate keystrokes with a delay, and playback recorded events while allowing screenshot capturing.",
         "type": "summary"
     },
-    "46": {
-        "file_id": 6,
+    "50": {
+        "file_id": 7,
         "content": "import pyautogui, time, sys, os, win32api, win32gui, win32con, datetime, pyHook, pythoncom\nfrom optparse import OptionParser\n'''\nPython Automated Actions Script by Ian Mckay\nVersion 0.1 - 20151217\n'''\npyautogui.PAUSE = 0\npyautogui.FAILSAFE = True\nmain_thread_id = win32api.GetCurrentThreadId()\nevents = []\nrecording = False\ndef OnMouseEvent(event):\n\tglobal events\n\tglobal recording\n\tif (event.Message!=512): # 512 is mouse move\n\t\t'''\n\t\tprint('MessageName:',event.MessageName)\n\t\tprint('Message:',event.Message)\n\t\tprint('Time:',event.Time)\n\t\tprint('Window:',event.Window)\n\t\tprint('WindowName:',event.WindowName)\n\t\tprint('Position:',event.Position)\n\t\tprint('Wheel:',event.Wheel)\n\t\tprint('Injected:',event.Injected)\n\t\tprint('---')\n\t\t'''\n\t\tif (recording==True):\n\t\t\tevents.append([event.Position[1],event.Position[0],event.Message,event.Time,\"2\"])\n\treturn True\ndef OnKeyboardEvent(event):\n\tglobal hm\n\tglobal events\n\tglobal recording\n\tglobal starttime\n\tglobal main_thread_id\n\t'''\n\tprint('MessageName:',event.MessageName)\n\tprint('Message:',event",
         "type": "code",
         "location": "/autogui.py:1-45"
     },
-    "47": {
-        "file_id": 6,
+    "51": {
+        "file_id": 7,
         "content": "This code imports various libraries and defines several functions for automating user actions, such as capturing mouse and keyboard events. It appears to be part of an automated action script with the capability to record and playback user input.",
         "type": "comment"
     },
-    "48": {
-        "file_id": 6,
+    "52": {
+        "file_id": 7,
         "content": ".Message)\n\tprint('Time:',event.Time)\n\tprint('Window:',event.Window)\n\tprint('WindowName:',event.WindowName)\n\tprint('Ascii:', event.Ascii, chr(event.Ascii))\n\tprint('Key:', event.Key)\n\tprint('KeyID:', event.KeyID)\n\tprint('ScanCode:', event.ScanCode)\n\tprint('Extended:', event.Extended)\n\tprint('Injected:', event.Injected)\n\tprint('Alt', event.Alt)\n\tprint('Transition', event.Transition)\n\tprint('---')\n\t'''\n\tif (recording==True):\n\t\tif (event.Key==\"End\"):\n\t\t\thm.UnhookKeyboard()\n\t\t\thm.UnhookMouse()\n\t\t\twin32api.PostThreadMessage(main_thread_id, win32con.WM_QUIT, 0, 0);\n\t\t\tevents.append([\"0\",\"0\",\"1\",event.Time,\"0\"])\n\t\t\tprint(\"Ended recording\")\n\t\t\tprint('\\a')\n\t\t\treturn False\n\t\telse:\n\t\t\tevents.append([event.Extended,event.KeyID,event.Message,event.Time,\"1\"])\n\tif (recording==False):\n\t\tif (event.Key==\"Home\" and event.Message==257):\n\t\t\tstarttime = datetime.datetime.now().time()\n\t\t\trecording = True\n\t\t\tprint(\"Started recording\")\n\t\t\tprint('\\a')\n\t\t\tevents.append([\"0\",\"0\",\"0\",event.Time,\"0\"])\n\t\t\treturn False\n\treturn True\ndef record():\n\tglobal",
         "type": "code",
         "location": "/autogui.py:45-84"
     },
-    "49": {
-        "file_id": 6,
+    "53": {
+        "file_id": 7,
         "content": "This code is handling keyboard and mouse events. If the \"End\" key is pressed while recording, it will stop recording and end the program. If the \"Home\" key is pressed, it starts recording. The events are being appended to a list for future use.",
         "type": "comment"
     },
-    "50": {
-        "file_id": 6,
+    "54": {
+        "file_id": 7,
         "content": " hm\n\tprint(\"Hooking now...\")\n\thm = pyHook.HookManager()\n\thm.MouseAll = OnMouseEvent\n\thm.KeyAll = OnKeyboardEvent\n\thm.HookMouse()\n\thm.HookKeyboard()\n\tprint(\"Hooked\")\n\tpythoncom.PumpMessages()\n\tprint(\"Exporting...\")\n\tf = open('recording.txt', 'w+')\n\tfor event in events:\n\t\tf.write(str(event.pop()) + ',' + str(event.pop()) + ',' + str(event.pop()) + ',' + str(event.pop()) + ',' + str(event.pop()) + '\\n')\n\tf.close()\n\tprint(\"Ending...\")\ndef play():\n\tprint(\"Starting in 2 secs...\")\n\ttime.sleep(2)\n\tlasttime=False\n\twith open('recording.txt') as fp:\n\t\tfor line in fp:\n\t\t\telements = line.split(',')\n\t\t\teventdata2 = int(elements.pop().replace('\\n',''))\n\t\t\teventdata1 = int(elements.pop())\n\t\t\teventsubtype = int(elements.pop())\n\t\t\teventtime = int(elements.pop())\n\t\t\teventtype = int(elements.pop())\n\t\t\tif (lasttime==False):\n\t\t\t\tif (eventtype==0 and eventsubtype==0):\n\t\t\t\t\tlasttime=eventtime\n\t\t\t\telse:\n\t\t\t\t\tprint(\"Source data error! (eventtype=\" + str(eventtype) + \", eventsubtype=\" + str(eventsubtype) + \")\")\n\t\t\t\t\tsys.exit(1)\n\t\t\telif (eventty",
         "type": "code",
         "location": "/autogui.py:84-122"
     },
-    "51": {
-        "file_id": 6,
+    "55": {
+        "file_id": 7,
         "content": "Hooking the mouse and keyboard events, recording them in a file named 'recording.txt', and then playing back the recorded events.",
         "type": "comment"
     },
-    "52": {
-        "file_id": 6,
+    "56": {
+        "file_id": 7,
         "content": "pe==1):\n\t\t\t\ttime.sleep(max((eventtime-lasttime)/1000,0.02)) # At least 20ms between everything\n\t\t\t\tif (eventdata1>32 and eventdata1<127 and eventdata2==0):\n\t\t\t\t\tkey = chr(eventdata1).lower()\n\t\t\t\telif (eventdata1==91 and eventdata2==1):\n\t\t\t\t\tkey = \"winleft\"\n\t\t\t\telif (eventdata1==9 and eventdata2==0):\n\t\t\t\t\tkey = \"tab\"\n\t\t\t\telif (eventdata1==20 and eventdata2==0):\n\t\t\t\t\tkey = \"capslock\"\n\t\t\t\telif (eventdata1==160 and eventdata2==0):\n\t\t\t\t\tkey = \"shiftleft\"\n\t\t\t\telif (eventdata1==162 and eventdata2==0):\n\t\t\t\t\tkey = \"ctrlleft\"\n\t\t\t\telif (eventdata1==164 and eventdata2==0):\n\t\t\t\t\tkey = \"altleft\"\n\t\t\t\telif (eventdata1==32 and eventdata2==0):\n\t\t\t\t\tkey = \"space\"\n\t\t\t\telif (eventdata1==165 and eventdata2==1):\n\t\t\t\t\tkey = \"altright\"\n\t\t\t\telif (eventdata1==163 and eventdata2==1):\n\t\t\t\t\tkey = \"ctrlright\"\n\t\t\t\telif (eventdata1==37 and eventdata2==1):\n\t\t\t\t\tkey = \"left\"\n\t\t\t\telif (eventdata1==40 and eventdata2==1):\n\t\t\t\t\tkey = \"down\"\n\t\t\t\telif (eventdata1==39 and eventdata2==1):\n\t\t\t\t\tkey = \"right\"\n\t\t\t\telif (eventdata1==161 and eventdata2==1):\n\t\t\t",
         "type": "code",
         "location": "/autogui.py:122-152"
     },
-    "53": {
-        "file_id": 6,
+    "57": {
+        "file_id": 7,
         "content": "This code handles USB HID events for keyboard inputs. It ensures at least 20ms between events and maps specific event data to corresponding keys or key combinations, such as \"winleft\" for the Windows key, \"capslock\", and various arrow/directional keys.",
         "type": "comment"
     },
-    "54": {
-        "file_id": 6,
+    "58": {
+        "file_id": 7,
         "content": "\t\tkey = \"shiftright\"\n\t\t\t\telif (eventdata1==38 and eventdata2==1):\n\t\t\t\t\tkey = \"up\"\n\t\t\t\telif (eventdata1==34 and eventdata2==1):\n\t\t\t\t\tkey = \"pgdn\"\n\t\t\t\telif (eventdata1==33 and eventdata2==1):\n\t\t\t\t\tkey = \"pgup\"\n\t\t\t\telif (eventdata1==8 and eventdata2==0):\n\t\t\t\t\tkey = \"backspace\"\n\t\t\t\telif (eventdata1==44 and eventdata2==1):\n\t\t\t\t\tkey = \"printscreen\"\n\t\t\t\telif (eventdata1==46 and eventdata2==1):\n\t\t\t\t\tkey = \"delete\"\n\t\t\t\telif (eventdata1==27 and eventdata2==0):\n\t\t\t\t\tkey = \"esc\"\n\t\t\t\telif (eventdata1==13 and eventdata2==0):\n\t\t\t\t\tkey = \"enter\"\n\t\t\t\telif (eventdata1==112 and eventdata2==0):\n\t\t\t\t\tkey = \"f1\"\n\t\t\t\telif (eventdata1==113 and eventdata2==0):\n\t\t\t\t\tkey = \"f2\"\n\t\t\t\telif (eventdata1==114 and eventdata2==0):\n\t\t\t\t\tkey = \"f3\"\n\t\t\t\telif (eventdata1==115 and eventdata2==0):\n\t\t\t\t\tkey = \"f4\"\n\t\t\t\telif (eventdata1==116 and eventdata2==0):\n\t\t\t\t\tkey = \"f5\"\n\t\t\t\telif (eventdata1==117 and eventdata2==0):\n\t\t\t\t\tkey = \"f6\"\n\t\t\t\telif (eventdata1==118 and eventdata2==0):\n\t\t\t\t\tkey = \"f7\"\n\t\t\t\telif (eventdata1==119 and eventdata2==0):\n\t\t\t\t\tkey = \"f8\"\n\t",
         "type": "code",
         "location": "/autogui.py:152-185"
     },
-    "55": {
-        "file_id": 6,
+    "59": {
+        "file_id": 7,
         "content": "This code is mapping different keyboard event combinations to their corresponding keys.",
         "type": "comment"
     },
-    "56": {
-        "file_id": 6,
+    "60": {
+        "file_id": 7,
         "content": "\t\t\telif (eventdata1==120 and eventdata2==0):\n\t\t\t\t\tkey = \"f9\"\n\t\t\t\telif (eventdata1==121 and eventdata2==0):\n\t\t\t\t\tkey = \"f10\"\n\t\t\t\telif (eventdata1==122 and eventdata2==0):\n\t\t\t\t\tkey = \"f11\"\n\t\t\t\telif (eventdata1==123 and eventdata2==0):\n\t\t\t\t\tkey = \"f12\"\n\t\t\t\telse:\n\t\t\t\t\tprint(\"Skipping unknown keycode: \" + str(eventdata1))\n\t\t\t\t\tkey = False\n\t\t\t\tif (eventsubtype==256 or eventsubtype==260): # I think 260 is a \"virtual keystroke\"\n\t\t\t\t\tif (key!=False):\n\t\t\t\t\t\tpyautogui.keyDown(key)\n\t\t\t\telif (eventsubtype==257):\n\t\t\t\t\tif (key!=False):\n\t\t\t\t\t\tpyautogui.keyUp(key)\n\t\t\t\telse:\n\t\t\t\t\tprint(\"Bad keyboard subtype!\")\n\t\t\t\t\tsys.exit(1)\n\t\t\t\tlasttime=eventtime\n\t\t\telif (eventtype==2):\n\t\t\t\ttime.sleep(max((eventtime-lasttime)/1000,0.02)) # At least 20ms between everything\n\t\t\t\tif (eventsubtype==513):\n\t\t\t\t\tpyautogui.mouseDown(x=eventdata1, y=eventdata2, button='left')\n\t\t\t\telif (eventsubtype==514):\n\t\t\t\t\tpyautogui.mouseUp(x=eventdata1, y=eventdata2, button='left')\n\t\t\t\telse:\n\t\t\t\t\tprint(\"Bad mouse subtype!\")\n\t\t\t\t\tsys.exit(1)\n\t\t\t\tlasttime=eventtime\n\t\t\tel",
         "type": "code",
         "location": "/autogui.py:185-220"
     },
-    "57": {
-        "file_id": 6,
-        "content": "This code is part of an autogui module and appears to be processing keyboard and mouse events from a device. If the eventdata matches specific keycodes, it assigns corresponding keys (\"f9\"-\"f12\") to the variable \"key\". The code then checks if it's a virtual keystroke (eventsubtype 256 or 260) and triggers either pyautogui.keyDown() or pyautogui.keyUp() function accordingly. If the event is related to mouse movement, it uses pyautogui.mouseDown() or pyautogui.mouseUp() depending on the eventsubtype. It ensures there's at least a 20ms delay between events and handles unknown subtypes by exiting the program.",
-        "type": "comment"
-    },
-    "58": {
-        "file_id": 6,
-        "content": "if (eventtype==0 and eventsubtype==1):\n\t\t\t\tprint(\"Done.\")\n\t\t\t\tsys.exit(0)\n\t\t\telse:\n\t\t\t\tprint(\"Bad source major type!\")\n\t\t\t\tsys.exit(1)\n\tprint(\"Done playing\")\n\tprint('\\a')\ndef main():\n\tusage = \"usage: %prog [options]\"\n\tparser = OptionParser(usage=usage)\n\tparser.add_option(\"-r\", \"--record\", action=\"store_true\", dest=\"do_record\", default=False, help=\"record a session of input\")\n\tparser.add_option(\"-p\", \"--play\", action=\"store_true\", dest=\"do_play\", default=False, help=\"play a session of input\")\n\t(options, args) = parser.parse_args()\n\tif (options.do_record==False and options.do_play==False):\n\t\tparser.print_help()\n\t\tsys.exit(0)\n\tif (options.do_record==True):\n\t\trecord()\n\tif (options.do_play==True):\n\t\tplay()\nif __name__ == \"__main__\":\n\tmain()\n'''\nPLAY AREA\nw=win32gui\ntitle=w.GetWindowText(w.GetForegroundWindow())\nim = None\ndef capture():\n\tglobal im\n\t#pyautogui.click(1200, 500)\n\t#pyautogui.typewrite('About to close window!')\n\t#time.sleep(2)\n\t#pyautogui.hotkey('alt', 'f4')\n\t#pyautogui.screenshot()\n\tposx, posy = pyautogui.positio",
-        "type": "code",
-        "location": "/autogui.py:220-259"
-    },
-    "59": {
-        "file_id": 6,
-        "content": "This code is part of a Python script for an auto-GUI (graphical user interface) tool. It allows the user to record input and playback sessions of input. The script uses the \"win32gui\" module, which provides GUI window handling functions.\n\nThe first part of the code checks if the command line arguments are correct and then proceeds with either recording or playing input sessions. If no action is specified, it displays help information and exits.\n\nIn the PLAY AREA section, there is a function called \"capture\" which captures a screenshot when a window with a specific title is active. However, the code seems incomplete as it does not include the necessary imports for the functions used within the code.",
-        "type": "comment"
-    },
-    "60": {
-        "file_id": 6,
-        "content": "n()\n\tprint(str(posx) + \",\" + str(posy))\n\tim = pyautogui.screenshot('img.png',region=(posx-20,posy-20,40,40))\ndef replay():\n\tglobal im\n\tloc = pyautogui.locateOnScreen(im)\n\tlocx, locy = pyautogui.center(loc)\n\tpyautogui.click(locx, locy)\n#capture()\n#replay()\ndef post_keys(hwnd, i):\n\twin32api.SendMessage(hwnd, win32con.WM_KEYDOWN, i, 0)\n\twin32api.SendMessage(hwnd, win32con.WM_KEYUP, i, 0)\n'''",
-        "type": "code",
-        "location": "/autogui.py:259-272"
-    },
     "61": {
-        "file_id": 6,
-        "content": "The code captures a screenshot of the current window and searches for the image within it. If found, it clicks on the location. The `post_keys()` function simulates key down and key up events.",
+        "file_id": 7,
+        "content": "This code is part of an autogui module and appears to be processing keyboard and mouse events from a device. If the eventdata matches specific keycodes, it assigns corresponding keys (\"f9\"-\"f12\") to the variable \"key\". The code then checks if it's a virtual keystroke (eventsubtype 256 or 260) and triggers either pyautogui.keyDown() or pyautogui.keyUp() function accordingly. If the event is related to mouse movement, it uses pyautogui.mouseDown() or pyautogui.mouseUp() depending on the eventsubtype. It ensures there's at least a 20ms delay between events and handles unknown subtypes by exiting the program.",
         "type": "comment"
     },
     "62": {
         "file_id": 7,
-        "content": "/compose.yaml",
-        "type": "filepath"
+        "content": "if (eventtype==0 and eventsubtype==1):\n\t\t\t\tprint(\"Done.\")\n\t\t\t\tsys.exit(0)\n\t\t\telse:\n\t\t\t\tprint(\"Bad source major type!\")\n\t\t\t\tsys.exit(1)\n\tprint(\"Done playing\")\n\tprint('\\a')\ndef main():\n\tusage = \"usage: %prog [options]\"\n\tparser = OptionParser(usage=usage)\n\tparser.add_option(\"-r\", \"--record\", action=\"store_true\", dest=\"do_record\", default=False, help=\"record a session of input\")\n\tparser.add_option(\"-p\", \"--play\", action=\"store_true\", dest=\"do_play\", default=False, help=\"play a session of input\")\n\t(options, args) = parser.parse_args()\n\tif (options.do_record==False and options.do_play==False):\n\t\tparser.print_help()\n\t\tsys.exit(0)\n\tif (options.do_record==True):\n\t\trecord()\n\tif (options.do_play==True):\n\t\tplay()\nif __name__ == \"__main__\":\n\tmain()\n'''\nPLAY AREA\nw=win32gui\ntitle=w.GetWindowText(w.GetForegroundWindow())\nim = None\ndef capture():\n\tglobal im\n\t#pyautogui.click(1200, 500)\n\t#pyautogui.typewrite('About to close window!')\n\t#time.sleep(2)\n\t#pyautogui.hotkey('alt', 'f4')\n\t#pyautogui.screenshot()\n\tposx, posy = pyautogui.positio",
+        "type": "code",
+        "location": "/autogui.py:220-259"
     },
     "63": {
         "file_id": 7,
-        "content": "Creating two services, Xorg-VNC-Client and VNC-Server with specified images.",
-        "type": "summary"
+        "content": "This code is part of a Python script for an auto-GUI (graphical user interface) tool. It allows the user to record input and playback sessions of input. The script uses the \"win32gui\" module, which provides GUI window handling functions.\n\nThe first part of the code checks if the command line arguments are correct and then proceeds with either recording or playing input sessions. If no action is specified, it displays help information and exits.\n\nIn the PLAY AREA section, there is a function called \"capture\" which captures a screenshot when a window with a specific title is active. However, the code seems incomplete as it does not include the necessary imports for the functions used within the code.",
+        "type": "comment"
     },
     "64": {
         "file_id": 7,
-        "content": "services:\n  xorg-vnc-client:\n    build: .\n  vnc-server:\n    image: \"dorowu/ubuntu-desktop-lxde-vnc:focal\"",
+        "content": "n()\n\tprint(str(posx) + \",\" + str(posy))\n\tim = pyautogui.screenshot('img.png',region=(posx-20,posy-20,40,40))\ndef replay():\n\tglobal im\n\tloc = pyautogui.locateOnScreen(im)\n\tlocx, locy = pyautogui.center(loc)\n\tpyautogui.click(locx, locy)\n#capture()\n#replay()\ndef post_keys(hwnd, i):\n\twin32api.SendMessage(hwnd, win32con.WM_KEYDOWN, i, 0)\n\twin32api.SendMessage(hwnd, win32con.WM_KEYUP, i, 0)\n'''",
         "type": "code",
-        "location": "/compose.yaml:1-5"
+        "location": "/autogui.py:259-272"
     },
     "65": {
         "file_id": 7,
-        "content": "Creating two services, Xorg-VNC-Client and VNC-Server with specified images.",
+        "content": "The code captures a screenshot of the current window and searches for the image within it. If found, it clicks on the location. The `post_keys()` function simulates key down and key up events.",
         "type": "comment"
     },
     "66": {
         "file_id": 8,
-        "content": "/config.py",
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/Dockerfile",
         "type": "filepath"
     },
     "67": {
         "file_id": 8,
-        "content": "Sets the simulation timestep to 0.03 seconds and defines the file path for storing state data as \"states.jsonl\".",
+        "content": "Installs Docker.io from Alpine Linux package manager (APT).",
         "type": "summary"
     },
     "68": {
         "file_id": 8,
-        "content": "timestep = 0.03\nfilePath = \"states.jsonl\"",
+        "content": "# just install 'docker.io' from apt\n# remember to use sudo.\n# no official support on i386 now!\nFROM alpine:3.7",
         "type": "code",
-        "location": "/config.py:1-2"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/Dockerfile:1-4"
     },
     "69": {
         "file_id": 8,
-        "content": "Sets the simulation timestep to 0.03 seconds and defines the file path for storing state data as \"states.jsonl\".",
+        "content": "Installs Docker.io from Alpine Linux package manager (APT).",
         "type": "comment"
     },
     "70": {
         "file_id": 9,
-        "content": "/conscious_struct.py",
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/README.md",
         "type": "filepath"
     },
     "71": {
         "file_id": 9,
-        "content": "The code processes HID actions, handles various inputs and formats, validates types, includes classes for data management and training, ensures proper shape and logging. It manages training data in an image processing program using SequentialEvalQueue class with LSTM, fixes bugs 9 and 13, optimizes data type bits, prepares input data for RNN, uses Einops library with ViTDecoder to process selected image bits, rearranges and copies data based on shared and exclusive indices, performs 1D convolution with filters, and generates output.",
+        "content": "This code provides instructions on how to train and use a bot for various tasks. It emphasizes the importance of allowing the bot to explore and learn, as meaning will arise from groups and communications.",
         "type": "summary"
     },
     "72": {
         "file_id": 9,
-        "content": "# TODO: design a way to \"observe\" current holding keys, current mouse location, encode that observation and feed into model input along with screen image data\n# import pynput\n# no such dependency when training.\nimport einops\nimport os\nimport numpy as np\nimport cv2\nimport ast\nfrom pydantic import BaseModel, validator\nfrom typing import Union, Mapping, List\n# import logging\nfrom log_utils import logger\nfrom pydantic_numpy import NDArray\nimport torch\ntry:\n    from typing import Literal\nexcept:\n    from typing_extensions import Literal  # this is a failsafe.\ntry:\n    from typing import TypeAlias\nexcept:\n    from typing_extensions import TypeAlias\n##############\n#  HID BASE  #\n##############\nclass HIDActionTypes:\n    keyboard_action_types: TypeAlias = Literal[\n        \"key_press\",\n        \"key_release\",\n    ]\n    mouse_action_types: TypeAlias = Literal[\n        \"mouse_move\",\n        \"mouse_click\",\n        \"mouse_scroll\",\n    ]\n    action_types: TypeAlias = Literal[\n        keyboard_action_types,\n        mouse_action_types,\n    ",
+        "content": "as long as you know how to train the bot, you are fine.\nfirst, the coordination training. you may want thee bot to track and click specific location. \nnext, the typing training. you create a dataset of typing against your random typing program.\nyou may also illustrate the action of browsing website, downloading software, playing games, coding and more.\nnevermind. performing actions is critical to the bot, since that is the only way to resolve repetition, do reproduction and become autonomous.\nyou can always let the bot to do (relatively) meaningless things like random clicking. and it always works. meaning will arise from groups and communications.\nlet the bot to explore and learn.",
         "type": "code",
-        "location": "/conscious_struct.py:1-46"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/README.md:1-13"
     },
     "73": {
         "file_id": 9,
-        "content": "This code is importing necessary libraries and defining classes for handling HID (Human Interface Device) actions such as keyboard and mouse events. It also includes type hints for different action types.",
+        "content": "This code provides instructions on how to train and use a bot for various tasks. It emphasizes the importance of allowing the bot to explore and learn, as meaning will arise from groups and communications.",
         "type": "comment"
     },
     "74": {
-        "file_id": 9,
-        "content": "]\n    mouse_buttons: TypeAlias = Literal[\n        \"Button.left\",\n        \"Button.middle\",\n        \"Button.right\",\n    ]\n    keys: TypeAlias = Literal[\n        \"\"\"','\"\"\",\n        \"\"\"'.'\"\"\",\n        \"\"\"'/'\"\"\",\n        \"\"\"';'\"\"\",\n        \"\"\"\\\"'\\\"\"\"\",\n        \"\"\"'['\"\"\",\n        \"\"\"']'\"\"\",\n        \"\"\"'\\\\'\"\"\",\n        \"\"\"'='\"\"\",\n        \"\"\"'-'\"\"\",\n        \"\"\"'0'\"\"\",\n        \"\"\"'9'\"\"\",\n        \"\"\"'8'\"\"\",\n        \"\"\"'7'\"\"\",\n        \"\"\"'6'\"\"\",\n        \"\"\"'5'\"\"\",\n        \"\"\"'4'\"\"\",\n        \"\"\"'3'\"\"\",\n        \"\"\"'2'\"\"\",\n        \"\"\"'1'\"\"\",\n        \"\"\"'`'\"\"\",\n        \"\"\"'a'\"\"\",\n        \"\"\"'b'\"\"\",\n        \"\"\"'c'\"\"\",\n        \"\"\"'d'\"\"\",\n        \"\"\"'e'\"\"\",\n        \"\"\"'f'\"\"\",\n        \"\"\"'g'\"\"\",\n        \"\"\"'h'\"\"\",\n        \"\"\"'i'\"\"\",\n        \"\"\"'j'\"\"\",\n        \"\"\"'k'\"\"\",\n        \"\"\"'l'\"\"\",\n        \"\"\"'m'\"\"\",\n        \"\"\"'n'\"\"\",\n        \"\"\"'o'\"\"\",\n        \"\"\"'p'\"\"\",\n        \"\"\"'q'\"\"\",\n        \"\"\"'r'\"\"\",\n        \"\"\"'s'\"\"\",\n        \"\"\"'t'\"\"\",\n        \"\"\"'u'\"\"\",\n        \"\"\"'v'\"\"\",\n        \"\"\"'w'\"\"\",\n        \"\"\"'x'\"\"\",\n        \"\"\"'y'\"\"\",\n        \"\"\"'z'\"\"\",\n       ",
-        "type": "code",
-        "location": "/conscious_struct.py:46-100"
+        "file_id": 10,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py",
+        "type": "filepath"
     },
     "75": {
-        "file_id": 9,
-        "content": "This code defines two type aliases, \"mouse_buttons\" and \"keys\", which represent specific button presses and key presses respectively. The mouse_buttons alias includes the literal strings for left, middle, and right mouse buttons, while the keys alias contains a list of literal strings representing commonly used keys on a keyboard.",
-        "type": "comment"
+        "file_id": 10,
+        "content": "The code is a Python script for Docker emulation, providing functions to manage containers and an interactive program. It also includes exception handling with predefined safe types and logging functionality.",
+        "type": "summary"
     },
     "76": {
-        "file_id": 9,
-        "content": " \"Key.alt\",  # check pynput.keyboard.Key\n        \"Key.alt_r\",\n        \"Key.backspace\",\n        \"Key.caps_lock\",\n        \"Key.cmd\",\n        \"Key.cmd_r\",\n        \"Key.ctrl\",\n        \"Key.ctrl_r\",\n        \"Key.delete\",\n        \"Key.down\",\n        \"Key.end\",\n        \"Key.enter\",\n        \"Key.esc\",\n        \"Key.f1\",\n        \"Key.f2\",\n        \"Key.f3\",\n        \"Key.f4\",\n        \"Key.f5\",\n        \"Key.f6\",\n        \"Key.f7\",\n        \"Key.f8\",\n        \"Key.f9\",\n        \"Key.f10\",\n        \"Key.f11\",\n        \"Key.f12\",\n        \"Key.f13\",\n        \"Key.f14\",\n        \"Key.f15\",\n        \"Key.f16\",\n        \"Key.f17\",\n        \"Key.f18\",\n        \"Key.f19\",\n        \"Key.f20\",\n        \"Key.home\",\n        \"Key.left\",\n        \"Key.page_down\",\n        \"Key.page_up\",\n        \"Key.right\",\n        \"Key.shift\",\n        \"Key.shift_r\",\n        \"Key.space\",\n        \"Key.tab\",\n        \"Key.up\",\n    ]\nclass HIDActionBase:\n    mouse_resolution: int = 1000\n    keyboard_action_types = list(HIDActionTypes.keyboard_action_types.__args__)\n    mouse_action_types = list(",
+        "file_id": 10,
+        "content": "# this will freeze the terminal. what the heck is going wrong?\n# maybe we need to profile this program.\n# you should wait longer while doing init check.\n# maybe you can do some system responsiveness check.\n# check if the system is performing as quick as it should.\nimport gc\n# import getpass\n# TODO: container & process profiler\nimport os\nimport sys\nimport traceback\nimport shutil\nimport easyprocess\nimport elevate\n# timeout this function.\n# from functools import partial\nimport func_timeout\n# import docker  # pip3 install docker\nimport progressbar\nfrom naive_actor import NaiveActor\nfrom vocabulary import AsciiVocab\nREQUIRED_BINARIES = [\"docker\"]\nfor name in REQUIRED_BINARIES:\n    assert shutil.which(\n        name\n    ), f\"{name} is not available in PATH.\"  # you can specify absolute path here\nLEGACY_DOCKER = False\nif sys.maxsize < 2**32:\n    print(\"Your system is 32bit or lower.\")\n    print(\"Assume using legacy docker.\")\n    LEGACY_DOCKER = True\n    if os.name == \"posix\":\n        # check if is sudo\n        print(\"*nix sys",
         "type": "code",
-        "location": "/conscious_struct.py:100-149"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:1-46"
     },
     "77": {
-        "file_id": 9,
-        "content": "This code defines a list of key names for the pynput.keyboard.Key module and creates two lists for keyboard action types. The first class, HIDActionBase, has two attributes: mouse_resolution (1000) and keyboard_action_types (list of keyboard action types).",
+        "file_id": 10,
+        "content": "This code appears to be a Python script for emulating an interactive program and working with Docker containers. It imports several modules, performs system checks, and asserts that required binary files like \"docker\" are available in the PATH. The script also checks if the system is running 32-bit or lower and assumes legacy docker support in such cases. It mentions a TODO for profiling the program and includes comments suggesting potential improvements.",
         "type": "comment"
     },
     "78": {
-        "file_id": 9,
-        "content": "HIDActionTypes.mouse_action_types.__args__)\n    action_types = list(HIDActionTypes.action_types.__args__)\n    mouse_buttons = list(HIDActionTypes.mouse_buttons.__args__)\n    keys = list(HIDActionTypes.keys.__args__)\n    length = (\n        len(action_types)\n        + len(keys)\n        + len(mouse_buttons)\n        + 1  # mouse pressed\n        + 4 * mouse_resolution\n    )  # ,\n    #             1)\n    @staticmethod\n    def unshift_keycode(keycode: str) -> Union[str, None]:\n        unshift_keycodes = {\n            \"!\": \"1\",\n            \"@\": \"2\",\n            \"#\": \"3\",\n            \"$\": \"4\",\n            \"%\": \"5\",\n            \"^\": \"6\",\n            \"&\": \"7\",\n            \"*\": \"8\",\n            \"(\": \"9\",\n            \")\": \"0\",\n            \"_\": \"-\",\n            \"+\": \"=\",\n            \"{\": \"[\",\n            \"}\": \"]\",\n            \"|\": \"\\\\\",\n            \":\": \";\",\n            '\"': \"'\",\n            \"<\": \",\",\n            \">\": \".\",\n            \"?\": \"/\",\n            \"~\": \"`\",\n        }\n        ctrl_keycodes = {\n            \"\\x01\": \"a\",\n           ",
+        "file_id": 10,
+        "content": "tem detected.\")\n        # you don't need to do root checking\n        # username = os.environ.get(\"USER\", os.environ.get(\"USERNAME\", \"unknown\"))\n        # username = getpass.getuser()\n        # # ref: https://www.geeksforgeeks.org/how-to-get-the-current-username-in-python/\n        # is_sudo = username == \"root\"\n        # if not is_sudo:\n        #     msg = f\"You ({username}) are not sudo. Docker may malfunction.\"\n        #     # raise Exception(msg)\n        #     print(msg)\n        #     print(\"Elevating now.\")\n        elevate.elevate(graphical=False)\nclass _AutoSeparatedString(str):\n    __slots__ = [\"sep\"]\n    # def __init__(self, *args, **kwargs):\n    #     self.sep = kwargs.pop('sep')\n    def __add__(self, other):\n        s_self, s_other = str(self), str(other)\n        val = s_self.__add__(self.sep + s_other)\n        return self.__class__(val)\n    def __radd__(self, other):\n        s_self, s_other = str(self), str(other)\n        val = s_other.__add__(self.sep + s_self)\n        return self.__class__(val)\ncla",
         "type": "code",
-        "location": "/conscious_struct.py:149-190"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:46-76"
     },
     "79": {
-        "file_id": 9,
-        "content": "Extracting argument types for action types, mouse buttons, and keys.\nCalculating total length including base type and additional mappings for a given keycode.\nStatic method to unshift keycodes based on specific conditions.",
+        "file_id": 10,
+        "content": "Code checks if the current user is root and prints a message if not. If not root, it elevates privileges using the \"elevate\" function. It also defines an auto-separated string class for adding strings separated by a specific delimiter.",
         "type": "comment"
     },
     "80": {
-        "file_id": 9,
-        "content": " \"\\x02\": \"b\",\n            \"\\x03\": \"c\",\n            \"\\x04\": \"d\",\n            \"\\x05\": \"e\",\n            \"\\x06\": \"f\",\n            \"\\x07\": \"g\",\n            \"\\x08\": \"h\",\n            \"\\t\": \"i\",\n            \"\\n\": \"j\",\n            \"\\x0b\": \"k\",\n            \"\\x0c\": \"l\",\n            \"\\r\": \"m\",\n            \"\\x0e\": \"n\",\n            \"\\x0f\": \"o\",\n            \"\\x10\": \"p\",\n            \"\\x11\": \"q\",\n            \"\\x12\": \"r\",\n            \"\\x13\": \"s\",\n            \"\\x14\": \"t\",\n            \"\\x15\": \"u\",\n            \"\\x16\": \"v\",\n            \"\\x17\": \"w\",\n            \"\\x18\": \"x\",\n            \"\\x19\": \"y\",\n            \"\\x1a\": \"z\",\n            \"<219>\": \"[\",\n            \"<221>\": \"]\",\n            \"<189>\": \"-\",\n            \"<187>\": \"=\",\n            \"<192>\": \"`\",\n            \"<48>\": \"0\",\n            \"<49>\": \"1\",\n            \"<50>\": \"2\",\n            \"<51>\": \"3\",\n            \"<52>\": \"4\",\n            \"<53>\": \"5\",\n            \"<54>\": \"6\",\n            \"<55>\": \"7\",\n            \"<56>\": \"8\",\n            \"<57>\": \"9\",\n            \"<220>\": \"\\\\\",\n            \"<186>\": \";\",\n ",
+        "file_id": 10,
+        "content": "ss AutoSpacedString(_AutoSeparatedString):\n    sep = \" \"\n    # def __init__(self, *args, **kwargs):\n    #     kwargs['sep'] = ' '\n    #     super().__init__(*args, **kwargs)\n# a = AutoSpacedString('a')\n# # a = AutoSeparatedString('a')\n# print(a)\n# print(a+a)\n# print(a+a+a)\n# you had better adopt async/await syntax.\n# import time\nfrom log_common import *\ndef docker_cmd(*args):\n    return \" \".join([\"docker\", *args])\ndef docker_container_cmd(*args):\n    return docker_cmd(\"container\", *args)\nif LEGACY_DOCKER:\n    LIST_CONTAINER = docker_cmd(\"ps -a\")\n    KILL_CONTAINER = docker_cmd(\"rm -f\")\n    # KILL_CONTAINER = docker_cmd(\"kill\")\nelse:\n    LIST_CONTAINER = docker_container_cmd(\"ls\")\n    KILL_CONTAINER = docker_container_cmd(\"kill\")\n# this error has been recorded.\n# we cannot just leave it like this.\n# we need some watchdog thread.\n# DOCKER CLI ON MACOS IS NOT RESPONSIVE!\n# WHAT TO DO WITH THIS?\n# DO NOT FOOL ME INTO BUYING E5-2650V2 OR REGECC RAMS!\n# suggestion: use ssh-based interaction with containers.\n# suggestion: ",
         "type": "code",
-        "location": "/conscious_struct.py:190-232"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:76-116"
     },
     "81": {
-        "file_id": 9,
-        "content": "This code is mapping various characters and special keys to their corresponding alphabets and numbers.",
+        "file_id": 10,
+        "content": "This code seems to define a class called AutoSpacedString that separates strings by space. It also defines functions for interacting with Docker, such as listing and killing containers. However, there are warnings about potential issues with the Docker CLI on MacOS and suggestions to use SSH-based interaction with containers instead.",
         "type": "comment"
     },
     "82": {
-        "file_id": 9,
-        "content": "           \"<222>\": \"'\",\n            \"<188>\": \",\",\n            \"<190>\": \".\",\n            \"<191>\": \"/\",\n        }\n        keycode = unshift_keycodes.get(keycode, ctrl_keycodes.get(keycode, keycode))\n        # still, this is something out of concern.\n        if keycode.startswith(\"<\") and keycode.endswith(\">\"):\n            logger.warning(\"Discarding unconvertable keycode: %s\" % keycode)\n            # keycode = pynput.keyboard.KeyCode(int(keycode[1:-1]))\n            return\n        return keycode\n    @staticmethod\n    def uncover_keycode(keycode: str) -> Union[str, None]:\n        if not keycode.startswith(\"Key.\"):\n            keycode_converted = HIDActionBase.unshift_keycode(\n                keycode\n                if keycode.startswith(\"<\") and keycode.endswith(\">\")\n                else ast.literal_eval(keycode)\n            )\n            return keycode_converted\n            # this could be None.\n            # when this is None, simply skip this code. do not end the conversion. skip it.\n        else:\n            ",
+        "file_id": 10,
+        "content": "restart docker service on macos.\n# TODO: make unittests for failsafe protocols and watchdogs\n# TODO: check docker binary if it is in PATH\n# TODO: count failures of microtasks like this method and create remedy routines which trying to repair and continue execution\nfrom rerun_docker_daemon import restart_and_verify\ndef killAndPruneAllContainers(trial_count=2):\n    fail_counter = 0\n    for i in range(trial_count):\n        print(f\"try to kill docker containers ({i+1} time(s))\")\n        try:\n            success = _killAndPruneAllContainers()\n            assert success, \"Failed to execute docker kill and prune\"\n            print(\"successfully killed all containers\")\n            return success\n        except:\n            fail_counter += 1\n    if fail_counter >= trial_count:  # in fact, it can only equal to the count.\n        print(\"relaunching docker\")\n        restart_and_verify()\n        return killAndPruneAllContainers(trial_count)\n@func_timeout.func_set_timeout(timeout=10)\ndef _killAndPruneAllContainers():  #",
         "type": "code",
-        "location": "/conscious_struct.py:232-257"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:116-142"
     },
     "83": {
-        "file_id": 9,
-        "content": "This code is handling keycode conversion for a keyboard input processing system. It maps certain special characters to their corresponding codes, and handles unconvertable keycodes by discarding them. If the keycode starts with \"<\" and ends with \">\", it's treated as a special keycode. The function then attempts to convert the keycode, and if successful, returns the converted keycode; otherwise, it returns None.",
+        "file_id": 10,
+        "content": "This code attempts to kill and prune all Docker containers on macOS. If it fails, it retries twice before relaunching the Docker service.",
         "type": "comment"
     },
     "84": {
-        "file_id": 9,
-        "content": "return keycode\nclass HIDAction(BaseModel, HIDActionBase):\n    # static method: from_action\n    # static method: from_ndarray\n    # instance method: to_ndarray\n    # instance method: to_action\n    max_x: int\n    max_y: int\n    action_type: Literal[\n        \"key_press\",  # [\"key_press\", \"'w'\"]\n        \"key_release\",  # [\"key_release\", \"'r'\"]\n        \"mouse_move\",  # [\"mouse_move\", [176.7734375, 580.40625]], \"timeStamp\": 1680247557.125498}\n        \"mouse_click\",  # [\"mouse_click\", [176.7734375, 580.40625, \"Button.left\", true]]\n        \"mouse_scroll\",  # [\"mouse_scroll\", [938.76171875, 318.75, 0, 0]]\n        #         None,  # end_of_action\n    ]  # you need to specify this.\n    key: Union[\n        HIDActionTypes.keys,\n        None,\n    ] = None\n    mouse_button: Union[HIDActionTypes.mouse_buttons, None] = None\n    mouse_pressed: Union[bool, None] = None\n    x: Union[float, None] = None\n    y: Union[float, None] = None\n    dx: Union[float, None] = None\n    dy: Union[float, None] = None\n    @validator(\"max_x\", \"max_",
+        "file_id": 10,
+        "content": " not working for legacy docker.\n    success = False\n    proc = easyprocess.EasyProcess(LIST_CONTAINER).call(timeout=4)\n    if proc.return_code == 0:\n        success = True  # usually this is the challange.\n    # proc = easyprocess.EasyProcess(\"docker container ls -a\").call()\n    if proc.stdout:\n        lines = proc.stdout.split(\"\\n\")[1:]\n        container_ids = [line.split(\" \")[0] for line in lines]\n        for cid in progressbar.progressbar(container_ids):\n            cmd = f\"{KILL_CONTAINER} {cid}\"\n            try:\n                func_timeout.func_timeout(3, os.system, args=(cmd,))\n            except func_timeout.FunctionTimedOut:\n                print(\n                    f'timeout while killing container \"{cid}\".\\nmaybe the container is not running.'\n                )\n            # os.system(f\"docker container kill -s SIGKILL {cid}\")\n        if not LEGACY_DOCKER:\n            os.system(\"docker container prune -f\")\n    return success\n# BUG: deprecated! may not connect to docker socket on windows.\n# @part",
         "type": "code",
-        "location": "/conscious_struct.py:257-286"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:142-166"
     },
     "85": {
-        "file_id": 9,
-        "content": "This class represents a HID action that can be a key press, key release, mouse move, mouse click, or mouse scroll. It has properties for the action type, key, mouse button, and coordinates. The to_ndarray method converts the instance to a numpy array, while the to_action method returns an action string in the format [\"<type>\", \"<key or coordinates>\"].",
+        "file_id": 10,
+        "content": "This code is used to clean up stopped Docker containers. It checks for running containers and attempts to stop them using either `os.system` or `docker container kill -s SIGKILL`. If a container takes too long to shut down, it will print a warning message indicating that the container might not be running. Additionally, if the LEGACY_DOCKER flag is False (non-legacy Docker), it will forcefully remove all stopped containers using `docker container prune -f`. However, this code is deprecated and may have compatibility issues with Windows systems as it doesn't connect to the Docker socket properly.",
         "type": "comment"
     },
     "86": {
-        "file_id": 9,
-        "content": "y\")\n    def greater_than_zero(cls, v):\n        assert type(v) == int\n        assert v > 0\n        return v\n    @validator(\"action_type\")\n    def action_type_within_action_types(cls, v):\n        if v:\n            assert v in HIDActionBase.action_types\n        return v\n    @validator(\"key\")\n    def key_within_keys(cls, v):\n        if v:\n            assert v in HIDActionBase.keys\n        return v\n    @validator(\"mouse_button\")\n    def mouse_button_within_mouse_buttons(cls, v):\n        if v:\n            assert v in HIDActionBase.mouse_buttons\n        return v\n    @validator(\"mouse_pressed\")\n    def mouse_pressed_type_check(cls, v):\n        if v:\n            assert type(v) == bool\n        return v\n    @staticmethod\n    def from_action_json(action_json: list, max_x: int, max_y: int):\n        action_type = action_json[0]\n        action_args = action_json[1]\n        construct_args = dict(max_x=max_x, max_y=max_y, action_type=action_type)\n        # BUG: convert single char keys to quoted format.\n        # TODO: make sure ' '",
+        "file_id": 10,
+        "content": "ial(func_timeout.func_timeout, 10)\n# def killAndPruneAllContainers():\n#     # def stopAndPruneAllContainers():\n#     all_containers = client.containers.list(all=True)\n#     print(\"killing running containers...\")\n#     for container in progressbar.progressbar(all_containers):\n#         try:\n#             container.kill()\n#         except:\n#             log_and_print_unknown_exception()\n#             # container not running. can be pruned.\n#             # usually.\n#         # container.stop()\n#     print(\"pruning stopped containers...\")\n#     client.containers.prune()\nclass AlpineActor(NaiveActor):\n    def __init__(self):\n        killAndPruneAllContainers()\n        super().__init__(\"docker run --rm -it alpine:3.7\")\n        # TODO: detect if the container is down by heartbeat-like mechanism\n        # TODO: retrieve created container id\n        # TODO: detect if we have the real container instead of fake container (do we have a real container session? or just dummy session with no docker behind), using pexpect",
         "type": "code",
-        "location": "/conscious_struct.py:286-324"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:166-190"
     },
     "87": {
-        "file_id": 9,
-        "content": "This code defines several validator functions and a static method for a class. The validator functions check if the input values are of the correct type and within specific ranges or sets, returning the input if it passes the checks, otherwise raising an exception. The static method, \"from_action_json,\" constructs objects from a JSON list representation, handling some potential issues with single char keys.",
+        "file_id": 10,
+        "content": "The code defines a class `AlpineActor` that extends `NaiveActor`. It initializes the actor by calling `killAndPruneAllContainers()`, which stops and prunes all Docker containers, and then sets up an Alpine container using the command `\"docker run --rm -it alpine:3.7\"`. The class also contains TODOs for detecting if the container is down, retrieving the container ID, and checking if a real container session exists.",
         "type": "comment"
     },
     "88": {
-        "file_id": 9,
-        "content": " is converted into Key.Space\n        if action_type.startswith(\"key\"):\n            if len(action_args) == 1:\n                if action_args != \"'\":\n                    action_args = f\"'{action_args}'\"\n                else:\n                    action_args = f'\"{action_args}\"'\n            if action_args == repr(\" \"):\n                action_args = \"Key.space\"\n        if action_type == \"key_press\":\n            assert action_args in HIDActionBase.keys\n            construct_args.update(dict(key=action_args))\n        elif action_type == \"key_release\":\n            assert action_args in HIDActionBase.keys\n            construct_args.update(dict(key=action_args))\n        elif action_type == \"mouse_move\":\n            assert action_args[0] >= 0 and action_args[0] <= max_x\n            assert action_args[1] >= 0 and action_args[1] <= max_y\n            construct_args.update(dict(x=action_args[0], y=action_args[1]))\n        elif action_type == \"mouse_click\":\n            assert action_args[0] >= 0 and action_args[0] <= max",
+        "file_id": 10,
+        "content": "'s default capability.\n    def __del__(self):\n        killAndPruneAllContainers()\n        super().__del__()\n    def _init_check(self):\n        print(\"checking container\")\n        steps = [\n            lambda: self.process.expect(\"/ # \"),\n            lambda: self.process.write(f\"whoami{os.linesep}\"),\n            lambda: self.process.expect(\"root\"),\n        ]\n        for step in progressbar.progressbar(steps):\n            step()\n    @NaiveActor.timeit\n    def loop(self):\n        _ = self.read()\n        write_content = AsciiVocab.generate()\n        write_content = write_content.encode()\n        self.write(write_content)\n        return True\nSAFE_EXCEPTION_TYPES = [OSError]  # are you sure? this can be many. not just io errors\n# SAFE_EXCEPTION_TYPES = []\nif os.name == \"nt\":\n    import wexpect\n    SAFE_EXCEPTION_TYPES.append(wexpect.wexpect_util.EOF)  # you can try to ignore this.\n# from typing import Generator\ndef run_actor_forever(actor_class):\n    # killAndPruneAllContainers()\n    if hasattr(actor_class, \"__next__\")",
         "type": "code",
-        "location": "/conscious_struct.py:324-348"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:190-226"
     },
     "89": {
-        "file_id": 9,
-        "content": "Checks if the action type is a key press or release, mouse move, or mouse click. If it's a key action, converts it into Key.Space format. For mouse actions, checks that x and y coordinates are within valid ranges. Updates construct_args accordingly.",
+        "file_id": 10,
+        "content": "This code defines a class representing an actor in an interactive program. It includes methods to check the container state, loop over reading and writing content, and safely handle certain exceptions. The function run_actor_forever can be used to run the actor's loop forever.\n\nThe class has a destructor (__del__) that kills and prunes all containers when the object is deleted. It also has an _init_check method that checks the container's state, expecting a prompt, and ensuring that the user running inside the container is root. The loop method repeatedly reads content from the actor and writes new content.\n\nThe SAFE_EXCEPTION_TYPES variable lists specific types of exceptions that should be considered safe and not interrupt the program's execution. There are comments suggesting that OSError might not be the only type to include, and that for Windows systems, weexpect.wexpect_util.EOF should also be included in SAFE_EXCEPTION_TYPES.\n\nThe run_actor_forever function can be used to run the actor's loop forever, continuously interacting with the container. However, there is a comment suggesting that this function might not be used or needed anymore.",
         "type": "comment"
     },
     "90": {
-        "file_id": 9,
-        "content": "_x\n            assert action_args[1] >= 0 and action_args[1] <= max_y\n            assert action_args[2] in HIDActionBase.mouse_buttons\n            assert type(action_args[3]) == bool\n            construct_args.update(\n                dict(\n                    x=action_args[0],\n                    y=action_args[1],\n                    mouse_button=action_args[2],\n                    mouse_pressed=action_args[3],\n                )\n            )\n        elif action_type == \"mouse_scroll\":\n            assert action_args[0] >= 0 and action_args[0] <= max_x\n            assert action_args[1] >= 0 and action_args[1] <= max_y\n            assert action_args[2] >= -max_x and action_args[2] <= max_x\n            assert action_args[3] >= -max_y and action_args[3] <= max_y\n            construct_args.update(\n                dict(\n                    x=action_args[0],\n                    y=action_args[1],\n                    dx=action_args[2],\n                    dy=action_args[3],\n                )\n            )\n        else:\n",
+        "file_id": 10,
+        "content": ":\n        # if isinstance(actor_class, Generator):\n        make_actor = lambda: next(actor_class)\n    else:\n        make_actor = lambda: actor_class()\n    # breakpoint()\n    # we just cannot use such long timeout limit.\n    # need watchdog alternative.\n    @func_timeout.func_set_timeout(timeout=131)\n    def internal_loop():\n        ret = None\n        # actor = actor_class()\n        actor = make_actor()\n        @func_timeout.func_set_timeout(timeout=100)\n        def run_actor():\n            try:\n                actor.run()\n            except KeyboardInterrupt:\n                print(\"exit on user demand\")\n                return \"INTERRUPTED\"\n            except Exception as e:\n                safe = check_if_is_safe_exception(e)\n        ret = run_actor()\n        del actor\n        if ret is None:\n            print()\n            print(\"restarting actor\")\n        gc.collect()\n        return ret\n    while True:\n        ret = None\n        try:\n            ret = internal_loop()\n            if ret == \"INTERRUPTED\":\n             ",
         "type": "code",
-        "location": "/conscious_struct.py:348-376"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:226-264"
     },
     "91": {
-        "file_id": 9,
-        "content": "The code checks the type and validity of input arguments for constructing different types of actions. It updates a dictionary with the action's parameters based on the action type (mouse click or scroll).",
+        "file_id": 10,
+        "content": "This code defines a function `internal_loop` that runs an actor. It creates an instance of the given `actor_class`, sets timeouts for the inner functions, and executes it within a while loop. If interrupted or if an exception occurs during execution, it will return \"INTERRUPTED\" or print \"restarting actor\", respectively.",
         "type": "comment"
     },
     "92": {
-        "file_id": 9,
-        "content": "            raise Exception(\n                \"Unknown action type: %s\\naction args: %s\" % (action_type, action_args)\n            )\n        mHIDAction = HIDAction(**construct_args)\n        return mHIDAction\n    @staticmethod\n    def from_ndarray(ndarray: np.ndarray, max_x: int, max_y: int):\n        assert ndarray.shape == (HIDActionBase.length,)\n        cursor = 0\n        action_type_ndarray = ndarray[cursor : cursor + len(HIDActionBase.action_types)]\n        cursor += len(HIDActionBase.action_types)\n        action_type_index = np.argmax(action_type_ndarray)\n        action_type = HIDActionBase.action_types[action_type_index]\n        del action_type_ndarray\n        del action_type_index\n        construct_args = dict(max_x=max_x, max_y=max_y, action_type=action_type)\n        if action_type:\n            key_ndarray = ndarray[cursor : cursor + len(HIDActionBase.keys)]\n            cursor += len(HIDActionBase.keys)\n            key_index = np.argmax(key_ndarray)\n            key = HIDActionBase.keys[key_index]\n    ",
+        "file_id": 10,
+        "content": "   break\n        except Exception as e:\n            safe = check_if_is_safe_exception(e)\ndef check_if_is_safe_exception(e):\n    safe = False\n    # for exc_type in SAFE_EXCEPTION_TYPES:\n    #     if isinstance(e, exc_type):\n    if type(e) in SAFE_EXCEPTION_TYPES:\n        safe = True\n    if safe:\n        traceback.print_exc()\n        print(\"safe exception:\", e)\n    else:\n        log_and_print_unknown_exception()\n    return safe\nif __name__ == \"__main__\":\n    run_actor_forever(AlpineActor)\n#     import cProfile\n#     fpath = \"alpine_actor.profile\"\n#     # # print(\"running\")\n#     prof = cProfile.run(\"AlpineActor()\", filename=fpath)\n#     # print(\"hello world\")",
         "type": "code",
-        "location": "/conscious_struct.py:376-402"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py:264-289"
     },
     "93": {
-        "file_id": 9,
-        "content": "Raises an exception if the action type is unknown.\nCreates a HIDAction object using given arguments.\nStatic method to create HIDAction from numpy array.\nAsserts that the shape of ndarray is (HIDActionBase.length,).\nGets the action type index from ndarray.\nConstructs construct_args with max_x, max_y, and action_type.\nIf action type exists, gets key index from ndarray and retrieves key.",
+        "file_id": 10,
+        "content": "The code is part of a larger function that handles exceptions during program execution. It checks if the exception thrown belongs to a predefined list of safe exception types, and if so, it prints the traceback and message before continuing. If the exception is not on the list, it calls log_and_print_unknown_exception().",
         "type": "comment"
     },
     "94": {
-        "file_id": 9,
-        "content": "        del key_ndarray\n            del key_index\n            mouse_button_ndarray = ndarray[\n                cursor : cursor + len(HIDActionBase.mouse_buttons)\n            ]\n            cursor += len(HIDActionBase.mouse_buttons)\n            mouse_button_index = np.argmax(mouse_button_ndarray)\n            mouse_button = HIDActionBase.mouse_buttons[mouse_button_index]\n            del mouse_button_ndarray\n            del mouse_button_index\n            mouse_pressed_ndarray = ndarray[cursor : cursor + 1]\n            cursor += 1\n            mouse_pressed = bool(mouse_pressed_ndarray[0][0])\n            del mouse_pressed_ndarray\n            x_ndarray = ndarray[cursor : cursor + HIDActionBase.mouse_resolution]\n            cursor += HIDActionBase.mouse_resolution\n            x_index = np.argmax(x_ndarray)\n            x = (x_index / HIDActionBase.mouse_resolution) * max_x\n            del x_ndarray\n            del x_index\n            y_ndarray = ndarray[cursor : cursor + HIDActionBase.mouse_resolution]\n            c",
-        "type": "code",
-        "location": "/conscious_struct.py:402-427"
+        "file_id": 11,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_bytes_actor.py",
+        "type": "filepath"
     },
     "95": {
-        "file_id": 9,
-        "content": "Deleting variables, processing mouse button and position data, updating cursor position.",
-        "type": "comment"
+        "file_id": 11,
+        "content": "This code defines an AlpineBytesActor class that inherits from BytesActor and AlpineActor. It has a loop method that reads, generates new content using BytesVocab, and writes it. The main function runs the actor forever.",
+        "type": "summary"
     },
     "96": {
-        "file_id": 9,
-        "content": "ursor += HIDActionBase.mouse_resolution\n            y_index = np.argmax(y_ndarray)\n            y = (y_index / HIDActionBase.mouse_resolution) * max_y\n            del y_ndarray\n            del y_index\n            dx_ndarray = ndarray[cursor : cursor + HIDActionBase.mouse_resolution]\n            cursor += HIDActionBase.mouse_resolution\n            dx_index = np.argmax(dx_ndarray)\n            dx = (dx_index / HIDActionBase.mouse_resolution) * 2 * max_x - max_x\n            del dx_ndarray\n            del dx_index\n            dy_ndarray = ndarray[cursor : cursor + HIDActionBase.mouse_resolution]\n            cursor += HIDActionBase.mouse_resolution\n            dy_index = np.argmax(dy_ndarray)\n            dy = (dy_index / HIDActionBase.mouse_resolution) * 2 * max_y - max_y\n            del dy_ndarray\n            del dy_index\n            if action_type == \"key_press\":\n                construct_args.update(dict(key=key))\n            elif action_type == \"key_release\":\n                construct_args.update(dict(key=ke",
+        "file_id": 11,
+        "content": "from alpine_actor import AlpineActor, run_actor_forever\nfrom bytes_actor import BytesActor\nfrom vocabulary import BytesVocab\nclass AlpineBytesActor(BytesActor, AlpineActor):\n    @AlpineActor.timeit\n    def loop(self):\n        _ = self.read()\n        write_content = BytesVocab.generate()\n        self.write(write_content)\n        return True\nif __name__ == \"__main__\":\n    run_actor_forever(AlpineBytesActor)",
         "type": "code",
-        "location": "/conscious_struct.py:427-450"
+        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_bytes_actor.py:1-16"
     },
     "97": {
-        "file_id": 9,
-        "content": "Calculating mouse and key inputs based on ndarray max index, updating construct_args accordingly.",
+        "file_id": 11,
+        "content": "This code defines an AlpineBytesActor class that inherits from BytesActor and AlpineActor. It has a loop method that reads, generates new content using BytesVocab, and writes it. The main function runs the actor forever.",
         "type": "comment"
     },
     "98": {
-        "file_id": 9,
-        "content": "y))\n            elif action_type == \"mouse_move\":\n                construct_args.update(dict(x=x, y=y))\n            elif action_type == \"mouse_click\":\n                construct_args.update(\n                    dict(\n                        x=x, y=y, mouse_button=mouse_button, mouse_pressed=mouse_pressed\n                    )\n                )\n            elif action_type == \"mouse_scroll\":\n                construct_args.update(dict(x=x, y=y, dx=dx, dy=dy))\n        else:\n            pass\n        del cursor\n        mHIDAction = HIDAction(**construct_args)\n        return mHIDAction\n    def round_within(self, number: Union[int, float], number_name: str) -> int:\n        result = round(number)\n        if result > self.mouse_resolution:\n            logger.warning(f\"Warning: {number_name} overflow\")\n            logger.warning(f\"Value {result} greater than {self.mouse_resolution}\")\n            return self.mouse_resolution\n        elif result < 0:\n            logger.warning(f\"Warning: {number_name} overflow\")\n         ",
-        "type": "code",
-        "location": "/conscious_struct.py:450-477"
+        "file_id": 12,
+        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/beat_common.py",
+        "type": "filepath"
     },
     "99": {
-        "file_id": 9,
-        "content": "This code is handling different types of mouse actions. It updates construct_args based on the action type and creates a HIDAction object using those arguments. If the number is greater than mouse_resolution, it logs a warning.",
-        "type": "comment"
+        "file_id": 12,
+        "content": "The code defines a decorator function for caching with expiration time, includes functions for caching, querying server info, and handling GET requests with timeout management and exception handling. In case of fatal errors or unknown exceptions, it attempts to kill the process.",
+        "type": "summary"
     }
 }

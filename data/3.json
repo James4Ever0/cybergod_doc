@@ -1,535 +1,545 @@
 {
     "300": {
-        "file_id": 27,
-        "content": "ctor)\n            mouse_controller.position = (x, y)\n            mouse_controller.scroll(dx, dy)\n        else:\n            raise Exception(\"Unknown action type: {}\".format(action_type))\n# after all the havok, you should not leave the mouse button pressed, and you should not leave any button onhold.\nmodifier_keys = [\"alt\", \"alt_gr\", \"ctrl\", \"shift\"]\nfor modifier_key in modifier_keys:\n    if keyboard_controller.__getattribute__(f\"{modifier_key}_pressed\"):\n        keyboard_controller.release(pynput.keyboard.Key.__dict__[modifier_key])\nfor button in mouse_buttons:\n    if mouse_button_states[button]:  # pressed, not released yet.\n        mouse_controller.release(button)",
-        "type": "code",
-        "location": "/player.py:204-220"
-    },
-    "301": {
-        "file_id": 27,
-        "content": "Updates mouse and keyboard positions based on action type.\nEnsures mouse button is not held down after movement.\nReleases modifier keys if still pressed.\nChecks for remaining held mouse buttons and releases them.",
-        "type": "comment"
-    },
-    "302": {
-        "file_id": 28,
-        "content": "/pyanalyze_check.py",
+        "file_id": 41,
+        "content": "/binary_program_synthesis_cpu_assembly_execution/gpt-binary-training.py",
         "type": "filepath"
     },
-    "303": {
-        "file_id": 28,
-        "content": "The code defines a function that takes an argument which must be a literal string and includes another function call with a literal string argument. The code also tests lambda functions using pytest, serialize/deserialize them, and attempts to extract their source but currently prints the full source code instead of just the lambda expression.",
+    "301": {
+        "file_id": 41,
+        "content": "The code imports necessary libraries, initializes a GPT2 model, defines functions for token building and generation, generates binary input, masks attention mask, adds custom special tokens to tokenizer, resizes token embeddings, trains the model by masking logits during forward pass, calculates loss using masked logits, computes gradients and optimizes them, and uses a symbol/reference variable for future reference.",
         "type": "summary"
     },
-    "304": {
-        "file_id": 28,
-        "content": "# from typing import TYPE_CHECKING\n# import typing\n# typing.TYPE_CHECKING = True\nimport dill\nimport pytest\nimport ast\nimport inspect\nfrom pyanalyze.value import Value, CanAssign, CanAssignContext\nfrom pyanalyze.extensions import CustomCheck\n# from pyanalyze.extensions import CustomCheck, Value, CanAssignContext, CanAssign\nimport pyanalyze\nfrom typing_extensions import Annotated\nimport rich\nclass LiteralOnly(CustomCheck):\n    def can_assign(self, value: Value, ctx: CanAssignContext) -> CanAssign:\n        rich.print(value.__dict__)\n        rich.print(ctx.__dict__)\n        breakpoint()\n        for subval in pyanalyze.value.flatten_values(value):\n            if not isinstance(subval, pyanalyze.value.KnownValue):\n                return pyanalyze.value.CanAssignError(\"Value must be a literal\")\n        return {}\ndef func(arg: Annotated[str, LiteralOnly()]) -> None:\n    ...\ndef some_call():\n    # it is actually running this. damn it!\n    print(\"CALLING FUNCTION\")\n    return \"abc\"\ndef anotherfunc():\n    func(\"x\")  # ok\n    ",
+    "302": {
+        "file_id": 41,
+        "content": "#!/usr/bin/env python\n# coding: utf-8\n# In[34]:\n# a good reference:\n# https://blog.paperspace.com/generating-text-summaries-gpt-2/\nget_ipython().system('pip3 install einops')\nimport einops\nimport transformers\nimport torch\nMODEL_NAME = 'gpt2'\nmodel = transformers.GPT2LMHeadModel.from_pretrained(MODEL_NAME)\ntokenizer = transformers.AutoTokenizer.from_pretrained(MODEL_NAME)\nlr = 0.0001\noptimizer = torch.optim.AdamW(model.parameters(), lr=lr)\nloss_fn = torch.nn.CrossEntropyLoss()\ndef build_special_token(location:str, name:str):\n    return f\"<|{location}_{name}|>\"\ndef generate_special_token_pair(name:str):\n    begin_token = build_special_token('begin', name)\n    end_token = build_special_token('end', name)\n    return begin_token, end_token\ntext = \"8e7d4f\"\n# text = \"0100100010010\"\nenc = tokenizer([text], return_tensors='pt')\ninput_ids = enc['input_ids'] # into three pieces only.\nattention_mask = torch.ones(input_ids.shape, dtype=torch.int64)\ninput_ids.shape\nbegin_bytes, end_bytes = generate_special_token_pair('bytes')\n",
         "type": "code",
-        "location": "/pyanalyze_check.py:1-40"
+        "location": "/binary_program_synthesis_cpu_assembly_execution/gpt-binary-training.py:1-39"
+    },
+    "303": {
+        "file_id": 41,
+        "content": "This code imports necessary libraries, initializes a GPT2 language model, and defines functions for building special tokens and generating token pairs. It also generates a binary input and masks the attention mask to be all ones.",
+        "type": "comment"
+    },
+    "304": {
+        "file_id": 41,
+        "content": "# how to step in and out?\ntokenizer(begin_bytes)['input_ids'], tokenizer(end_bytes)['input_ids']\n# In[35]:\n# print(dir(tokenizer))\n# print(tokenizer.all_special_tokens)\n# help(tokenizer.add_tokens)\ntokenizer.add_tokens([begin_bytes, end_bytes]) # will not do this again.\n# tokenizer.add_special_tokens({\"begin_bytes\": begin_bytes, \"end_bytes\":end_bytes})\n# In[36]:\n# add new special token to tokenizer\nlen(tokenizer)\n# In[37]:\nmodel.resize_token_embeddings(len(tokenizer))\n# In[38]:\n# dir(tokenizer)\n# tokenizer.vocab\n# binary_vocab = {i: format(i, '04b') for i in range(16)}\n# binary_map = {v: tokenizer.vocab[v] for _, v in binary_vocab.items()}\n# missing: 0011\nhex_vocab = {i: format(i, '0x') for i in range(16)}\nhex_map = {v: tokenizer.vocab[v] for _, v in hex_vocab.items()}\n# hex_map\n# In[39]:\nbyte_vocab = {i: str(i) for i in range(256)}\nbyte_map = {v: tokenizer.vocab[v] for _, v in byte_vocab.items()}\n# In[46]:\noutput.logits.shape # now: 50259\n# <|begin_bytes|>feffd3d7ea<|end_bytes|>\n# <|begin_hex|>feffd3d7ea<|end_he",
+        "type": "code",
+        "location": "/binary_program_synthesis_cpu_assembly_execution/gpt-binary-training.py:39-94"
     },
     "305": {
-        "file_id": 28,
-        "content": "class LiteralOnly(CustomCheck):\n    can_assign: check if value is a literal, returns CanAssign or error\ndef func(arg: Annotated[str, LiteralOnly()]) -> None:\n    function with argument that must be a literal\ndef some_call():\n    call a function with a literal string argument\n\ndef anotherfunc():\n    call func with a literal string argument (ok)",
+        "file_id": 41,
+        "content": "This code is adding custom special tokens to a tokenizer, mapping binary and hexadecimal values to existing tokens in the tokenizer's vocabulary. This allows the model to process input data that includes binary or hexadecimal information. The code then resizes the token embeddings based on the updated vocabulary size and logs some shapes of output arrays for further analysis.",
         "type": "comment"
     },
     "306": {
-        "file_id": 28,
-        "content": "func(str(some_call()))  # error\n# actually will not run the code, only if putting in between definitions.\n# anotherfunc() # will run\nif __name__ == \"__main__\":\n    anotherfunc()  # will not run\n@pytest.mark.parametrize(\"mylambda\", [lambda x: x == 0, lambda x: x < 0])\ndef test_0(mylambda):\n    # a = lambda x: x<0\n    # print(dill.dumps(mylambda))\n    # print(dill.source.dumpsource(mylambda))\n    ...\n    # a_source = inspect.getsource(mylambda)  # full source being dumped. not the lambda expression alone.\n    # print(a_source)\n    # tree = ast.parse(a_source)",
+        "file_id": 41,
+        "content": "x|>\n# .............##########[#..........] <- in training we only mask some prob\n# .............####################### <- in inference/parsing there could be state rolling back\n# In[41]:\n# training\noutput = model(input_ids = input_ids, attention_mask = attention_mask)\n# output.logits[:,:,:] = 0 # this will not affect loss\nmasked_logits = torch.zeros(output.logits.shape)\nfocused_ids = [10,20,30]\nmasked_logits[:,:,focused_ids] = output.logits[:,:,focused_ids] # this will\nzero_input_ids = torch.zeros(input_ids.shape, dtype=input_ids.dtype)\n# output.logits\nreshaped_original_logits = einops.rearrange(output.logits, \"b s c -> b c s\")\nreshaped_logits = einops.rearrange(masked_logits, \"b s c -> b c s\")\nloss = loss_fn(reshaped_original_logits, zero_input_ids)\n# loss = loss_fn(reshaped_logits, zero_input_ids)\nprint(loss.item()) # it would be the same as long as setting to zero.\n# In[42]:\nmasked_logits[:,:,focused_ids]\n# In[43]:\nmodel.zero_grad()\n# In[44]:\nloss.backward()\noptimizer.step()\nmodel.zero_grad()\n# In[45]:\n# in",
         "type": "code",
-        "location": "/pyanalyze_check.py:40-57"
+        "location": "/binary_program_synthesis_cpu_assembly_execution/gpt-binary-training.py:94-141"
     },
     "307": {
-        "file_id": 28,
-        "content": "This code is defining a function that uses lambdas and then tests them using pytest. The lambdas are being serialized and deserialized to check if they are being correctly defined in the codebase. The code also tries to extract the source of the lambda functions, but it seems to be printing the full source code instead of just the lambda expression.",
+        "file_id": 41,
+        "content": "This code is training a model by masking some logits during the forward pass. It first creates a tensor of zeros for the masked logits and selects specific elements to preserve from the original output logits. Then, it calculates the loss using these masked logits. The loss is then printed, and the gradients are computed and optimized.",
         "type": "comment"
     },
     "308": {
-        "file_id": 29,
-        "content": "/pyright_utils.py",
-        "type": "filepath"
+        "file_id": 41,
+        "content": "ference",
+        "type": "code",
+        "location": "/binary_program_synthesis_cpu_assembly_execution/gpt-binary-training.py:141-141"
     },
     "309": {
-        "file_id": 29,
-        "content": "The code sets the Pyright version, tracks errors, and creates a regex pattern. It imports modules for parsing, subprocess execution, and cache creation. The code then checks for undefined variables, finds type errors using regex, logs them, and asserts based on an error message.",
-        "type": "summary"
-    },
-    "310": {
-        "file_id": 29,
-        "content": "from log_utils import logger_print\nMIN_PYRIGHT_VERSION = \"1.1.317\"  # if lower than this version then raise exception.\npyright_errors = [\"reportImportCycles\", \"reportUndefinedVariable\"]\nerrorRegex = r\"^(.+?(?:{}).+)$\".format(\"|\".join(pyright_errors))\n# use `os.strerror` to translate os-specific error code obtained by `subprocess.run`\nimport parse\nimport re\ndef parse_version(version: str):\n    p = parse.parse(\"{x:d}.{y:d}.{z:d}\", version)\n    return [p[k] for k in \"xyz\"]\ndef check_version(current_version: str, minimum_version: str):\n    cp = parse_version(current_version)\n    mp = parse_version(minimum_version)\n    for cv, mv in zip(cp, mp):\n        if cv < mv:\n            return False\n    return True\nimport pyright\nfrom typing import Any, Union\nimport subprocess\n# monkey patch start\ndef run(\n    *args: str, **kwargs: Any\n) -> Union[\"subprocess.CompletedProcess[bytes]\", \"subprocess.CompletedProcess[str]\"]:\n    ROOT_CACHE_DIR = pyright.utils.get_cache_dir() / \"pyright-python\"\n    version = pyright.__pyright_vers",
-        "type": "code",
-        "location": "/pyright_utils.py:1-37"
-    },
-    "311": {
-        "file_id": 29,
-        "content": "- Set the minimum required Pyright version.\n- Define a list of errors to track.\n- Create a regular expression pattern for matching error messages.\n- Import necessary modules for parsing and subprocess execution.\n- Define functions for parsing versions and checking if a current version meets the minimum requirement.",
+        "file_id": 41,
+        "content": "This code snippet seems to be a reference variable or symbol, possibly indicating a memory location or value that will be used later in the program.",
         "type": "comment"
     },
+    "310": {
+        "file_id": 42,
+        "content": "/binary_program_synthesis_cpu_assembly_execution/interpret_and_save_binary_program.py",
+        "type": "filepath"
+    },
+    "311": {
+        "file_id": 42,
+        "content": "Reads binary program from file, converts to integer list, and writes to output file.",
+        "type": "summary"
+    },
     "312": {
-        "file_id": 29,
-        "content": "ion__\n    if not check_version(version, MIN_PYRIGHT_VERSION):\n        raise Exception(\n            f\"Pyright version {version} does not meet minimum version {MIN_PYRIGHT_VERSION}\\nPlease upgrade using `pip install -U pyright`\"\n        )\n    # current_version = pyright.node.get_pkg_version(pkg_dir / 'package.json')\n    # cache_dir = ROOT_CACHE_DIR / current_version\n    cache_dir = ROOT_CACHE_DIR / version\n    cache_dir.mkdir(exist_ok=True, parents=True)\n    pkg_dir = cache_dir / \"node_modules\" / \"pyright\"\n    script = pkg_dir / \"index.js\"\n    if not script.exists():\n        raise RuntimeError(f\"Expected CLI entrypoint: {script} to exist\")\n    result = pyright.node.run(\"node\", str(script), *args, **kwargs)\n    return result\npyright.cli.run = run\n# monkey patch end\n# short test.\nif __name__ == \"__main__\":\n    args = [\"../test_undefined.py\"]\n    # args = ['ies_optim.py']\n    kwargs = dict(capture_output=True)\n    run_result = pyright.cli.run(*args, capture_output=True, encoding=\"utf-8\")\n    import rich\n    logger",
+        "file_id": 42,
+        "content": "# filepath = \"binary_program_windows_bin.txt\"\nfilepath = \"binary_program.txt\"\n# output_path = \"program.bin\"\n# output_path = \"program.exe\"\noutput_path = \"program\" # linux program?\nbyte_int_list = []\nwith open(filepath, 'r') as f:\n    content = f.read()\n    byte_list = content.replace(\"\\n\", ' ').split()\n    for byte_str in byte_list:\n        byte_int = int(byte_str, 2)\n        byte_int_list.append(byte_int)\nbinary_bytes = bytes(byte_int_list)\nwith open(output_path, 'wb') as f:\n    f.write(binary_bytes)\n# import os\n# os.system(output_path)",
         "type": "code",
-        "location": "/pyright_utils.py:37-67"
+        "location": "/binary_program_synthesis_cpu_assembly_execution/interpret_and_save_binary_program.py:1-20"
     },
     "313": {
-        "file_id": 29,
-        "content": "The code checks the version of Pyright installed and creates a cache directory based on that version. It then locates the CLI entrypoint (index.js) and runs it using pyright's node module, returning the result. The monkey patch allows the pyright.cli.run function to be called with arguments and keyword arguments for running the Pyright CLI. A short test is included at the end to demonstrate the functionality of the code.",
+        "file_id": 42,
+        "content": "Reads binary program from file, converts to integer list, and writes to output file.",
         "type": "comment"
     },
     "314": {
-        "file_id": 29,
-        "content": "_print(run_result)\n    # errorRegex = r\".+?reportUndefinedVariable.+\"\n    # if \"does not exist\" in run_result.stderr:\n    if run_result.stderr:\n        raise Exception(f\"Pyright error:\\n{run_result.stderr}\")\n    typeErrors = re.findall(errorRegex, run_result.stdout, re.MULTILINE)\n    # breakpoint()\n    logger_print(typeErrors)\n    assert typeErrors[0].endswith(\n        'test_undefined.py:1:5 - error: \"b\" is not defined (reportUndefinedVariable)'\n    )",
-        "type": "code",
-        "location": "/pyright_utils.py:67-77"
-    },
-    "315": {
-        "file_id": 29,
-        "content": "This code checks if there are any undefined variable errors in the Pyright output. If an error message containing \"does not exist\" is found in stderr, it raises an exception with the error message. It then finds all occurrences of the regular expression 'errorRegex' in stdout using re.findall, and logs these type errors. Finally, it asserts that the first type error ends with a specific error message.",
-        "type": "comment"
-    },
-    "316": {
-        "file_id": 30,
-        "content": "/pytest_disable_assertion_inspection_use_better_exceptions.py",
+        "file_id": 43,
+        "content": "/binary_program_synthesis_cpu_assembly_execution/softmax_test.py",
         "type": "filepath"
     },
-    "317": {
-        "file_id": 30,
-        "content": "Code utilizes Monkeypatch to replace numpy.array with custom marray class and sets environment variables for testing exceptions, creating an array in the process.",
+    "315": {
+        "file_id": 43,
+        "content": "Computing 2D softmax activation for random input tensor of shape (2,3).",
         "type": "summary"
     },
-    "318": {
-        "file_id": 30,
-        "content": "# commandline:\n# env BETTER_EXCEPTIONS=1 python3 -m pytest --full-capture --assert=plain pytest_disable_assertion_inspection_use_better_exceptions.py\n# env BETTER_EXCEPTIONS=1 python3 -m pytest pytest_disable_assertion_inspection_use_better_exceptions.py\nfrom pytest import MonkeyPatch\nimport numpy as np\nimport better_exceptions\n# # import unittest\nfrom pytest import ExceptionInfo\n# def max_traceback_limit(tb, max_limit = 3):\n#     if getattr(tb, 'tb_next',None):\n#         if max_limit == 0:\n#             tb.tb_next = None\n#         else:\n#             max_traceback_limit(tb.tb_next, max_limit = max_limit-1)\n# import rich\ndef patch(exc_info, exprinfo):\n    tb = exc_info[2]\n    # max_traceback_limit(tb)\n    # traceback is staring from the root cause. deal it in the end.\n    # rich.print(tb)\n    # breakpoint()\n    cls = ExceptionInfo\n    textlist = better_exceptions.format_exception(\n        exc=exc_info[0], value=exc_info[1], tb=tb\n    )\n    # textlist = better_exceptions.format_exception(*exc_info)\n    text = \"\"",
+    "316": {
+        "file_id": 43,
+        "content": "import torch\nimport torch.nn as nn\nm = nn.Softmax(dim=1)\ninput = torch.randn(2, 3, requires_grad=True)\noutput = m(input)\nprint(output)",
         "type": "code",
-        "location": "/pytest_disable_assertion_inspection_use_better_exceptions.py:1-33"
+        "location": "/binary_program_synthesis_cpu_assembly_execution/softmax_test.py:1-7"
     },
-    "319": {
-        "file_id": 30,
-        "content": "Setting environment variable to enable better exceptions, running pytest with full capture and assertions as plain text.",
+    "317": {
+        "file_id": 43,
+        "content": "Computing 2D softmax activation for random input tensor of shape (2,3).",
         "type": "comment"
     },
+    "318": {
+        "file_id": 44,
+        "content": "/binary_program_synthesis_cpu_assembly_execution/vkq_bin.py",
+        "type": "filepath"
+    },
+    "319": {
+        "file_id": 44,
+        "content": "The VKQAttention class implements attention mechanism using linear layers, while the code defines binary quantization configuration and converts model to binary format. The 'bout' array shape is stored but not printed.",
+        "type": "summary"
+    },
     "320": {
-        "file_id": 30,
-        "content": ".join(textlist)\n    keyword = \"in pytest_pyfunc_call\"\n    text = text.split(\"\\n\")\n    last_index = -20\n    for i, t in enumerate(text):\n        if keyword in t:\n            last_index = i\n            break\n    text = text[last_index:]\n    text = \"\\n\".join(text)\n    print()\n    print(text)  # great. this could be the hook.\n    return cls(exc_info, text, _ispytest=True)\nExceptionInfo.from_exc_info = patch\n# better_exceptions.hook()\ndef create_array():\n    a = np.array([1, 2, 3])\n    b = np.array([1, 2, 3, 4])\n    c = a + b\n    return c\nimport numpy\nclass marray:\n    def __init__(self, content):\n        print(\"CREATING ARRAY WITH CONTENT:\", content)\n        # how do you inspect that after patched the original method?\n        # shall you return \"None\"\n        # return \"CREATED_ARRAY\"\ndef test_mytest(monkeypatch: MonkeyPatch):\n    # monkeypatch.setitem(numpy.__dict__, \"array\", marray) # patched!\n    monkeypatch.setattr(numpy, \"array\", marray) # again, patched!\n    monkeypatch.setenv(\"BETTER_EXCEPTIONS\",\"1\") # still, no ",
+        "file_id": 44,
+        "content": "import torch\nimport torch.nn as nn\nimport torch.nn.functional as F\nclass VKQAttention(nn.Module):\n    def __init__(self, input_dim):\n        super(VKQAttention, self).__init__()\n        self.input_dim = input_dim\n        self.value = nn.Linear(input_dim, input_dim)\n        self.key = nn.Linear(input_dim, input_dim)\n        self.query = nn.Linear(input_dim, input_dim)\n        self.softmax = nn.Softmax(dim=2)\n        self.dk = self.input_dim\n    def forward(self, x):\n        values = self.value(x)\n        keys = self.key(x)\n        queries = self.query(x)\n        # scores = torch.bmm(queries, keys.transpose(1, 2)) / (self.dk**0.5)\n        # scores = torch.bmm(keys.transpose(1, 2), queries) / (self.dk**0.3)  # not 2!\n        scores = torch.bmm(keys.transpose(1, 2), queries) / (self.dk**0.5)\n        attention = self.softmax(scores)\n        # print(attention)\n        # print(scores)\n        # breakpoint()\n        # weighted = torch.bmm(scores, values)\n        # weighted = torch.bmm(attention, values)\n        weight",
         "type": "code",
-        "location": "/pytest_disable_assertion_inspection_use_better_exceptions.py:33-72"
+        "location": "/binary_program_synthesis_cpu_assembly_execution/vkq_bin.py:1-29"
     },
     "321": {
-        "file_id": 30,
-        "content": "Creating a numpy array and testing it with Monkeypatch.\n\nThe code creates two numpy arrays (a and b) and adds them together to create another array (c). Then, it defines a class marray which should be used for creating numpy arrays instead of the original numpy.array function. The test_mytest function uses Monkeypatch to replace the numpy.array function with the marray class.\n\nMonkeypatch is being used to set attributes and environment variables in order to change how numpy's array function behaves during testing. This allows for inspection of exceptions thrown by this function, presumably using a different method than the original one. The code appears to be setting up an alternative way of handling numpy arrays specifically for testing purposes.",
+        "file_id": 44,
+        "content": "This code defines a VKQAttention class that implements an attention mechanism using linear layers for value, key, and query calculations. The input_dim parameter is used to specify the size of the input. The forward method performs the attention calculations by multiplying queries with keys transposed, then dividing by the square root of the input_dim. It then applies softmax along dimension 2 and returns the attention weights for further processing.",
         "type": "comment"
     },
     "322": {
-        "file_id": 30,
-        "content": "\"better\" exception.\n    a = 1\n    b = {}\n    create_array()\n    # print(b[1])\n    # assert b[2] == a\n# if __name__ == \"__main__\":\n#     test_mytest()",
+        "file_id": 44,
+        "content": "ed = torch.bmm(values, attention)\n        return weighted\nimport torch\n# import torchvision.models as models\nfrom bnn import BConfig, prepare_binary_model\n# Import a few examples of quantizers\nfrom bnn.ops import BasicInputBinarizer, BasicScaleBinarizer, XNORWeightBinarizer\n# Define the binarization configuration and assign it to the model\nbconfig = BConfig(\n    activation_pre_process=BasicInputBinarizer,\n    activation_post_process=BasicScaleBinarizer,\n    # optionally, one can pass certain custom variables\n    weight_pre_process=XNORWeightBinarizer.with_args(center_weights=True),\n)\n# Convert the model appropiately, propagating the changes from parent node to leafs\n# The custom_config_layers_name syntax will perform a match based on the layer name, setting a custom quantization function.\nmodel = VKQAttention(input_dim=768)\nbmodel = prepare_binary_model(model, bconfig)\ninp = torch.randn(1, 12, 768)\n# out = model(inp)\n# print(out, out.shape)\n# print(inp)\n# print(out.shape)  # 1, 12, 768\nbout = bmodel(inp)\nprin",
         "type": "code",
-        "location": "/pytest_disable_assertion_inspection_use_better_exceptions.py:72-81"
+        "location": "/binary_program_synthesis_cpu_assembly_execution/vkq_bin.py:29-61"
     },
     "323": {
-        "file_id": 30,
-        "content": "Creates an array.",
+        "file_id": 44,
+        "content": "28-47: Define binary quantization config and assign it to the model\n48-56: Convert the model to a binary one, propagating changes from parent to leaf nodes\n57-60: Pass input to the binary model and obtain output",
         "type": "comment"
     },
     "324": {
-        "file_id": 31,
-        "content": "/pytropos_check.py",
-        "type": "filepath"
+        "file_id": 44,
+        "content": "t(bout)\n# print(bout.shape)",
+        "type": "code",
+        "location": "/binary_program_synthesis_cpu_assembly_execution/vkq_bin.py:61-62"
     },
     "325": {
-        "file_id": 31,
-        "content": "This code imports the necessary libraries, sets up some variables and arrays, performs matrix operations using NumPy, and includes a test function using Hypothesis library for testing. The code is related to matrix multiplication and unit testing.",
-        "type": "summary"
+        "file_id": 44,
+        "content": "This code stores the shape of the 'bout' array, but it is not currently printed.",
+        "type": "comment"
     },
     "326": {
-        "file_id": 31,
-        "content": "# # pip install git+https://github.com/helq/pytropos\n# # pytropos pytropos_check.py\n# import numpy as np\n# a = np.zeros((10, 6))\n# m = 4 + 1\n# n = 0 + 2\n# if m == 5:\n#     n = 1\n# else:\n#     m = 6\n# b = np.ones((m, n))\n# res = np.dot(a, b)  # fails here\n# print(res)\n# var = True\n# if var:\n#     b = np.zeros((3, 11))\n#     res = np.dot(b, a)  # fails here\n# print(res)\nfrom hypothesis import given\nfrom hypothesis.strategies import text\nimport mock\nfrom pytest import MonkeyPatch, FixtureRequest\n# from unittest.mock import MagicMock # replace class.\nfrom unittest.mock import *\n# mock.patch()\n# common fixture!\ndef test_monkey(monkeypatch: MonkeyPatch, request: FixtureRequest):\n    # now you finally have a better view on fixtures.\n    monkeypatch.setitem\n@given(s=text(), s0=text())\ndef test_myfun(s, s0):\n    print(s, s0)  # lots of charactors.",
-        "type": "code",
-        "location": "/pytropos_check.py:1-48"
-    },
-    "327": {
-        "file_id": 31,
-        "content": "This code imports the necessary libraries, sets up some variables and arrays, performs matrix operations using NumPy, and includes a test function using Hypothesis library for testing. The code is related to matrix multiplication and unit testing.",
-        "type": "comment"
-    },
-    "328": {
-        "file_id": 32,
-        "content": "/random_actor.py",
+        "file_id": 45,
+        "content": "/compose.yaml",
         "type": "filepath"
     },
-    "329": {
-        "file_id": 32,
-        "content": "The code generates random mouse and keyboard inputs for simulation purposes, including modifiers and directionals, utilizing pyautogui. It lacks keydown state support and requires error handling for a smooth execution.",
+    "327": {
+        "file_id": 45,
+        "content": "Creating two services, Xorg-VNC-Client and VNC-Server with specified images.",
         "type": "summary"
     },
-    "330": {
-        "file_id": 32,
-        "content": "# you generate states.jsonl.\n# must include all possible states.\n# try to match the distribution?\n# i think it is kind of like monkey.js (aka monkey testing)?\n# it's better to add some kind of randomness, or \"experienced learner\" responsible for generating new data, to overcome the shortage of imagination and possibilities.\n# virtualbox unattended installation:\n# vboxuser:changeme\n# connect via openai universe (vnc)\n# you can setup initial desktop environments, just like yours, using automated scripts.\n# you perform your actions randomly, inject actions while the bot is acting alone.\n# first let's use pyautogui as random actor.\n# then may consider cross-platform RPA record/replay libs\n# like: https://github.com/repeats/Repeat\n# you may use pyinput or something else.\nfrom functools import lru_cache\nimport random\nimport pyautogui\n# there are several keys we should never touch.\nKEY_CHARS = [\n    \"\\t\",\n    \"\\n\",\n    \"\\r\",\n    \" \",\n    \"!\",\n    '\"',\n    \"#\",\n    \"$\",\n    \"%\",\n    \"&\",\n    \"'\",\n    \"(\",\n    \")\",\n    \"*\",\n  ",
+    "328": {
+        "file_id": 45,
+        "content": "services:\n  xorg-vnc-client:\n    build: .\n  vnc-server:\n    image: \"dorowu/ubuntu-desktop-lxde-vnc:focal\"",
         "type": "code",
-        "location": "/random_actor.py:1-44"
+        "location": "/compose.yaml:1-5"
     },
-    "331": {
-        "file_id": 32,
-        "content": "This code is for generating random user input using the pyautogui library. It aims to cover all possible states by introducing some randomness and avoids interacting with certain keys. The code can be used in unattended installation scenarios and may consider cross-platform RPA record/replay libraries for further improvements.",
+    "329": {
+        "file_id": 45,
+        "content": "Creating two services, Xorg-VNC-Client and VNC-Server with specified images.",
         "type": "comment"
     },
+    "330": {
+        "file_id": 46,
+        "content": "/config.py",
+        "type": "filepath"
+    },
+    "331": {
+        "file_id": 46,
+        "content": "Sets the simulation timestep to 0.03 seconds and defines the file path for storing state data as \"states.jsonl\".",
+        "type": "summary"
+    },
     "332": {
-        "file_id": 32,
-        "content": "  \"+\",\n    \",\",\n    \"-\",\n    \".\",\n    \"/\",\n    \"0\",\n    \"1\",\n    \"2\",\n    \"3\",\n    \"4\",\n    \"5\",\n    \"6\",\n    \"7\",\n    \"8\",\n    \"9\",\n    \":\",\n    \";\",\n    \"<\",\n    \"=\",\n    \">\",\n    \"?\",\n    \"@\",\n    \"[\",\n    \"\\\\\",\n    \"]\",\n    \"^\",\n    \"_\",\n    \"`\",\n    \"a\",\n    \"b\",\n    \"c\",\n    \"d\",\n    \"e\",\n    \"f\",\n    \"g\",\n    \"h\",\n    \"i\",\n    \"j\",\n    \"k\",\n    \"l\",\n    \"m\",\n    \"n\",\n    \"o\",\n    \"p\",\n    \"q\",\n    \"r\",\n    \"s\",\n    \"t\",\n    \"u\",\n    \"v\",\n    \"w\",\n    \"x\",\n    \"y\",\n    \"z\",\n    \"{\",\n    \"|\",\n    \"}\",\n    \"~\",\n]\nKEY_MOD = [\n    \"alt\",\n    \"altleft\",\n    \"altright\",\n    \"shift\",\n    \"shiftleft\",\n    \"shiftright\",\n    \"ctrl\",\n    \"ctrlleft\",\n    \"ctrlright\",\n]\nKEY_WIN_MOD = [\n    \"win\",\n    \"winleft\",\n    \"winright\",\n]\nKEY_MAC_MOD = [\n    \"option\",\n    \"optionleft\",\n    \"optionright\",\n    \"command\",\n]\nKEY_DIRECTION = [\n    \"down\",\n    \"up\",\n    \"right\",\n    \"left\",\n]\nKEY_SPECIAL = [\n    \"backspace\",\n    \"capslock\",\n    \"del\",\n    \"delete\",\n    \"tab\",\n    \"home\",\n    \"insert\",\n    \"end\",\n    \"enter\",\n    \"esc\",\n    \"escape\",\n    \"pagedown\",\n    \"pageup\",\n    \"pgdn\",\n    \"pgup\",\n    \"r",
+        "file_id": 46,
+        "content": "timestep = 0.03\nfilePath = \"states.jsonl\"",
         "type": "code",
-        "location": "/random_actor.py:44-150"
+        "location": "/config.py:1-2"
     },
     "333": {
-        "file_id": 32,
-        "content": "The code defines a list of keys that can be used for keyboard interactions. It includes both standard alphanumeric characters and special keys like \"backspace\" and \"enter\". Additionally, it separates the modifiers into three categories: \"KEY_MOD\", \"KEY_WIN_MOD\", and \"KEY_MAC_MOD\". The \"KEY_DIRECTION\" list contains directional keyboard actions.",
+        "file_id": 46,
+        "content": "Sets the simulation timestep to 0.03 seconds and defines the file path for storing state data as \"states.jsonl\".",
         "type": "comment"
     },
     "334": {
-        "file_id": 32,
-        "content": "eturn\",\n]\nKEY_FUNC = [\n    \"fn\",\n    \"f1\",\n    \"f10\",\n    \"f11\",\n    \"f12\",\n    \"f13\",\n    \"f14\",\n    \"f15\",\n    \"f16\",\n    \"f17\",\n    \"f18\",\n    \"f19\",\n    \"f2\",\n    \"f20\",\n    \"f21\",\n    \"f22\",\n    \"f23\",\n    \"f24\",\n    \"f3\",\n    \"f4\",\n    \"f5\",\n    \"f6\",\n    \"f7\",\n    \"f8\",\n    \"f9\",\n]\nKEY_NUMPAD = [\n    \"num0\",\n    \"num1\",\n    \"num2\",\n    \"num3\",\n    \"num4\",\n    \"num5\",\n    \"num6\",\n    \"num7\",\n    \"num8\",\n    \"num9\",\n    \"numlock\",\n]\nKEY_MORE = [\n    \"accept\",\n    \"pause\",\n    \"add\",\n    \"apps\",\n    \"browserback\",\n    \"browserfavorites\",\n    \"browserforward\",\n    \"browserhome\",\n    \"browserrefresh\",\n    \"browsersearch\",\n    \"browserstop\",\n    \"clear\",\n    \"convert\",\n    \"decimal\",\n    \"divide\",\n    \"execute\",\n    \"playpause\",\n    \"prevtrack\",\n    \"print\",\n    \"printscreen\",\n    \"prntscrn\",\n    \"prtsc\",\n    \"prtscr\",\n    \"scrolllock\",\n    \"select\",\n    \"separator\",\n    \"sleep\",\n    \"space\",\n    \"stop\",\n    \"subtract\",\n    \"volumedown\",\n    \"volumemute\",\n    \"volumeup\",\n    \"yen\",\n    \"final\",\n    \"hanguel\",\n    \"hangul\",\n    \"hanja\",\n    \"help\",\n    \"junja\",\n    \"",
-        "type": "code",
-        "location": "/random_actor.py:150-236"
+        "file_id": 47,
+        "content": "/conscious_struct.py",
+        "type": "filepath"
     },
     "335": {
-        "file_id": 32,
-        "content": "This code defines various keyboard keys as lists for later use, such as KEY_ALPHA, KEY_NUMERIC, KEY_FUNCTIONS, and KEY_MORE.",
-        "type": "comment"
+        "file_id": 47,
+        "content": "The code processes HID actions, handles various inputs and formats, validates types, includes classes for data management and training, ensures proper shape and logging. It manages training data in an image processing program using SequentialEvalQueue class with LSTM, fixes bugs 9 and 13, optimizes data type bits, prepares input data for RNN, uses Einops library with ViTDecoder to process selected image bits, rearranges and copies data based on shared and exclusive indices, performs 1D convolution with filters, and generates output.",
+        "type": "summary"
     },
     "336": {
-        "file_id": 32,
-        "content": "kana\",\n    \"kanji\",\n    \"launchapp1\",\n    \"launchapp2\",\n    \"launchmail\",\n    \"launchmediaselect\",\n    \"modechange\",\n    \"multiply\",\n    \"nexttrack\",\n    \"nonconvert\",\n]\nALL_KEYS = (\n    KEY_CHARS\n    + KEY_DIRECTION\n    + KEY_MOD\n    + KEY_MAC_MOD\n    + KEY_WIN_MOD\n    + KEY_SPECIAL\n    + KEY_FUNC\n    + KEY_NUMPAD\n    + KEY_MORE\n)\nINIT_KEYS = KEY_CHARS + KEY_DIRECTION + KEY_MOD + KEY_WIN_MOD + KEY_SPECIAL\n# turn off pyautogui failsafe.\npyautogui.FAILSAFE = False\ndef get_random_single_key():\n    key = random.choice(INIT_KEYS)\n    return key\ndef random_press_single_key():\n    key = get_random_single_key()\n    pyautogui.press(key)\n# no keydown support? what about states?\ndef get_random_mod_key():\n    key = random.choice(KEY_SPECIAL + KEY_WIN_MOD)\n    return key\ndef random_mod_key_down():\n    key = get_random_mod_key()\n    try:\n        pyautogui.keyDown(key)\n    except:\n        pass\ndef random_mod_key_up():\n    key = get_random_mod_key()\n    try:\n        pyautogui.keyUp(key)\n    except:\n        pass\ndef get_random_offset():\n    offset ",
+        "file_id": 47,
+        "content": "# TODO: design a way to \"observe\" current holding keys, current mouse location, encode that observation and feed into model input along with screen image data\n# import pynput\n# no such dependency when training.\nimport einops\nimport os\nimport numpy as np\nimport cv2\nimport ast\nfrom pydantic import BaseModel, validator\nfrom typing import Union, Mapping, List\n# import logging\nfrom log_utils import logger\nfrom pydantic_numpy import NDArray\nimport torch\ntry:\n    from typing import Literal\nexcept:\n    from typing_extensions import Literal  # this is a failsafe.\ntry:\n    from typing import TypeAlias\nexcept:\n    from typing_extensions import TypeAlias\n##############\n#  HID BASE  #\n##############\nclass HIDActionTypes:\n    keyboard_action_types: TypeAlias = Literal[\n        \"key_press\",\n        \"key_release\",\n    ]\n    mouse_action_types: TypeAlias = Literal[\n        \"mouse_move\",\n        \"mouse_click\",\n        \"mouse_scroll\",\n    ]\n    action_types: TypeAlias = Literal[\n        keyboard_action_types,\n        mouse_action_types,\n    ",
         "type": "code",
-        "location": "/random_actor.py:236-304"
+        "location": "/conscious_struct.py:1-46"
     },
     "337": {
-        "file_id": 32,
-        "content": "This code defines several lists of keys representing various key types, and functions for randomly selecting and pressing a single key, as well as pressing and releasing modifier keys. It also turns off the pyautogui failsafe. The code lacks support for keydown states and does not handle exceptions well.",
+        "file_id": 47,
+        "content": "This code is importing necessary libraries and defining classes for handling HID (Human Interface Device) actions such as keyboard and mouse events. It also includes type hints for different action types.",
         "type": "comment"
     },
     "338": {
-        "file_id": 32,
-        "content": "= random.randint(-100, 100)\n    return offset\ndef random_mouse_move():\n    xOffset = get_random_offset()\n    yOffset = get_random_offset()\n    pyautogui.move(xOffset, yOffset)\n@lru_cache(maxsize=1)\ndef get_screen_size():\n    return pyautogui.size()  # (width, height)\ndef get_random_screen_position():\n    width, height = get_screen_size()\n    return random.randint(0, width), random.randint(0, height)\ndef random_mouse_moveTo():\n    x, y = get_random_screen_position()\n    pyautogui.moveTo(x, y)\n# mouse click, mouse move, mouse scroll, mouse double click\ndef random_mouse_scroll():\n    # don't use hscroll/vscroll because it only supports linux\n    pyautogui.scroll(get_random_offset())\nMOUSE_BUTTONS = [pyautogui.LEFT, pyautogui.MIDDLE, pyautogui.RIGHT]\ndef get_random_mouse_button():\n    button = random.choice(MOUSE_BUTTONS)\n    return button\nMOUSE_ACTIONS = [\n    lambda: pyautogui.leftClick(),\n    lambda: pyautogui.rightClick(),\n    lambda: pyautogui.middleClick(),\n    lambda: pyautogui.mouseDown(button=get_random_mou",
+        "file_id": 47,
+        "content": "]\n    mouse_buttons: TypeAlias = Literal[\n        \"Button.left\",\n        \"Button.middle\",\n        \"Button.right\",\n    ]\n    keys: TypeAlias = Literal[\n        \"\"\"','\"\"\",\n        \"\"\"'.'\"\"\",\n        \"\"\"'/'\"\"\",\n        \"\"\"';'\"\"\",\n        \"\"\"\\\"'\\\"\"\"\",\n        \"\"\"'['\"\"\",\n        \"\"\"']'\"\"\",\n        \"\"\"'\\\\'\"\"\",\n        \"\"\"'='\"\"\",\n        \"\"\"'-'\"\"\",\n        \"\"\"'0'\"\"\",\n        \"\"\"'9'\"\"\",\n        \"\"\"'8'\"\"\",\n        \"\"\"'7'\"\"\",\n        \"\"\"'6'\"\"\",\n        \"\"\"'5'\"\"\",\n        \"\"\"'4'\"\"\",\n        \"\"\"'3'\"\"\",\n        \"\"\"'2'\"\"\",\n        \"\"\"'1'\"\"\",\n        \"\"\"'`'\"\"\",\n        \"\"\"'a'\"\"\",\n        \"\"\"'b'\"\"\",\n        \"\"\"'c'\"\"\",\n        \"\"\"'d'\"\"\",\n        \"\"\"'e'\"\"\",\n        \"\"\"'f'\"\"\",\n        \"\"\"'g'\"\"\",\n        \"\"\"'h'\"\"\",\n        \"\"\"'i'\"\"\",\n        \"\"\"'j'\"\"\",\n        \"\"\"'k'\"\"\",\n        \"\"\"'l'\"\"\",\n        \"\"\"'m'\"\"\",\n        \"\"\"'n'\"\"\",\n        \"\"\"'o'\"\"\",\n        \"\"\"'p'\"\"\",\n        \"\"\"'q'\"\"\",\n        \"\"\"'r'\"\"\",\n        \"\"\"'s'\"\"\",\n        \"\"\"'t'\"\"\",\n        \"\"\"'u'\"\"\",\n        \"\"\"'v'\"\"\",\n        \"\"\"'w'\"\"\",\n        \"\"\"'x'\"\"\",\n        \"\"\"'y'\"\"\",\n        \"\"\"'z'\"\"\",\n       ",
         "type": "code",
-        "location": "/random_actor.py:304-349"
+        "location": "/conscious_struct.py:46-100"
     },
     "339": {
-        "file_id": 32,
-        "content": "get_random_offset: Returns a random integer between -100 and 100.\nrandom_mouse_move: Moves the mouse randomly by calling get_random_offset twice for x and y coordinates, then using pyautogui.move.\nget_screen_size: Returns the screen size as a tuple (width, height) using pyautogui.size.\nget_random_screen_position: Gets the screen size and returns a random position on the screen within those bounds using get_random_offset.\nrandom_mouse_moveTo: Moves the mouse to a random position on the screen using get_random_screen_position, then moves to that position with pyautogui.moveTo.\nrandom_mouse_scroll: Scrolls randomly by calling get_random_offset and passing it to pyautogui.scroll.\nget_random_mouse_button: Chooses a random mouse button from MOUSE_BUTTONS list.\nMOUSE_ACTIONS: A list of lambda functions that perform left click, right click, middle click, or get_random_mou \n\nThe codebase contains several functions for interacting with the mouse. There are functions to randomly move the mouse, scroll the mouse wheel, and select a random mouse button. It also includes a list of lambda functions that can be used to simulate left, right, and middle mouse clicks as well as get_random_mouse_button(). Additionally, it has a function called get_random_screen_position() which returns a random position on the screen within the bounds of the screen size.",
+        "file_id": 47,
+        "content": "This code defines two type aliases, \"mouse_buttons\" and \"keys\", which represent specific button presses and key presses respectively. The mouse_buttons alias includes the literal strings for left, middle, and right mouse buttons, while the keys alias contains a list of literal strings representing commonly used keys on a keyboard.",
         "type": "comment"
     },
     "340": {
-        "file_id": 32,
-        "content": "se_button()),\n    lambda: pyautogui.mouseUp(button=get_random_mouse_button()),\n]\ndef random_mouse_button_action():\n    try:\n        action = random.choice(MOUSE_ACTIONS)\n    except:\n        pass\n    action()\nif __name__ == \"__main__\":\n    random_keyboard_actions = [\n        random_mod_key_down,\n        random_mod_key_up,\n        random_press_single_key,\n    ]\n    random_mouse_actions = [\n        random_mouse_button_action,\n        random_mouse_move,\n        random_mouse_moveTo,\n        random_mouse_scroll,\n    ]\n    random_actions = random_mouse_actions + random_keyboard_actions\n    for _ in range(10):\n        random_action = random.choice(random_actions)\n        try:\n            random_action()\n        except:\n            pass\n    # to recover from mortality...\n    # use try...finally or something...\n    # context manager...\n    for key in KEY_MOD + KEY_WIN_MOD + KEY_MAC_MOD:\n        try:\n            pyautogui.keyUp(key)\n        except:\n            pass\n    for button in MOUSE_BUTTONS:\n        try:\n            pyautogui.m",
+        "file_id": 47,
+        "content": " \"Key.alt\",  # check pynput.keyboard.Key\n        \"Key.alt_r\",\n        \"Key.backspace\",\n        \"Key.caps_lock\",\n        \"Key.cmd\",\n        \"Key.cmd_r\",\n        \"Key.ctrl\",\n        \"Key.ctrl_r\",\n        \"Key.delete\",\n        \"Key.down\",\n        \"Key.end\",\n        \"Key.enter\",\n        \"Key.esc\",\n        \"Key.f1\",\n        \"Key.f2\",\n        \"Key.f3\",\n        \"Key.f4\",\n        \"Key.f5\",\n        \"Key.f6\",\n        \"Key.f7\",\n        \"Key.f8\",\n        \"Key.f9\",\n        \"Key.f10\",\n        \"Key.f11\",\n        \"Key.f12\",\n        \"Key.f13\",\n        \"Key.f14\",\n        \"Key.f15\",\n        \"Key.f16\",\n        \"Key.f17\",\n        \"Key.f18\",\n        \"Key.f19\",\n        \"Key.f20\",\n        \"Key.home\",\n        \"Key.left\",\n        \"Key.page_down\",\n        \"Key.page_up\",\n        \"Key.right\",\n        \"Key.shift\",\n        \"Key.shift_r\",\n        \"Key.space\",\n        \"Key.tab\",\n        \"Key.up\",\n    ]\nclass HIDActionBase:\n    mouse_resolution: int = 1000\n    keyboard_action_types = list(HIDActionTypes.keyboard_action_types.__args__)\n    mouse_action_types = list(",
         "type": "code",
-        "location": "/random_actor.py:349-398"
+        "location": "/conscious_struct.py:100-149"
     },
     "341": {
-        "file_id": 32,
-        "content": "This code defines functions for random mouse and keyboard actions, then executes a loop of 10 random actions. It attempts to recover from potential key presses and ends by releasing all keys and mouse buttons.",
+        "file_id": 47,
+        "content": "This code defines a list of key names for the pynput.keyboard.Key module and creates two lists for keyboard action types. The first class, HIDActionBase, has two attributes: mouse_resolution (1000) and keyboard_action_types (list of keyboard action types).",
         "type": "comment"
     },
     "342": {
-        "file_id": 32,
-        "content": "ouseUp(button)\n        except:\n            pass",
+        "file_id": 47,
+        "content": "HIDActionTypes.mouse_action_types.__args__)\n    action_types = list(HIDActionTypes.action_types.__args__)\n    mouse_buttons = list(HIDActionTypes.mouse_buttons.__args__)\n    keys = list(HIDActionTypes.keys.__args__)\n    length = (\n        len(action_types)\n        + len(keys)\n        + len(mouse_buttons)\n        + 1  # mouse pressed\n        + 4 * mouse_resolution\n    )  # ,\n    #             1)\n    @staticmethod\n    def unshift_keycode(keycode: str) -> Union[str, None]:\n        unshift_keycodes = {\n            \"!\": \"1\",\n            \"@\": \"2\",\n            \"#\": \"3\",\n            \"$\": \"4\",\n            \"%\": \"5\",\n            \"^\": \"6\",\n            \"&\": \"7\",\n            \"*\": \"8\",\n            \"(\": \"9\",\n            \")\": \"0\",\n            \"_\": \"-\",\n            \"+\": \"=\",\n            \"{\": \"[\",\n            \"}\": \"]\",\n            \"|\": \"\\\\\",\n            \":\": \";\",\n            '\"': \"'\",\n            \"<\": \",\",\n            \">\": \".\",\n            \"?\": \"/\",\n            \"~\": \"`\",\n        }\n        ctrl_keycodes = {\n            \"\\x01\": \"a\",\n           ",
         "type": "code",
-        "location": "/random_actor.py:398-400"
+        "location": "/conscious_struct.py:149-190"
     },
     "343": {
-        "file_id": 32,
-        "content": "This code is attempting to call a function \"ouseUp(button)\" but if an exception occurs, it will be ignored with the \"pass\" statement.",
+        "file_id": 47,
+        "content": "Extracting argument types for action types, mouse buttons, and keys.\nCalculating total length including base type and additional mappings for a given keycode.\nStatic method to unshift keycodes based on specific conditions.",
         "type": "comment"
     },
     "344": {
-        "file_id": 33,
-        "content": "/record_playback_test.py",
-        "type": "filepath"
+        "file_id": 47,
+        "content": " \"\\x02\": \"b\",\n            \"\\x03\": \"c\",\n            \"\\x04\": \"d\",\n            \"\\x05\": \"e\",\n            \"\\x06\": \"f\",\n            \"\\x07\": \"g\",\n            \"\\x08\": \"h\",\n            \"\\t\": \"i\",\n            \"\\n\": \"j\",\n            \"\\x0b\": \"k\",\n            \"\\x0c\": \"l\",\n            \"\\r\": \"m\",\n            \"\\x0e\": \"n\",\n            \"\\x0f\": \"o\",\n            \"\\x10\": \"p\",\n            \"\\x11\": \"q\",\n            \"\\x12\": \"r\",\n            \"\\x13\": \"s\",\n            \"\\x14\": \"t\",\n            \"\\x15\": \"u\",\n            \"\\x16\": \"v\",\n            \"\\x17\": \"w\",\n            \"\\x18\": \"x\",\n            \"\\x19\": \"y\",\n            \"\\x1a\": \"z\",\n            \"<219>\": \"[\",\n            \"<221>\": \"]\",\n            \"<189>\": \"-\",\n            \"<187>\": \"=\",\n            \"<192>\": \"`\",\n            \"<48>\": \"0\",\n            \"<49>\": \"1\",\n            \"<50>\": \"2\",\n            \"<51>\": \"3\",\n            \"<52>\": \"4\",\n            \"<53>\": \"5\",\n            \"<54>\": \"6\",\n            \"<55>\": \"7\",\n            \"<56>\": \"8\",\n            \"<57>\": \"9\",\n            \"<220>\": \"\\\\\",\n            \"<186>\": \";\",\n ",
+        "type": "code",
+        "location": "/conscious_struct.py:190-232"
     },
     "345": {
-        "file_id": 33,
-        "content": "Code is recording and playing back user interface actions in a Windows environment using the pywinauto library.",
-        "type": "summary"
+        "file_id": 47,
+        "content": "This code is mapping various characters and special keys to their corresponding alphabets and numbers.",
+        "type": "comment"
     },
     "346": {
-        "file_id": 33,
-        "content": "from pywinauto_recorder.recorder import Recorder\n# from pywinauto_recorder.player import UIPath, click, move, playback\n# this seems not working.\nfrom pywinauto_recorder.player import playback\nrecorder = Recorder()\ninput(\"START?\")\nrecorder.start_recording()\nimport time\ntime.sleep(10)\nprint(\"RECORD COMPLETE\")\ninput(\"PLAY?\")\n#  |          with UIPath(\"Untitled - Notepad||Window\"):\n#  |                  doc = move(\"Text editor||Document\")\n#  |                  time.sleep(0.5)\n#  |                  click(doc)\n#  |                  utf8 = move(\"||Pane-> UTF-8||Text\")\n#  |                  time.sleep(0.5)\n#  |                  click(utf8)\nrecorded_python_script = recorder.stop_recording()\nrecorder.quit()\nprint(\"RECORDING FILENAME?\", recorded_python_script)\nplayback(filename=recorded_python_script)",
+        "file_id": 47,
+        "content": "           \"<222>\": \"'\",\n            \"<188>\": \",\",\n            \"<190>\": \".\",\n            \"<191>\": \"/\",\n        }\n        keycode = unshift_keycodes.get(keycode, ctrl_keycodes.get(keycode, keycode))\n        # still, this is something out of concern.\n        if keycode.startswith(\"<\") and keycode.endswith(\">\"):\n            logger.warning(\"Discarding unconvertable keycode: %s\" % keycode)\n            # keycode = pynput.keyboard.KeyCode(int(keycode[1:-1]))\n            return\n        return keycode\n    @staticmethod\n    def uncover_keycode(keycode: str) -> Union[str, None]:\n        if not keycode.startswith(\"Key.\"):\n            keycode_converted = HIDActionBase.unshift_keycode(\n                keycode\n                if keycode.startswith(\"<\") and keycode.endswith(\">\")\n                else ast.literal_eval(keycode)\n            )\n            return keycode_converted\n            # this could be None.\n            # when this is None, simply skip this code. do not end the conversion. skip it.\n        else:\n            ",
         "type": "code",
-        "location": "/record_playback_test.py:1-24"
+        "location": "/conscious_struct.py:232-257"
     },
     "347": {
-        "file_id": 33,
-        "content": "Code is recording and playing back user interface actions in a Windows environment using the pywinauto library.",
+        "file_id": 47,
+        "content": "This code is handling keycode conversion for a keyboard input processing system. It maps certain special characters to their corresponding codes, and handles unconvertable keycodes by discarding them. If the keycode starts with \"<\" and ends with \">\", it's treated as a special keycode. The function then attempts to convert the keycode, and if successful, returns the converted keycode; otherwise, it returns None.",
         "type": "comment"
     },
     "348": {
-        "file_id": 34,
-        "content": "/recorder.py",
-        "type": "filepath"
+        "file_id": 47,
+        "content": "return keycode\nclass HIDAction(BaseModel, HIDActionBase):\n    # static method: from_action\n    # static method: from_ndarray\n    # instance method: to_ndarray\n    # instance method: to_action\n    max_x: int\n    max_y: int\n    action_type: Literal[\n        \"key_press\",  # [\"key_press\", \"'w'\"]\n        \"key_release\",  # [\"key_release\", \"'r'\"]\n        \"mouse_move\",  # [\"mouse_move\", [176.7734375, 580.40625]], \"timeStamp\": 1680247557.125498}\n        \"mouse_click\",  # [\"mouse_click\", [176.7734375, 580.40625, \"Button.left\", true]]\n        \"mouse_scroll\",  # [\"mouse_scroll\", [938.76171875, 318.75, 0, 0]]\n        #         None,  # end_of_action\n    ]  # you need to specify this.\n    key: Union[\n        HIDActionTypes.keys,\n        None,\n    ] = None\n    mouse_button: Union[HIDActionTypes.mouse_buttons, None] = None\n    mouse_pressed: Union[bool, None] = None\n    x: Union[float, None] = None\n    y: Union[float, None] = None\n    dx: Union[float, None] = None\n    dy: Union[float, None] = None\n    @validator(\"max_x\", \"max_",
+        "type": "code",
+        "location": "/conscious_struct.py:257-286"
     },
     "349": {
-        "file_id": 34,
-        "content": "The code defines a variable 'timestep' set to 0.1, imports the pyautogui library and creates a dictionary named 'frame' containing various data elements such as image, keystate, mouseloc, mousestate and sound. The comment suggests that the keystroke timing may need further consideration, the code could benefit from decoding the screen recording video into images, and the computer only has CPU without an Nvidia GPU.",
-        "type": "summary"
+        "file_id": 47,
+        "content": "This class represents a HID action that can be a key press, key release, mouse move, mouse click, or mouse scroll. It has properties for the action type, key, mouse button, and coordinates. The to_ndarray method converts the instance to a numpy array, while the to_action method returns an action string in the format [\"<type>\", \"<key or coordinates>\"].",
+        "type": "comment"
     },
     "350": {
-        "file_id": 34,
-        "content": "timestep = 0.1\nimport pyautogui\n# are you sure the keystroke is just enough?\n# let's first record them separately.\nframe = dict(\n    image=image,\n    keystate=keystate,\n    mouseloc=mouseloc,\n    mousestate=mousestate,\n    sound=sound,\n)\n# no other feelings, currently.\n# this computer only has cpu, no nvidia gpu.\n# you may want to decode the screen recording video into a series of images.",
+        "file_id": 47,
+        "content": "y\")\n    def greater_than_zero(cls, v):\n        assert type(v) == int\n        assert v > 0\n        return v\n    @validator(\"action_type\")\n    def action_type_within_action_types(cls, v):\n        if v:\n            assert v in HIDActionBase.action_types\n        return v\n    @validator(\"key\")\n    def key_within_keys(cls, v):\n        if v:\n            assert v in HIDActionBase.keys\n        return v\n    @validator(\"mouse_button\")\n    def mouse_button_within_mouse_buttons(cls, v):\n        if v:\n            assert v in HIDActionBase.mouse_buttons\n        return v\n    @validator(\"mouse_pressed\")\n    def mouse_pressed_type_check(cls, v):\n        if v:\n            assert type(v) == bool\n        return v\n    @staticmethod\n    def from_action_json(action_json: list, max_x: int, max_y: int):\n        action_type = action_json[0]\n        action_args = action_json[1]\n        construct_args = dict(max_x=max_x, max_y=max_y, action_type=action_type)\n        # BUG: convert single char keys to quoted format.\n        # TODO: make sure ' '",
         "type": "code",
-        "location": "/recorder.py:1-21"
+        "location": "/conscious_struct.py:286-324"
     },
     "351": {
-        "file_id": 34,
-        "content": "The code defines a variable 'timestep' set to 0.1, imports the pyautogui library and creates a dictionary named 'frame' containing various data elements such as image, keystate, mouseloc, mousestate and sound. The comment suggests that the keystroke timing may need further consideration, the code could benefit from decoding the screen recording video into images, and the computer only has CPU without an Nvidia GPU.",
+        "file_id": 47,
+        "content": "This code defines several validator functions and a static method for a class. The validator functions check if the input values are of the correct type and within specific ranges or sets, returning the input if it passes the checks, otherwise raising an exception. The static method, \"from_action_json,\" constructs objects from a JSON list representation, handling some potential issues with single char keys.",
         "type": "comment"
     },
     "352": {
-        "file_id": 35,
-        "content": "/recording_train_parse.py",
-        "type": "filepath"
+        "file_id": 47,
+        "content": " is converted into Key.Space\n        if action_type.startswith(\"key\"):\n            if len(action_args) == 1:\n                if action_args != \"'\":\n                    action_args = f\"'{action_args}'\"\n                else:\n                    action_args = f'\"{action_args}\"'\n            if action_args == repr(\" \"):\n                action_args = \"Key.space\"\n        if action_type == \"key_press\":\n            assert action_args in HIDActionBase.keys\n            construct_args.update(dict(key=action_args))\n        elif action_type == \"key_release\":\n            assert action_args in HIDActionBase.keys\n            construct_args.update(dict(key=action_args))\n        elif action_type == \"mouse_move\":\n            assert action_args[0] >= 0 and action_args[0] <= max_x\n            assert action_args[1] >= 0 and action_args[1] <= max_y\n            construct_args.update(dict(x=action_args[0], y=action_args[1]))\n        elif action_type == \"mouse_click\":\n            assert action_args[0] >= 0 and action_args[0] <= max",
+        "type": "code",
+        "location": "/conscious_struct.py:324-348"
     },
     "353": {
-        "file_id": 35,
-        "content": "The code prepares training data by synchronizing hidden and video data, reading frames for processing, and handling failed frame readings through logging and raising exceptions.",
-        "type": "summary"
+        "file_id": 47,
+        "content": "Checks if the action type is a key press or release, mouse move, or mouse click. If it's a key action, converts it into Key.Space format. For mouse actions, checks that x and y coordinates are within valid ranges. Updates construct_args accordingly.",
+        "type": "comment"
     },
     "354": {
-        "file_id": 35,
-        "content": "# from collections import namedtuple\ntry:\n    from typing import TypedDict\nexcept:\n    from typing_extensions import TypedDict\ntry:\n    from typing import Literal\nexcept:\n    from typing import Literal\ntry:\n    from typing import NamedTuple\nexcept:\n    from typing_extensions import NamedTuple\nimport numpy as np\nfrom typing import Union, cast, overload\n# import logging\nfrom log_utils import logger\nclass HIDStruct(TypedDict):\n    HIDEvents: list\nclass TrainingFrame(NamedTuple):\n    datatype: Literal['hid','image']\n    data: Union[HIDStruct, np.ndarray]\n# we just need the basepath.\ndef getTrainingData(basePath: str):\n    import os\n    hid_timestamp_path = os.path.join(basePath,\"hid_timestamps.json\")\n    video_timestamp_path = os.path.join(basePath,\"video_timestamps.json\")\n    video_path = os.path.join(basePath,\"video_record.mp4\")\n    hid_rec_path = os.path.join(basePath,\"hid_record.jsonl\")\n    import json\n    import cv2\n    import jsonlines\n    video_cap = cv2.VideoCapture(video_path)\n    # breakpoint()\n    # 318 frames? ",
+        "file_id": 47,
+        "content": "_x\n            assert action_args[1] >= 0 and action_args[1] <= max_y\n            assert action_args[2] in HIDActionBase.mouse_buttons\n            assert type(action_args[3]) == bool\n            construct_args.update(\n                dict(\n                    x=action_args[0],\n                    y=action_args[1],\n                    mouse_button=action_args[2],\n                    mouse_pressed=action_args[3],\n                )\n            )\n        elif action_type == \"mouse_scroll\":\n            assert action_args[0] >= 0 and action_args[0] <= max_x\n            assert action_args[1] >= 0 and action_args[1] <= max_y\n            assert action_args[2] >= -max_x and action_args[2] <= max_x\n            assert action_args[3] >= -max_y and action_args[3] <= max_y\n            construct_args.update(\n                dict(\n                    x=action_args[0],\n                    y=action_args[1],\n                    dx=action_args[2],\n                    dy=action_args[3],\n                )\n            )\n        else:\n",
         "type": "code",
-        "location": "/recording_train_parse.py:1-42"
+        "location": "/conscious_struct.py:348-376"
     },
     "355": {
-        "file_id": 35,
-        "content": "The code imports necessary libraries, defines data structure classes and functions for parsing training data from a given base path. It uses NamedTuple and TypedDict for defining data structures, and utilizes OpenCV and JSON for handling video and data files.",
+        "file_id": 47,
+        "content": "The code checks the type and validity of input arguments for constructing different types of actions. It updates a dictionary with the action's parameters based on the action type (mouse click or scroll).",
         "type": "comment"
     },
     "356": {
-        "file_id": 35,
-        "content": "only got 266 timestamps!\n    frame_count = video_cap.get(cv2.CAP_PROP_FRAME_COUNT)\n    logger.info(\"FRAME COUNT: %d\", frame_count)\n    def load_json(filename):\n        with open(filename, \"r\") as f:\n            return json.load(f)\n    hid_timestamp = load_json(hid_timestamp_path)\n    video_timestamp = load_json(video_timestamp_path)\n    from typing import List, Union\n    import numpy as np\n    def getVideoFrameIndexSynced(\n        x: Union[List[int], np.ndarray],\n        y: Union[List[int], np.ndarray],\n        EPS: float = 1e-10,\n    ) -> List[int]:\n        \"\"\"\n        Notes:\n            All input arrays and output array are positive and increasing.\n        Params:\n            x: Actual video frame indexes.\n            y: Index list to be synced against.\n        Output:\n            x_: Synced frame indexs. (len(x_) == len(y))\n        \"\"\"\n        x_ = np.linspace(x[0], x[-1] + (1 - EPS), len(y))\n        x_ = np.floor(x_).astype(int).tolist()\n        return x_\n    hidseq = np.zeros(shape=(2, len(hid_timestamp))) ",
+        "file_id": 47,
+        "content": "            raise Exception(\n                \"Unknown action type: %s\\naction args: %s\" % (action_type, action_args)\n            )\n        mHIDAction = HIDAction(**construct_args)\n        return mHIDAction\n    @staticmethod\n    def from_ndarray(ndarray: np.ndarray, max_x: int, max_y: int):\n        assert ndarray.shape == (HIDActionBase.length,)\n        cursor = 0\n        action_type_ndarray = ndarray[cursor : cursor + len(HIDActionBase.action_types)]\n        cursor += len(HIDActionBase.action_types)\n        action_type_index = np.argmax(action_type_ndarray)\n        action_type = HIDActionBase.action_types[action_type_index]\n        del action_type_ndarray\n        del action_type_index\n        construct_args = dict(max_x=max_x, max_y=max_y, action_type=action_type)\n        if action_type:\n            key_ndarray = ndarray[cursor : cursor + len(HIDActionBase.keys)]\n            cursor += len(HIDActionBase.keys)\n            key_index = np.argmax(key_ndarray)\n            key = HIDActionBase.keys[key_index]\n    ",
         "type": "code",
-        "location": "/recording_train_parse.py:42-78"
+        "location": "/conscious_struct.py:376-402"
     },
     "357": {
-        "file_id": 35,
-        "content": "The code is loading a video's frame count, two JSON files containing timestamp information, and defining a function to synchronize frame indexes between two arrays.",
+        "file_id": 47,
+        "content": "Raises an exception if the action type is unknown.\nCreates a HIDAction object using given arguments.\nStatic method to create HIDAction from numpy array.\nAsserts that the shape of ndarray is (HIDActionBase.length,).\nGets the action type index from ndarray.\nConstructs construct_args with max_x, max_y, and action_type.\nIf action type exists, gets key index from ndarray and retrieves key.",
         "type": "comment"
     },
     "358": {
-        "file_id": 35,
-        "content": "- 1\n    hidseq[0] = np.array(range(len(hid_timestamp)))\n    videoseq = np.zeros(shape=(2, len(video_timestamp))) - 1\n    # videoseq[1] = np.array(range(len(video_timestamp)))\n    index_list_to_be_synced_against = np.array(range(len(video_timestamp)))\n    actual_video_frame_indexs = np.array(range(int(frame_count)))\n    videoseq[1] = getVideoFrameIndexSynced(\n        actual_video_frame_indexs, index_list_to_be_synced_against\n    )\n    seq = np.hstack((hidseq, videoseq))\n    logger.info(\"SEQ SHAPE: %s\", seq.shape)\n    timeseq = np.array(hid_timestamp + video_timestamp)\n    sorted_indexes = np.argsort(timeseq)\n    sorted_seq = seq[:, sorted_indexes].T.astype(int)\n    # print(sorted_seq)\n    # now, attempt to parse them.\n    hid_data_list = []\n    with open(hid_rec_path, \"r\") as f:\n        jsonl_reader = jsonlines.Reader(f)\n        while True:\n            try:\n                hid_data = jsonl_reader.read()\n                hid_data_list.append(hid_data)\n            except:\n                break\n    # maybe you shou",
+        "file_id": 47,
+        "content": "        del key_ndarray\n            del key_index\n            mouse_button_ndarray = ndarray[\n                cursor : cursor + len(HIDActionBase.mouse_buttons)\n            ]\n            cursor += len(HIDActionBase.mouse_buttons)\n            mouse_button_index = np.argmax(mouse_button_ndarray)\n            mouse_button = HIDActionBase.mouse_buttons[mouse_button_index]\n            del mouse_button_ndarray\n            del mouse_button_index\n            mouse_pressed_ndarray = ndarray[cursor : cursor + 1]\n            cursor += 1\n            mouse_pressed = bool(mouse_pressed_ndarray[0][0])\n            del mouse_pressed_ndarray\n            x_ndarray = ndarray[cursor : cursor + HIDActionBase.mouse_resolution]\n            cursor += HIDActionBase.mouse_resolution\n            x_index = np.argmax(x_ndarray)\n            x = (x_index / HIDActionBase.mouse_resolution) * max_x\n            del x_ndarray\n            del x_index\n            y_ndarray = ndarray[cursor : cursor + HIDActionBase.mouse_resolution]\n            c",
         "type": "code",
-        "location": "/recording_train_parse.py:78-111"
+        "location": "/conscious_struct.py:402-427"
     },
     "359": {
-        "file_id": 35,
-        "content": "Code is creating a sequence of hidden and video data points in synchronization. It uses numpy arrays to represent the sequences, including hidden timestamp, video timestamp, and corresponding video frame indices. The code sorts the combined sequence based on the timestamps and opens a file (hid_rec_path) to read JSON lines containing the hidden data for parsing.",
+        "file_id": 47,
+        "content": "Deleting variables, processing mouse button and position data, updating cursor position.",
         "type": "comment"
     },
     "360": {
-        "file_id": 35,
-        "content": "ld \"yield\" data through these iterators.\n    NO_CONTENT = -1\n    suc, frame = video_cap.read()\n    frame_index_cursor = 0\n    for hid_index, frame_index in sorted_seq:\n        logger.debug(\"HID INDEX: %d, FRAME INDEX: %d\", hid_index, frame_index)\n        assert not all(\n            [e == NO_CONTENT for e in [hid_index, frame_index]]\n        ), \"at least one type of content is active\"\n        assert not all(\n            [e != NO_CONTENT for e in [hid_index, frame_index]]\n        ), \"cannot have two types of active content sharing the same index\"\n        if hid_index != NO_CONTENT:\n            hid_data = hid_data_list[hid_index]\n            logger.debug(\"HID DATA: %s\", hid_data)\n            yield TrainingFrame(datatype='hid', data=cast(HIDStruct, hid_data))\n        elif frame_index != NO_CONTENT:\n            while frame_index_cursor != frame_index:\n                suc, frame = video_cap.read()\n                frame_index_cursor += 1\n            assert (\n                suc\n            ), f\"Video '{video_path}",
+        "file_id": 47,
+        "content": "ursor += HIDActionBase.mouse_resolution\n            y_index = np.argmax(y_ndarray)\n            y = (y_index / HIDActionBase.mouse_resolution) * max_y\n            del y_ndarray\n            del y_index\n            dx_ndarray = ndarray[cursor : cursor + HIDActionBase.mouse_resolution]\n            cursor += HIDActionBase.mouse_resolution\n            dx_index = np.argmax(dx_ndarray)\n            dx = (dx_index / HIDActionBase.mouse_resolution) * 2 * max_x - max_x\n            del dx_ndarray\n            del dx_index\n            dy_ndarray = ndarray[cursor : cursor + HIDActionBase.mouse_resolution]\n            cursor += HIDActionBase.mouse_resolution\n            dy_index = np.argmax(dy_ndarray)\n            dy = (dy_index / HIDActionBase.mouse_resolution) * 2 * max_y - max_y\n            del dy_ndarray\n            del dy_index\n            if action_type == \"key_press\":\n                construct_args.update(dict(key=key))\n            elif action_type == \"key_release\":\n                construct_args.update(dict(key=ke",
         "type": "code",
-        "location": "/recording_train_parse.py:111-136"
+        "location": "/conscious_struct.py:427-450"
     },
     "361": {
-        "file_id": 35,
-        "content": "This code is parsing a sequence of hidden index (HID) and frame index values. It checks that at least one type of content is active, and ensures that there are no two types of active content sharing the same index. If a HID index is present, it yields a TrainingFrame with datatype 'hid' and the corresponding HIDStruct data. If a frame index is present, it reads frames from video_cap until reaching the specified frame index before continuing.",
+        "file_id": 47,
+        "content": "Calculating mouse and key inputs based on ndarray max index, updating construct_args accordingly.",
         "type": "comment"
     },
     "362": {
-        "file_id": 35,
-        "content": "' failed to read frame #{frame_index} (index starting from zero)\"\n            logger.debug(\"FRAME SHAPE: %s\", frame.shape)\n            yield TrainingFrame(datatype='image', data=frame)\n            # cv2.imshow(\"win\", frame)\n            # cv2.waitKey(1)\n        else:\n            raise Exception(\"Something impossible has happened.\")\n    # breakpoint()\n    video_cap.release()\n    # success, frame = video_cap.read()\n    # print(frame.shape) # (768, 1280, 3)",
+        "file_id": 47,
+        "content": "y))\n            elif action_type == \"mouse_move\":\n                construct_args.update(dict(x=x, y=y))\n            elif action_type == \"mouse_click\":\n                construct_args.update(\n                    dict(\n                        x=x, y=y, mouse_button=mouse_button, mouse_pressed=mouse_pressed\n                    )\n                )\n            elif action_type == \"mouse_scroll\":\n                construct_args.update(dict(x=x, y=y, dx=dx, dy=dy))\n        else:\n            pass\n        del cursor\n        mHIDAction = HIDAction(**construct_args)\n        return mHIDAction\n    def round_within(self, number: Union[int, float], number_name: str) -> int:\n        result = round(number)\n        if result > self.mouse_resolution:\n            logger.warning(f\"Warning: {number_name} overflow\")\n            logger.warning(f\"Value {result} greater than {self.mouse_resolution}\")\n            return self.mouse_resolution\n        elif result < 0:\n            logger.warning(f\"Warning: {number_name} overflow\")\n         ",
         "type": "code",
-        "location": "/recording_train_parse.py:136-147"
+        "location": "/conscious_struct.py:450-477"
     },
     "363": {
-        "file_id": 35,
-        "content": "Reading video frames and processing them for training data. If a frame fails to read, logs the frame shape and raises an exception.",
+        "file_id": 47,
+        "content": "This code is handling different types of mouse actions. It updates construct_args based on the action type and creates a HIDAction object using those arguments. If the number is greater than mouse_resolution, it logs a warning.",
         "type": "comment"
     },
     "364": {
-        "file_id": 36,
-        "content": "/render_python_code.py",
-        "type": "filepath"
+        "file_id": 47,
+        "content": "   logger.warning(f\"Value {result} smaller than 0\")\n            return 0\n        return result\n    def to_ndarray(\n        self,\n    ) -> np.ndarray:\n        action_type_ndarray = np.zeros((len(self.action_types), 1))\n        action_type_ndarray[self.action_types.index(self.action_type)] = 1\n        key_ndarray = np.zeros((len(self.keys), 1))\n        if self.key:\n            key_ndarray[self.keys.index(self.key)] = 1\n        mouse_button_ndarray = np.zeros((len(self.mouse_buttons), 1))\n        if self.mouse_button:\n            mouse_button_ndarray[self.mouse_buttons.index(self.mouse_button)] = 1\n        mouse_pressed_array = np.zeros((1, 1))\n        if self.mouse_pressed:\n            mouse_pressed_array[0] = 1\n        x_ndarray = np.zeros((self.mouse_resolution, 1))\n        if self.x:\n            x_ndarray[\n                self.round_within(self.mouse_resolution * self.x / self.max_x, \"X\")\n            ] = 1\n        y_ndarray = np.zeros((self.mouse_resolution, 1))\n        if self.y:\n            y_ndarray[\n     ",
+        "type": "code",
+        "location": "/conscious_struct.py:477-508"
     },
     "365": {
-        "file_id": 36,
-        "content": "The code imports the jinja_utils module and sys, gets the current working directory (but not actually used), and takes the input file path as a command-line argument. It checks if it ends with .py, extracts the base name without .py, uses jinja_utils to get the code and template paths based on the base name, asserts that the code path is the same as the target path, and then loads the renderer and formats the template using the specified parameters and banner.",
-        "type": "summary"
+        "file_id": 47,
+        "content": "Creates a numpy array for each action type, key, mouse button, and coordinates, with 1's at their respective indices if they are not None.",
+        "type": "comment"
     },
     "366": {
-        "file_id": 36,
-        "content": "import jinja_utils as ju\nimport sys\n# get current working direcory.\n# import os\n# curdir = os.curdir\ntarget = sys.argv[-1]\nprint(\"target output:\", target)\nassert target.endswith(\".py\")\nbasename = target.strip(\".py\")\ncode_path, template_path = ju.code_and_template_path(basename)\nassert code_path == target\nju.load_render_and_format(template_path, code_path, render_params = {}, banner = basename.replace(\"_\",\" \").upper()) # TODO: case by case. ensure we have the right render_params.",
+        "file_id": 47,
+        "content": "           self.round_within(self.mouse_resolution * self.y / self.max_y, \"Y\")\n            ] = 1\n        dx_ndarray = np.zeros((self.mouse_resolution, 1))\n        if self.dx:\n            dx_ndarray[\n                self.round_within(\n                    self.mouse_resolution * (self.dx + self.max_x) / (2 * self.max_x),\n                    \"DX\",\n                )\n            ] = 1\n        dy_ndarray = np.zeros((self.mouse_resolution, 1))\n        if self.dy:\n            dy_ndarray[\n                self.round_within(\n                    self.mouse_resolution * (self.dy + self.max_y) / (2 * self.max_y),\n                    \"DY\",\n                )\n            ] = 1\n        ndarray = np.concatenate(\n            [\n                action_type_ndarray,\n                key_ndarray,\n                mouse_button_ndarray,\n                mouse_pressed_array,\n                x_ndarray,\n                y_ndarray,\n                dx_ndarray,\n                dy_ndarray,\n            ]\n        )\n        return ndarray\n    def to_actio",
         "type": "code",
-        "location": "/render_python_code.py:1-16"
+        "location": "/conscious_struct.py:508-543"
     },
     "367": {
-        "file_id": 36,
-        "content": "The code imports the jinja_utils module and sys, gets the current working directory (but not actually used), and takes the input file path as a command-line argument. It checks if it ends with .py, extracts the base name without .py, uses jinja_utils to get the code and template paths based on the base name, asserts that the code path is the same as the target path, and then loads the renderer and formats the template using the specified parameters and banner.",
+        "file_id": 47,
+        "content": "The code initializes and concatenates multiple numpy arrays representing various actions and parameters (action type, key pressed, mouse button, mouse position, etc.). It then returns the concatenated array.",
         "type": "comment"
     },
     "368": {
-        "file_id": 37,
-        "content": "/requirements.txt",
-        "type": "filepath"
+        "file_id": 47,
+        "content": "n_json(\n        self,\n    ) -> Union[list, None]:\n        action_type = self.action_type\n        if action_type:\n            if action_type == \"key_press\":\n                assert self.key in self.keys\n                action_args = self.key\n            elif action_type == \"key_release\":\n                assert self.key in self.keys\n                action_args = self.key\n            elif action_type == \"mouse_move\":\n                assert self.x >= 0 and self.x <= self.max_x\n                assert self.y >= 0 and self.y <= self.max_y\n                action_args = [self.x, self.y]\n            elif action_type == \"mouse_click\":\n                assert self.x >= 0 and self.x <= self.max_x\n                assert self.y >= 0 and self.y <= self.max_y\n                assert self.mouse_button in self.mouse_buttons\n                assert type(self.mouse_pressed) == bool\n                action_args = [self.x, self.y, self.mouse_button, self.mouse_pressed]\n            elif action_type == \"mouse_scroll\":\n                as",
+        "type": "code",
+        "location": "/conscious_struct.py:543-569"
     },
     "369": {
-        "file_id": 37,
-        "content": "This code is importing various libraries for data processing, image manipulation, and handling keyboard input.",
-        "type": "summary"
+        "file_id": 47,
+        "content": "This function checks the action type and constructs appropriate arguments for each type of action (key press/release, mouse move/click/scroll). It asserts that all required conditions are met before constructing the action_args.",
+        "type": "comment"
     },
     "370": {
-        "file_id": 37,
-        "content": "easyprocess\njsonlines\npynput\neinops\ndatetime\nparse\nmss\nopencv-python\npydantic-numpy\nhypothesis\nstopit\nkeysymdef",
+        "file_id": 47,
+        "content": "sert self.x >= 0 and self.x <= self.max_x\n                assert self.y >= 0 and self.y <= self.max_y\n                assert self.dx >= -self.max_x and self.dx <= self.max_x\n                assert self.dy >= -self.max_y and self.dy <= self.max_y\n                action_args = [self.x, self.y, self.dx, self.dy]\n            else:\n                raise Exception(\"Unknown action_type: %s\" % action_type)\n            action_json = [action_type, action_args]\n        else:\n            action_json = None\n        return action_json\n#########################\n#  HID DATA VALIDATION  #\n#########################\nfrom pydantic import confloat\nclass KeyPress(BaseModel):\n    _action_type = \"key_press\"\n    key: HIDActionTypes.keys\n    def to_list(self) -> List:\n        return [self._action_type, self.key]\n    @classmethod\n    def from_list(cls, lst: List):\n        action_type = lst[0]\n        action_args = [lst[1]]\n        assert len(action_args) == 1\n        assert action_type == cls._action_type\n        assert isinstance(action",
         "type": "code",
-        "location": "/requirements.txt:1-12"
+        "location": "/conscious_struct.py:569-605"
     },
     "371": {
-        "file_id": 37,
-        "content": "This code is importing various libraries for data processing, image manipulation, and handling keyboard input.",
+        "file_id": 47,
+        "content": "Code is validating input values and converting them into JSON format for use in the application. It also handles exceptions for unknown action types and ensures proper data structure.",
         "type": "comment"
     },
     "372": {
-        "file_id": 38,
-        "content": "/run_gpu_docker.sh",
-        "type": "filepath"
+        "file_id": 47,
+        "content": "_args[0], HIDActionTypes.keys)\n        return cls(key=action_args[0])\nclass KeyRelease(BaseModel):\n    _action_type = \"key_release\"\n    key: HIDActionTypes.keys\n    def to_list(self) -> List:\n        return [self._action_type, self.key]\n    @classmethod\n    def from_list(cls, lst: List):\n        action_type = lst[0]\n        action_args = [lst[1]]\n        assert len(action_args) == 1\n        assert action_type == cls._action_type\n        assert isinstance(action_args[0], HIDActionTypes.keys)\n        return cls(key=action_args[0])\nclass MouseClick(BaseModel):\n    _action_type = \"mouse_click\"\n    x: confloat(ge=0)\n    y: confloat(ge=0)\n    button: HIDActionTypes.mouse_buttons\n    pressed: bool\n    def to_list(self) -> List:\n        return [self._action_type, [self.x, self.y, self.button, self.pressed]]\n    @classmethod\n    def from_list(cls, lst: List):\n        action_type = lst[0]\n        action_args = lst[1]\n        assert len(action_args) == 4\n        assert action_type == cls._action_type\n        assert isinstanc",
+        "type": "code",
+        "location": "/conscious_struct.py:605-648"
     },
     "373": {
-        "file_id": 38,
-        "content": "Testing GPU availability and NVIDIA driver version within the Docker container.",
-        "type": "summary"
+        "file_id": 47,
+        "content": "This code defines two classes, KeyRelease and MouseClick, that inherit from BaseModel. Both classes have methods to convert objects to a list and vice versa. The to_list method returns a list representing the action type and relevant parameters (key for KeyRelease, coordinates, button, and press state for MouseClick). The from_list classmethod parses a list and creates an instance of the respective class with the correct values.",
+        "type": "comment"
     },
     "374": {
-        "file_id": 38,
-        "content": "docker run --rm -it --gpus 1 --runtime nvidia ubuntu:22.04 nvidia-smi # working!",
+        "file_id": 47,
+        "content": "e(action_args[0], confloat(ge=0))\n        assert isinstance(action_args[1], confloat(ge=0))\n        assert isinstance(action_args[2], HIDActionTypes.mouse_buttons)\n        assert isinstance(action_args[3], bool)\n        return cls(\n            x=action_args[0],\n            y=action_args[1],\n            button=action_args[2],\n            pressed=action_args[3],\n        )\nclass MouseMove(BaseModel):\n    _action_type = \"mouse_move\"\n    x: confloat(ge=0)\n    y: confloat(ge=0)\n    def to_list(self) -> List:\n        return [self._action_type, [self.x, self.y]]\n    @classmethod\n    def from_list(cls, lst: List):\n        action_type = lst[0]\n        action_args = lst[1]\n        assert len(action_args) == 2\n        assert action_type == cls._action_type\n        assert isinstance(action_args[0], confloat(ge=0))\n        assert isinstance(action_args[1], confloat(ge=0))\n        return cls(x=action_args[0], y=action_args[1])\nclass MouseScroll(BaseModel):\n    _action_type = \"mouse_scroll\"\n    x: confloat(ge=0)\n    y: confloat(",
         "type": "code",
-        "location": "/run_gpu_docker.sh:1-1"
+        "location": "/conscious_struct.py:648-687"
     },
     "375": {
-        "file_id": 38,
-        "content": "Testing GPU availability and NVIDIA driver version within the Docker container.",
+        "file_id": 47,
+        "content": "This code defines two classes, `MouseMove` and `MouseScroll`, which inherit from the `BaseModel` class. Both classes represent different types of mouse actions. The constructor for each class takes arguments representing the x and y coordinates (both expected to be non-negative floats) and a boolean indicating whether a button is pressed or not. The `to_list()` method converts an instance of these classes into a list, while the `from_list()` classmethod recreates an instance from a list representation.",
         "type": "comment"
     },
     "376": {
-        "file_id": 39,
-        "content": "/screenshot_test.py",
-        "type": "filepath"
+        "file_id": 47,
+        "content": "ge=0)\n    dx: float\n    dy: float\n    def to_list(self) -> List:\n        return [self._action_type, [self.x, self.y, self.dx, self.dy]]\n    @classmethod\n    def from_list(cls, lst: List):\n        action_type = lst[0]\n        action_args = lst[1]\n        assert len(action_args) == 4\n        assert action_type == cls._action_type\n        assert isinstance(action_args[0], confloat(ge=0))\n        assert isinstance(action_args[1], confloat(ge=0))\n        assert isinstance(action_args[2], float)\n        assert isinstance(action_args[3], float)\n        return cls(\n            x=action_args[0], y=action_args[1], dx=action_args[2], dy=action_args[3]\n        )\n#################\n# VIDEO CONTEXT #\n#################\nclass VideoCaptureContextManager:\n    def __init__(self, videoPath):\n        self.videoPath = videoPath\n    def __enter__(self):\n        logger.info(\"Entering the context...\")\n        self.cap = cv2.VideoCapture(self.videoPath)\n        return self.cap\n    def __exit__(self, exc_type, exc_value, exc_tb):\n        try",
+        "type": "code",
+        "location": "/conscious_struct.py:687-726"
     },
     "377": {
-        "file_id": 39,
-        "content": "This code imports the mss library to take a screenshot and timeit library for timing execution. It then defines a test_screenshot function that grabs a screenshot from monitor 0 and prints it, executing the function 10 times using timeit and printing the output (0.03 seconds).",
-        "type": "summary"
+        "file_id": 47,
+        "content": "This code defines a class for storing x and y coordinates, along with dx and dy values. It has methods to convert the object into a list of its attributes and vice versa. Additionally, it includes assertions to ensure that the input list conforms to certain data types and conditions. The code also includes the definition of a VideoCaptureContextManager class for working with video capture contexts using OpenCV's VideoCapture API.",
+        "type": "comment"
     },
     "378": {
-        "file_id": 39,
-        "content": "import mss\nimport timeit\ndef test_screenshot():\n    with mss.mss() as m:\n        img = m.grab(m.monitors[0])\n        print(img)\noutput = timeit.timeit(test_screenshot, number=10)\nprint(output)  # 0.03 seconds",
+        "file_id": 47,
+        "content": ":\n            self.cap.release()\n        finally:\n            import gc\n            gc.collect()\n            logger.info(\"Leaving the context...\")\n        #  print(exc_type, exc_value, exc_tb, sep=\"\\n\")\n##################\n# CONSCIOUS BASE #\n##################\nclass ConsciousBase:\n    data_types = [\"image\", \"HIDAction\"]\n    special_tokens = [\"image_newline\", \"image_end\", \"action_end\", None]\n    #     vector_size = 1+2+1000+4110 # visual things are pre-encoded. no raw image here!\n    # vector size is \"length\" now\n    image_dim = 224\n    image_channels = 3\n    data_type_length = len(data_types)\n    special_token_length = len(special_tokens)\n    image_length = image_dim * image_dim * image_channels  # obviously flattened.\n    # FIX 1: plus to colon.\n    split_sizes = [\n        len(data_types),\n        len(special_tokens),\n        image_length,  # FIX 9: change to flattened image bits count\n        HIDActionBase.length,  # 4110?\n    ]\n    length = sum(split_sizes)\n    # you cannot easily revert this compression by arg",
         "type": "code",
-        "location": "/screenshot_test.py:1-12"
+        "location": "/conscious_struct.py:726-763"
     },
     "379": {
-        "file_id": 39,
-        "content": "This code imports the mss library to take a screenshot and timeit library for timing execution. It then defines a test_screenshot function that grabs a screenshot from monitor 0 and prints it, executing the function 10 times using timeit and printing the output (0.03 seconds).",
+        "file_id": 47,
+        "content": "This code defines a class called ConsciousBase, which has variables related to data types, special tokens, and image dimensions for image processing. It also calculates the length of the various components in the consciousness structure.",
         "type": "comment"
     },
     "380": {
-        "file_id": 40,
-        "content": "/streaming_utils.yaml",
-        "type": "filepath"
+        "file_id": 47,
+        "content": "max or something else.\n    # so you need the decoder.\n# can it be consciousnessless?\nclass ConsciousBlock(BaseModel, ConsciousBase):\n    data_type: Literal[\"image\", \"HIDAction\"]  # 2 bits, required\n    special_token: Union[\n        Literal[\n            \"image_newline\",\n            \"image_end\",\n            \"action_end\",  # change some of these bits into -torch.inf, so you won't have paradox like results.\n        ],\n        None,\n    ] = None  # 4 bits\n    image_data: Union[\n        None, NDArray\n    ] = None  # what is the shape of this image data? assume to be [3,224,224] (c h w) flattened\n    action_data: Union[None, NDArray] = None  # assume to be: (4110, )\n    # [1,1000] -> [3,1000,1000] -> [3,224,224]\n    #    einsum.repeat       conv2d\n    # so, maybe you still need some ViT decode layer.\n    @staticmethod\n    def from_json(data: Mapping):\n        mConsciousBlock = ConsciousBlock(**data)\n        return mConsciousBlock\n    def to_json(self) -> Mapping:\n        mJson = self.dict()\n        return mJson\n    @st",
+        "type": "code",
+        "location": "/conscious_struct.py:763-798"
     },
     "381": {
-        "file_id": 40,
-        "content": "The code configures a set of windows, each with specific shell commands and start directories. The windows include \"dev window\", \"BongoCat\", \"virtualbox\", \"viewer_loop\", and \"viewer_final\".",
-        "type": "summary"
+        "file_id": 47,
+        "content": "This code defines a class called \"ConsciousBlock\" which is derived from \"BaseModel\" and \"ConsciousBase\". It has attributes for data_type, special_token, image_data, and action_data. The class also includes methods to convert the object to JSON format and create an instance of the class from a dictionary representation of its fields.",
+        "type": "comment"
     },
     "382": {
-        "file_id": 40,
-        "content": "session_name: streaming_utils\nstart_directory: \"/media/root/Toshiba XG3/works/agi_computer_control\"\nwindows:\n  - window_name: dev window\n    layout: tiled\n    panes:\n######################[bongocats]\n      - shell_command:\n        - \"python3 cat.pyw\"\n        start_directory: \"BongoCat\"\n      - shell_command:\n        - \"python3 cat.pyw\"\n        start_directory: \"BongoCat\"\n######################[virtualbox]\n      - shell_command:\n        - \"python3 kali_vbox_main_loop.py\"\n        start_directory: \"ubuntu_qemu_utm_arm_record/kali_vbox_control\"\n######################[viewer_loop]\n      - shell_command:\n        - sleep 1\n        - \"python3 xvfb_test_loop_double_display.py\"\n        start_directory: \"ubuntu_qemu_utm_arm_record/kali_vbox_control\"\n######################[viewer_final]\n      - shell_command:\n        - sleep 3\n        - \"bash x11grab_loop_viewer.sh\"\n        start_directory: \"ubuntu_qemu_utm_arm_record/kali_vbox_control\"",
+        "file_id": 47,
+        "content": "aticmethod\n    def from_tensor(tensor: torch.Tensor):\n        # check its shape.\n        assert tensor.shape == (ConsciousBlock.length,)\n        split_sizes = ConsciousBase.split_sizes\n        data_bits, special_bits, image_data, action_data = einops.unpack(\n            tensor, [[s] for s in split_sizes], \"*\"\n        )\n        #         data_bits, special_bits, image_data, action_data = size_splits(tensor, split_sizes)\n        data_type = ConsciousBase.data_types[int(torch.argmax(data_bits))]\n        if data_type == \"image\":\n            special_bits[2] = -torch.inf\n            special_token = ConsciousBase.special_tokens[\n                int(torch.argmax(special_bits))\n            ]\n            mConsciousBlock = ConsciousBlock(\n                data_type=data_type, special_token=special_token, image_data=image_data\n            )\n        elif data_type == \"HIDAction\":\n            special_bits[0:2] = -torch.inf\n            special_token = ConsciousBase.special_tokens[\n                int(torch.argmax(special_",
         "type": "code",
-        "location": "/streaming_utils.yaml:1-31"
+        "location": "/conscious_struct.py:798-821"
     },
     "383": {
-        "file_id": 40,
-        "content": "The code configures a set of windows, each with specific shell commands and start directories. The windows include \"dev window\", \"BongoCat\", \"virtualbox\", \"viewer_loop\", and \"viewer_final\".",
+        "file_id": 47,
+        "content": "Converts a tensor into a ConsciousBlock instance by splitting based on provided sizes and assigning appropriate data types.",
         "type": "comment"
     },
     "384": {
-        "file_id": 41,
-        "content": "/sync_utils.sh",
-        "type": "filepath"
+        "file_id": 47,
+        "content": "bits))\n            ]\n            mConsciousBlock = ConsciousBlock(\n                data_type=data_type,\n                special_token=special_token,\n                action_data=action_data,\n            )\n        else:\n            raise Exception(\"Unknown data_type:\", data_type)\n        return mConsciousBlock\n    def to_tensor(self) -> torch.Tensor:\n        mTensorBase = torch.zeros((ConsciousBase.length))\n        # BUG 1: not enough values to unpack\n        #         print(ConsciousBase.length)\n        #         print(ConsciousBase.split_sizes)\n        data_bits, special_bits, image_data, action_data = einops.unpack(\n            mTensorBase, [[s] for s in ConsciousBase.split_sizes], \"*\"\n        )\n        #         data_bits, special_bits, image_data, action_data = size_splits(mTensorBase, ConsciousBase.split_sizes)\n        data_bits[ConsciousBase.data_types.index(self.data_type)] = 1\n        if self.data_type == \"image\":\n            # BUG 2: comparing ndarray to None\n            # FIX 2: change \"!=\" into \"i",
+        "type": "code",
+        "location": "/conscious_struct.py:821-845"
     },
     "385": {
-        "file_id": 41,
-        "content": "Copying necessary files and updating file names.",
-        "type": "summary"
+        "file_id": 47,
+        "content": "The code defines a class called ConsciousBlock which has a constructor and a method to convert the object into a Tensor. The constructor takes in data_type, special_token, and action_data as parameters. If an unknown data_type is provided, it raises an exception. The to_tensor() method converts the ConsciousBlock object into a tensor using Einops library's unpack function, then sets the bit corresponding to the data_type of the ConsciousBlock to 1. There are two bugs in this code: BUG 1 - not enough values to unpack; BUG 2 - comparing ndarray to None.",
+        "type": "comment"
     },
     "386": {
-        "file_id": 41,
-        "content": "# cp ../jubilant-adventure2/microgrid_base/log_utils.py .\n# cp ../jubilant-adventure2/microgrid_base/jinja_utils.py .\n# sed -i \"s/microgrid/agi_computer_control/g\" log_utils.py\ncp $2$1 .\n# echo $1\nif [[ \"$1\" == \"log_utils.py\" ]]; then\n    sed -i \"s/microgrid/agi_computer_control/g\" $1\nfi",
+        "file_id": 47,
+        "content": "s not\"\n            assert self.image_data is not None\n            logger.debug(\"Image data shape: %s\", self.image_data.shape)\n            logger.debug(\n                \"Expected data shape: %s\",\n                expected_data_shape := (ConsciousBase.image_length,),\n            )\n            assert self.image_data.shape == expected_data_shape\n            assert self.special_token != \"action_end\"\n            image_data = torch.Tensor(self.image_data)\n            special_bits[ConsciousBase.special_tokens.index(self.special_token)] = 1\n        elif self.data_type == \"HIDAction\":\n            assert self.action_data is not None\n            if len(self.action_data.shape) > 1:\n                self.action_data = self.action_data.reshape((-1,))\n            logger.debug(\"Action data shape: %s\", self.action_data.shape)\n            # BUG: actual: (4110, 1)\n            # shall we reshape this.\n            logger.debug(\n                \"Expected data shape: %s\",\n                expected_data_shape := (HIDActionBase.lengt",
         "type": "code",
-        "location": "/sync_utils.sh:1-9"
+        "location": "/conscious_struct.py:845-867"
     },
     "387": {
-        "file_id": 41,
-        "content": "Copying necessary files and updating file names.",
+        "file_id": 47,
+        "content": "Ensures image data and action data are not None, checks shapes, and converts to torch.Tensor.",
         "type": "comment"
     },
     "388": {
-        "file_id": 42,
-        "content": "/terminal_test_tk.py",
-        "type": "filepath"
+        "file_id": 47,
+        "content": "h,),\n            )  # TODO: expected shape is (4110, )? how to make this typed?\n            assert self.action_data.shape == expected_data_shape\n            assert self.special_token not in [\"image_newline\", \"image_end\"]\n            action_data = torch.Tensor(self.action_data)\n            special_bits[ConsciousBase.special_tokens.index(self.special_token)] = 1\n        else:\n            # FIX: found by pyright (UndefinedVariable)\n            raise Exception(\"Unknown data_type:\", self.data_type)\n        mTensor, _ = einops.pack(\n            (data_bits, special_bits, image_data, action_data), \"*\"\n        )\n        #         mTensor = torch.concat((data_bits, special_bits, image_data, action_data))\n        del mTensorBase\n        return mTensor\nclass ConsciousFlow(BaseModel, ConsciousBase):\n    consciousBlocks: List[ConsciousBlock]\n    @staticmethod\n    def from_json(data: List[Mapping]):\n        mList = [ConsciousBlock.from_json(j) for j in data]\n        mConsciousFlow = ConsciousFlow(consciousBlocks=mList)\n ",
+        "type": "code",
+        "location": "/conscious_struct.py:867-893"
     },
     "389": {
-        "file_id": 42,
-        "content": "Creating a Tkinter window with a terminal widget using tkterminal package.",
-        "type": "summary"
+        "file_id": 47,
+        "content": "Creates a tensor from various data types, checking their shapes and handling special tokens.",
+        "type": "comment"
     },
     "390": {
-        "file_id": 42,
-        "content": "import tkinter as tk\nfrom tkterminal import Terminal\nroot = tk.Tk()\nterminal = Terminal(pady=5, padx=5)\nterminal.shell = True\nterminal.pack(expand=True, fill=\"both\")\nroot.mainloop()",
+        "file_id": 47,
+        "content": "       return mConsciousFlow\n    def to_json(self) -> List[Mapping]:\n        mJson = [c.to_json() for c in self.consciousBlocks]\n        return mJson\n    @staticmethod\n    def from_tensor(tensor: torch.Tensor):\n        consciousBlockCount, vector_length = tensor.shape\n        assert vector_length == ConsciousBase.length\n        mConsciousBlocks = []\n        for i in range(consciousBlockCount):\n            arr = tensor[i, :]  # dimension reduction.\n            mConsciousBlock = ConsciousBlock.from_tensor(arr)\n            mConsciousBlocks.append(mConsciousBlock)\n        mConsciousFlow = ConsciousFlow(consciousBlocks=mConsciousBlocks)\n        return mConsciousFlow\n    def to_tensor(self) -> torch.Tensor:\n        mTensor, _ = einops.pack([c.to_tensor() for c in self.consciousBlocks], \"* d\")\n        return mTensor\nclass ConsciousStream(BaseModel, ConsciousBase):\n    consciousFlows: List[ConsciousFlow]\n    @staticmethod\n    def from_json(data: List[Mapping]):\n        mList = [ConsciousFlow.from_json(j) for j in d",
         "type": "code",
-        "location": "/terminal_test_tk.py:1-8"
+        "location": "/conscious_struct.py:893-921"
     },
     "391": {
-        "file_id": 42,
-        "content": "Creating a Tkinter window with a terminal widget using tkterminal package.",
+        "file_id": 47,
+        "content": "This code defines classes for representing and manipulating conscious data in the form of flows and streams. The ConsciousFlow class has methods to convert between JSON and tensors, while the ConsciousStream class represents a list of such flows with methods to convert from JSON as well.",
         "type": "comment"
     },
     "392": {
-        "file_id": 43,
-        "content": "/test_calculated_type.py",
-        "type": "filepath"
+        "file_id": 47,
+        "content": "ata]\n        mConsciousStream = ConsciousStream(consciousFlows=mList)\n        return mConsciousStream\n    def to_json(self) -> List[Mapping]:\n        mJson = [c.to_json() for c in self.consciousFlows]\n        return mJson\n    @staticmethod\n    def from_tensor(tensor: torch.Tensor):\n        consciousFlowCount, _, vector_length = tensor.shape\n        assert vector_length == ConsciousBase.length\n        mConsciousFlows = []\n        for i in range(consciousFlowCount):\n            arr = tensor[i, :, :]  # dimension reduction.\n            mConsciousFlow = ConsciousFlow.from_tensor(arr)\n            mConsciousFlows.append(mConsciousFlow)\n        mConsciousStream = ConsciousStream(consciousFlows=mConsciousFlows)\n        return mConsciousStream\n    def to_tensor(self) -> torch.Tensor:\n        mTensor, _ = einops.pack([c.to_tensor() for c in self.consciousFlows], \"* s d\")\n        return mTensor\n#####################\n# TRAINER & DATASET #\n#####################\nclass Trainer:\n    def __init__(self, model, loss_fn, optimiz",
+        "type": "code",
+        "location": "/conscious_struct.py:921-952"
     },
     "393": {
-        "file_id": 43,
-        "content": "Code explains the problem of determining types in libraries like PyTorch and NumPy, where different parameters create different types. The author proposes using Erg to solve this issue by allowing static type checking before execution. Help can be found through `help(torch.nn.Conv2d)`.",
-        "type": "summary"
+        "file_id": 47,
+        "content": "This code defines a class called ConsciousStream which represents a stream of conscious flows. It has methods for creating an instance from a list of conscious flows, converting the stream to JSON format, converting it to a tensor, and converting individual conscious flows to tensors. The class also mentions Trainer and Dataset but they are not defined in this code snippet.",
+        "type": "comment"
     },
     "394": {
-        "file_id": 43,
-        "content": "# i wouldn't know if there is anything called \"calculated type\" in python \"typing\" module or erglang, but i do know some \"type\" details about numpy matrix multiplication and torch convolutional neural networks.\n# Calculated types or custom type hint and type checkers\n# There's been a long history of attempts on typechecking libraries like `pytorch` and `numpy`. One major issue is that passing different parameters to these constructors create different types (tensors with traits (matrix multiplication) and tensor functions). There's some relationship between definition of a convolutional network and what type of value (usually not a fixed type, but rather a set of types (infinite)) it can accept and return.\n# So I propose or want to know how we can let Erg to solve this long-standing problem, by letting the static typechecker to know the type of `torch.nn.Conv2d` and emit errors before execution? Help can be found by:\n# ```python\n# import torch\n# help(torch.nn.Conv2d)\n# ```",
+        "file_id": 47,
+        "content": "er):\n        self.model = model\n        self.loss_fn = loss_fn\n        self.optimizer = optimizer  # shall be registered to model parameters.\n    def step(self, batched_input, batched_output=None):\n        # BUG 8: model forward keyword error\n        # FIX 8: fixing keyword, adding default keyword argument\n        model_output = self.model.forward(batched_input, target_output=batched_output)\n        loss = self.loss_fn(model_output, batched_output)\n        logger.debug(\"LOSS? %s\", loss)\n        # this loss is incorrect. shall use some argmax stuff.\n        # to ensure that this thing is the thing that we want.\n        loss.backward()\n        self.optimizer.step()\n        self.optimizer.zero_grad()\nfrom typing import Protocol\nclass Enqueue(Protocol):\n    def enqueue(self, data, /):\n        ...\n    def clear(self):\n        ...\nclass TestEnqueue(Enqueue):\n    def __init__(self):\n        ...\n        # self.queue = []\n    def enqueue(self, data):\n        logger.debug(\"DATA QUEUE: %s\", data)\n        # may you print th",
         "type": "code",
-        "location": "/test_calculated_type.py:1-12"
+        "location": "/conscious_struct.py:952-989"
     },
     "395": {
-        "file_id": 43,
-        "content": "Code explains the problem of determining types in libraries like PyTorch and NumPy, where different parameters create different types. The author proposes using Erg to solve this issue by allowing static type checking before execution. Help can be found through `help(torch.nn.Conv2d)`.",
+        "file_id": 47,
+        "content": "This code defines a class that represents a conscious structure. It initializes the model, loss function, and optimizer in its constructor. The step method performs forward pass on the input data using the model's forward method, calculates the loss, and applies backpropagation to update the model's parameters. This conscious structure also includes an Enqueue class that can enqueue data and clear the queue.",
         "type": "comment"
     },
     "396": {
-        "file_id": 44,
-        "content": "/try_better_exceptions.py",
-        "type": "filepath"
+        "file_id": 47,
+        "content": "e data shape.\n        if data.action_data is not None:\n            logger.debug(\"ACTION DATA SHAPE: %s\", data.action_data.shape)\n        elif data.image_data is not None:\n            logger.debug(\"IMAGE DATA SHAPE: %s\", data.image_data.shape)\n        logger.debug(\"\")\n    def clear(self):\n        ...\nclass SequentialTrainingQueue:\n    def __init__(self, context_length: int, batch_size: int, trainer: Trainer):\n        self.context_length = context_length\n        self.batch_size = batch_size\n        self.trainer = trainer\n        self.max_critical_length = self.context_length + self.batch_size\n        self.min_critical_length = self.context_length + 1\n        self.consciousVectors = []\n    def enqueue(self, consciousBlock: ConsciousBlock, clear: bool = False):\n        # change that into some tensor first.\n        # BUG 3: consciousBlock has tensor output but not numpy ndarray\n        # FIX 3: find and replace all \"consciousBlock.to_nparray()\" with \"consciousBlock.to_tensor()\"\n        #         print(consciou",
+        "type": "code",
+        "location": "/conscious_struct.py:989-1017"
     },
     "397": {
-        "file_id": 44,
-        "content": "Attempting to access non-existent key \"2\" from dictionary \"a\", resulting in a KeyError.",
-        "type": "summary"
+        "file_id": 47,
+        "content": "Checking data shape for action_data and image_data.\nCreating a SequentialTrainingQueue object with context_length, batch_size, and trainer.\nEnqueuing consciousBlock into the queue, optionally clearing it after enqueueing.",
+        "type": "comment"
     },
     "398": {
-        "file_id": 44,
-        "content": "a = {1:\"a\"}\nprint(a[2]) # must be error.",
+        "file_id": 47,
+        "content": "sBlock)\n        #         print(type(consciousBlock))\n        consciousVector = consciousBlock.to_tensor()\n        logger.debug(\n            \"CONSCIOUS VECTOR [TYPE: %s SHAPE: %s]\",\n            type(consciousVector),\n            consciousVector.shape,\n        )\n        self.consciousVectors.append(consciousVector)\n        if not clear:\n            # BUG 5: no \"max_critical_point\"\n            # FIX 5: replace it with \"max_critical_length\"\n            if len(self.consciousVectors) == self.max_critical_length:\n                self.train()\n        else:\n            self.clear()\n    def train(self, clear: bool = False):\n        # TODO: use `ConsciousFlow` to replace logic here.\n        # train the model and clear the queue.\n        # size of queue before: self.context_length+self.batch_size (should be? at least geq to self.length+1)\n        # size of queue after training: self.context_length\n        if len(self.consciousVectors) >= self.min_critical_length:\n            batch_size = len(self.consciousVectors) - s",
         "type": "code",
-        "location": "/try_better_exceptions.py:2-3"
+        "location": "/conscious_struct.py:1017-1042"
     },
     "399": {
-        "file_id": 44,
-        "content": "Attempting to access non-existent key \"2\" from dictionary \"a\", resulting in a KeyError.",
+        "file_id": 47,
+        "content": "This function is appending conscious vectors to a queue, and if the maximum critical length is reached, it trains the model. If \"clear\" is True, it clears the queue instead of training.",
         "type": "comment"
     }
 }

@@ -1,537 +1,543 @@
 {
     "700": {
         "file_id": 91,
-        "content": "/containerized_chatgpt_agent/README.md",
+        "content": "/generate_datamodel_code.sh",
         "type": "filepath"
     },
     "701": {
         "file_id": 91,
-        "content": "This code appears to be informal notes about a project, possibly related to containerizing an AI model and working with different interfaces. The author is facing challenges in getting the AI to respond well in GUI but finds it more successful in terminal interface. They decide to name this project \"Helen Keller\".",
+        "content": "Generating Python code from a YAML datamodel file, with class name \"MyModel\".",
         "type": "summary"
     },
     "702": {
         "file_id": 91,
-        "content": "let's try to containerize open-interpreter first. seems easier.\nit sucks! but it is safe!\ni think it is a good start!\n---\nthe ai is not responding well to our request of performing actions in GUI.\nhowever, it is doing somehow good in terminal interface.\n---\nlet's call this project 'Helen Keller'",
+        "content": "datamodel-codegen --input mydatamodel.yaml --output mydatamodel.py --class-name MyModel\n# cannot process multiple instances of datamodel.",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/README.md:1-15"
+        "location": "/generate_datamodel_code.sh:1-3"
     },
     "703": {
         "file_id": 91,
-        "content": "This code appears to be informal notes about a project, possibly related to containerizing an AI model and working with different interfaces. The author is facing challenges in getting the AI to respond well in GUI but finds it more successful in terminal interface. They decide to name this project \"Helen Keller\".",
+        "content": "Generating Python code from a YAML datamodel file, with class name \"MyModel\".",
         "type": "comment"
     },
     "704": {
         "file_id": 92,
-        "content": "/containerized_chatgpt_agent/ai_captialism.py",
+        "content": "/hardware_capture_hid_power_control/Makefile",
         "type": "filepath"
     },
     "705": {
         "file_id": 92,
-        "content": "The code handles user accounts, enforces population limits, and processes payments through command handlers and result formatters. It creates functions for financial transactions but lacks a complete 'pay_result_formatter'. The 'clerk' function is used to handle commands based on their first component.",
+        "content": "This Makefile is responsible for building and executing the Python script \"test_control.py\". It first compiles the script using a template, then runs the compiled version with Python interpreter.",
         "type": "summary"
     },
     "706": {
         "file_id": 92,
-        "content": "# there must be some smaller groups called \"company\" evolved in the process.\n# the total amount of currency remained unchanged.\nimport uuid\nfrom typing import Callable\n# TODO: socialism, communism\n# TODO: is your cybergod misbehaving because of psycological reasons\ntotal_amount = 1e5\npopulation_limit = 100\ncentral_account_registry = {}\ncentral_bank_registry = {}\ndef create_account(\n    user_registry, base_amount=100\n):  # you can create account in 'central_account_registry' and 'central_bank_registry'\n    if len(user_registry) > population_limit:\n        raise Exception(\n            \"too many accounts: %d; limit: %d\" % (len(user_registry), base_amount)\n        )\n    for _ in range(3):\n        user_id = str(uuid.uuid4())\n        if user_id not in user_registry.keys():\n            user_registry[user_id] = base_amount\n            return user_id\n    raise Exception(\"failed to create new account. is the world collapsed?\")\ndef check_account(user_id, user_registry):\n    balance = user_registry.get(user_id, None)\n    ",
+        "content": "main: test_control.py\n\t${PYTHON} test_control.py\ntest_control.py: test_control.py.j2 $(addprefix ../, ${RENDERED_CODE})\n\t${PYTHON} ../render_python_code.py test_control.py",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/ai_captialism.py:1-32"
+        "location": "/hardware_capture_hid_power_control/Makefile:1-5"
     },
     "707": {
         "file_id": 92,
-        "content": "This code creates and manages user accounts in a centralized system, ensuring there are no more than a specified population limit. It also includes functions to check an account's balance.",
+        "content": "This Makefile is responsible for building and executing the Python script \"test_control.py\". It first compiles the script using a template, then runs the compiled version with Python interpreter.",
         "type": "comment"
     },
     "708": {
-        "file_id": 92,
-        "content": "if balance is None:\n        status = \"not_found\"\n    elif balance < 0:\n        status = \"overdrawn\"\n    else:\n        status = \"ok\"\n    result = {\"status\": status, \"balance\": balance, \"account\": user_id}\n    return result\ndef pay_amount(amount: float, user_id, target_id, user_registry, target_registry):\n    reason = []\n    status = \"unknown\"\n    if amount > 0:\n        user_info = check_account(user_id, user_registry)\n        target_info = check_account(target_id, target_registry)\n        user_status = user_info[\"status\"]\n        target_status = target_info[\"status\"]\n        if user_status != \"ok\":\n            reason.append(f\"user account {user_id} has invalid state {user_status}\")\n        if target_status != \"ok\":\n            reason.append(f\"target account {user_id} has invalid state {target_status}\")\n        if reason == []:\n            user_balance = user_info[\"balance\"]\n            # target_balance = target_info['balance']\n            user_balance_after = user_balance - amount\n            if user_balance_a",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/ai_captialism.py:32-58"
+        "file_id": 93,
+        "content": "/hardware_capture_hid_power_control/README.md",
+        "type": "filepath"
     },
     "709": {
-        "file_id": 92,
-        "content": "The code checks the account status and balance before processing a payment. It first sets the status as \"not_found\" or \"overdrawn\" if the balance is None or negative, respectively. Then it creates a result dictionary with the status, balance, and user ID. In the pay_amount function, it checks if the amount is positive and retrieves account information for both the sender and receiver. If any account has an invalid state, it adds a reason to a list. Finally, it calculates the updated balance after subtracting the payment amount.",
-        "type": "comment"
+        "file_id": 93,
+        "content": "This code is describing a computer-AI interface called ICI (Intelligence Computer Interface). It mentions the use of ROS for control-related packages and provides information about power control through `/dev/serial/by-id/*`. Users need to install pyserial. For HID (Human Interface Device) control, it suggests using `hidapi` from pypi with kcom2/kcom3 or ch9329 and provides links to related projects. Video capture details are missing in the provided code chunk.",
+        "type": "summary"
     },
     "710": {
-        "file_id": 92,
-        "content": "fter > 0:\n                status = \"ok\"\n                user_registry[user_id] -= amount\n                target_registry[target_id] += amount\n            else:\n                reason.append(\n                    f\"user account {user_id} has insufficient balance {user_balance} (needed: {amount})\"\n                )\n        else:\n            status = \"invalid_transfer\"\n    else:\n        status = \"invalid_amount\"\n    result = {\"status\": status, \"amount\": amount, \"reason\": reason}\n    return result\ndef put_into_bank(user_id, amount, user_registry, bank_registry):\n    result = pay_amount(amount, user_id, user_id, user_registry, bank_registry)\n    return result\ndef extract_from_bank(user_id, amount, user_registry, bank_registry):\n    result = pay_amount(amount, user_id, user_id, bank_registry, user_registry)\n    return result\ndef parse_command_to_components(command: str):\n    command_components = command.strip().split(\" \")\n    command_components = [c.strip() for c in command_components]\n    command_components = [c.l",
+        "file_id": 93,
+        "content": "it is more of a computer-ai interface, just like the computer-brain interface.\n智机接口 ICI (intelligence computer interface)\n----\nyou may check out ROS and find some control related packages\n----\npower: `/dev/serial/by-id/*`\ninstall `pyserial`\n----\nhid: `/dev/hidraw*` (need to find by provider name)\ninstall `hidapi` from pypi\nuse kcom2/kcom3 or ch9329\n[pycomkb](https://gitee.com/NetPuppetLib/pycomkb)\n[ch9329comm](https://github.com/beijixiaohu/CH9329_COMM) (also on pypi)\n[9329keyboardremote](https://github.com/Blue-Beaker/9329KeyboardRemotehttps://github.com/Blue-Beaker/9329KeyboardRemote)\n[ch9329](https://github.com/ChengZu/ch9329) (in c/c++)\n----\nvideo capture: ...",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/ai_captialism.py:58-87"
+        "location": "/hardware_capture_hid_power_control/README.md:1-33"
     },
     "711": {
-        "file_id": 92,
-        "content": "1. Check if amount is positive and both user_id and target_id exist in registries.\n2. If valid, deduct from user account and add to target account; else, provide reason for insufficient balance or invalid transfer.\n3. Set status based on invalid amount or invalid transfer.\n4. Return result with status, amount, and reason.",
+        "file_id": 93,
+        "content": "This code is describing a computer-AI interface called ICI (Intelligence Computer Interface). It mentions the use of ROS for control-related packages and provides information about power control through `/dev/serial/by-id/*`. Users need to install pyserial. For HID (Human Interface Device) control, it suggests using `hidapi` from pypi with kcom2/kcom3 or ch9329 and provides links to related projects. Video capture details are missing in the provided code chunk.",
         "type": "comment"
     },
     "712": {
-        "file_id": 92,
-        "content": "ower() for c in command_components if len(c) > 0]\n    return command_components\ndef parse_amount(components: list[str]):\n    amount = components.pop(0)\n    amount = float(amount)\n    return amount\nimport inspect\ndef construct_command_excutor(executor):\n    sig = inspect.signature(executor)\n    parameter_names = list(sig.parameters.keys())\n    def command_executor(components: list[str], context: dict[str, str]):\n        kwargs = {\n            pname: parse_amount(components) if pname == \"amount\" else context[pname]\n            for pname in parameter_names\n        }\n        ret = executor(*kwargs)\n        return ret\n    return command_executor\ndef pay_result_formatter():\n    ...\ncommand_handlers: dict[str, Callable[[list[str], dict[str, str]], dict]] = dict(\n    pay=construct_command_excutor(pay_amount),\n    check=construct_command_excutor(check_account),\n    put_into_bank=construct_command_excutor(put_into_bank),\n    extract_from_bank=construct_command_excutor(extract_from_bank),\n)\nresult_formatters: dict[str, Ca",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/ai_captialism.py:87-124"
+        "file_id": 94,
+        "content": "/hardware_capture_hid_power_control/common_keycodes.py",
+        "type": "filepath"
     },
     "713": {
-        "file_id": 92,
-        "content": "This code defines a set of command handlers and result formatters for financial transactions. The command handlers include 'pay', 'check', 'put_into_bank', and 'extract_from_bank'. Each command is associated with its corresponding executor function. The 'construct_command_excutor' function takes an executor function, extracts its parameter names, and creates a new function that can handle a list of components as input. The 'pay_result_formatter' function is incomplete.",
-        "type": "comment"
+        "file_id": 94,
+        "content": "The code translates hardware keycodes into compatible ones for a computer system using JSON files, manages unsupported keys, and ensures standardized names while also updating translation tables with mappings and handling errors.",
+        "type": "summary"
     },
     "714": {
-        "file_id": 92,
-        "content": "llable[[dict,dict], dict]] = dict(pay=pay_result_formatter)\ndef clerk(command: str, context: dict[str, str]):\n    command_components = parse_command_to_components(command)\n    ret = ...\n    if len(command_components) >= 2:\n        comp_0 = command_components[0]\n        rest_of_components = command_components[1:]\n        handler = command_handlers.get(comp_0, None)\n        formatter = result_formatters.get(comp_0, None)\n        if handler:\n            ret = handler(rest_of_components, context)\n            if formatter:\n                ret = formatter(ret, context)\n        else:\n            ...\n    else:\n        ...\n    return ret",
+        "file_id": 94,
+        "content": "import sys\nsys.path.append(\"../\")\n# TODO: add feedback to unsupported keys.\n# for now, just ignore these. don't do anything.\nfrom conscious_struct import HIDActionTypes\nimport json\ntrans_outpath = \"translation_keys.json\"\nfrom functools import lru_cache\n@lru_cache(maxsize=1)\ndef load_translation_table():\n    with open(trans_outpath, \"r\") as f:\n        content = f.read()\n        data = json.loads(content)\n        tk = \"translation_table\"\n        data[tk] = {k: bytes.fromhex(v) for k, v in data[tk].items()}\n        return data\nfrom beartype import beartype\n@beartype\ndef KeyLiteralToKCOMKeycode(keyLiteral: HIDActionTypes.keys):\n    translation_data = load_translation_table()\n    translation_table, missing = (\n        translation_data[\"translation_table\"],\n        translation_data[\"missing\"],\n    )\n    if keyLiteral in translation_table.keys():\n        return translation_table[keyLiteral]\n    elif keyLiteral in missing:\n        raise Exception(\"Calling missing keyLiteral:\", keyLiteral)\n    else:\n        raise Exception",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/ai_captialism.py:124-143"
+        "location": "/hardware_capture_hid_power_control/common_keycodes.py:1-41"
     },
     "715": {
-        "file_id": 92,
-        "content": "This code defines a function `clerk` that takes a command and context as input, parses the command into components, and handles it based on its first component. It uses separate dictionaries for command handlers and result formatters, and applies the formatter if the command has both a handler and a formatter.",
+        "file_id": 94,
+        "content": "This code reads and translates hardware keycodes into compatible keycodes for a computer system. It loads translation tables from a JSON file and handles unsupported keys by either ignoring them or raising exceptions.",
         "type": "comment"
     },
     "716": {
-        "file_id": 93,
-        "content": "/containerized_chatgpt_agent/are_you_kidding_me.txt",
-        "type": "filepath"
+        "file_id": 94,
+        "content": "(\"Unknown keyLiteral: \" + keyLiteral)\nfrom beartype.door import is_bearable\nif __name__ == \"__main__\":\n    # import json5\n    with open(\"keys.json\", \"r\") as f:\n        content = f.read()\n        kcom_keycodes = json.loads(content)\n    kcom_translation_table = {}\n    import re\n    def subs_brackets(e):\n        s, _ = re.subn(r\"\\(.*\\)\", \"\", e)\n        s = s.strip()\n        return s\n    for record in kcom_keycodes:\n        keyname = subs_brackets(record[\"Key Name\"])\n        keycode = bytes.fromhex(record[\"HID Usage ID\"])\n        possible_translations = []\n        keyname = keyname.replace(\"Arrow\", \"\").strip()\n        base_trans0 = keyname.replace(\" \", \"_\").lower()\n        base_trans = (\n            base_trans0.replace(\"gui\", \"cmd\")\n            .replace(\"control\", \"ctrl\")\n            .replace(\"escape\", \"esc\")\n            .replace(\"keyboard\", \"media\")\n            .replace(\"mute\", \"volume_mute\")\n            .replace(\"volume_dn\", \"volume_down\")\n            .replace(\"return\", \"enter\")\n        )\n        missing_key_litera",
+        "type": "code",
+        "location": "/hardware_capture_hid_power_control/common_keycodes.py:41-77"
     },
     "717": {
-        "file_id": 93,
-        "content": "The code uses image processing and password cracking tools, but faces challenges due to ASCII-PNG format differences. It handles security measures for error handling and system commands while displaying random commands for moving pointer and typing Latin characters.",
-        "type": "summary"
+        "file_id": 94,
+        "content": "The code reads a JSON file called \"keys.json\", parses the key names and HID usage IDs, and creates a translation table for keycodes. It also performs some string manipulation to standardize key names (e.g., replacing \"Arrow\" with empty string, converting spaces to underscores).",
+        "type": "comment"
     },
     "718": {
-        "file_id": 93,
-        "content": "sending:\n[{'content': '\\nAscii image:\\n\\nvvvc%)))><<<<<<<<<>>>>>>>>>>>>>>>)))))))))>vl<\\\\\\\\\\\\<illcclllxl\\nvi?f{rssr%xxccccccccllllllllrrrrrrrrrrrrrrrrrrsssrr*I}}}}}}}\\n%%c}{{{{rcccclllllllrrrrrrrrrssssss{{{{{{{{{{{{{{{{}IIIIIIII\\nxxtC!{{*{lllrrrrrrrssss{{{{{{{{{{{{****************I????????\\ncr*]?**}*rrrsss{{{{{{{{*********}}}}}}}}}}}}}}}}}}}?!!!!!!??\\nlloT1}II*s{{{{{******}}}}}}IIIIIIIIIIIIIIIIIIIIIIII!]!!!!!!!\\nrr7JtII?I{*****}}}}IIIIIII?????????????????????????][[[[]]]]\\n{{s}?????}}}IIIIII???????!!!!!!!!!!!!!!!!!!!!!!!!!![1[[[[[[[\\n***?!!!!!III?????!!!!!!!!]]]]][[[[[[[[[[[[[[[[[[[]]11111111[\\n*}}?!!]]!???!!!!!!]]][[[[[[[111111111111111111111[[1tttt1111\\nIII![[[[[!!!!]][[[[[1111111tttattttttttttttttttt111tttttttt1\\n???][[11[]][[[[11111tttttttaaaeaaaaeeeaaaaaaaatttttaaaattttt\\n?!![111t1[[1111tttttaaaaeeeeeeeooooooooeeeeeeeeaaateeeaaaatt\\n!!!1ttttt111ttttaaaeeeeoooooooooooo777oooooooeeeeeaeeeeeaaat\\n]][1tttatttttaaeeeeoooo77juT#CTSXFwzzz77777ooooeeeeeeeeeaaat\\n[[[taaaeataaeeeeooo7777zzzz",
+        "file_id": 94,
+        "content": "ls = [\n        ]\n        def check_is_common_keyname(keyname: str):\n            if keyname.startswith(\"Key\"):\n                keyname = keyname.strip(\"Key.\")\n                for forbidden_prefix in [\"ctrl\", \"cmd\", \"shift\", \"alt\", \"media\"]:\n                    if keyname.startswith(forbidden_prefix):\n                        return False\n            return True\n        def do_append(t):\n            _k = f\"Key.{t}\"\n            if check_is_common_keyname(_k):\n                possible_translations.append(t)\n                possible_translations.append(_k)\n            else:\n                for k in [t, _k]:\n                    if is_bearable(k, HIDActionTypes.keys):\n                        missing_key_literals.append(k)\n        do_append(base_trans)\n        for direction in [\"right_\", \"left_\"]:\n            if base_trans.startswith(direction):\n                base_trans = base_trans.replace(direction, \"\") + f\"_{direction[0]}\"\n                if direction == \"left_\":\n                    basekey = base_trans.split(\"_",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/are_you_kidding_me.txt:1-2"
+        "location": "/hardware_capture_hid_power_control/common_keycodes.py:77-103"
     },
     "719": {
-        "file_id": 93,
-        "content": "This code appears to contain an ASCII image with various elements such as letters, numbers, and special characters. The image seems to depict a scene involving text, symbols, and possibly an emoji or emoticon representation of something surprised or amazed.",
+        "file_id": 94,
+        "content": "This code checks if a given keyname starts with \"Key\" and doesn't have forbidden prefixes, then appends it to the list of possible translations. If not, it adds it to the missing_key_literals list.",
         "type": "comment"
     },
     "720": {
-        "file_id": 93,
-        "content": "n@NWRRXyjjjzzz777ooooeeeeeeeeaaat\\n[[1taaeeeaaeeeooo777zzzjjjjuywfwyujjjjjzz777ooooeeeeeeeeaaat\\n111teeeeeeeeoooo777zzjjjjLLLLLLLLLLjjjzz7777oooeeeaeeeeaaatt\\n111aeeeeeeeeooo7777zzjjjLLLLLLLLLjjjjz7777oooeeeeaaeeeaatttt\\n111aeeeeeeeeoooo7777zz7ooooo7o7oooeoeo7ooooeeeaaattaaattttt1\\n111aeeeeeaeeeeooooo777tzjcic2n{ts*c2ytoeeeeaaatttt1tttttt111\\n\\nText in image:\\n\\nba seo\\n\\n \\n\\nTea)\\n\\net\\n\\n \\n\\nPW Rere ek oe\\n\\nPointer location: 640, 512\\n\\nResolution: 1280x1024\\n\\nLast random command errors:\\n\\n\\nLast errors:\\n\\n\\nNext random commands:\\nmove_abs 1031,158\\n\\nYour commands:\\n', 'role': 'system'}]\nreply:\nThank you for the input. Based on your instructions, I have performed the following operations:\n- Converted the ASCII image to a hex code using the Python library called ImageMagick. This conversion process involved changing every character in the image from 8-bit grayscale into a hexadecimal value and then converting each group of four characters (0xXXXX) into a string.\n- Extracted the poi",
+        "file_id": 94,
+        "content": "\")[0]\n                    do_append(basekey)\n                do_append(base_trans)\n        if not base_trans0.startswith(\"F\"):\n            if len(keyname) == 3 and keyname[1] == \" \":\n                val = keyname[0]\n                trans = f\"\"\"'{val}'\"\"\" if val != \"'\" else f'''\"{val}\"'''\n                possible_translations.append(trans)\n        for translation in possible_translations:\n            kcom_translation_table[translation] = keycode\n    # coverage test.\n    error_msg = []\n    translation_table_cleaned = {}\n    import rich\n    # extra_missing_key_literals = []\n    for key_literal in HIDActionTypes.keys.__args__:\n        if key_literal not in kcom_translation_table:\n            # if key_literal not in missing_key_literals:\n            if check_is_common_keyname(key_literal):\n                error_msg.append(f\"{key_literal} not covered by translation table.\")\n            else:\n                missing_key_literals.append(key_literal)\n        else:\n            keycode = kcom_translation_table[key_lite",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/are_you_kidding_me.txt:2-7"
+        "location": "/hardware_capture_hid_power_control/common_keycodes.py:103-131"
     },
     "721": {
-        "file_id": 93,
-        "content": "Extracted the text from the image, obtained the pointer location, and set the resolution. Performed random command operations: moved to position (1031, 158), added 'role':'system' to the list of commands, and displayed errors.",
+        "file_id": 94,
+        "content": "Code generates translation table for hardware capture power control keys based on common keycodes. It handles possible translations and checks if all key literals are covered by the translation table.",
         "type": "comment"
     },
     "722": {
-        "file_id": 93,
-        "content": "nter location information from the converted ASCII image by identifying the string \"Pointer location:\" located at coordinates 640, 512. I then parsed the remainder of the string to determine the x and y values for the pointer in question.\n- Used the command line tool called pwscan to scan a specific directory for possible password candidates. This step required you to provide me with the path to the directory.\n- Utilized the Python library called ImageMagick again to convert the hex code of the ASCII image into a PNG format.\n- Analyzed and compared the two different images (original and converted) using an AI algorithm to determine if there was any significant difference between them in terms of content, such as text or image. This comparison was done using ImageMagick's `compare` command.\n- Checked for potential security breaches by scanning the original ASCII image with a variety of password cracking tools available online. The results of this step are provided to you below.\nIn terms of p",
+        "file_id": 94,
+        "content": "ral]\n            translation_table_cleaned.update({key_literal: keycode})\n    if error_msg:\n        raise Exception(\"\\n\" + \"\\n\".join(error_msg))\n    print(\"cleaned translation table:\")\n    rich.print(translation_table_cleaned)\n    # use bytes.fromhex() to deserialize.\n    output_data = {\n        \"translation_table\": {k: v.hex() for k, v in translation_table_cleaned.items()},\n        \"missing\": missing_key_literals\n        # \"missing\": missing_key_literals + extra_missing_key_literals,\n    }\n    with open(trans_outpath, \"w+\") as f:\n        content = json.dumps(output_data, indent=4)\n        f.write(content)\n    print(\"write to:\", trans_outpath)",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/are_you_kidding_me.txt:7-12"
+        "location": "/hardware_capture_hid_power_control/common_keycodes.py:131-146"
     },
     "723": {
-        "file_id": 93,
-        "content": "Identify pointer location from ASCII image, scan directory for password candidates using pwscan, convert ASCII image to PNG, compare original and converted images with AI algorithm, check for security breaches by scanning with online password cracking tools.",
+        "file_id": 94,
+        "content": "Updating translation table with key mappings, handling errors, and outputting cleaned table in JSON format.",
         "type": "comment"
     },
     "724": {
-        "file_id": 93,
-        "content": "assword cracking, I used the following tools:\n1) Brute force - This method involves trying every possible combination of letters, numbers and special characters until a correct one is found.\n2) Rainbow tables - This method uses pre-computed tables that map each possible character to its encrypted equivalent. It can be a very effective way of cracking passwords if the hash algorithm is weak or vulnerable to cryptanalysis.\n3) Dictionary attack - This involves trying known words and phrases from a list of common passwords, also known as 'wordlists'. It can help identify weak and common passwords quickly.       \n4) Hybrid attacks - These combine multiple methods above in order to increase the probability of finding a password with a brute-force approach.\nResults: The original ASCII image did not have any significant difference in terms of content, such as text or images, from the converted PNG format. However, after analyzing and comparing both images using ImageMagick's `compare` command, I fo",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/are_you_kidding_me.txt:12-17"
+        "file_id": 95,
+        "content": "/hardware_capture_hid_power_control/multiple_inheritance.py",
+        "type": "filepath"
     },
     "725": {
-        "file_id": 93,
-        "content": "Explaining password cracking techniques and results of converting an image.",
-        "type": "comment"
+        "file_id": 95,
+        "content": "Class A and C define method b; class B inherits, overrides method b calling super().b() but due to MRO, it calls a. Class Child overrides Parent1 and Parent2 methods using super().",
+        "type": "summary"
     },
     "726": {
-        "file_id": 93,
-        "content": "und that there were some slight differences due to the conversion process.\nFurthermore, I performed a brute-force attack on the ASCII image by trying every possible combination of letters, numbers, and special characters until a correct password was found. The results of this step are provided to you below:\nPassword cracking tools used:\n1) John the Ripper - This tool can crack MD5, SHA0, SHA1, MD4, MCCM, SQRL, Bcrypt, PBKDF2 and more hashes.\n2) Hashcat - This tool can crack various hashing algorithms such as Argon2, BCrypt, MD5, NTLM, OpenBSD MD5, PSWD64, SHA1, SHA2, SHA3 and more.\n3) CudaHashCat - A GPU-accelerated version of Hashcat that uses the Nvidia CUDA API to take advantage of GPU computing power for password cracking operations.\nCracked passwords:\n1. Password A (length = 15): None found, but possible guesses include '1234567890' and 'password'.\n2. Password B (length = 16): None found, but possible guesses include 'QWERTY', '1234567890', 'admin', 'guest' and 'password'.\nIn conclusion, t",
+        "file_id": 95,
+        "content": "from types import MethodType, MethodWrapperType\nclass A:\n    def a(self):\n        print(\"a\")\n    def b(self):\n        print(\"a.b method\")\n        self.a()\n        super().b()\n        print(\"a.super()\", super())\n        print(\"super.b\", super().b)\n        my_b = super().b\n        a_sup = super()\n        #     breakpoint()\n        print(\"a.super init?\", init := getattr(super(), \"__init__\", None))\n        print(dir(init), type(init), dir(type(init)))\n        print(\"CALLING A.SUPER.INIT\")\n        super().__init__()\n        print(\n            type(super().__init__),\n            isinstance(super().__init__, MethodType),\n            isinstance(super().__init__, MethodWrapperType),\n        )\n    def d(self):\n        print(\"a.d\")\nclass C:\n    def __init__(self):\n        print(\"C.INIT\")\n        #   super().__init__(a=1)\n        print(\n            type(super().__init__),\n            isinstance(super().__init__, MethodWrapperType),\n            isinstance(super().__init__, MethodType),\n        )\n    def d(self):\n        print(\"c.d\"",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/are_you_kidding_me.txt:17-26"
+        "location": "/hardware_capture_hid_power_control/multiple_inheritance.py:1-42"
     },
     "727": {
-        "file_id": 93,
-        "content": "The code is describing password cracking attempts using various tools like John the Ripper, Hashcat, and CudaHashCat on two different passwords with lengths 15 and 16. No cracked passwords were found but possible guesses are provided.",
+        "file_id": 95,
+        "content": "Code is defining two classes A and C, with class A having method b which calls super() to access the __init__ method. Class C has method d and overrides the __init__ method. The code also prints types and checks if the methods are instances of MethodType or MethodWrapperType.",
         "type": "comment"
     },
     "728": {
-        "file_id": 93,
-        "content": "here are no significant differences between the original ASCII image and the converted PNG format. The brute-force password cracking method did not identify any correct passwords for either of these formats. However, it is worth mentioning that different combinations of letters, numbers, and special characters may produce slightly different images or outputs.   \nexcuting: move_abs 1031,158\nINFO:     127.0.0.1:50672 - \"GET /move_abs?x=1031.0&y=158.0 HTTP/1.1\" 200 OK\nINFO:     127.0.0.1:50672 - \"GET /text_screenshot HTTP/1.1\" 200 OK\nINFO:     127.0.0.1:50672 - \"GET /position HTTP/1.1\" 200 OK\nrandom commands: ['move_abs 325,45', 'click left', 'type \\\\xa9\\\\xee\\\\x1d\\\\xe3\\\\xcb']\nsending:\n[{'content': '\\nAscii image:\\n\\nvvvc%)))><<<<<<<<<>>>>>>>>>>>>>>>)))))))))>vl<\\\\\\\\\\\\<illcclllxl\\nvi?f{rssr%xxccccccccllllllllrrrrrrrrrrrrrrrrrrsssrr*I}}}}}}}\\n%%c}{{{{rcccclllllllrrrrrrrrrssssss{{{{{{{{{{{{{{{{}IIIIIIII\\nxxtC!{{*{lllrrrrrrrssss{{{{{{{{{{{{*************?**I????????\\ncr*]?**}*rrrsss{{{{{{{{*********}",
+        "file_id": 95,
+        "content": ")\n    def b(self):\n        print(\"c.b method\")\n        # super().b()\n        print(\"c.super()\", super())\n        print(getattr(super(), \"b\", None))\n        c_sup = super()\n        # breakpoint()\n        print(\"c.super init?\", init := getattr(super(), \"__init__\", None))\n        print(dir(init), type(init), dir(type(init)))\n    def c(self):\n        print(\"c\")\nclass B(A, C):\n    def __init__(self):\n        print(\"CALLING B.INIT\")\n        self.A = super().__init__()\n    def b(self):\n        print(\"b.b method\")\n        print(\"b.super()\", super())\n        super().b()\n        #     super().b()\n        self.c()\n        super(A,self).d()\n        super(C,self).d()\n    def a(self):\n        print(\"override\")\n# B().b()\n# c.b not shown up!\n# b.b method\n# a.b method\n# override\n# c\nclass Parent1:\n    def method(self):\n        print(\"Parent1 method\")\nclass Parent2:\n    def method(self):\n        print(\"Parent2 method\")\nclass Child(Parent1, Parent2):\n    def method(self):\n        super(Parent1, self).method()\n        super(Parent2, self).method",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/are_you_kidding_me.txt:26-33"
+        "location": "/hardware_capture_hid_power_control/multiple_inheritance.py:42-95"
     },
     "729": {
-        "file_id": 93,
-        "content": "The code appears to be related to image processing and password cracking. It mentions that there are no significant differences between the original ASCII image and the converted PNG format, and a brute-force password cracking method did not identify any correct passwords for either of these formats. The code also includes some random commands and sends specific content as input, which seems to be related to image manipulation and producing different outputs with various combinations of letters, numbers, and special characters.",
+        "file_id": 95,
+        "content": "The code defines two classes, B and Child.\n\nClass B inherits from A and C, and has methods b and c. In method b, it calls super().b(), which would normally call the next method in the Method Resolution Order (MRO), but due to Python's MRO implementation, it ends up calling a() instead. Then it calls self.c() and super(A,self).d() and super(C,self).d().\n\nClass Child also inherits from Parent1 and Parent2, and overrides their method by calling it using the super() function with the correct arguments.",
         "type": "comment"
     },
     "730": {
-        "file_id": 93,
-        "content": "}}}}}}}}}}}}}}}}}}?!!!!!!??\\nlloT1}II*s{{{{{******}}}}}}IIIIIIIIIIIIIIIIIIIIIIII!]!!!!!!!\\nrr7JtII?I{*****}}}}IIIIIII?????????????????????????][[[[]]]]\\n{{s}?????}}}IIIIII???????!!!!!!!!!!!!!!!!!!!!!!!!!![1[[[[[[[\\n***?!!!!!III?????!!!!!!!!]]]]][[[[[[[[[[[[[[[[[[[]]11111111[\\n*}}?!!]]!???!!!!!!]]][[[[[[[111111111111111111111[[1tttt1111\\nIII![[[[[!!!!]][[[[[1111111ttttttttttttttttttttt111tttttttt1\\n???][[11[]][[[[11111tttttttaaaaaaaaeeeaaaaaaaatttttaaaattttt\\n?!![111t1[[1111tttttaaaaeeeeeeeooooooooeeeeeeeeaaateeeaaaatt\\n!!!1ttttt111ttttaaaeeeeoooooooooooo777oooooooeeeeeaeeeeeaaat\\n]][1tttatttttaaeeeeoooo77juT#CTSXFwzzz77777ooooeeeeeeeeeaaat\\n[[[taaaeataaeeeeooo7777zzzzn@NWRRXyjjjzzz777ooooeeeeeeeeaaat\\n[[1taaeeeaaeeeooo777zzzjjjjuywfwyujjjjjzz777ooooeeeeeeeeaaat\\n111teeeeeeeeoooo777zzjjjjLLLLLLLLLLjjjzz7777oooeeeaeeeeaaatt\\n111aeeeeeeeeooo7777zzjjjLLLLLLLLLjjjjz7777oooeeeeaaeeeaatttt\\n111aeeeeeeeeoooo7777zz7ooooo7o7oooeoeo7ooooeeeaaattaaattttt1\\n111aeeeeeaeeeeooooo777tzjcic2n{ts*c2ytoee",
+        "file_id": 95,
+        "content": "()\nc = Child()\nc.method()",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/are_you_kidding_me.txt:33-33"
+        "location": "/hardware_capture_hid_power_control/multiple_inheritance.py:95-98"
     },
     "731": {
-        "file_id": 93,
-        "content": "This code seems to contain a mix of different characters and symbols. It appears to be a random sequence of symbols rather than actual code.",
+        "file_id": 95,
+        "content": "Creates an instance of Child class.\nCalls method on the created object.",
         "type": "comment"
     },
     "732": {
-        "file_id": 93,
-        "content": "eeaaatttt1tttttt111\\n\\nText in image:\\n\\nba seo\\n\\n \\n\\nTea)\\n\\net\\n\\n \\n\\nPW Rele ek ce Pao)\\n\\nPointer location: 1031, 158\\n\\nResolution: 1280x1024\\n\\nLast random command errors:\\n\\n\\nLast errors:\\n\\n\\nNext random commands:\\nmove_abs 325,45\\nclick left\\ntype \\\\xa9\\\\xee\\\\x1d\\\\xe3\\\\xcb\\n\\nYour commands:\\n', 'role': 'system'}]\nreply:\nBased on the ASCII image provided, I can identify that this is a set of instructions for a computer program. The instructions appear to be written in a programming language commonly used for C++ and Java applications. \nThe first line of code appears to read \"ba seo,\" which suggests that it may be part of a website's code, as \"seo\" is an abbreviation for search engine optimization. However, the second line of code contains some unfamiliar characters, so it is not clear what it means. \nThe next line of code appears to contain commands to move and click on the screen, with the location being specified in absolute coordinates rather than relative ones. After that, ",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/are_you_kidding_me.txt:33-37"
+        "file_id": 96,
+        "content": "/hardware_capture_hid_power_control/parse_hid_keycodes.py",
+        "type": "filepath"
     },
     "733": {
-        "file_id": 93,
-        "content": "This code appears to be instructions for a computer program, possibly related to image recognition or search engine optimization. The code contains commands for moving and clicking on the screen, as well as typing specific characters. However, some of the commands are unclear due to unfamiliar characters.",
-        "type": "comment"
+        "file_id": 96,
+        "content": "The code reads text files, parses the data into pandas DataFrames, handles errors such as null strings and short table entries, and filters data for HID keycodes before writing it to a CSV or JSON file.",
+        "type": "summary"
     },
     "734": {
-        "file_id": 93,
-        "content": "the program's \"next random commands\" are displayed, which involve moving the pointer to a specific location and typing some text in Latin characters.",
+        "file_id": 96,
+        "content": "input_path = \"./resources/decompressed/Kcom3资料/keys.txt\"\nfrom typing import Annotated\n# import beartype\nfrom beartype.vale import Is\nfrom beartype.door import is_bearable\nnull_string = Annotated[str, Is[lambda s: len(s) == 0]]\ntable_entry = Annotated[str, Is[lambda s: len(s) < 30]]\ntable_header_count = 7\ntable_rows = []\nrow = []\nheader_index = -1\nwith open(input_path, \"r\", encoding=\"utf-8\") as f:\n    for line in f.readlines():\n        line = line.strip()\n        if is_bearable(line, null_string):\n            if header_index == table_header_count - 1:\n                table_rows.append(row.copy())\n            row = []\n            header_index = -1\n        elif is_bearable(line, table_entry):\n            if header_index != -2:\n                header_index += 1\n                row.append(line)\n        else:  # too long\n            header_index = -2\n# import rich\n# rich.print(table_rows)\nimport pandas\ndf = pandas.DataFrame(table_rows[1:], columns=table_rows[0])\nprint(df)\ndf.to_csv(outpath := \"keys.csv\")\nprint(\"write to: ",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/are_you_kidding_me.txt:37-37"
+        "location": "/hardware_capture_hid_power_control/parse_hid_keycodes.py:1-42"
     },
     "735": {
-        "file_id": 93,
-        "content": "Displaying the program's next random commands for moving pointer and typing text in Latin characters.",
+        "file_id": 96,
+        "content": "This code reads a text file, parses its lines, and stores the data in a pandas DataFrame. It checks for null strings (empty lines) and table entries that are less than 30 characters long. The headers are counted, and if a line is too long, the header index becomes -2. Finally, it prints the DataFrame and writes it to a CSV file.",
         "type": "comment"
     },
     "736": {
-        "file_id": 94,
-        "content": "/containerized_chatgpt_agent/build_and_run_image.sh",
-        "type": "filepath"
+        "file_id": 96,
+        "content": "\" + outpath)\nfrom beartype.door import is_bearable\nfrom typing import Annotated\nfrom beartype.vale import Is\nstring2 = Annotated[str, Is[lambda s: len(s) == 2]]\n# Key Name\n# HID Usage ID\nfrom functools import partial\nnew_usage_id = df[\"HID Usage ID\"].apply(partial(is_bearable, hint=string2))\nprint(\"new usage id?\")\nprint(new_usage_id)\nnew_df = df[new_usage_id]\nselect_new_df = new_df[[\"Key Name\", \"HID Usage ID\"]]\nprint(\"____\")\nprint(select_new_df)\n# print(select_new_df.head())\n# for index, row in new_df.iterrows():\n#     print(\"_______________________________________________________________\")\n#     print(\"index?\", index,sep=\"\\n\")\n#     print()\n#     print(\"row?\", row,sep=\"\\n\")\n#     print()\n#     breakpoint()\nselect_new_df.to_json(json_outpath := \"keys.json\", orient=\"records\", indent=4)\nprint(\"write json to: \" + json_outpath)\n# print(_json)",
+        "type": "code",
+        "location": "/hardware_capture_hid_power_control/parse_hid_keycodes.py:42-74"
     },
     "737": {
-        "file_id": 94,
-        "content": "Building and running a containerized chatGPT agent. Dockerizing the interpreter and running it in a container.",
-        "type": "summary"
+        "file_id": 96,
+        "content": "This code parses HID keycodes and filters the dataframe based on HID Usage ID, creating a new dataframe containing only the \"Key Name\" and \"HID Usage ID\" columns. It then writes this filtered data to a JSON file named \"keys.json\".",
+        "type": "comment"
     },
     "738": {
-        "file_id": 94,
-        "content": "docker build -t open_interpreter_container -f Dockerfile .\nbash run_interpreter_container.sh\n# docker run --rm -it open_interpreter_container python3 -m interpreter\n# docker run --rm -it open_interpreter_container interpreter --help",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/build_and_run_image.sh:1-4"
+        "file_id": 97,
+        "content": "/hardware_capture_hid_power_control/set_capture_card_properties.sh",
+        "type": "filepath"
     },
     "739": {
-        "file_id": 94,
-        "content": "Building and running a containerized chatGPT agent. Dockerizing the interpreter and running it in a container.",
-        "type": "comment"
+        "file_id": 97,
+        "content": "Installs v4l2-python3 and v4l2py for Linux, suggests using OBS for cross-platform integration, provides macOS alternative (uvc-util), sets video format with v4l2-ctl, gets/sets fps with v4l2-ctl, and provides general help with v4l2-ctl.",
+        "type": "summary"
     },
     "740": {
-        "file_id": 95,
-        "content": "/containerized_chatgpt_agent/build_llama2_autoexec_model.sh",
-        "type": "filepath"
+        "file_id": 97,
+        "content": "# maybe you shall install python bindings\n# pip3 install v4l2-python3\n# pip3 install v4l2py\n# fuck windows. how can i change capture device specs without using obs?\n# maybe you should spin up obs for cross-platform integration.\n# for macos (maybe?): https://github.com/jtfrey/uvc-util\n# you could find alternatives to v4l2 on other platforms.\n# busy! cannot share same device (when using obs).\nv4l2-ctl -d 2 --set-fmt-video=width=1920,height=1080,pixelformat=MJPG\n# get fps\n# v4l2-ctl -P -d 2\n# set fps\n# v4l2-ctl -p 60 -d 2\n# get all help\n# v4l2-ctl --help-all",
+        "type": "code",
+        "location": "/hardware_capture_hid_power_control/set_capture_card_properties.sh:1-21"
     },
     "741": {
-        "file_id": 95,
-        "content": "Copying model file to the container and creating an autoexec model.",
-        "type": "summary"
-    },
-    "742": {
-        "file_id": 95,
-        "content": "docker cp Modelfile ollama:/root/.ollama/Modelfile\n# docker exec -it ollama ollama create autoexec -f Modelfile\ndocker exec -it ollama ollama create autoexec -f \"root/.ollama/Modelfile\"",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/build_llama2_autoexec_model.sh:1-3"
-    },
-    "743": {
-        "file_id": 95,
-        "content": "Copying model file to the container and creating an autoexec model.",
+        "file_id": 97,
+        "content": "Installs v4l2-python3 and v4l2py for Linux, suggests using OBS for cross-platform integration, provides macOS alternative (uvc-util), sets video format with v4l2-ctl, gets/sets fps with v4l2-ctl, and provides general help with v4l2-ctl.",
         "type": "comment"
     },
-    "744": {
-        "file_id": 96,
-        "content": "/containerized_chatgpt_agent/build_llama2_visual_autoexec_model.sh",
+    "742": {
+        "file_id": 98,
+        "content": "/hardware_capture_hid_power_control/test_control.py",
         "type": "filepath"
     },
-    "745": {
-        "file_id": 96,
-        "content": "Copying and creating visual autoexec model file.",
+    "743": {
+        "file_id": 98,
+        "content": "The code utilizes modules for type safety, defines functions for scroll codes, initializes objects to check device IDs, and handles various data communications using KCOM and HID protocols for mouse control and keyboard transmission.",
         "type": "summary"
     },
-    "746": {
-        "file_id": 96,
-        "content": "docker cp Modelfile_visual ollama:/root/.ollama/Modelfile_visual\n# docker exec -it ollama ollama create autoexec -f Modelfile\ndocker exec -it ollama ollama create autoexec_visual -f \"root/.ollama/Modelfile_visual\"",
+    "744": {
+        "file_id": 98,
+        "content": "from typing import Callable\nimport math\nimport serial\nfrom beartype import beartype\nfrom beartype.vale import Is\nfrom typing import Annotated, TYPE_CHECKING\nfrom typing_extensions import TypeAlias\nimport sys\nsys.path.append(\"../\")\nif TYPE_CHECKING:\n    from ..hid_utils import *\nelse:\n    from hid_utils import *\n# use xephyr (leafpad, fullscreen) for unit test.\nif sys.version_info >= (3, 11):\n    from enum import StrEnum\nelse:\n    from strenum import StrEnum\n# for branching; ref: https://beartype.readthedocs.io/en/latest/api_door/\nfrom beartype.door import is_bearable\nfrom enum import Enum, auto, Flag\nimport time\nimport random\nfrom functools import reduce\nfrom typing import Union, List, Literal, Tuple\nfrom common_keycodes import KeyLiteralToKCOMKeycode, HIDActionTypes\nimport inspect\n# confusing!\n# TODO: unit test underway\n@beartype\ndef get_scroll_code(c_scroll: movement) -> one_byte:\n    if c_scroll < 0:\n        c_scroll = -c_scroll + 0x80\n    return c_scroll.to_bytes()\nclass DeviceType(StrEnum):\n    power = auto()\n    kc",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/build_llama2_visual_autoexec_model.sh:1-3"
+        "location": "/hardware_capture_hid_power_control/test_control.py:1-49"
+    },
+    "745": {
+        "file_id": 98,
+        "content": "- Importing necessary modules and classes\n- Ensuring type safety with `beartype` and `typing`\n- Defining a function `get_scroll_code` to convert movement values into one-byte scroll codes\n- Creating an enumeration `DeviceType` for device types\n- Including comments related to version compatibility, import paths, and error handling.",
+        "type": "comment"
+    },
+    "746": {
+        "file_id": 98,
+        "content": "om2 = auto()\n    kcom3 = auto()\n    ch9329 = auto()\n# TODO: iterate over available devices, then select.\nimport serial.tools.list_ports\navailable_ports = serial.tools.list_ports.comports()\nserialDeviceHWIDs = {\n    DeviceType.power: \"VID:PID=1A86:5523\",\n    DeviceType.kcom2: (ch340_hwid := \"VID:PID=1A86:7523\"),\n    DeviceType.kcom3: ch340_hwid,\n    DeviceType.ch9329: ch340_hwid,\n}\nserialDevices = {}\nfor comport in available_ports:\n    hwid = comport.hwid\n    for k, v in serialDeviceHWIDs.items():\n        if v in hwid:\n            if k not in serialDevices.keys():\n                serialDevices[k] = comport.device\n            else:\n                raise Exception(\n                    f'Devices undistinguishable by HWID \"{v}\": \"{serialDevices[k]}\" <=> \"{comport.device}\"'\n                )\n# serialDevices = {  # VID:PID=1A86:5523\n#     DeviceType.power: \"/dev/serial/by-id/usb-1a86_5523-if00-port0\",\n#     # kcom2/kcom3 & ch9329 not distinguishable by id (all ch340).\n#     # these are identical. 'VID:PID=1A86:7523' i",
+        "type": "code",
+        "location": "/hardware_capture_hid_power_control/test_control.py:49-83"
     },
     "747": {
-        "file_id": 96,
-        "content": "Copying and creating visual autoexec model file.",
+        "file_id": 98,
+        "content": "This code initializes objects for different devices and checks available device IDs. It then iterates over the list of available serial ports, compares their hardware IDs to a dictionary of expected IDs, and adds the found ports to a dictionary of serialDevices by type. If two or more types have the same hardware ID (ch340), it raises an exception indicating that they cannot be distinguished.",
         "type": "comment"
     },
     "748": {
-        "file_id": 97,
-        "content": "/containerized_chatgpt_agent/change_icon_size.py",
-        "type": "filepath"
+        "file_id": 98,
+        "content": "n hwid.\n#     DeviceType.kcom2: (ch340 := \"/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0\"),\n#     # another hid device will be: ch9329\n#     DeviceType.kcom3: ch340,\n#     DeviceType.ch9329: ch340,\n# }\ndeviceType = DeviceType.power\n# deviceType = DeviceType.ch9329\n# deviceType = DeviceType.kcom3\n# deviceType = DeviceType.kcom2  # 为了保证数据能正常传输，两条数据发送间隔最低要有5ms 的延时；意思就是你发送一个数据后延时5ms 再发下一条数据。\nser = serial.Serial(\n    serialDevices[deviceType],\n    timeout=0.01,\n    **({\"baudrate\": 57600} if deviceType == \"hid\" else {}),\n)\nprint(\"Serial device: %s\" % deviceType)\n# print(dir(ser))\n# ['BAUDRATES', 'BAUDRATE_CONSTANTS', 'BYTESIZES', 'PARITIES', 'STOPBITS', '_SAVED_SETTINGS', ..., '_baudrate', '_break_state', '_bytesize', '_checkClosed', '_checkReadable', '_checkSeekable', '_checkWritable', '_dsrdtr', '_dtr_state', '_exclusive', '_inter_byte_timeout', '_parity', '_port', '_reconfigure_port', '_reset_input_buffer', '_rs485_mode', '_rts_state', '_rtscts', '_set_rs485_mode', '_set_special_baudrate', '_stopbits',",
+        "type": "code",
+        "location": "/hardware_capture_hid_power_control/test_control.py:83-103"
     },
     "749": {
-        "file_id": 97,
-        "content": "This code defines a function to resize an image while maintaining its aspect ratio, then saves the resized image. It takes three arguments: the input image path, output image path, and maximum size for the resized image. An example usage is also provided.",
-        "type": "summary"
+        "file_id": 98,
+        "content": "This code is mapping different device types to a serial device and creating a Serial object with that device. The device type is set to \"power\" initially but can be changed to \"DeviceType.ch9329\", \"DeviceType.kcom3\", or \"DeviceType.kcom2\". The code also adds a delay of 5ms between sending data for proper data transmission.",
+        "type": "comment"
     },
     "750": {
-        "file_id": 97,
-        "content": "from PIL import Image\ndef resize_image(image_path, output_path, max_size):\n    # Open the image file\n    image = Image.open(image_path)\n    # Calculate the new size while maintaining the aspect ratio\n    width, height = image.size\n    if width > height:\n        new_width = max_size\n        new_height = int(height * max_size / width)\n    else:\n        new_height = max_size\n        new_width = int(width * max_size / height)\n    # Resize the image\n    resized_image = image.resize((new_width, new_height))\n    # Save the resized image\n    resized_image.save(output_path)\n# Example usage\ninput_image_path = 'windows-mouse-cursor-png-2.png'\noutput_image_path = 'cursor.png'\nmax_size = 20  # Maximum size (width or height) for the resized image\nresize_image(input_image_path, output_image_path, max_size)",
+        "file_id": 98,
+        "content": " '_timeout', '_update_break_state', '_update_dtr_state', '_update_rts_state', '_write_timeout', '_xonxoff', 'applySettingsDict', 'apply_settings', 'baudrate', 'break_condition', 'bytesize', 'cancel_read', 'cancel_write', 'cd', 'close', 'closed', 'cts', 'dsr', 'dsrdtr', 'dtr', 'exclusive', 'fd', 'fileno', 'flush', 'flushInput', 'flushOutput', 'getCD', 'getCTS', 'getDSR', 'getRI', 'getSettingsDict', 'get_settings', 'inWaiting', 'in_waiting', 'interCharTimeout', 'inter_byte_timeout', 'iread_until', 'isOpen', 'is_open', 'isatty', 'name', 'nonblocking', 'open', 'out_waiting', 'parity', 'pipe_abort_read_r', 'pipe_abort_read_w', 'pipe_abort_write_r', 'pipe_abort_write_w', 'port', 'portstr', 'read', 'read_all', 'read_until', 'readable', 'readall', 'readinto', 'readline', 'readlines', 'reset_input_buffer', 'reset_output_buffer', 'ri', 'rs485_mode', 'rts', 'rtscts', 'seek', 'seekable', 'sendBreak', 'send_break', 'setDTR', 'setPort', 'setRTS', 'set_input_flow_control', 'set_low_latency_mode', 'se",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/change_icon_size.py:1-27"
+        "location": "/hardware_capture_hid_power_control/test_control.py:103-103"
     },
     "751": {
-        "file_id": 97,
-        "content": "This code defines a function to resize an image while maintaining its aspect ratio, then saves the resized image. It takes three arguments: the input image path, output image path, and maximum size for the resized image. An example usage is also provided.",
+        "file_id": 98,
+        "content": "This code appears to be a part of a serial communication implementation, providing methods for setting and getting various communication settings, such as baudrate, parity, flow control, and more. It also supports reading and writing data from/to the serial port, handling break conditions, DTR and RTS states, and other related operations.",
         "type": "comment"
     },
     "752": {
         "file_id": 98,
-        "content": "/containerized_chatgpt_agent/container_autoexec_example.py",
-        "type": "filepath"
+        "content": "t_output_flow_control', 'stopbits', 'tell', 'timeout', 'truncate', 'writable', 'write', 'writeTimeout', 'write_timeout', 'writelines', 'xonxoff']\n# import rich\n# rich.print(ser.__dict__)]\n# print(ser.name) # /dev/serial/by-id/usb-1a86_5523-if00-port0\n# ser.write(b\"hello\")\n@beartype\ndef write_and_read(_bytes: bytes):\n    ser.write(_bytes)\n    print(f\"w> {repr(_bytes)}\")\n    res = ser.readall()\n    print(f\"r> {repr(res)}\")\n    # use int.to_bytes afterwards.\n    # use enum.Flag to replace enum.Enum in this situation.\n@beartype\ndef reduce_flags_to_bytes(  # force this to be non-empty!\n    flags: List[Flag],\n    # flags: Annotated[List[Flag], Is[lambda l: len(l) > 0]],\n    byteorder: Literal[\"little\", \"big\"] = \"little\",\n    byte_length: Union[int, Ellipsis] = ...,\n):\n    # def reduce_flags_to_bytes(opcodes: List[Union[one_byte, two_bytes]]):\n    if flags == []:\n        assert is_bearable(\n            pos_int, byte_length\n        ), f\"invalid byte_length (positive integer): {byte_length}\"\n        return b\"\\x00\" * by",
+        "type": "code",
+        "location": "/hardware_capture_hid_power_control/test_control.py:103-135"
     },
     "753": {
         "file_id": 98,
-        "content": "The code utilizes the LitEllm library for user input, incorporates AI model processing to generate replies, includes command parsing, retries, sleep delay, and executes commands from a specified port at random intervals.",
-        "type": "summary"
+        "content": "This code defines two functions: 'write_and_read' and 'reduce_flags_to_bytes'. The 'write_and_read' function takes a bytes parameter, writes it to the serial port, prints the written data, reads all available data from the serial port, and then prints the received data. The 'reduce_flags_to_bytes' function takes a list of flags and converts them into bytes using a specified byte order ('little' or 'big') and optional byte length. If the input list is empty, it returns a null byte.",
+        "type": "comment"
     },
     "754": {
         "file_id": 98,
-        "content": "# TODO: replace this unstable api with another\n# TODO: make sure the terminal service is always alive, sometimes the service is not responsive because of commands like \">8\"\n# TODO: insert & execute random commands\n# TODO: build multi-agent framework\n# TODO: memory framework, cache & permanent storage\n# TODO: use image to ascii protocol (with ocr) for gui manipulation\n# TODO: get terminal size\n# TODO: specify which part of response is executed, and which is not\n# TODO: match error info with commands which cause problems\n# TODO: do not clear the previous command execution records, instead keep a limited few and refresh\n# TODO: create some interface to describe what commands does, or narriation.\nimport ollama_utils\n# llama2 is not intelligent enough to complete this task.\n# still, we can build framework upon this.\nfrom terminal_config import cols, rows\nimport ast\ngenerate_command_pool = lambda: {\n    \"executed\": [],\n    \"not_executed\": [],\n    \"error\": [],\n}\ndef refresh_command_pool(command_pool, limit=3):\n   ",
+        "content": "te_length\n    flag = reduce(lambda a, b: a | b, flags)\n    opcode = flag.value\n    # bytecode = opcode.to_bytes(1 if opcode <= 0xFF else 2)\n    if byte_length is ...:\n        byte_length = (\n            get_byte_length := lambda _bytes: math.ceil(\n                len(hex(_bytes).strip(\"0x\")) / 2\n            )\n        )(opcode)\n        for member in type(flags[0]).__members__.values():\n            if (member_byte_length := get_byte_length(member.value)) > byte_length:\n                byte_length = member_byte_length\n    byte_code = opcode.to_bytes(byte_length, byteorder=byteorder)\n    return byte_code\n# cannot use match here? python 3.10+ required\nif deviceType == DeviceType.power:\n    # will reset on reboot\n    channel = 1  # CH3 does not exist. CH2 is placeholder. (virtually working)\n    # channel = 2\n    # state = \"ON\"\n    # # state = \"OFF\"\n    # write_and_read(f\"CH{channel}=?\".encode())\n    # write_and_read(f\"CH{channel}={state}\".encode())\n    # write_and_read(f\"CH{channel}=?\".encode())\n    # just toggle.\n  ",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/container_autoexec_example.py:1-28"
+        "location": "/hardware_capture_hid_power_control/test_control.py:135-170"
     },
     "755": {
         "file_id": 98,
-        "content": "Code is importing necessary libraries and defining a function to generate and refresh a command pool for executing various tasks. The TODO comments indicate potential future improvements or features to be added to the codebase.",
+        "content": "This code calculates the byte length and encodes an opcode for a device. It then writes and reads data to/from the device, toggling its state if necessary.",
         "type": "comment"
     },
     "756": {
         "file_id": 98,
-        "content": " ret = {}\n    for k, v in command_pool.items():\n        new_v = v[-limit:]\n        ret[k] = new_v\n    return ret\nprev_command_pool = generate_command_pool()\ndef unescape(text: str):\n    text = ast.literal_eval(repr(text).replace(\"\\\\\\\\\", \"\\\\\"))\n    return text\ndef escape(text: str):\n    text = text.encode(\"unicode_escape\").decode()\n    return text\nimport litellm\nimport base64\nimport requests\nfrom port_util import port\nprint(\"using server on port %d\" % port)\nopenrouter_model_name = \"mistralai/mistral-7b-instruct\"\ncmd_prefix = \"type \"\nimport random\ndef generate_single_random_command(_min, _max):\n    cmd = \"\"\n    rng = lambda: random.randint(0, 255)\n    for _ in range(random.randint(_min, _max)):\n        cmd += chr(rng())\n    cmd = escape(cmd)\n    return cmd_prefix + cmd\ndef random_command_generator(_min=5, _max=10, min_count=1, max_count=3):\n    count = random.randint(min_count, max_count)\n    cmdlist = []\n    for _ in range(count):\n        cmd = generate_single_random_command(_min, _max)\n        cmdlist.append(cmd)\n    ",
+        "content": "  write_and_read(f\"CH{channel}=OFF\".encode())\n    write_and_read(f\"CH{channel}=ON\".encode())\nelif deviceType in [DeviceType.kcom2, DeviceType.kcom3]:\n    commonHeader = b\"\\x57\\xab\"\n    class KCOMHeader(Enum):\n        # +4bytes, (2bytes VID, 2bytes PID)\n        modifyIDHeader = commonHeader + b\"\\x10\"\n        keyboardHeader = commonHeader + b\"\\x01\"  # +8bytes\n        mouseRelativeHeader = commonHeader + b\"\\x02\"  # +4bytes\n        # below only working for KCOM3\n        multimediaHeader = commonHeader + b\"\\x03\"  # +(2 or 4)bytes\n        mouseAbsoluteHeader = commonHeader + b\"\\x04\"  # +4bytes\n    @beartype\n    def kcom_write_and_read(\n        header: KCOMHeader, data_code: bytes, length: Union[int, List[int], None]\n    ):\n        if is_bearable(length, int):\n            length = [length]\n        if length is not None:\n            assert (\n                data_length := len(data_code)\n            ) == length, f\"Assumed data lengths: {length}\\nActual length: {data_length}\"\n        write_and_read(header + data_code",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/container_autoexec_example.py:28-75"
+        "location": "/hardware_capture_hid_power_control/test_control.py:170-196"
     },
     "757": {
         "file_id": 98,
-        "content": "This code generates a random command pool and escapes the text. It then returns a dictionary containing a limited number of commands from the pool. The code also prints the server port, defines functions to escape and unescape text, initializes an openrouter model, and generates single and multiple random commands.",
+        "content": "Sends \"ON\" or \"OFF\" commands to channel, depending on device type.\nDefines KCOMHeader enum for different HID header types and a function kcom_write_and_read().",
         "type": "comment"
     },
     "758": {
         "file_id": 98,
-        "content": "return cmdlist\n# it is bad to run random commands.\n# maybe you should listen to the advice at https://github.com/Significant-Gravitas/AutoGPT/issues/346\n# before it is too late.\n# we are just prototyping. why so serious.\n# trying random stuff!\n# let's create a virtual editor.\n# you just need to master the diff, the memory and the action\ndef prompt_gen(content, random_command_list):\n    random_command_repr = \"\\n\".join(random_command_list)\n    previous_executed_repr = \"\\n\".join(prev_command_pool[\"executed\"])\n    previous_error_repr = \"\\n\".join(prev_command_pool[\"error\"])\n    previous_not_executed_repr = \"\\n\".join(prev_command_pool[\"not_executed\"])\n    prompt = f\"\"\"\nTerminal environment:\n{content}\nTerminal size: {cols}x{rows}\nPrevious executed successfully:\n{previous_executed_repr}\nPrevious executed with error:\n{previous_error_repr}\nPrevious not executed:\n{previous_not_executed_repr}\nRandom commands:\n{random_command_repr}\nYour commands:\n\"\"\"\n    return prompt\nfrom diff_utils import diff_methods\nfrom typing import Lite",
+        "content": ")\n    @beartype\n    def changeID(vid: two_bytes, pid: two_bytes):\n        print(\"change VID=%s, PID=%s\" % (vid, pid))\n        data_code = vid + pid\n        kcom_write_and_read(KCOMHeader.modifyIDHeader, data_code, 4)\n    # class KeyboardKey(Enum):\n    #     ...\n    # leave it empty to release all keys.\n    @beartype\n    def keyboard(\n        control_codes: List[ControlCode] = [ControlCode.NULL],\n        key_literals: Annotated[\n            List[HIDActionTypes.keys], Is[lambda l: len(l) <= 6 and len(l) >= 0]\n        ] = [],\n    ):  # check for \"HID Usage ID\"\n        reserved_byte = b\"\\x00\"\n        # control_code = reduce_flags_to_bytes(control_codes)\n        control_code = reduce_flags_to_bytes(control_codes, byte_length=1)\n        keycodes = [\n            KeyLiteralToKCOMKeycode(key_literal)\n            for key_literal in key_literals\n            if KeyLiteralToKCOMKeycode(key_literal)\n        ]  # could reduce size with walrus operator with higher python version.\n        # keycodes = [v:=KeyLiteralToKCOMKeyc",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/container_autoexec_example.py:75-126"
+        "location": "/hardware_capture_hid_power_control/test_control.py:196-223"
     },
     "759": {
         "file_id": 98,
-        "content": "This code generates a prompt for a virtual editor, combining previous commands and random commands. It encourages experimentation while also displaying the consequences of previous actions.",
+        "content": "The code defines a function called `changeID` that takes two-byte values for VID (vendor ID) and PID (product ID) as input, prints their values, combines them into `data_code`, and uses the `kcom_write_and_read` function to write and read the `modifyIDHeader`. The code also defines a function called `keyboard` that takes control codes and key literals as inputs. It converts control codes to bytes, maps key literals to KCOM keycodes, and processes them to release all keys or perform specific actions based on the provided arguments.",
         "type": "comment"
     },
     "760": {
         "file_id": 98,
-        "content": "ral\nprev_terminal_content = \"\"\ndef get_terminal_data(\n    port,\n    method: Literal[\n        \"git_style_diff\", \"char_diff\", \"line_indexed_diff\", \"no_diff\"\n    ] = \"line_indexed_diff\",\n):\n    global prev_terminal_content\n    r = requests.get(f\"http://localhost:{port}/display\")\n    terminal_content = r.text.strip()\n    procedure = diff_methods.get(method, lambda prev, _next: _next)\n    result = procedure(prev_terminal_content, terminal_content)\n    prev_terminal_content = terminal_content\n    return result\nEXEC_DELAY = 0.5\ndef construct_prompt(data):\n    random_command_list = random_command_generator()\n    prompt = prompt_gen(data, random_command_list)\n    return prompt, random_command_list\n# model_tag = \"openai/gpt-3.5-turbo\"\n# import functools\n# @functools.lru_cache(maxsize=100)\ndef get_reply_from_chatgpt(content: str, max_tokens=50):\n    # why you talk back to me! why are you so talktive!\n    messages = [{\"content\": content, \"role\": \"system\"}]\n    # messages = [{\"content\": content, \"role\": \"user\"}]\n    print(\"s",
+        "content": "ode(key_literal) for key_literal in key_literals if v]\n        data_code = (\n            control_code\n            + reserved_byte\n            + b\"\".join(keycodes + ([b\"\\x00\"] * (6 - len(keycodes))))\n        )\n        kcom_write_and_read(KCOMHeader.keyboardHeader, data_code, 8)\n    @beartype\n    def get_rel_code_kcom(c_rel: movement):\n        if c_rel < 0:\n            c_rel = 0xFF + c_rel\n        return c_rel.to_bytes()\n    @beartype\n    def mouse_common(\n        x_code: Union[two_bytes, one_byte],\n        y_code: Union[two_bytes, one_byte],\n        scroll: movement,\n        kcom_flag: Literal[\n            KCOMHeader.mouseRelativeHeader, KCOMHeader.mouseAbsoluteHeader\n        ],\n        button_codes: List[MouseButton] = [MouseButton.NULL],\n    ):\n        scroll_code = get_scroll_code(scroll)\n        # button_code = reduce_flags_to_bytes(button_codes)\n        button_code = reduce_flags_to_bytes(button_codes, byte_length=1)\n        # button_opcode = reduce_opcodes(button_codes)\n        # button_code = button_opcod",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/container_autoexec_example.py:126-165"
+        "location": "/hardware_capture_hid_power_control/test_control.py:223-251"
     },
     "761": {
         "file_id": 98,
-        "content": "This code defines a function `get_terminal_data` that retrieves data from a local server and applies a diff method to determine the changes. It also includes a `construct_prompt` function for generating prompts using random commands, and a `get_reply_from_chatgpt` function that uses an AI model to generate responses based on input content.",
+        "content": "This code appears to be part of a larger program that interacts with hardware, specifically related to keyboard and mouse inputs. It defines functions for handling different types of input data and sending them through KCOM (Keyboard/Mouse COMMAND) protocol. The `get_rel_code_kcom` function converts relative movement into bytes for the KCOM protocol, while the `mouse_common` function processes various parameters such as mouse position, scroll, and button codes, then packages them into a format suitable for sending through KCOM.",
         "type": "comment"
     },
     "762": {
         "file_id": 98,
-        "content": "ending:\")\n    print(messages)\n    # openai call\n    # many info inside. you may want to take a look?\n    # response = litellm.completion(f\"openrouter/{openrouter_model_name}\", messages)\n    # response = litellm.completion(\"ollama/llama2\", messages, api_base=\"http://localhost:11434\")\n    response = litellm.completion(\n        \"ollama/autoexec\",\n        messages,\n        api_base=\"http://localhost:11434\",\n        max_tokens=max_tokens,\n    )\n    choices = response[\"choices\"]\n    reply_content = choices[0][\"message\"][\"content\"]\n    print(\"reply:\")\n    print(reply_content)\n    return reply_content\nimport ast\ndef parse_command_list(response):\n    command_list = []\n    for _line in response.split(\"\\n\"):\n        line = _line.lstrip()\n        if line.startswith(cmd_prefix):\n            command = line[len(cmd_prefix) :]\n            # command = ast.literal_eval(repr(line).replace(\"\\\\\\\\\",\"\\\\\"))\n            command = unescape(command)\n            command_list.append(command)\n            prev_command_pool[\"executed\"].append(",
+        "content": "e.to_bytes()\n        data_code = button_code + x_code + y_code + scroll_code  # all 1byte\n        kcom_write_and_read(\n            kcom_flag,\n            data_code,\n            4 if is_bearable(kcom_flag, KCOMHeader.mouseRelativeHeader) else 6,\n        )\n    @beartype\n    def mouse_relative(\n        x: movement,\n        y: movement,\n        scroll: movement,\n        button_codes: List[MouseButton] = [MouseButton.NULL],\n    ):\n        x_code = get_rel_code_kcom(x)\n        y_code = get_rel_code_kcom(y)\n        mouse_common(\n            x_code,\n            y_code,\n            scroll,\n            kcom_flag=KCOMHeader.mouseRelativeHeader,\n            button_codes=button_codes,\n        )\n    def get_abs_code(c_abs, res):\n        return int((4096 * c_abs) / res).to_bytes(2, byteorder=\"little\")\n    @beartype\n    def mouse_absolute(\n        coordinate: Tuple[non_neg_int, non_neg_int],\n        resolution: Tuple[pos_int, pos_int],\n        scroll: movement,\n        button_codes: List[MouseButton] = [MouseButton.NULL],\n    ):\n   ",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/container_autoexec_example.py:165-196"
+        "location": "/hardware_capture_hid_power_control/test_control.py:251-287"
     },
     "763": {
         "file_id": 98,
-        "content": "This code snippet is handling user input, processing it with an AI model, and returning the output as a reply. It appears to be using the LitEllm library for handling the AI model calls. The code also includes functionality to parse command lists from user inputs and execute them.",
+        "content": "This code defines functions for controlling mouse movements, buttons, and scrolling using the KCOM protocol. The `mouse_relative` function handles relative mouse movements, while the `mouse_absolute` function handles absolute mouse coordinates. Both functions also support handling button presses and releases, and scrolling. The code converts these inputs into appropriate byte sequences for sending over the KCOM interface.",
         "type": "comment"
     },
     "764": {
         "file_id": 98,
-        "content": "_line)\n        else:\n            prev_command_pool[\"not_executed\"].append(_line)\n    return command_list\ndef execute_command(command, port):\n    print(\"executing command:\", repr(command))\n    b64command = base64.b64encode(command.encode(\"utf-8\")).decode(\"utf-8\")\n    params = dict(b64type=b64command)\n    requests.get(f\"http://localhost:{port}/input\", params=params)\n    time.sleep(EXEC_DELAY)\ndef execute_command_list(command_list, port):\n    print(\"total commands:\", len(command_list))\n    for command in command_list:\n        execute_command(command, port)\nimport os\nprint(\"env:\", os.environ)\nimport time\nSLEEP_TIME = 3\nwhile True:\n    data = get_terminal_data(port)\n    prompt, random_commands = construct_prompt(data)\n    prev_command_pool = generate_command_pool()\n    # prev_command_pool = refresh_command_pool(prev_command_pool)\n    print(\"random commands:\", random_commands)\n    response = get_reply_from_chatgpt(prompt)\n    prev_command_pool[\"executed\"].extend(random_commands)\n    execute_command_list([c[len(\"type ",
+        "content": "     \"\"\"\n        coordinate: (x_abs, y_abs)\n        resolution: (width, height)\n        \"\"\"\n        (x_abs, y_abs) = coordinate\n        (width, height) = resolution\n        assert x_abs <= width, f\"Invalid x: {x_abs}\\nWidth: {width}\"\n        assert y_abs <= height, f\"Invalid y: {y_abs}\\nHeight: {height}\"\n        x_code = get_abs_code(x_abs)\n        y_code = get_abs_code(y_abs)\n        # scroll_code = get_rel_code(scroll)\n        mouse_common(\n            x_code,\n            y_code,\n            scroll,\n            kcom_flag=KCOMHeader.mouseAbsoluteHeader,\n            button_codes=button_codes,\n        )\n    # @beartype\n    # def multimedia_raw(data_code: Union[two_bytes, four_bytes]):\n    @beartype\n    def multimedia(keys: Union[List[ACPIKey], List[MultimediaKey]] = []):\n        if len(keys) == 0:  # clear all multimedia keys.\n            multimedia(keys=[ACPIKey.Null])\n            multimedia(keys=[MultimediaKey.Null])\n            return\n        isMultimediaKeys = is_bearable(keys, List[MultimediaKey])\n        by",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/container_autoexec_example.py:196-232"
+        "location": "/hardware_capture_hid_power_control/test_control.py:287-321"
     },
     "765": {
         "file_id": 98,
-        "content": "195-206: Generate command pool and prepare for executing commands\n207-218: Encode and execute a single command using requests module\n219-231: Execute command list with retries, print total commands, and sleep for execution delay",
+        "content": "The code is defining a function called \"multimedia\" which takes a list of multimedia keys as input. It checks if the length of the key list is 0, and if so, it clears all multimedia keys by adding Null to the key list and calling the function again. If the list contains ACPI or Multimedia keys, it calls another function passing the keys.",
         "type": "comment"
     },
     "766": {
         "file_id": 98,
-        "content": "\") :] for c in random_commands], port)\n    command_list = parse_command_list(response)\n    execute_command_list(command_list, port)\n    time.sleep(SLEEP_TIME)",
+        "content": "te_length = 3 if isMultimediaKeys else 1\n        # key_code = reduce_flags_to_bytes(keys)\n        key_code = reduce_flags_to_bytes(keys, byte_length=byte_length)\n        data_code = (b\"\\x02\" if isMultimediaKeys else b\"\\x01\") + key_code\n        # multimedia_opcode = reduce_opcodes(multimedia_keys)\n        # data_code = multimedia_opcode.to_bytes(1 if multimedia_opcode <= 0xff else 2)\n        # multimedia_raw(data_code)\n        kcom_write_and_read(\n            KCOMHeader.multimediaHeader, data_code, 4 + (1 + byte_length)\n        )\nelif deviceType == DeviceType.ch9329:\n    import ch9329Comm\n    # import parse\n    from types import MethodType\n    # from types import MethodWrapperType\n    @beartype\n    class CH9329Util:\n        def __init__(self, port: serial.Serial, **kwargs):\n            self.port = port\n            super_class_init = getattr(super(), \"__init__\", None)\n            if super_class_init:\n                # not method-wrapper.\n                if isinstance(super_class_init, MethodType):\n            ",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/container_autoexec_example.py:232-235"
+        "location": "/hardware_capture_hid_power_control/test_control.py:321-348"
     },
     "767": {
         "file_id": 98,
-        "content": "Reads random commands from file, parses command list, executes commands on specified port, and sleeps for a while before repeating.",
+        "content": "This code appears to be part of a larger program and seems to handle data transmission for different devices. If `isMultimediaKeys` is True, 3 keys are processed. Otherwise, only 1 key is processed. The code then generates data code for the selected keys and transmits it using a function called `kcom_write_and_read`. For device type \"ch9329\", it imports necessary classes and defines a class `CH9329Util` which may handle communication with this specific device type.",
         "type": "comment"
     },
     "768": {
-        "file_id": 99,
-        "content": "/containerized_chatgpt_agent/diff_utils.py",
-        "type": "filepath"
+        "file_id": 98,
+        "content": "        # sclass_init_str = str(super_class_init)\n                    # sclass_str = str(super())\n                    # sclass_parsed = parse.parse(\"<super: <class '{self}'>, <{base} object>>\", sclass_str)\n                    # base_init_str =\n                    # self.super_class = super_class_init(**kwargs)\n                    super().__init__(**kwargs)\n        def communicate(\n            self,\n            DATA: Annotated[bytes, Is[lambda b: len(b) > 0]],\n            CMD: one_byte,\n            LEN: one_byte,\n        ):\n            # 将字符转写为数据包\n            HEAD = b\"\\x57\\xAB\"  # 帧头\n            ADDR = b\"\\x00\"  # 地址\n            # CMD = b\"\\x02\"  # 命令\n            # LEN = b\"\\x08\"  # 数据长度\n            data_length = ord(LEN)\n            # 控制键\n            # control_byte = reduce_flags_to_bytes(control_codes, byte_length=1)\n            # DATA += control_byte\n            # # if ctrl == '':\n            # #     DATA += b'\\x00'\n            # # elif isinstance(ctrl, int):\n            # #     DATA += bytes([ctrl])\n          ",
+        "type": "code",
+        "location": "/hardware_capture_hid_power_control/test_control.py:348-375"
     },
     "769": {
-        "file_id": 99,
-        "content": "This code provides three functions for comparing and generating differences between two strings, including Git-style diff text, character comparisons with locations, and line indexed diffs. The differences are calculated using various methods and outputted as a single string.",
-        "type": "summary"
+        "file_id": 98,
+        "content": "Code is initializing the superclass and defining a method to communicate by transforming data into a packet format.",
+        "type": "comment"
     },
     "770": {
-        "file_id": 99,
-        "content": "import difflib\njoin_result = lambda result: \"\\n\".join(result)\ndef git_style_diff(text1, text2):\n    result = []\n    # Use difflib to generate the diff text\n    diff = difflib.unified_diff(text1.splitlines(), text2.splitlines(), lineterm=\"\")\n    # Print the diff text\n    for line in diff:\n        result.append(line)\n    return join_result(result)\ndef char_diff(text1, text2):\n    result = []\n    matcher = difflib.SequenceMatcher(None, text1, text2)\n    diffs = list(matcher.get_opcodes())\n    # Print the differences and their locations\n    for diff in diffs:\n        tag, i1, i2, j1, j2 = diff\n        if tag != \"equal\":\n            result.append(f\"{tag} at [{i1}:{i2}] -> [{j1}:{j2}]\")\n            result.append(f\"  {text1[i1:i2]}\")\n            result.append(f\"  {text2[j1:j2]}\")\n    return join_result(result)\ndef line_indexed_diff(text1, text2):\n    result = []\n    d = difflib.Differ()\n    diff = list(d.compare(text1.splitlines(), text2.splitlines()))\n    # Print the differences and their line indices\n    line_index =",
+        "file_id": 98,
+        "content": "  # # else:\n            # #     DATA += self.control_button_hex_dict[ctrl]\n            # # DATA固定码\n            # DATA += b\"\\x00\"\n            # 读入data\n            # for i in range(0, len(data), 2):\n            #     DATA += self.normal_button_hex_dict[data[i:i + 2]]\n            # for key_literal in key_literals:\n            #     DATA += KeyLiteralToKCOMKeycode(key_literal)\n            if len(DATA) < data_length:\n                DATA += b\"\\x00\" * (data_length - len(DATA))\n            else:\n                DATA = DATA[:data_length]\n            # 分离HEAD中的值，并计算和\n            HEAD_hex_list = []\n            for byte in HEAD:\n                HEAD_hex_list.append(byte)\n            HEAD_add_hex_list = sum(HEAD_hex_list)\n            # 分离DATA中的值，并计算和\n            DATA_hex_list = []\n            for byte in DATA:\n                DATA_hex_list.append(byte)\n            DATA_add_hex_list = sum(DATA_hex_list)\n            SUM = self.checksum(HEAD_add_hex_list, ADDR, CMD, LEN, DATA_add_hex_list)\n            packet = HEAD + ADDR +",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/diff_utils.py:1-37"
+        "location": "/hardware_capture_hid_power_control/test_control.py:375-404"
     },
     "771": {
-        "file_id": 99,
-        "content": "The code defines three functions to compare and generate differences between two strings. 'git_style_diff' generates diff text in the style of Git, 'char_diff' compares characters and prints their locations, and 'line_indexed_diff' is not yet defined but will print differences with line indices.",
+        "file_id": 98,
+        "content": "Checksum calculation and packet construction for a control message.",
         "type": "comment"
     },
     "772": {
-        "file_id": 99,
-        "content": " 0\n    for line in diff:\n        if line.startswith(\"+\") or line.startswith(\"-\"):\n            result.append(f\"{line_index}: {line}\")\n        if not line.startswith(\"-\"):\n            line_index += 1\n    return join_result(result)\ndiff_methods = {\n    \"git_style_diff\": git_style_diff,\n    \"char_diff\": char_diff,\n    \"line_indexed_diff\": line_indexed_diff,\n}\nif __name__ == \"__main__\":\n    # Define the two texts to be compared\n    text1 = \"\"\"Hello, world!\n    This is a test.\n    \"\"\"\n    text2 = \"\"\"Hello, everyone!\n    This is a test.\n    \"\"\"\n    print_spliter = lambda: print(\"-\" * 80)\n    # print_result = lambda result: print(\"\\n\".join(result))\n    for method in diff_methods.values():\n        result = method(text1, text2)\n        print(result)\n        print_spliter()",
+        "file_id": 98,
+        "content": " CMD + LEN + DATA + bytes([SUM])  # 数据包\n            self.port.write(packet)  # 将命令代码写入串口\n            # return True  # 如果成功，则返回True，否则引发异常\n        def checksum(\n            self,\n            HEAD_add_hex_list: int,\n            ADDR: bytes,\n            CMD: bytes,\n            LEN: bytes,\n            DATA_add_hex_list: int,\n        ):\n            try:\n                SUM = (\n                    sum(\n                        [\n                            HEAD_add_hex_list,\n                            int.from_bytes(ADDR, byteorder=\"big\"),\n                            int.from_bytes(CMD, byteorder=\"big\"),\n                            int.from_bytes(LEN, byteorder=\"big\"),\n                            DATA_add_hex_list,\n                        ]\n                    )\n                    % 256\n                )  # 校验和\n            except Exception as e:\n                print(\"int too big to convert\")\n                raise e\n                # return False\n            return SUM\n    @beartype\n    class Multimedia(CH9329Util):\n    ",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/diff_utils.py:37-69"
+        "location": "/hardware_capture_hid_power_control/test_control.py:404-437"
     },
     "773": {
-        "file_id": 99,
-        "content": "This code calculates the differences between two texts using various diff methods and outputs the results. It loops through each line of the diff, identifies lines added or removed, and appends them to a list. Finally, it joins the list elements into a single string and prints the result for each diff method.",
+        "file_id": 98,
+        "content": "Function sends a command packet to the device via serial port, and calculates checksum for each data packet.",
         "type": "comment"
     },
     "774": {
-        "file_id": 100,
-        "content": "/containerized_chatgpt_agent/dna_like_transformation_triple_or_more_strands.py",
-        "type": "filepath"
+        "file_id": 98,
+        "content": "    def send_data(self, keys: Union[List[ACPIKey], List[MultimediaKey]] = []):\n            if len(keys) == 0:  # clear all multimedia keys.\n                Multimedia.send_data(keys=[ACPIKey.Null])\n                Multimedia.send_data(keys=[MultimediaKey.Null])\n                return\n            isMultimediaKeys = is_bearable(keys, List[MultimediaKey])\n            CMD = b\"\\x03\"  # 命令\n            LEN = b\"\\x04\" if isMultimediaKeys else b\"\\x02\"  # 数据长度\n            byte_length = 3 if isMultimediaKeys else 1\n            key_code = reduce_flags_to_bytes(keys, byte_length=byte_length)\n            DATA = (b\"\\x02\" if isMultimediaKeys else b\"\\x01\") + key_code  # 数据\n            self.communicate(DATA, CMD, LEN)\n        def release(self):\n            self.send_data()\n    # ref: https://github.com/beijixiaohu/CH9329_COMM\n    @beartype\n    class Keyboard(CH9329Util):\n        # def __init__(\n        #     self,\n        #     port: serial.Serial,\n        # ):\n        #     self.port = port\n        def send_data(\n            ",
+        "type": "code",
+        "location": "/hardware_capture_hid_power_control/test_control.py:437-466"
     },
     "775": {
-        "file_id": 100,
-        "content": "The code defines a base value (65535) and mentions that the data or code can have complementary values in bitwise and numerical forms. It also suggests that copying could be spontaneous.",
-        "type": "summary"
+        "file_id": 98,
+        "content": "The code defines a class named \"Keyboard\" that communicates with a serial device. The `send_data()` method sends data to the device, and the `release()` method calls `send_data()` without any parameters to release all keys. The `is_bearable()` function determines if the input is a list of MultimediaKeys. The code also uses `reduce_flags_to_bytes()`, `b\"\\x03\"`, `b\"\\x04\"`, and `b\"\\x02\"` for command, data length, and flag reduction operations.",
+        "type": "comment"
     },
     "776": {
-        "file_id": 100,
-        "content": "# dna: complementary\n# triple dna: 1 -> 3 or 2 -> 3\n# it could be code or data\n# type: bitwise (base n) complementary & numerical complementary (rotary)\nbase = 65535\n# copy shall be spontaneous",
+        "file_id": 98,
+        "content": "self,\n            # [ControlCode.NULL] or [], both works\n            control_codes: List[ControlCode] = [ControlCode.NULL],\n            key_literals: Annotated[\n                List[HIDActionTypes.keys], Is[lambda l: len(l) <= 8 and len(l) >= 0]\n            ] = [],\n        ):\n            # 将字符转写为数据包\n            # HEAD = b\"\\x57\\xAB\"  # 帧头\n            # ADDR = b\"\\x00\"  # 地址\n            CMD = b\"\\x02\"  # 命令\n            LEN = b\"\\x08\"  # 数据长度\n            DATA = b\"\"  # 数据\n            # 控制键\n            # control_byte = reduce_flags_to_bytes(control_codes)\n            control_byte = reduce_flags_to_bytes(control_codes, byte_length=1)\n            DATA += control_byte\n            # if ctrl == '':\n            #     DATA += b'\\x00'\n            # elif isinstance(ctrl, int):\n            #     DATA += bytes([ctrl])\n            # else:\n            #     DATA += self.control_button_hex_dict[ctrl]\n            # DATA固定码\n            DATA += b\"\\x00\"\n            # 读入data\n            # for i in range(0, len(data), 2):\n            #    ",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/dna_like_transformation_triple_or_more_strands.py:1-10"
+        "location": "/hardware_capture_hid_power_control/test_control.py:466-496"
     },
     "777": {
-        "file_id": 100,
-        "content": "The code defines a base value (65535) and mentions that the data or code can have complementary values in bitwise and numerical forms. It also suggests that copying could be spontaneous.",
+        "file_id": 98,
+        "content": "This code is defining a function that converts input data into a data package. It initializes variables for the frame header, address, command, and length of the data. The control_byte variable is created from the provided control_codes using reduce_flags_to_bytes(). The function then appends the control_byte to the DATA variable. If the 'ctrl' variable is empty or an integer, it adds the corresponding bytes to DATA. Finally, it appends a fixed value of 0x00 to the end of DATA and prepares for reading the data in increments of two.",
         "type": "comment"
     },
     "778": {
-        "file_id": 101,
-        "content": "/containerized_chatgpt_agent/install_pip.sh",
-        "type": "filepath"
+        "file_id": 98,
+        "content": " DATA += self.normal_button_hex_dict[data[i:i + 2]]\n            for key_literal in key_literals:\n                DATA += KeyLiteralToKCOMKeycode(key_literal)\n            self.communicate(DATA, CMD, LEN)\n            # if len(DATA) < 8:\n            #     DATA += b\"\\x00\" * (8 - len(DATA))\n            # else:\n            #     DATA = DATA[:8]\n            # # 分离HEAD中的值，并计算和\n            # HEAD_hex_list = []\n            # for byte in HEAD:\n            #     HEAD_hex_list.append(byte)\n            # HEAD_add_hex_list = sum(HEAD_hex_list)\n            # # 分离DATA中的值，并计算和\n            # DATA_hex_list = []\n            # for byte in DATA:\n            #     DATA_hex_list.append(byte)\n            # DATA_add_hex_list = sum(DATA_hex_list)\n            # #\n            # try:\n            #     SUM = (\n            #         sum(\n            #             [\n            #                 HEAD_add_hex_list,\n            #                 int.from_bytes(ADDR, byteorder=\"big\"),\n            #                 int.from_bytes(CMD, byteorder=\"b",
+        "type": "code",
+        "location": "/hardware_capture_hid_power_control/test_control.py:496-524"
     },
     "779": {
-        "file_id": 101,
-        "content": "The script is installing the Python 3 pip package and checking if it was successful. If the installation fails, it runs an apt update and tries again.",
-        "type": "summary"
+        "file_id": 98,
+        "content": "Appending button hex codes and key literals to data.\nSending data to communicate with hardware.\nCalculating checksum for head and data sections.",
+        "type": "comment"
     },
     "780": {
-        "file_id": 101,
-        "content": "#!/bin/bash\nfunction install_packages {\n  # Install the packages\n  apt install -y python3-pip\n  # courtesy from ChatGPT\n  local status=$?\n  # Return the exit status\n  return $status\n}\ninstall_packages\n# Check the status of the package installation\nif [ $? -ne 0 ]; then\n# If the installation failed, run apt update and try again\necho \"Package installation failed. Running apt update and trying again...\"\napt update\ninstall_packages\nfi",
+        "file_id": 98,
+        "content": "ig\"),\n            #                 int.from_bytes(LEN, byteorder=\"big\"),\n            #                 DATA_add_hex_list,\n            #             ]\n            #         )\n            #         % 256\n            #     )  # 校验和\n            # except OverflowError:\n            #     raise Exception(\"int too big to convert\")\n            #     # return False\n            # packet = HEAD + ADDR + CMD + LEN + DATA + bytes([SUM])  # 数据包\n            # self.port.write(packet)  # 将命令代码写入串口\n            # # return True  # 如果成功，则返回True，否则引发异常\n        def release(self):\n            self.send_data()\n    # keyboard = ch9329Comm.keyboard.DataComm()\n    keyboard = Keyboard(port=ser)  # TODO: multimedia key support\n    # pass int to override.\n    @beartype\n    class Mouse(CH9329Util, ch9329Comm.mouse.DataComm):\n        def __init__(\n            self, port: serial.Serial, screen_width: pos_int, screen_height: pos_int\n        ):\n            # self.port = port\n            initargs = dict(screen_width=screen_width, screen_height=s",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/install_pip.sh:1-20"
+        "location": "/hardware_capture_hid_power_control/test_control.py:524-551"
     },
     "781": {
-        "file_id": 101,
-        "content": "The script is installing the Python 3 pip package and checking if it was successful. If the installation fails, it runs an apt update and tries again.",
+        "file_id": 98,
+        "content": "def send_data(self):\n    # Sends data to the hardware capture device.\n    pass",
         "type": "comment"
     },
     "782": {
-        "file_id": 102,
-        "content": "/containerized_chatgpt_agent/install_pip_and_pyautogui_prequisites.sh",
-        "type": "filepath"
+        "file_id": 98,
+        "content": "creen_height)\n            super().__init__(port=port, **initargs)\n            self.super_instance = ch9329Comm.mouse.DataComm(**initargs)\n        # TODO: scroll support\n        def assert_inbound(self, x: non_neg_int, y: non_neg_int):\n            assert x <= self.X_MAX, f\"exceeding x limit ({self.X_MAX}): {x}\"\n            assert y <= self.Y_MAX, f\"exceeding y limit ({self.Y_MAX}): {y}\"\n        def get_ctrl(\n            self, x: int, y: int, button_codes: List[MouseButton], inbound: bool\n        ) -> int:\n            if inbound:\n                self.assert_inbound(x, y)\n            ctrl: int = reduce_flags_to_bytes(button_codes, byte_length=1)\n            return ctrl\n        def call_super_method(\n            self,\n            funcName: str,\n            x: int,\n            y: int,\n            button_codes: List[MouseButton] = [MouseButton.NULL],\n            inbound: bool = True,\n            use_super_instance: bool = False,\n        ):\n            ctrl = self.get_ctrl(x, y, button_codes, inbound=inbound)\n      ",
+        "type": "code",
+        "location": "/hardware_capture_hid_power_control/test_control.py:551-579"
     },
     "783": {
-        "file_id": 102,
-        "content": "This script installs pip, PyAutoGUI, and other required dependencies for a ChatGPT agent using apt package manager in a containerized environment. It also handles failed installation attempts by running apt update before retrying.",
-        "type": "summary"
+        "file_id": 98,
+        "content": "This code appears to be a part of a class that controls mouse movements and button presses. The `assert_inbound` function checks if the given coordinates are within the maximum limits, while the `get_ctrl` function converts a list of button codes into a single byte value. The `call_super_method` function seems to be a wrapper for calling a superclass method with optional mouse movement and button parameters. However, there is currently no support for scroll functionality (indicated by the TODO comment).",
+        "type": "comment"
     },
     "784": {
-        "file_id": 102,
-        "content": "#!/bin/bash\nfunction install_packages {\n  # Install the packages\n  apt install -y python3-pip python3-tk python3-dev xvfb xfce4 scrot tesseract-ocr\n  # courtesy from ChatGPT\n  local status=$?\n  # Return the exit status\n  return $status\n}\ninstall_packages\n# Check the status of the package installation\nif [ $? -ne 0 ]; then\n# If the installation failed, run apt update and try again\necho \"Package installation failed. Running apt update and trying again...\"\napt update\ninstall_packages\nfi",
+        "file_id": 98,
+        "content": "      ret = (\n                self.super_instance\n                if use_super_instance\n                else getattr(super(), funcName)\n            )(x, y, ctrl=ctrl, port=self.port)\n            if ret == False:\n                raise Exception(\"Error calling super method: {}\".format(funcName))\n        def send_data_absolute(\n            self,\n            x: non_neg_int,\n            y: non_neg_int,\n            scroll: movement,\n            button_codes: List[MouseButton] = [MouseButton.NULL],\n        ):\n            ctrl = self.get_ctrl(x, y, button_codes=button_codes, inbound=True)\n            # currentFuncName = inspect.currentframe().f_code.co_name\n            # self.call_super_method(currentFuncName, x, y, button_codes)\n            # 将字符转写为数据包\n            # HEAD = b\"\\x57\\xAB\"  # 帧头\n            # ADDR = b\"\\x00\"  # 地址\n            CMD = b\"\\x04\"  # 命令\n            LEN = b\"\\x07\"  # 数据长度\n            DATA = bytearray(b\"\\x02\")  # 数据\n            # 鼠标按键\n            # if ctrl == \"\":\n            #     DATA.append(0)\n     ",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/install_pip_and_pyautogui_prequisites.sh:1-20"
+        "location": "/hardware_capture_hid_power_control/test_control.py:579-608"
     },
     "785": {
-        "file_id": 102,
-        "content": "This script installs pip, PyAutoGUI, and other required dependencies for a ChatGPT agent using apt package manager in a containerized environment. It also handles failed installation attempts by running apt update before retrying.",
+        "file_id": 98,
+        "content": "This code defines a class method to send data to an absolute position on the screen by specifying x and y coordinates, scroll direction, and button codes. It first determines the control based on the provided parameters and then constructs a message with frame header, address, command, length, and data fields to be sent. If there is an error calling the superclass method, it raises an exception.",
         "type": "comment"
     },
     "786": {
-        "file_id": 103,
-        "content": "/containerized_chatgpt_agent/ollama_utils.py",
-        "type": "filepath"
+        "file_id": 98,
+        "content": "       # elif isinstance(ctrl, int):\n            DATA.append(ctrl)\n            # else:\n            #     DATA += self.hex_dict[ctrl]\n            # 坐标\n            X_Cur = (4096 * x) // self.X_MAX\n            Y_Cur = (4096 * y) // self.Y_MAX\n            DATA += X_Cur.to_bytes(2, byteorder=\"little\")\n            DATA += Y_Cur.to_bytes(2, byteorder=\"little\")\n            DATA += get_scroll_code(scroll)\n            self.communicate(bytes(DATA), CMD, LEN)\n            # if len(DATA) < 7:\n            #     DATA += b\"\\x00\" * (7 - len(DATA))\n            # else:\n            #     DATA = DATA[:7]\n            # # 分离HEAD中的值，并计算和\n            # HEAD_hex_list = list(HEAD)\n            # HEAD_add_hex_list = sum(HEAD_hex_list)\n            # # 分离DATA中的值，并计算和\n            # DATA_hex_list = list(DATA)\n            # DATA_add_hex_list = sum(DATA_hex_list)\n            # try:\n            #     SUM = (\n            #         sum(\n            #             [\n            #                 HEAD_add_hex_list,\n            #                 int.fro",
+        "type": "code",
+        "location": "/hardware_capture_hid_power_control/test_control.py:608-640"
     },
     "787": {
-        "file_id": 103,
-        "content": "This code sets Ollama token limits, defines a context manager to change it, and generates a response stream for Ollama, breaking it into chunks while checking the maximum token count.",
-        "type": "summary"
+        "file_id": 98,
+        "content": "This code appears to be part of a larger program, likely responsible for handling some type of input and converting it into data that can be communicated over a hardware interface. The code block checks if the 'ctrl' input is an integer and adds it to a list called 'DATA'. It then calculates X and Y coordinates based on given values and appends their byte representation to the 'DATA' list. Lastly, it calls a function named 'get_scroll_code' with another argument 'scroll' and appends the result to the 'DATA' list before calling another function named 'communicate'. The rest of the code is unfinished or unclear in its purpose.",
+        "type": "comment"
     },
     "788": {
-        "file_id": 103,
-        "content": "# TODO: post this patch as issue to litellm\nimport litellm.llms.ollama as ollama\nimport litellm\nimport copy\nimport os\nmax_token_count_env_key = \"LITELLM_MAX_TOKEN_COUNT\"\nold_completion = copy.copy(litellm.completion)\nfrom contextlib import contextmanager\n@contextmanager\ndef set_max_token_count_env_context(max_tokens):\n    orig_env = os.environ.get(max_token_count_env_key, None)\n    if max_tokens:\n        print(\"setting max tokens env:\", max_tokens)\n        os.environ[max_token_count_env_key] = str(max_tokens)\n    else:\n        print(\"not setting max token count\")\n    try:\n        yield\n    finally:\n        if isinstance(orig_env, str):\n            os.environ[max_token_count_env_key] = orig_env\n        else:\n            os.environ.pop(max_token_count_env_key, None)\n        print(\"recovered max token count:\", orig_env)\ndef new_completion(*args, **kwargs):\n    max_tokens = kwargs.get(\"max_tokens\", None)\n    print(\"kwarg max tokens:\", max_tokens)\n    with set_max_token_count_env_context(max_tokens):\n        ret = old",
+        "file_id": 98,
+        "content": "m_bytes(ADDR, byteorder=\"big\"),\n            #                 int.from_bytes(CMD, byteorder=\"big\"),\n            #                 int.from_bytes(LEN, byteorder=\"big\"),\n            #                 DATA_add_hex_list,\n            #             ]\n            #         )\n            #         % 256\n            #     )  # 校验和\n            # except OverflowError:\n            #     raise Exception(\"int too big to convert\")\n            # packet = HEAD + ADDR + CMD + LEN + DATA + bytes([SUM])  # 数据包\n            # self.port.write(packet)  # 将命令代码写入串口\n            # # return True  # 如果成功，则返回True，否则引发异常\n        def send_data_relatively(\n            self,\n            x: int,\n            y: int,\n            scroll: movement,\n            button_codes: List[MouseButton] = [MouseButton.NULL],\n        ):\n            ctrl = self.get_ctrl(x, y, button_codes=button_codes, inbound=False)\n            # currentFuncName = inspect.currentframe().f_code.co_name\n            # self.call_super_method(currentFuncName, x, y,\n            #  ",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/ollama_utils.py:1-35"
+        "location": "/hardware_capture_hid_power_control/test_control.py:640-664"
     },
     "789": {
-        "file_id": 103,
-        "content": "This code sets an environment variable to limit the maximum number of tokens for the Open Large Language Model Arithmetic (Ollama) in LitELLM. It defines a context manager to temporarily change the max_token_count_env_key and restores it to its original value after execution. The new_completion function takes \"max_tokens\" as an argument to set the token limit while calling the original completion function.",
+        "file_id": 98,
+        "content": "This code is sending control data to hardware, including address (ADDR), command (CMD), length (LEN), data (DATA), and sum (SUM) in the form of a packet. If any integer value is too big to convert, it raises an exception. The function sends this data-related information to a port using write() method.",
         "type": "comment"
     },
     "790": {
-        "file_id": 103,
-        "content": "_completion(*args, **kwargs)\n    return ret\nlitellm.completion = new_completion\ndef get_max_token_from_environ():\n    count = os.environ.get(max_token_count_env_key, None)\n    print(\"getted count:\", count)\n    if count:\n        count = int(count)\n    else:\n        count = float(\"inf\")\n    return count\nold_get_ollama_response_stream = copy.copy(ollama.get_ollama_response_stream)\nimport progressbar\ndef new_get_ollama_response_stream(*args, **kwargs):\n    old_generator = old_get_ollama_response_stream(*args, **kwargs)\n    max_token_count = get_max_token_from_environ()\n    total_count = 0\n    # Create a new progress bar instance\n    bar = progressbar.ProgressBar(max_value=max_token_count)\n    for chunk in old_generator:\n        piece = chunk[\"choices\"][0][\"delta\"][\"content\"]\n        piece_token_count = len(litellm.encoding.encode(piece))\n        total_count += piece_token_count\n        bar.update(min(total_count, max_token_count))\n        # print(\n        #     \"received:\",\n        #     piece_token_count,\n        #",
+        "file_id": 98,
+        "content": "                      button_codes, inbound=False)\n            # 将字符转写为数据包\n            # HEAD = b\"\\x57\\xAB\"  # 帧头\n            # ADDR = b\"\\x00\"  # 地址\n            CMD = b\"\\x05\"  # 命令\n            LEN = b\"\\x05\"  # 数据长度\n            DATA = bytearray(b\"\\x01\")  # 数据\n            # 鼠标按键\n            # if ctrl == \"\":\n            #     DATA.append(0)\n            # elif isinstance(ctrl, int):\n            DATA.append(ctrl)\n            # else:\n            #     DATA += self.hex_dict[ctrl]\n            # x坐标\n            if x == 0:\n                DATA.append(0)\n            elif x < 0:\n                DATA += (0 - abs(x)).to_bytes(1, byteorder=\"big\", signed=True)\n            else:\n                DATA += x.to_bytes(1, byteorder=\"big\", signed=True)\n            # y坐标，这里为了符合坐标系直觉，将<0改为向下，>0改为向上\n            # y = - y\n            # change your ass.\n            # after doing this, we shall perform unittests, to ensure its integrity.\n            if y == 0:\n                DATA.append(0)\n            elif y < 0:\n                DATA += (0 -",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/ollama_utils.py:35-73"
+        "location": "/hardware_capture_hid_power_control/test_control.py:664-696"
     },
     "791": {
-        "file_id": 103,
-        "content": "This code defines a new completion function and other utility functions. It retrieves the maximum token count from an environment variable, creates a progress bar with this maximum value, and iterates through a generator to update the progress bar while counting the number of tokens received.",
+        "file_id": 98,
+        "content": "Converting string command to HID data packet.\nBuilding HID data packet with mouse button, x and y coordinates.",
         "type": "comment"
     },
     "792": {
-        "file_id": 103,
-        "content": "     \"total:\",\n        #     total_count,\n        #     \"max:\",\n        #     max_token_count,\n        # )\n        yield chunk\n        if total_count > max_token_count:\n            break\nollama.get_ollama_response_stream = new_get_ollama_response_stream",
+        "file_id": 98,
+        "content": " abs(y)).to_bytes(1, byteorder=\"big\", signed=True)\n            else:\n                DATA += y.to_bytes(1, byteorder=\"big\", signed=True)\n            DATA += get_scroll_code(scroll)\n            DATA += b\"\\x00\" * (5 - len(DATA)) if len(DATA) < 5 else DATA[:5]\n            self.communicate(bytes(DATA), CMD, LEN)\n            # # 分离HEAD中的值，并计算和\n            # HEAD_hex_list = list(HEAD)\n            # HEAD_add_hex_list = sum(HEAD_hex_list)\n            # # 分离DATA中的值，并计算和\n            # DATA_hex_list = list(DATA)\n            # DATA_add_hex_list = sum(DATA_hex_list)\n            # try:\n            #     SUM = (\n            #         sum(\n            #             [\n            #                 HEAD_add_hex_list,\n            #                 int.from_bytes(ADDR, byteorder=\"big\"),\n            #                 int.from_bytes(CMD, byteorder=\"big\"),\n            #                 int.from_bytes(LEN, byteorder=\"big\"),\n            #                 DATA_add_hex_list,\n            #             ]\n            #         )\n        ",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/ollama_utils.py:73-83"
+        "location": "/hardware_capture_hid_power_control/test_control.py:696-724"
     },
     "793": {
-        "file_id": 103,
-        "content": "This code is generating a response stream for Ollama, breaking it into chunks, and checking if the total count exceeds the maximum token count. If it does, the loop breaks.",
+        "file_id": 98,
+        "content": "The code is preparing a byte array for communication with the hardware. It checks if the value of y is negative, converts it to a signed big endian byte, adds scroll-related data, and pads the byte array to be exactly 5 bytes long before communicating it. Additionally, there is commented out code that calculates and sums the hex values from HEAD and DATA arrays.",
         "type": "comment"
     },
     "794": {
-        "file_id": 104,
-        "content": "/containerized_chatgpt_agent/port_util.py",
-        "type": "filepath"
+        "file_id": 98,
+        "content": "    #         % 256\n            #     )  # 校验和\n            # except OverflowError:\n            #     raise Exception(\"int too big to convert\")\n            # packet = HEAD + ADDR + CMD + LEN + DATA + bytes([SUM])  # 数据包\n            # self.port.write(packet)  # 将命令代码写入串口\n            # # return True  # 如果成功，则返回True，否则引发异常\n        def move_to_basic(\n            self,\n            x: non_neg_int,\n            y: non_neg_int,\n            button_codes: List[MouseButton] = [MouseButton.NULL],\n        ):\n            currentFuncName = inspect.currentframe().f_code.co_name\n            self.call_super_method(\n                currentFuncName, x, y, button_codes, use_super_instance=True\n            )\n        def move_to(\n            self,\n            dest_x: non_neg_int,\n            dest_y: non_neg_int,\n            button_codes: List[MouseButton] = [MouseButton.NULL],\n        ):\n            currentFuncName = inspect.currentframe().f_code.co_name\n            self.call_super_method(\n                currentFuncName, dest_x, dest",
+        "type": "code",
+        "location": "/hardware_capture_hid_power_control/test_control.py:724-751"
     },
     "795": {
-        "file_id": 104,
-        "content": "Code sets a default port number, parses command line arguments for a custom port value (between 0 and 65534), and asserts that the chosen port is valid.",
-        "type": "summary"
+        "file_id": 98,
+        "content": "Function to move mouse cursor to a specified location\n\n- Defines methods \"move_to_basic\" and \"move_to\" for moving the mouse cursor to specific coordinates.\n- Takes in parameters: x, y coordinates (non_neg_int) and a list of button codes (MouseButton).\n- Uses the \"call_super_method\" function to invoke the parent class method.\n- Inspects the current frame's name for the calling function using the \"inspect\" module.",
+        "type": "comment"
     },
     "796": {
-        "file_id": 104,
-        "content": "import argparse\nparser = argparse.ArgumentParser()\nparser.add_argument(\"-p\", \"--port\", type=int, default=8788, help=\"port number\")\nargs = parser.parse_args()\nport = args.port\nassert port > 0 and port < 65535",
+        "file_id": 98,
+        "content": "_y, button_codes, use_super_instance=True\n            )\n        # this is right click. we need to override this.\n        def click(\n            self,\n            button: MouseButton,\n            get_delay: Callable[[], float] = lambda: random.uniform(0.1, 0.45),\n        ):\n            self.send_data_relatively(0, 0, [button])\n            time.sleep(get_delay())  # 100到450毫秒延迟\n            self.send_data_relatively(0, 0)\n    # mouse = ch9329Comm.mouse.DataComm(screen_width=1920, screen_height=1080)\n    # (deprecated) monkey patch some method.\n    # from types import MethodType\n    # # to override instance methods.\n    # keyboard.send_data = MethodType(send_data, keyboard)\n    # keyboard.release = MethodType(release, keyboard)\nelse:\n    raise Exception(\"Unknown device type: {deviceType}\".format(deviceType=deviceType))\nser.close()",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/port_util.py:2-8"
+        "location": "/hardware_capture_hid_power_control/test_control.py:751-777"
     },
     "797": {
-        "file_id": 104,
-        "content": "Code sets a default port number, parses command line arguments for a custom port value (between 0 and 65534), and asserts that the chosen port is valid.",
+        "file_id": 98,
+        "content": "This code defines a class that simulates mouse clicks, with the ability to customize delay time between click and post-click. It also includes handling for different device types and closing the serial connection after use.",
         "type": "comment"
     },
     "798": {
-        "file_id": 105,
-        "content": "/containerized_chatgpt_agent/ptyproc.py",
+        "file_id": 99,
+        "content": "/hardware_capture_hid_power_control/test_hidraw.py",
         "type": "filepath"
     },
     "799": {
-        "file_id": 105,
-        "content": "The module creates a containerized chat server with sound effects and adjustable settings, utilizing ptyprocess and Tornado web framework. It uses multiple threads for process monitoring and input reading, ensuring thread safety by setting them as daemons. The code includes a MainHandler class with methods defining a Tornado web application, process status checking, and error handling, using window watcher and compiled version while starting the Loop and registering a handler.",
+        "file_id": 99,
+        "content": "The code tests USB devices with specific manufacturer strings, using HID API to interact by printing device information, writing and reading data, and closing the connection. However, it may require adjustments for certain devices due to hard-coded paths.",
         "type": "summary"
     }
 }

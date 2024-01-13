@@ -1,533 +1,535 @@
 {
     "600": {
-        "file_id": 71,
-        "content": "docker_cmds.append(f\"open -j -a {MACOS_DOCKER_APP_BINARY}\")\n    start_docker_cmds.append(\"open -a Docker\")\n    start_docker_cmds.append(f\"open -a {MACOS_DOCKER_APP_BINARY}\")\n    def hide_docker():\n        HIDE_DOCKER_ASCRIPT_OBJ.run()\n    def check_if_docker_window_exists():\n        exist = any([WINDOW_TITLE_KW in t for t in pygetwindow.getAllTitles()])\n        return exist\nelse:\n    raise Exception(f\"Unknown platform: {sysname}\")\ndef kill_docker():\n    for cmd in kill_docker_cmds:\n        execute_os_command_and_assert_safe_exit(cmd, kill_safe_codes)\ndef start_docker():\n    for cmd in start_docker_cmds:\n        execute_os_command_and_assert_safe_exit(cmd, start_safe_codes)\nDOCKER_KILLED_KWS = [\n    \"the docker daemon is not running\",\n    \"Cannot connect to the Docker daemon\",\n    \"error during connect\",\n]\ndef verify_docker_killed(timeout=5, encoding=\"utf-8\", inverse: bool = False):\n    output = (\n        subprocess.Popen(\n            [\"docker\", \"ps\"], stdout=subprocess.PIPE, stderr=subprocess.PIPE\n        )\n   ",
-        "type": "code",
-        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/rerun_docker_daemon.py:120-157"
+        "file_id": 74,
+        "content": "/containerized_chatgpt_agent/test_image_to_ascii.py",
+        "type": "filepath"
     },
     "601": {
-        "file_id": 71,
-        "content": "This code appears to be for controlling the Docker daemon. It includes functions to start, stop, and check if the Docker window is open. The code also handles different platforms (possibly MacOS and others) by appending specific commands or raising an exception for unknown platforms. There are also lists of keywords to recognize when checking if Docker has been killed or not.",
-        "type": "comment"
+        "file_id": 74,
+        "content": "The code takes an image file path, converts it to ASCII art using the AsciiArt library, and then prints the ASCII art. It also extracts text from the image using pytesseract and prints that extracted text.",
+        "type": "summary"
     },
     "602": {
-        "file_id": 71,
-        "content": "     .communicate(timeout=timeout)[1]\n        .decode(encoding)\n    )\n    killed = any([kw in output for kw in DOCKER_KILLED_KWS])\n    if not inverse:\n        if not killed:\n            raise Exception(\n                f\"Docker not killed.\\nCaptured output from command `docker ps`:\\n{output}\"\n            )\n    else:\n        if killed:\n            raise Exception(\n                f\"Docker not started.\\nCaptured output from command `docker ps`:\\n{output}\"\n            )\nimport time\ndef verify_docker_launched(retries=10, sleep=3, daemon=False):\n    success = False\n    for i in range(retries):\n        try:\n            if not daemon:\n                exist = check_if_docker_window_exists()\n                print(f\"window exists? {exist}\")\n            else:\n                exist = False\n            if not exist:\n                verify_docker_killed(inverse=True)\n            success = True\n            break\n        except Exception as e:\n            if i < retries - 1:\n                print(f\"Retrying in {sleep} seconds...\")\n",
+        "file_id": 74,
+        "content": "image_path = \"vscode_screenshot.png\"\nfrom ascii_magic import AsciiArt\ncolumns = 60\nmy_art = AsciiArt.from_image(image_path)\n# str_art = my_art.to_terminal(columns=columns, monochrome=True)\nstr_art = my_art._img_to_art(columns=columns, monochrome=True)\nprint('artwork:')\nprint()\nprint(str_art)\n# then we need to visualize it.\nimport pytesseract\nfrom PIL import Image\nimage = Image.open(image_path)\nextracted_text = pytesseract.image_to_string(image)\nprint(\"extracted text:\")\nprint(extracted_text)",
         "type": "code",
-        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/rerun_docker_daemon.py:157-192"
+        "location": "/containerized_chatgpt_agent/test_image_to_ascii.py:1-23"
     },
     "603": {
-        "file_id": 71,
-        "content": "This code checks if Docker is running and handles the case when it's not running or when it's a daemon. It attempts to verify the Docker launch multiple times, with a specified number of retries and sleep time between each retry. If it fails after all retries, it raises an exception.",
+        "file_id": 74,
+        "content": "The code takes an image file path, converts it to ASCII art using the AsciiArt library, and then prints the ASCII art. It also extracts text from the image using pytesseract and prints that extracted text.",
         "type": "comment"
     },
     "604": {
-        "file_id": 71,
-        "content": "                time.sleep(sleep)\n            else:\n                raise e\n    return success\ndef restart_docker():\n    check_required_binaries()\n    print(\"prerequisites checked\")\n    kill_docker()\n    print(\"docker killed\")\n    verify_docker_killed()\n    print(\"kill has been verified\")\n    start_docker()\n    print(\"docker restarted\")\nimport shutil\ndef check_required_binaries():\n    for name in REQUIRED_BINARIES:\n        resolved_path = shutil.which(name)\n        assert resolved_path, f\"{name} is not available in PATH.\"\n        assert os.path.exists(\n            resolved_path\n        ), f\"{name} does not exist.\\nfilepath: {resolved_path}\"\n        print(f\"'{name}' found\")\n# working!\ndef restart_and_verify():\n    # this could be faulty! still stuck even if docker is killed on macOS\n    restart_docker()\n    if sysname in [\"Windows\", \"Darwin\"]:\n        verify_docker_launched()\n        print(\"docker restart verified\")\n        hide_docker()\n        print(\"docker window minimized\")\n    verify_docker_launched(daemon=True)\n",
-        "type": "code",
-        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/rerun_docker_daemon.py:192-232"
+        "file_id": 75,
+        "content": "/containerized_chatgpt_agent/visual_autoexec_example.py",
+        "type": "filepath"
     },
     "605": {
-        "file_id": 71,
-        "content": "The code attempts to check if required binaries are available in the PATH and restart Docker. It first checks for the existence of each binary, raises an error if any is missing, and then restarts and verifies the Docker daemon. If running on Windows or macOS, it also hides the Docker window after verification.",
-        "type": "comment"
+        "file_id": 75,
+        "content": "The code imports utilities, defines variables, and outlines future development tasks for a multi-agent system. It initializes functions to interact with a visual model API, handles input actions and action types, escapes/unescapes text, and generates random commands like cursor movement. The program executes commands with error handling and interfaces with ChatGPT, continuously capturing screenshots, constructing prompts with random commands, sending them to ChatGPT for responses, executing the responses as commands, recording errors in lists.",
+        "type": "summary"
     },
     "606": {
-        "file_id": 71,
-        "content": "    print(\"docker daemon restart verified\")\nif elevate_needed:\n    elevate.elevate(graphical=False)\nif __name__ == \"__main__\":\n    # kill & perform checks if you really have killed docker.\n    # restart & check if restart is successful.\n    # do it once more.\n    for i in range(2):\n        print(f\"trial #{i}\")\n        restart_and_verify()\n        time.sleep(3)  # m1 is running too damn fast. or is it?",
+        "file_id": 75,
+        "content": "from port_util import port\nimport ollama_utils\n# TODO: multi-agent infrastructure, help each other to earn bucks\n# TODO: train the model on some 'visual' datasets\n# TODO: diff/diffuse (memory fading) the input\n# TODO: limit the output. prevent the ai from going too far (talkative), if it is not doing any valid operation\n# TODO: make the model 'error-free', that is, interpreting & executing the output no matter what it is\n# TODO: zoom in/out & move around the focus area\n# TODO: focus on the mouse when it is moved\n# TODO: correct mistakes, force it to learn random commands if not doing anything right\n# TODO: use utils designed for blind people to operate the GUI\n# TODO: make statistics on ai execution frequency & overall performance (including random commands), record every execution error and cause (who did it)\nurlbase = f\"http://localhost:{port}\"\nimport functools\ngenerate_command_pool = lambda: {\n    \"executed\": [],\n    \"not_executed\": [],\n    \"error\": [],\n}\nprev_command_pool = generate_command_pool()\nEXE",
         "type": "code",
-        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/rerun_docker_daemon.py:232-245"
+        "location": "/containerized_chatgpt_agent/visual_autoexec_example.py:1-25"
     },
     "607": {
-        "file_id": 71,
-        "content": "This code is checking the restart and successful operation of the Docker daemon. It restarts the daemon twice, performs checks, and waits for 3 seconds between trials to ensure stable results.",
+        "file_id": 75,
+        "content": "This code imports functions from \"port_util\" and \"ollama_utils\", and defines a URL base, lambda function for generating command pools, and variables to track executed, not executed, and error commands. The code has various TODO items for future development such as multi-agent infrastructure, model training, input/output limitations, error correction, and performance statistics.",
         "type": "comment"
     },
     "608": {
-        "file_id": 72,
-        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/sequence_learner.py",
-        "type": "filepath"
+        "file_id": 75,
+        "content": "C_DELAY = 0.5\n@functools.lru_cache()\ndef urlmake(path):\n    return f\"{urlbase}/{path}\"\nimport litellm\nimport requests\nmodel_name = \"ollama/autoexec_visual\"\nsess = requests.Session()\ndef perform_action(path: str, params: dict):\n    url = urlmake(path)\n    response = sess.get(url, params=params)\n    response_code = response.status_code\n    assert response_code == 200, f\"Error code: {response_code} {response.text}\"\n    return response\ndef get_info(path: str):\n    response = perform_action(path, {})\n    data = response.json()\n    return data\ndef get_resolution():\n    data = get_info(\"resolution\")\n    return data[\"width\"], data[\"height\"]\ndef get_position():\n    data = get_info(\"position\")\n    return data[\"x\"], data[\"y\"]\ndef get_text_screenshot():\n    data = get_info(\"text_screenshot\")\n    return data[\"text\"]\ndef move_abs_action(argument: str):\n    x, y = argument.split(\",\")\n    x, y = x.strip(), y.strip()\n    x, y = float(x), float(y)\n    perform_action(\"move_abs\", {\"x\": x, \"y\": y})\ndef type_action(argument: str):\n    argu",
+        "type": "code",
+        "location": "/containerized_chatgpt_agent/visual_autoexec_example.py:25-76"
     },
     "609": {
-        "file_id": 72,
-        "content": "The code presents a predictor class for sequences using NaivePredictor and PredictorWrapper. It initializes the PredictorWrapper with a NaivePredictor and enqueues a sequence [0, 1, 2, 3, 4]. The next 100 tokens are predicted based on sequence length of 10.",
-        "type": "summary"
+        "file_id": 75,
+        "content": "Code snippet initializes functions to interact with a visual model API. It retrieves information such as resolution, position, and allows moving the cursor and typing text using API requests.",
+        "type": "comment"
     },
     "610": {
-        "file_id": 72,
-        "content": "from collections import deque\nfrom typing import List\nimport numpy as np\nclass NaivePredictor:\n    def __init__(self, ksize: int):\n        self.ksize = ksize\n        self.kernel = np.random.rand(self.ksize)\n    def predict(self, x: List[int]):\n        x_processed = x[-self.ksize :]\n        if len(x_processed) < self.ksize:\n            x_processed = [0] * (self.ksize - len(x_processed)) + x_processed\n        x_one_hot = self.one_hot(x_processed)\n        next_token = np.matmul(x_one_hot, self.kernel)\n        ret = np.argmax(next_token)\n        return ret\n    def one_hot(self, x):\n        x_one_hot = np.eye(self.ksize)[x]\n        return x_one_hot\nclass PredictorWrapper:\n    def __init__(self, ksize: int, predictor_cls: NaivePredictor):\n        self.predictor: NaivePredictor = predictor_cls(ksize)\n        self.seq = deque([], maxlen=ksize)\n    def enqueue(self, seq: List[int]):\n        for tok in seq:\n            self.seq.append(tok)\n    def predict(self, seqlen: int):\n        ret_seq = []\n        for _ in range(seq",
+        "file_id": 75,
+        "content": "ment = unescape(argument)\n    perform_action(\"type\", {\"text\": argument})\ndef click_action(argument: str):\n    button = argument.strip()\n    params = {}\n    if argument:\n        params = {\"button\": button}\n    perform_action(\"click\", params)\naction_handlers = {\n    \"move_abs\": move_abs_action,\n    \"type\": type_action,\n    \"click\": click_action,\n}\nimport random\ndef move_abs_random_action(width, height):\n    x = random.randint(0, width)\n    y = random.randint(0, height)\n    action = f\"move_abs {x},{y}\"\n    return action\nimport ast\ndef unescape(text: str):\n    text = ast.literal_eval(repr(text).replace(\"\\\\\\\\\", \"\\\\\"))\n    return text\ndef escape(text: str):\n    text = text.encode(\"unicode_escape\").decode()\n    return text\ndef type_random_action(min_char=4, max_char=10):\n    text_length = random.randint(min_char, max_char)\n    text = \"\".join(chr(random.randint(0, 255)) for _ in range(text_length))\n    text = escape(text)\n    action = f\"type {text}\"\n    return action\ndef click_random_action():\n    button_choices = [\"left\", \"r",
         "type": "code",
-        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/sequence_learner.py:1-37"
+        "location": "/containerized_chatgpt_agent/visual_autoexec_example.py:76-126"
     },
     "611": {
-        "file_id": 72,
-        "content": "Code describes a class that implements a predictor for sequences, using a NaivePredictor and PredictorWrapper. The NaivePredictor uses a kernel to predict the next token in the sequence based on the last ksize elements of the input list. The PredictorWrapper maintains a deque with a maximum length of ksize and provides a method to enqueue new sequences, as well as a method to predict the next token for a given sequence length.",
+        "file_id": 75,
+        "content": "The code defines functions for various input actions such as typing and clicking, and action handlers based on different action types. It also includes functions to escape and unescape text, and generate random actions like moving the cursor and typing or clicking with random parameters.",
         "type": "comment"
     },
     "612": {
-        "file_id": 72,
-        "content": "len):\n            tok = self.predictor.predict(list(self.seq))\n            self.seq.append(tok)\n            ret_seq.append(tok)\n        return ret_seq\nif __name__ == \"__main__\":\n    pw = PredictorWrapper(10, NaivePredictor)\n    pw.enqueue([0, 1, 2, 3, 4])\n    total_seq = pw.predict(100)\n    # ksize = 10\n    # predictor = NaivePredictor(ksize=ksize)\n    # seq = deque([0, 1, 2, 3, 4], maxlen=ksize)\n    # total_seq = list(seq)\n    # for _ in range(100):\n    #     tok = predictor.predict(list(seq))\n    #     seq.append(tok)\n    #     total_seq.append(tok)\n    print(\"total seq:\", total_seq)",
+        "file_id": 75,
+        "content": "ight\", \"middle\", None]\n    button = random.choice(button_choices)\n    if button:\n        action = f\"click {button}\"\n    else:\n        action = \"click\"\n    return action\nrandom_action_generators = {\n    \"move_abs\": move_abs_random_action,\n    \"type\": type_random_action,\n    \"click\": click_random_action,\n}\ndef random_actor(width, height, min_action=1, max_action=3):\n    random_actions = []\n    action_count = random.randint(min_action, max_action)\n    for _ in range(action_count):\n        action_name, action_generator = random.choice(\n            list(random_action_generators.items())\n        )\n        args = []\n        if action_name == \"move_abs\":\n            args.extend([width, height])\n        action = action_generator(*args)\n        random_actions.append(action)\n    return random_actions\nimport traceback\ndef action_executor(action_text: str):\n    action_text = action_text.lstrip()\n    err = None\n    executed = False\n    for action, handler in action_handlers.items():\n        if action_text.startswith(action):\n     ",
         "type": "code",
-        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/sequence_learner.py:37-56"
+        "location": "/containerized_chatgpt_agent/visual_autoexec_example.py:126-166"
     },
     "613": {
-        "file_id": 72,
-        "content": "This code initializes a PredictorWrapper object with a NaivePredictor and enqueues a sequence [0, 1, 2, 3, 4]. It then predicts the next tokens for the next 100 steps using the wrapped predictor and prints the total sequence. The naive predictor seems to be used for prediction based on the input sequence length of 10.",
+        "file_id": 75,
+        "content": "This code defines a function `random_actor` that generates a list of random actions to be taken in a visual environment. The actions can be \"move_abs\", \"type\", or \"click\". The number of actions generated is randomly determined between the minimum and maximum values specified. The `action_executor` function takes an action text as input, strips any leading whitespace, and executes the action if it matches any defined action handlers. If an error occurs during execution, it will be stored in the `err` variable.",
         "type": "comment"
     },
     "614": {
-        "file_id": 73,
-        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/test_beat_server.py",
-        "type": "filepath"
+        "file_id": 75,
+        "content": "       argument = action_text[len(action) + 1 :]\n            print(\"excuting:\", action, argument)\n            try:\n                handler(argument)\n                prev_command_pool[\"executed\"].append(action_text)\n            except:\n                err = traceback.format_exc(limit=1)\n                print(\"err:\", err)\n                prev_command_pool[\"error\"].append(action_text)\n            executed = True\n            break\n    if not executed:\n        prev_command_pool[\"not_executed\"].append(action_text)\n    time.sleep(EXEC_DELAY)\n    return err\n# at the same time, how do we visualize the current display?\n# you need to name that container.\ndef execute_command_list(cmd_list):\n    err_list = []\n    for cmd in cmd_list:\n        err = action_executor(cmd)\n        if err:\n            err_list.append(err)\n    return err_list\nimport time\nSLEEP_TIME = 3\ndef construct_prompt(\n    data: str, width: int, height: int, random_err_list: list[str], err_list: list[str]\n):\n    random_commands = random_actor(width, height)\n    x",
+        "type": "code",
+        "location": "/containerized_chatgpt_agent/visual_autoexec_example.py:166-205"
     },
     "615": {
-        "file_id": 73,
-        "content": "Testing the beat server using unittest. Can also test killing server or normal clients. Imports from beat_common module.",
-        "type": "summary"
+        "file_id": 75,
+        "content": "1. Executes actions based on the given command list\n2. Handles success, error, and not executed commands separately\n3. Sleeps for a specified delay time after executing each action\n4. Returns a list of errors encountered",
+        "type": "comment"
     },
     "616": {
-        "file_id": 73,
-        "content": "# unittest for our damn beat server. so damn error prone.\n# you can also do unittest for kill server or normal clients.\nfrom beat_common import *",
+        "file_id": 75,
+        "content": ", y = get_position()\n    random_commands_str = \"\\n\".join(random_commands)\n    last_random_errors = \"\\n\".join(random_err_list)\n    last_errors = \"\\n\".join(err_list)\n    previous_executed_repr = \"\\n\".join(prev_command_pool[\"executed\"])\n    previous_error_repr = \"\\n\".join(prev_command_pool[\"error\"])\n    previous_not_executed_repr = \"\\n\".join(prev_command_pool[\"not_executed\"])\n    prompt = f\"\"\"\n{data}\nPointer location: {x}, {y}\nResolution: {width}x{height}\nLast random command errors:\n{last_random_errors}\nLast errors:\n{last_errors}\nPrevious executed successfully:\n{previous_executed_repr}\nPrevious executed with error:\n{previous_error_repr}\nPrevious not executed:\n{previous_not_executed_repr}\nNext random commands:\n{random_commands_str}\nYour commands:\n\"\"\"\n    return prompt, random_commands\ndef get_reply_from_chatgpt(content: str, max_tokens=50):\n    messages = [{\"content\": content, \"role\": \"system\"}]\n    print(\"sending:\")\n    print(messages)\n    response = litellm.completion(\n        model_name, messages, api_base=\"http://lo",
         "type": "code",
-        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/test_beat_server.py:1-3"
+        "location": "/containerized_chatgpt_agent/visual_autoexec_example.py:205-253"
     },
     "617": {
-        "file_id": 73,
-        "content": "Testing the beat server using unittest. Can also test killing server or normal clients. Imports from beat_common module.",
+        "file_id": 75,
+        "content": "Line 204: Get the current position\nLine 205-209: Format random_commands, last_random_errors, last_errors, previous_executed_repr, and previous_error_repr into strings\nLine 210: Create a prompt for ChatGPT that includes the data, position, error logs, previous commands, and next commands\nLine 211-214: Return the prompt and random_commands\nLine 215-231: Send messages to OpenAI API, get reply from ChatGPT",
         "type": "comment"
     },
     "618": {
-        "file_id": 74,
-        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/timeout_utils.py",
-        "type": "filepath"
+        "file_id": 75,
+        "content": "calhost:11434\", max_tokens=max_tokens\n    )\n    choices = response[\"choices\"]\n    reply_content = choices[0][\"message\"][\"content\"]\n    print(\"reply:\")\n    print(reply_content)\n    return reply_content\ndef refresh_command_pool(command_pool, limit=3):\n    ret = {}\n    for k,v in command_pool.items():\n        new_v = v[-limit:]\n        ret[k] = new_v\n    return ret\nerr_list = []\nrandom_err_list = []\nwidth, height = get_resolution()\nwhile True:\n    data = get_text_screenshot()\n    prompt, random_commands = construct_prompt(\n        data.strip(), width, height, random_err_list, err_list\n    )\n    prev_command_pool = generate_command_pool()\n    # prev_command_pool = refresh_command_pool(prev_command_pool)\n    print(\"random commands:\", random_commands)\n    response = get_reply_from_chatgpt(prompt)\n    command_list = response.split(\"\\n\")\n    random_err_list = execute_command_list(random_commands)\n    err_list = execute_command_list(command_list)\n    time.sleep(SLEEP_TIME)",
+        "type": "code",
+        "location": "/containerized_chatgpt_agent/visual_autoexec_example.py:253-284"
     },
     "619": {
-        "file_id": 74,
-        "content": "Imports libraries for timeouts and retrying. Defines timeout_func decorator for functions with no arguments and a nested retrying_timeout_func decorator for retrying and timeouts. Includes the \"__all__\" variable to export these functions.",
-        "type": "summary"
+        "file_id": 75,
+        "content": "This code is continuously capturing a text screenshot, constructing a prompt with random commands, and sending the prompt to ChatGPT for replies. The replies are then executed as commands, and any errors generated are recorded in error lists.",
+        "type": "comment"
     },
     "620": {
-        "file_id": 74,
-        "content": "import functools\nimport func_timeout\nimport retrying\n# let's not use multitasking\n# timeout decorator for func with no arg/kwarg\ntimeout_func = lambda timeout: (\n    lambda func: functools.partial(\n        func_timeout.func_timeout, timeout=timeout, func=func\n    )\n)\nretrying_timeout_func = lambda retry_max_count, timeout: (\n    lambda func:\n    # lambda func: multitasking.task(\n    retrying.retry(stop_max_attempt_number=retry_max_count)(timeout_func(timeout)(func))\n    # )\n)\n__all__ = [\"timeout_func\", \"retrying_timeout_func\"]",
-        "type": "code",
-        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/timeout_utils.py:1-22"
+        "file_id": 76,
+        "content": "/containerized_chatgpt_agent/visual_autoexec_main.sh",
+        "type": "filepath"
     },
     "621": {
-        "file_id": 74,
-        "content": "Imports libraries for timeouts and retrying. Defines timeout_func decorator for functions with no arguments and a nested retrying_timeout_func decorator for retrying and timeouts. Includes the \"__all__\" variable to export these functions.",
-        "type": "comment"
+        "file_id": 76,
+        "content": "Starts Xvfb with 99 display, launches Ubuntu visual server, and then runs an example script",
+        "type": "summary"
     },
     "622": {
-        "file_id": 75,
-        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/to_be_killed.py",
-        "type": "filepath"
+        "file_id": 76,
+        "content": "xvfb-run -n 99 -f ~/.Xauthority xfce4-session &\nsleep 2 && env DISPLAY=:99 python3 visual_server_on_ubuntu.py &\nsleep 5 && python3 visual_autoexec_example.py",
+        "type": "code",
+        "location": "/containerized_chatgpt_agent/visual_autoexec_main.sh:1-3"
     },
     "623": {
-        "file_id": 75,
-        "content": "This code imports os and time modules, gets the process ID (pid), and continuously prints the pid every second until terminated by os.kill().",
-        "type": "summary"
-    },
-    "624": {
-        "file_id": 75,
-        "content": "import os\nimport time\npid = os.getpid()\n# killed by os.kill!\nwhile True:\n    print(\"process pid:\", pid)\n    time.sleep(1)",
-        "type": "code",
-        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/to_be_killed.py:1-9"
-    },
-    "625": {
-        "file_id": 75,
-        "content": "This code imports os and time modules, gets the process ID (pid), and continuously prints the pid every second until terminated by os.kill().",
+        "file_id": 76,
+        "content": "Starts Xvfb with 99 display, launches Ubuntu visual server, and then runs an example script",
         "type": "comment"
     },
-    "626": {
-        "file_id": 76,
-        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/type_utils.py",
+    "624": {
+        "file_id": 77,
+        "content": "/containerized_chatgpt_agent/visual_server_on_ubuntu.py",
         "type": "filepath"
     },
-    "627": {
-        "file_id": 76,
-        "content": "These functions ensure the input is either a bytes or string type, and raise exceptions if it's not.",
+    "625": {
+        "file_id": 77,
+        "content": "The code is a Python script using PyAutoGUI and Tesseract OCR, enabling users to capture screenshots with cursor overlay, perform actions like moving, clicking, typing, and offers API endpoints for controlling the cursor and inputting text on a computer.",
         "type": "summary"
     },
-    "628": {
-        "file_id": 76,
-        "content": "def enforce_bytes(s):\n    if isinstance(s, str):\n        s = s.encode()\n    if not isinstance(s, bytes):\n        raise Exception(\"unknown line content type:\", type(s))\n    return s\ndef enforce_str(content):\n    if isinstance(content, bytes):\n        content = content.decode()\n    if not isinstance(content, str):\n        raise Exception(\"Invalid content type: %s\\nShould be: str\" % type(content))\n    return content",
+    "626": {
+        "file_id": 77,
+        "content": "# you can input commands here.\n# after input, you may take screenshot and get it as text.\n# now you can move, click, and type.\nimport fastapi\nimport uvicorn\nfrom port_util import port\nimport pyautogui\nfrom PIL import Image\nfrom diff_utils import diff_methods\nfrom typing import Literal\npyautogui.FAILSAFE = False\ncursor_image = \"cursor.png\"\ncur = Image.open(cursor_image)\ndef screenshot_with_cursor():\n    shot = pyautogui.screenshot()\n    pos = pyautogui.position()\n    shot.paste(cur, pos, cur)\n    return shot\nfrom ascii_magic import AsciiArt\nimport pytesseract\ndef image_to_ascii(img: Image, columns=60):\n    art = AsciiArt.from_pillow_image(img)\n    ascii_text = art._img_to_art(columns=columns, monochrome=True)\n    return ascii_text.strip()\ndef image_to_words(img: Image):\n    words = pytesseract.image_to_string(img)\n    return words.strip()\nprev_registry = {\n    'ascii_text':'',\n    'words': ''\n}\ndef image_to_ascii_and_words(img: Image, method):\n    procedure = diff_methods.get(method, lambda prev_text, next_text: next_",
         "type": "code",
-        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/type_utils.py:1-14"
+        "location": "/containerized_chatgpt_agent/visual_server_on_ubuntu.py:1-47"
+    },
+    "627": {
+        "file_id": 77,
+        "content": "This code is a Python script that allows the user to input commands, take screenshots with cursor overlay, perform actions like moving, clicking, and typing, converts images to ASCII art or extracts text from images using Tesseract OCR. It also keeps track of previous ascii_text and words values in prev_registry.",
+        "type": "comment"
+    },
+    "628": {
+        "file_id": 77,
+        "content": "text)\n    ascii_text = image_to_ascii(img)\n    ascii_text_processed = process_and_update(procedure, ascii_text, 'ascii_text')\n    words = image_to_words(img)\n    words_processed = process_and_update(procedure, words, 'words')\n    text = f\"\"\"\nAscii image:\n{ascii_text_processed}\nText in image:\n{words_processed}\n\"\"\"\n    return text\ndef process_and_update(procedure, item, key):\n    output = procedure(prev_registry[key], item)\n    prev_registry[key] = item\n    return output\napp = fastapi.FastAPI()\n@app.get(\"/position\")\ndef get_position():\n    pos = pyautogui.position()\n    data = {\"x\": pos.x, \"y\": pos.y}\n    return data\n@app.get(\"/resolution\")\ndef get_resolution():\n    size = pyautogui.size()\n    data = {\"width\": size.width, \"height\": size.height}\n    return data\n@app.get(\"/text_screenshot\")\ndef get_text_screenshot(\n    method: Literal[\"git_style_diff\", \"char_diff\", \"line_indexed_diff\", 'no_diff'] = 'line_indexed_diff'\n):\n    shot = screenshot_with_cursor()\n    text = image_to_ascii_and_words(shot, method)\n    return {\"tex",
+        "type": "code",
+        "location": "/containerized_chatgpt_agent/visual_server_on_ubuntu.py:47-95"
     },
     "629": {
-        "file_id": 76,
-        "content": "These functions ensure the input is either a bytes or string type, and raise exceptions if it's not.",
+        "file_id": 77,
+        "content": "Code is converting an image to ASCII text and words, then combining them into a formatted string. It also provides API endpoints for getting the position of the mouse and the resolution of the screen.",
         "type": "comment"
     },
     "630": {
         "file_id": 77,
-        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/vocabulary.py",
-        "type": "filepath"
+        "content": "t\": text}\n@app.get(\"/move_abs\")\ndef move_cursor_abs(x: int, y: int):\n    pyautogui.moveTo(x, y)\n@app.get(\"/move_rel\")\ndef move_cursor_rel(x: int, y: int):\n    pyautogui.moveRel(x, y)\nfrom typing import Literal\n@app.get(\"/click\")\ndef click_cursor(button: Literal[\"left\", \"right\", \"middle\"] = \"left\"):\n    params = {}\n    if button:\n        params = {\"button\": button}\n    pyautogui.click(**params)\n@app.get(\"/type\")\ndef type_text(text: str):\n    pyautogui.typewrite(text)\n@app.get(\"/write\")\ndef type_text(text: str):\n    pyautogui.write(text)\n@app.get(\"/scroll\")\ndef scroll_down(x: float, y: float, clicks: float):\n    pyautogui.scroll(clicks=clicks, x=x, y=y)\nif __name__ == \"__main__\":\n    host = \"0.0.0.0\"\n    print(\"gui server running at:\", f\"http://{host}:{port}\")\n    uvicorn.run(app, host=host, port=port)",
+        "type": "code",
+        "location": "/containerized_chatgpt_agent/visual_server_on_ubuntu.py:95-137"
     },
     "631": {
         "file_id": 77,
-        "content": "NaiveVocab class generates a random string of characters from a given list and AsciiVocab/BytesVocab inherit from NaiveVocab to handle both ASCII and bytes content respectively.",
-        "type": "summary"
+        "content": "This code defines several API endpoints that can be used to control the cursor and input text on a computer using Python's PyAutoGUI library. The endpoints include moving the cursor, clicking buttons, typing text, and scrolling down. The code also sets up an Uvicorn server to host these API endpoints.",
+        "type": "comment"
     },
     "632": {
-        "file_id": 77,
-        "content": "import random\nfrom type_utils import *\nclass NaiveVocab:\n    charlist = [\"a\"]\n    startpoint = \"\"\n    content_typeguard = enforce_str\n    @classmethod\n    def generate(cls):\n        content = cls.startpoint\n        for _ in range(random.randint(1, 10)):\n            char = random.choice(cls.charlist)\n            content += char\n        return content\n    @classmethod\n    def filter(cls, content):\n        content = cls.content_typeguard(content)\n        result = cls.startpoint\n        for char in content:\n            if char in cls.charlist:\n                result += char\n        return result\nclass AsciiVocab(NaiveVocab):\n    charlist = [chr(x) for x in range(256)]\nclass BytesVocab(NaiveVocab):\n    startpoint = b\"\"\n    charlist = [bytes([x]) for x in range(256)]\n    content_typeguard = enforce_bytes",
-        "type": "code",
-        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/vocabulary.py:1-36"
+        "file_id": 78,
+        "content": "/decorator_method_registry.py",
+        "type": "filepath"
     },
     "633": {
-        "file_id": 77,
-        "content": "NaiveVocab class generates a random string of characters from a given list and AsciiVocab/BytesVocab inherit from NaiveVocab to handle both ASCII and bytes content respectively.",
-        "type": "comment"
+        "file_id": 78,
+        "content": "MyDecorator is a function decorator that executes code before and after the decorated function, while MyMeta adds code execution right after the 'def' block of the decorated function. A decorator function \"my_decorator\" is defined which executes code before and after the decorated function by using \"@\" syntax to decorate the function \"my_function\".",
+        "type": "summary"
     },
     "634": {
         "file_id": 78,
-        "content": "/basic_interactive_program_emulation_and_image_with_docker_support/wexpect_example.py",
-        "type": "filepath"
+        "content": "class MyDecorator:\n    def __init__(self, func):\n        self.func = func\n        self.invoke_decorated_function()\n    def invoke_decorated_function(self):\n        # Code to execute after the 'def' block of the decorated function\n        print(\"Executing code right after the 'def' block\")\n        self.func()\n# Decorate a function with the decorator\n@MyDecorator\ndef my_function():\n    print(\"Executing the decorated function\")\nprint(\"-\" * 40)\nclass MyMeta(type):\n    def __new__(cls, name, bases, attrs):\n        # Code to execute right after the 'def' block of the decorated function\n        print(\"Executing code right after the 'def' block\")\n        return super().__new__(cls, name, bases, attrs)\n# Define the metaclass for the decorator\nclass MyDecorator(metaclass=MyMeta):\n    def __call__(self, func):\n        print(\"Executing code before the function is invoked\")\n        def wrapper(*args, **kwargs):\n            # Code to execute before invoking the decorated function\n            # Invoke the decorated function\n",
+        "type": "code",
+        "location": "/decorator_method_registry.py:1-38"
     },
     "635": {
         "file_id": 78,
-        "content": "Starts a cmd child process, waits for prompt, sends commands, prints output, and exits.",
-        "type": "summary"
+        "content": "MyDecorator class is a function decorator that executes code before and after the decorated function.\nMetaclass MyMeta adds code execution right after the 'def' block of the decorated function.",
+        "type": "comment"
     },
     "636": {
         "file_id": 78,
-        "content": "import wexpect\n# Start cmd as child process\nchild = wexpect.spawn(\"cmd.exe\")\n# Wait for prompt when cmd becomes ready.\nchild.expect(\">\")\n# Prints the cmd's start message\nprint(\"before\", child.before)\nprint(\"after\", child.after)\n# run list directory command\nchild.sendline(\"ls\")\n# Waiting for prompt\nchild.expect(\">\")\n# Prints content of the directory\nprint(child.before, end=\"\")\nprint(child.after, end=\"\")\n# Exit from cmd\nchild.sendline(\"exit\")\n# Waiting for cmd termination.\nchild.wait()",
+        "content": "            return func(*args, **kwargs)\n        return wrapper\n# Decorate a function with the decorator\n@MyDecorator()\ndef my_function():\n    print(\"Executing the decorated function\")\nprint(\"-\" * 20)\ndef my_decorator(func):\n    print(\"Executing code before the function is invoked.\")\n    print(\"Function name:\", func.__name__)\n    def wrapper(*args, **kwargs):\n        # Code to execute before the invocation of the decorated function\n        # Invoke the decorated function\n        return func(*args, **kwargs)\n    # Return the wrapper function\n    return wrapper\n# Decorate a function with the decorator\n@my_decorator\ndef my_function():\n    print(\"Executing the decorated function.\")",
         "type": "code",
-        "location": "/basic_interactive_program_emulation_and_image_with_docker_support/wexpect_example.py:1-27"
+        "location": "/decorator_method_registry.py:38-68"
     },
     "637": {
         "file_id": 78,
-        "content": "Starts a cmd child process, waits for prompt, sends commands, prints output, and exits.",
+        "content": "Defines a decorator function \"my_decorator\" that executes code before and after the decorated function. Uses the \"@\" syntax to decorate the function \"my_function\".",
         "type": "comment"
     },
     "638": {
         "file_id": 79,
-        "content": "/binary_program_synthesis_cpu_assembly_execution/README.md",
+        "content": "/directml_yolov5/test.py",
         "type": "filepath"
     },
     "639": {
         "file_id": 79,
-        "content": "Idea: Programs ingest and evolve via evolutionary process, directly executing assembly code without human interface. Interaction through isolated environments like a computer virus. Consider hierarchical tokenizer or embedding for memory efficiency.",
+        "content": "The code modifies torch.cat to handle zero-sized arrays and enables DirectML compatibility for inference mode. It processes a filepath with the model multiple times using a loop, sets it to specified device, prints output for 1000 iterations, and disables automatic differentiation using torch.no_grad().",
         "type": "summary"
     },
     "640": {
         "file_id": 79,
-        "content": "I had an idea that programs shall ingest programs and learn to evolve in a evolutionary manner.\nThe program shall directly execute assembly code. So obviously, no human interface is needed.\nYou may ask how do we interact with such program? Consider computer virus. We first run it in isolated environments, then we interact.\n---\nyou may make hierarchical tokenizer or hierarchical embedding to reduce memory consumption",
+        "content": "import torch\nimport torch_directml\nimport contextlib\nimport copy\nfrom functools import reduce\n@contextlib.contextmanager\ndef null_inference_mode(*args, **kwargs):\n    try:\n        yield\n    finally:\n        pass\ntorch.inference_mode = null_inference_mode\nold_cat = copy.copy(torch.cat)\ndef smart_cat(arr, *args, **kwargs):\n    new_arr = []\n    for it in arr:\n        shape = it.shape\n        size = reduce(lambda x,y: x*y, shape)\n        if size >0:\n            new_arr.append(it)\n    ret = old_cat(new_arr, *args, **kwargs)\n    return ret\ntorch.cat = smart_cat\ndev = torch_directml.device()\nmodel = torch.hub.load(\"../yolov5\", \"yolov5m\", source='local')\n# get torch cache path?\n# model = torch.hub.load(\"ultralytics/yolov5\", \"yolov5m\")\nfilepath = \"./zidane.jpg\"\n# two issues:\n# 1. directml doesn't work with inference mode (yet), you can nullify it.\n# 2. torch.cat is not working properly, because we are passing zero size arrays into it. however, the cpu executor supports it.\n# with torch.inference_mode(mode=False):\nwith torch.n",
         "type": "code",
-        "location": "/binary_program_synthesis_cpu_assembly_execution/README.md:1-9"
+        "location": "/directml_yolov5/test.py:1-41"
     },
     "641": {
         "file_id": 79,
-        "content": "Idea: Programs ingest and evolve via evolutionary process, directly executing assembly code without human interface. Interaction through isolated environments like a computer virus. Consider hierarchical tokenizer or embedding for memory efficiency.",
+        "content": "Code is modifying torch.cat to handle zero size arrays and nullifying inference mode for DirectML compatibility.",
         "type": "comment"
     },
     "642": {
-        "file_id": 80,
-        "content": "/binary_program_synthesis_cpu_assembly_execution/bnn_data_ingest.py",
-        "type": "filepath"
+        "file_id": 79,
+        "content": "o_grad():\n    # for _ in range(1000):\n    print(model(filepath))\nmodel.to(dev)\n# with torch.inference_mode(mode=False):\nwith torch.no_grad():\n    # for _ in range(1000):\n    # amd yes!\n    print(model(filepath))",
+        "type": "code",
+        "location": "/directml_yolov5/test.py:41-49"
     },
     "643": {
-        "file_id": 80,
-        "content": "The code imports libraries, defines the `makeQuant` function to create a quantizer layer, and initializes variables. It generates a random tensor, applies embedding and quantization layers, performs matrix multiplication and softmax operation for attention, and outputs binary values from the quantized results while printing intermediate outputs.",
-        "type": "summary"
+        "file_id": 79,
+        "content": "This code is using the \"model\" to process the \"filepath\" multiple times in a loop. It first sets the model to the specified device (dev), and then prints the output of the model for 1000 iterations. The \"torch.no_grad()\" context manager ensures that automatic differentiation is disabled, potentially improving performance during these model evaluations.",
+        "type": "comment"
     },
     "644": {
         "file_id": 80,
-        "content": "import larq  # keras/tensorflow\n# ref: https://github.com/itayhubara/BinaryNet.pytorch\nimport tensorflow as tf\nimport random\n# tf.experimental.numpy.experimental_enable_numpy_behavior()\ndim = 2\n# dim = 10\ndef makeQuant(in_dim, out_dim):\n    layer = larq.layers.QuantDense(  # this will regulate all values into integers\n        units=out_dim,  # anything -> 2\n        # units=dim,\n        input_quantizer=larq.quantizers.SteSign(clip_value=1.0),\n        kernel_quantizer=larq.quantizers.SteSign(clip_value=1.0),\n        kernel_constraint=larq.constraints.WeightClip(clip_value=1.0),\n        # input_shape=(42,), # still working? not in sequential.\n        input_shape=(in_dim,),\n    )\n    return layer\n# larq.layers.QuantDense(units=2)\n# dim = 1024\n# model = tf.keras.Sequential()\nseqlen = 20\n# (AB * BA) * (BA * AB)\n# random_x_in = [[random.randint(0, 1) for _ in range(seqlen)]]\nrandom_x_in = [[random.randint(0, 1) for _ in range(seqlen)]]\nx_in = tf.convert_to_tensor(random_x_in, dtype=tf.float32)  # [1, 20]\n# x_in = tf.r",
-        "type": "code",
-        "location": "/binary_program_synthesis_cpu_assembly_execution/bnn_data_ingest.py:1-37"
+        "content": "/directml_yolov5/test_concat.py",
+        "type": "filepath"
     },
     "645": {
         "file_id": 80,
-        "content": "The code imports necessary libraries and defines a function `makeQuant` that creates a quantizer layer for regulating input and kernel values to integers. It also initializes variables, including the dimension (`dim`) and sequence length (`seqlen`), and creates a tensor `x_in` with random integer data.",
-        "type": "comment"
+        "content": "Code snippet for testing concatenation using torch library with directml acceleration.",
+        "type": "summary"
     },
     "646": {
         "file_id": 80,
-        "content": "andom.uniform(shape=(1, dim), minval=0, maxval=2, dtype=tf.float32)\nl_emb = tf.keras.layers.Embedding(2, dim)\nt_emb = l_emb(x_in)\nl_q = makeQuant(dim, dim)\nl_k = makeQuant(dim, dim)\nl_v = makeQuant(dim, dim)\nt_q = l_q(t_emb)\nt_k = l_k(t_emb)\nt_v = l_v(t_emb)\nt_att_pre = tf.matmul(t_k, t_q, transpose_a=True)\nt_att = tf.nn.softmax(t_att_pre, axis=2) / (dim**0.5)\nt_feat = tf.matmul(t_v, t_att)\nl_out = makeQuant(dim, 2)\nt_out = l_out(t_feat)\nprint(x_in)\nprint()\nprint(t_out)  # not within 1 and 0\nbinary = tf.argmax(t_out, axis=2)\nprint()\nprint(binary)\nprint(binary.shape, t_out.shape)\n# breakpoint()",
+        "content": "import torch\nimport torch_directml\ndev = torch_directml.device()\na = torch.ones((20, 20))\na.to(dev)\nprint(torch.cat([a, a]))\nprint(torch.cat([a, a], dim=1))\nprint(torch.cat([a, a], 1))\nprint(torch.cat((a, a), 1))\nprint(torch.cat((a, a, a), 1))\nprint(torch.cat((a, a, a, a), 1))\nprint(torch.cat((a, a, a, a, a), 1))",
         "type": "code",
-        "location": "/binary_program_synthesis_cpu_assembly_execution/bnn_data_ingest.py:37-65"
+        "location": "/directml_yolov5/test_concat.py:1-14"
     },
     "647": {
         "file_id": 80,
-        "content": "This code generates a random tensor, applies embedding and quantization layers to it, performs matrix multiplication and softmax operation for attention, and finally outputs binary values from the quantized results. The code also prints these intermediate outputs for debugging purposes.",
+        "content": "Code snippet for testing concatenation using torch library with directml acceleration.",
         "type": "comment"
     },
     "648": {
         "file_id": 81,
-        "content": "/binary_program_synthesis_cpu_assembly_execution/convert_binary_files_as_zero_and_one_streams.py",
+        "content": "/directml_yolov5/test_nograd.py",
         "type": "filepath"
     },
     "649": {
         "file_id": 81,
-        "content": "This code reads a binary file, converts it to a stream of zeroes and ones, groups the bits into 8-bit groups (bytes), and writes the result in text format with one byte per line.",
+        "content": "The code is importing necessary libraries and initializing a YOLOv5 model using the \"ultralytics/yolov5\" module. It then warns about two issues: DirectML not working with torch.inference_mode and potential problems with torch.cat due to passing zero-size arrays. The code finally runs inference on an image, first without and then with DirectML device.",
         "type": "summary"
     },
     "650": {
         "file_id": 81,
-        "content": "# binaries? this reminds me of binary neural networks. whoa there!\n# import numpy as np\nfilepath = \"README.md\"\noutput_path = \"converted_binary_view.txt\"\n# import binascii\n# this can do the job of hex\nimport itertools\nwith open(filepath, \"rb\") as f:\n    _bytes = f.read()\n    # char = f.read(1)\n    # arr = np.frombuffer(char, dtype=np.bool_) # this will not work.\n    # arr = np.frombuffer(char, dtype=np.uint8)\n    # arr = np.array(list(char)).astype(np.uint8)\n    # print(arr)\n    # print(char)\n    # bin_array = np.unpackbits(arr)\n    # bin_array = np.unpackbits(arr).astype(np.bool_)\n    # print(bin_array)  # [False  True False False  True False False  True]\n    bit_repr = [format(it, '08b') for it in _bytes]\n    line_list = []\n    for index, bit_group in itertools.groupby(enumerate(bit_repr), key=lambda x: x[0]//8):\n        line = \" \".join([it for _, it in bit_group])\n        line_list.append(line)\n    with open(output_path, 'w+') as fw:\n        fw.write(\"\\n\".join(line_list))",
+        "content": "import torch\nimport torch_directml\ndev = torch_directml.device()\nmodel = torch.hub.load(\"ultralytics/yolov5\", \"yolov5m\")\n# two issues:\n# 1. directml doesn't work with torch.inference_mode. you can nullify it.\n# 2. torch.cat is not working properly, because we are passing zero size arrays into it. however, the cpu executor supports it.\nwith torch.no_grad():\n    print(model(\"C:/Users/z98hu/Desktop/zidane.jpg\"))\nmodel.to(dev)\nwith torch.no_grad():\n    print(model(\"C:/Users/z98hu/Desktop/zidane.jpg\"))",
         "type": "code",
-        "location": "/binary_program_synthesis_cpu_assembly_execution/convert_binary_files_as_zero_and_one_streams.py:1-27"
+        "location": "/directml_yolov5/test_nograd.py:1-14"
     },
     "651": {
         "file_id": 81,
-        "content": "This code reads a binary file, converts it to a stream of zeroes and ones, groups the bits into 8-bit groups (bytes), and writes the result in text format with one byte per line.",
+        "content": "The code is importing necessary libraries and initializing a YOLOv5 model using the \"ultralytics/yolov5\" module. It then warns about two issues: DirectML not working with torch.inference_mode and potential problems with torch.cat due to passing zero-size arrays. The code finally runs inference on an image, first without and then with DirectML device.",
         "type": "comment"
     },
     "652": {
         "file_id": 82,
-        "content": "/binary_program_synthesis_cpu_assembly_execution/gpt-binary-training.py",
+        "content": "/dynamic_plasticity_neural_networks/MCTS_NAS.md",
         "type": "filepath"
     },
     "653": {
         "file_id": 82,
-        "content": "The code imports necessary libraries, initializes a GPT2 model, defines functions for token building and generation, generates binary input, masks attention mask, adds custom special tokens to tokenizer, resizes token embeddings, trains the model by masking logits during forward pass, calculates loss using masked logits, computes gradients and optimizes them, and uses a symbol/reference variable for future reference.",
+        "content": "Monte Carlo Tree Search (MCTS) is used in Neural Architecture Search (NAS) to evaluate potential network structures. This process involves simulation, backpropagation, selection and repetition until a stopping criterion is met. Researchers continue to explore new methods for NAS efficiency and effectiveness.",
         "type": "summary"
     },
     "654": {
         "file_id": 82,
-        "content": "#!/usr/bin/env python\n# coding: utf-8\n# In[34]:\n# a good reference:\n# https://blog.paperspace.com/generating-text-summaries-gpt-2/\nget_ipython().system('pip3 install einops')\nimport einops\nimport transformers\nimport torch\nMODEL_NAME = 'gpt2'\nmodel = transformers.GPT2LMHeadModel.from_pretrained(MODEL_NAME)\ntokenizer = transformers.AutoTokenizer.from_pretrained(MODEL_NAME)\nlr = 0.0001\noptimizer = torch.optim.AdamW(model.parameters(), lr=lr)\nloss_fn = torch.nn.CrossEntropyLoss()\ndef build_special_token(location:str, name:str):\n    return f\"<|{location}_{name}|>\"\ndef generate_special_token_pair(name:str):\n    begin_token = build_special_token('begin', name)\n    end_token = build_special_token('end', name)\n    return begin_token, end_token\ntext = \"8e7d4f\"\n# text = \"0100100010010\"\nenc = tokenizer([text], return_tensors='pt')\ninput_ids = enc['input_ids'] # into three pieces only.\nattention_mask = torch.ones(input_ids.shape, dtype=torch.int64)\ninput_ids.shape\nbegin_bytes, end_bytes = generate_special_token_pair('bytes')\n",
+        "content": "Monte Carlo Tree Search (MCTS) is a heuristic search algorithm that's commonly used in decision-making processes, particularly in game-playing AI, where it evaluates possible moves and outcomes to make decisions. When it comes to using MCTS in neural architecture search (NAS), it typically involves using MCTS to explore the space of possible neural network architectures and evaluate their performance.\nHere's a high-level overview of how MCTS could be used in NAS:\n1. **Search Space Representation**: Define a representation of the neural network architecture space. This could involve defining different types of layers, their connections, hyperparameters, etc., that form the search space.\n2. **Tree Expansion**: Start with a root node representing the current state of the search (e.g., a randomly initialized neural network architecture). Use MCTS to iteratively expand the search tree by considering different possible architectures and their performance.\n3. **Simulation and Evaluation**: During",
         "type": "code",
-        "location": "/binary_program_synthesis_cpu_assembly_execution/gpt-binary-training.py:1-39"
+        "location": "/dynamic_plasticity_neural_networks/MCTS_NAS.md:1-7"
     },
     "655": {
         "file_id": 82,
-        "content": "This code imports necessary libraries, initializes a GPT2 language model, and defines functions for building special tokens and generating token pairs. It also generates a binary input and masks the attention mask to be all ones.",
+        "content": "Monte Carlo Tree Search (MCTS) is used in neural architecture search to explore and evaluate possible network architectures based on their performance.",
         "type": "comment"
     },
     "656": {
         "file_id": 82,
-        "content": "# how to step in and out?\ntokenizer(begin_bytes)['input_ids'], tokenizer(end_bytes)['input_ids']\n# In[35]:\n# print(dir(tokenizer))\n# print(tokenizer.all_special_tokens)\n# help(tokenizer.add_tokens)\ntokenizer.add_tokens([begin_bytes, end_bytes]) # will not do this again.\n# tokenizer.add_special_tokens({\"begin_bytes\": begin_bytes, \"end_bytes\":end_bytes})\n# In[36]:\n# add new special token to tokenizer\nlen(tokenizer)\n# In[37]:\nmodel.resize_token_embeddings(len(tokenizer))\n# In[38]:\n# dir(tokenizer)\n# tokenizer.vocab\n# binary_vocab = {i: format(i, '04b') for i in range(16)}\n# binary_map = {v: tokenizer.vocab[v] for _, v in binary_vocab.items()}\n# missing: 0011\nhex_vocab = {i: format(i, '0x') for i in range(16)}\nhex_map = {v: tokenizer.vocab[v] for _, v in hex_vocab.items()}\n# hex_map\n# In[39]:\nbyte_vocab = {i: str(i) for i in range(256)}\nbyte_map = {v: tokenizer.vocab[v] for _, v in byte_vocab.items()}\n# In[46]:\noutput.logits.shape # now: 50259\n# <|begin_bytes|>feffd3d7ea<|end_bytes|>\n# <|begin_hex|>feffd3d7ea<|end_he",
+        "content": " the selection and expansion phase of MCTS, simulate the performance of different architectures by training them on a subset of data or using a proxy measure of performance. This helps in estimating the potential value of exploring a particular architecture.\n4. **Backpropagation**: Propagate the simulated performance results back up the tree to update the value estimates of different architectures and guide the search towards promising areas of the architecture space.\n5. **Selection**: Use the updated value estimates to guide the selection of architectures for further exploration, focusing on those with potentially higher performance.\n6. **Repeat and Refine**: Iterate the process of selection, expansion, simulation, and backpropagation for a certain number of iterations or until a stopping criterion is met.\nIt's important to note that the specific implementation of MCTS in NAS can vary depending on the exact problem setting, the search space representation, and the performance evaluation m",
         "type": "code",
-        "location": "/binary_program_synthesis_cpu_assembly_execution/gpt-binary-training.py:39-94"
+        "location": "/dynamic_plasticity_neural_networks/MCTS_NAS.md:7-12"
     },
     "657": {
         "file_id": 82,
-        "content": "This code is adding custom special tokens to a tokenizer, mapping binary and hexadecimal values to existing tokens in the tokenizer's vocabulary. This allows the model to process input data that includes binary or hexadecimal information. The code then resizes the token embeddings based on the updated vocabulary size and logs some shapes of output arrays for further analysis.",
+        "content": "This code describes the process of using Monte Carlo Tree Search (MCTS) for Neural Architecture Search (NAS). It involves simulating performance, backpropagation, selection, and repeating until a stopping criterion is met. The implementation can vary based on problem setting and search space representation.",
         "type": "comment"
     },
     "658": {
         "file_id": 82,
-        "content": "x|>\n# .............##########[#..........] <- in training we only mask some prob\n# .............####################### <- in inference/parsing there could be state rolling back\n# In[41]:\n# training\noutput = model(input_ids = input_ids, attention_mask = attention_mask)\n# output.logits[:,:,:] = 0 # this will not affect loss\nmasked_logits = torch.zeros(output.logits.shape)\nfocused_ids = [10,20,30]\nmasked_logits[:,:,focused_ids] = output.logits[:,:,focused_ids] # this will\nzero_input_ids = torch.zeros(input_ids.shape, dtype=input_ids.dtype)\n# output.logits\nreshaped_original_logits = einops.rearrange(output.logits, \"b s c -> b c s\")\nreshaped_logits = einops.rearrange(masked_logits, \"b s c -> b c s\")\nloss = loss_fn(reshaped_original_logits, zero_input_ids)\n# loss = loss_fn(reshaped_logits, zero_input_ids)\nprint(loss.item()) # it would be the same as long as setting to zero.\n# In[42]:\nmasked_logits[:,:,focused_ids]\n# In[43]:\nmodel.zero_grad()\n# In[44]:\nloss.backward()\noptimizer.step()\nmodel.zero_grad()\n# In[45]:\n# in",
+        "content": "ethods used. Additionally, MCTS is just one of many approaches to NAS, and researchers continue to explore different methods to efficiently and effectively search the space of neural network architectures.",
         "type": "code",
-        "location": "/binary_program_synthesis_cpu_assembly_execution/gpt-binary-training.py:94-141"
+        "location": "/dynamic_plasticity_neural_networks/MCTS_NAS.md:12-12"
     },
     "659": {
         "file_id": 82,
-        "content": "This code is training a model by masking some logits during the forward pass. It first creates a tensor of zeros for the masked logits and selects specific elements to preserve from the original output logits. Then, it calculates the loss using these masked logits. The loss is then printed, and the gradients are computed and optimized.",
+        "content": "This code discusses the use of MCTS (Monte Carlo Tree Search) in NAS (Neural Architecture Search), mentioning that it's just one approach and researchers continue to explore new methods for efficient and effective neural network architecture search.",
         "type": "comment"
     },
     "660": {
-        "file_id": 82,
-        "content": "ference",
-        "type": "code",
-        "location": "/binary_program_synthesis_cpu_assembly_execution/gpt-binary-training.py:141-141"
+        "file_id": 83,
+        "content": "/dynamic_plasticity_neural_networks/README.md",
+        "type": "filepath"
     },
     "661": {
-        "file_id": 82,
-        "content": "This code snippet seems to be a reference variable or symbol, possibly indicating a memory location or value that will be used later in the program.",
-        "type": "comment"
+        "file_id": 83,
+        "content": "This code introduces the concept of creating artificial neurons that can move around and change connections. It first focuses on replicating a static classic neural network before moving to dynamic ones.",
+        "type": "summary"
     },
     "662": {
         "file_id": 83,
-        "content": "/binary_program_synthesis_cpu_assembly_execution/interpret_and_save_binary_program.py",
-        "type": "filepath"
+        "content": "We can create artificial neurons that can move around, form new connections, changing its overall shape.\nBut first we will replicate a common static classic neural network.",
+        "type": "code",
+        "location": "/dynamic_plasticity_neural_networks/README.md:1-3"
     },
     "663": {
         "file_id": 83,
-        "content": "Reads binary program from file, converts to integer list, and writes to output file.",
-        "type": "summary"
+        "content": "This code introduces the concept of creating artificial neurons that can move around and change connections. It first focuses on replicating a static classic neural network before moving to dynamic ones.",
+        "type": "comment"
     },
     "664": {
-        "file_id": 83,
-        "content": "# filepath = \"binary_program_windows_bin.txt\"\nfilepath = \"binary_program.txt\"\n# output_path = \"program.bin\"\n# output_path = \"program.exe\"\noutput_path = \"program\" # linux program?\nbyte_int_list = []\nwith open(filepath, 'r') as f:\n    content = f.read()\n    byte_list = content.replace(\"\\n\", ' ').split()\n    for byte_str in byte_list:\n        byte_int = int(byte_str, 2)\n        byte_int_list.append(byte_int)\nbinary_bytes = bytes(byte_int_list)\nwith open(output_path, 'wb') as f:\n    f.write(binary_bytes)\n# import os\n# os.system(output_path)",
-        "type": "code",
-        "location": "/binary_program_synthesis_cpu_assembly_execution/interpret_and_save_binary_program.py:1-20"
+        "file_id": 84,
+        "content": "/dynamic_plasticity_neural_networks/dnn_reference.py",
+        "type": "filepath"
     },
     "665": {
-        "file_id": 83,
-        "content": "Reads binary program from file, converts to integer list, and writes to output file.",
-        "type": "comment"
+        "file_id": 84,
+        "content": "This code defines classes for connections and neurons in a neural network, including forward propagation, activation function, backpropagation, and derivative functions using a sigmoid function.",
+        "type": "summary"
     },
     "666": {
         "file_id": 84,
-        "content": "/binary_program_synthesis_cpu_assembly_execution/softmax_test.py",
-        "type": "filepath"
+        "content": "import numpy as np  # Import NumPy for mathematical operations\nclass Connection:\n    def __init__(self, connected_index, weights, bias):\n        self.connected_index = connected_index  # Index of the connected neuron\n        self.weights = weights  # Weights of the connection\n        self.bias = bias  # Bias of the connection\nclass Neuron:\n    def __init__(self, index, current_potential, input_connections, output_connections):\n        self.index = index  # Index of the neuron\n        self.current_potential = current_potential  # Current membrane potential\n        self.input_connections = input_connections  # List of input connections\n        self.output_connections = output_connections  # List of output connections\n    def forward_propagate(self, inputs):\n        # Perform weighted sum of inputs and apply activation function\n        weighted_sum = np.dot(inputs, [conn.weights for conn in self.input_connections]) + self.input_connections[0].bias\n        self.current_potential = self.activation_functio",
+        "type": "code",
+        "location": "/dynamic_plasticity_neural_networks/dnn_reference.py:1-19"
     },
     "667": {
         "file_id": 84,
-        "content": "Computing 2D softmax activation for random input tensor of shape (2,3).",
-        "type": "summary"
+        "content": "The code defines two classes: \"Connection\" and \"Neuron\". The \"Connection\" class represents a connection between two neurons with properties like connected index, weights, and bias. The \"Neuron\" class represents a neuron with properties such as its index, current potential, input connections, and output connections. It also has a method called \"forward_propagate\" that performs weighted sum of inputs, adds the connection's bias, and applies an activation function to calculate the neuron's new potential.",
+        "type": "comment"
     },
     "668": {
         "file_id": 84,
-        "content": "import torch\nimport torch.nn as nn\nm = nn.Softmax(dim=1)\ninput = torch.randn(2, 3, requires_grad=True)\noutput = m(input)\nprint(output)",
+        "content": "n(weighted_sum)\n    def activation_function(self, x):\n        # For example, using a simple sigmoid activation function\n        return 1 / (1 + np.exp(-x))\n    def back_propagate(self, error):\n        # Update weights and biases based on backpropagated error\n        # This is a simplified example; a complete backpropagation algorithm would involve more steps\n        for conn in self.input_connections:\n            # Update weights using the error and the derivative of the activation function\n            conn.weights -= learning_rate * error * self.activation_function_derivative(self.current_potential) * conn.connected_index.current_potential\n            # Update bias using the error\n            conn.bias -= learning_rate * error * self.activation_function_derivative(self.current_potential)\n    def activation_function_derivative(self, x):\n        # Derivative of the sigmoid activation function\n        return self.activation_function(x) * (1 - self.activation_function(x))",
         "type": "code",
-        "location": "/binary_program_synthesis_cpu_assembly_execution/softmax_test.py:1-7"
+        "location": "/dynamic_plasticity_neural_networks/dnn_reference.py:19-36"
     },
     "669": {
         "file_id": 84,
-        "content": "Computing 2D softmax activation for random input tensor of shape (2,3).",
+        "content": "This code defines a neural network class with activation function, backpropagation, and derivative functions. The activation function uses a simple sigmoid function, while the backpropagate method updates weights and biases based on the error. The activation_function_derivative calculates the derivative of the activation function.",
         "type": "comment"
     },
     "670": {
         "file_id": 85,
-        "content": "/binary_program_synthesis_cpu_assembly_execution/vkq_bin.py",
+        "content": "/dynamic_plasticity_neural_networks/dynamic_neural_network.py",
         "type": "filepath"
     },
     "671": {
         "file_id": 85,
-        "content": "The VKQAttention class implements attention mechanism using linear layers, while the code defines binary quantization configuration and converts model to binary format. The 'bout' array shape is stored but not printed.",
+        "content": "The code defines neural network classes for creating bots capable of understanding human intentions and performing tasks, with a focus on decision-making using Monte Carlo tree search and batch training techniques.",
         "type": "summary"
     },
     "672": {
         "file_id": 85,
-        "content": "import torch\nimport torch.nn as nn\nimport torch.nn.functional as F\nclass VKQAttention(nn.Module):\n    def __init__(self, input_dim):\n        super(VKQAttention, self).__init__()\n        self.input_dim = input_dim\n        self.value = nn.Linear(input_dim, input_dim)\n        self.key = nn.Linear(input_dim, input_dim)\n        self.query = nn.Linear(input_dim, input_dim)\n        self.softmax = nn.Softmax(dim=2)\n        self.dk = self.input_dim\n    def forward(self, x):\n        values = self.value(x)\n        keys = self.key(x)\n        queries = self.query(x)\n        # scores = torch.bmm(queries, keys.transpose(1, 2)) / (self.dk**0.5)\n        # scores = torch.bmm(keys.transpose(1, 2), queries) / (self.dk**0.3)  # not 2!\n        scores = torch.bmm(keys.transpose(1, 2), queries) / (self.dk**0.5)\n        attention = self.softmax(scores)\n        # print(attention)\n        # print(scores)\n        # breakpoint()\n        # weighted = torch.bmm(scores, values)\n        # weighted = torch.bmm(attention, values)\n        weight",
+        "content": "import torch\n# let's use networkx to generate random graphs?\n# the method to train it? we only keep the input & output the same as the static model.\n# place some clock like neurons, just like the SNN\n# to ensure that neurons won't get far away from each other\n# if they want to have some spikes\n# now you might want to use solver for network assembly.\n# neurons that fire together, wire together\n# there are pending connections. if these connections has larger gradients, they will be welcomed.\n# calculate route to output. if there is no route to output, then no gradient.\n# it rolls out the monte carlo tree search in ppo. would you find some optimal neural network structure with that?\nclass Connection:\n    def __init__(self):\n        self.connected_index = ...\n        self.weights = ...\n        self.bias = ...\nclass Neuron:\n    def __init__(self): # you can choose like: 100x1 -> 1x50 (1 can be larger, like 2) or 10x10\n        # but 100x1, 1x50 can be perferred, since it includes the potential or hidden state\n",
         "type": "code",
-        "location": "/binary_program_synthesis_cpu_assembly_execution/vkq_bin.py:1-29"
+        "location": "/dynamic_plasticity_neural_networks/dynamic_neural_network.py:1-30"
     },
     "673": {
         "file_id": 85,
-        "content": "This code defines a VKQAttention class that implements an attention mechanism using linear layers for value, key, and query calculations. The input_dim parameter is used to specify the size of the input. The forward method performs the attention calculations by multiplying queries with keys transposed, then dividing by the square root of the input_dim. It then applies softmax along dimension 2 and returns the attention weights for further processing.",
+        "content": "The code defines classes for neurons and connections in a neural network. The neuron class has an output size of 1x50, which includes potential or hidden state. The connection class represents the connections between neurons and holds their weights and bias. The code mentions using Monte Carlo tree search to find optimal neural network structure, but does not explicitly define this algorithm.",
         "type": "comment"
     },
     "674": {
         "file_id": 85,
-        "content": "ed = torch.bmm(values, attention)\n        return weighted\nimport torch\n# import torchvision.models as models\nfrom bnn import BConfig, prepare_binary_model\n# Import a few examples of quantizers\nfrom bnn.ops import BasicInputBinarizer, BasicScaleBinarizer, XNORWeightBinarizer\n# Define the binarization configuration and assign it to the model\nbconfig = BConfig(\n    activation_pre_process=BasicInputBinarizer,\n    activation_post_process=BasicScaleBinarizer,\n    # optionally, one can pass certain custom variables\n    weight_pre_process=XNORWeightBinarizer.with_args(center_weights=True),\n)\n# Convert the model appropiately, propagating the changes from parent node to leafs\n# The custom_config_layers_name syntax will perform a match based on the layer name, setting a custom quantization function.\nmodel = VKQAttention(input_dim=768)\nbmodel = prepare_binary_model(model, bconfig)\ninp = torch.randn(1, 12, 768)\n# out = model(inp)\n# print(out, out.shape)\n# print(inp)\n# print(out.shape)  # 1, 12, 768\nbout = bmodel(inp)\nprin",
+        "content": "        # we can also tune the decay factor inside the neuron.\n        self.index = ...\n        self.current_potential = ...\n        self.input_connection = ...\n        self.output_connection = ...\nclass NeuralPort:\n    def __init__(self):\n        self.index = ...\n        self.port_type = ...\n        self.current_potential = ...\n# so we would iterate through our connection pool, propagate\n# how to do batch training?\ninput_ports = [] # assign ten indices\noutput_ports = []\n# obviously they are not connected.\n# you can assess that by gradient. does it have gradient?\n# recurrent connection: (0, 1), (1, 2), (2, 0)\n# so we just do all the forwarding at once in random order. who cares the order? no one!\n# maybe you can take multiple random execution samples multiple times and average out to stablize the performance\n# so there are possibly two things to learn. the first is to learn the connectivity rule. the second is to learn the propagation rule.\n# does a regular/periodic propagation rule plausible in brain?\n# c",
         "type": "code",
-        "location": "/binary_program_synthesis_cpu_assembly_execution/vkq_bin.py:29-61"
+        "location": "/dynamic_plasticity_neural_networks/dynamic_neural_network.py:30-58"
     },
     "675": {
         "file_id": 85,
-        "content": "28-47: Define binary quantization config and assign it to the model\n48-56: Convert the model to a binary one, propagating changes from parent to leaf nodes\n57-60: Pass input to the binary model and obtain output",
+        "content": "This code defines a NeuralPort class with properties for index, port_type, and current_potential. It also initializes input_ports and output_ports lists to store indices. The code mentions batch training, recurrent connections, forwarding all inputs randomly, and learning connectivity and propagation rules.",
         "type": "comment"
     },
     "676": {
         "file_id": 85,
-        "content": "t(bout)\n# print(bout.shape)",
+        "content": "alculate inter_neuron distance\n# we have to use sparse matrix\n# output_node_index, input_node_index\n# if you swap, you break the connection\n# you can compute the gradient, to decide if you want to break or keep\n# (2, 3)\n# (4, 1)\n# we will start with the input neurons, iterate over the network\n# it forms a loop.\n# output: spikes, movements per neuron\n# what determines the connectivity between neurons?\n# what forms new connectivities?\n# (in0, out0)\n# (in1, out1)\n# (in2, out2)\n# i think we do not need the coordinates.\n# i think we need some gcn, or recommendation engine?\n# just represent the connectivity in sparse matrix.\n# connection swapping?\n# minimize the number of unconnected neurons\n# cannot connect to themselves\n# you may have pre-programmed randomly initialized connectivity matrix\n# hierarchical grouping?\n# would you rather do some value swapping in weight matricies\n# liquid state machine\n# dynamic rewiring of neurons by upper/lower weight limit, or the free energy principle\n# or you can also look at the a",
         "type": "code",
-        "location": "/binary_program_synthesis_cpu_assembly_execution/vkq_bin.py:61-62"
+        "location": "/dynamic_plasticity_neural_networks/dynamic_neural_network.py:58-99"
     },
     "677": {
         "file_id": 85,
-        "content": "This code stores the shape of the 'bout' array, but it is not currently printed.",
+        "content": "Computing inter-neuron distance and creating sparse matrices for input/output nodes. Iterating over the network to form connections. Determining connectivity between neurons using potential methods like GCN, recommendation engine, or pre-programmed random initialization. Connection swapping to minimize unconnected neurons. Hierarchical grouping or adjusting weight matrices possible.",
         "type": "comment"
     },
     "678": {
-        "file_id": 86,
-        "content": "/containerized_chatgpt_agent/Dockerfile",
-        "type": "filepath"
+        "file_id": 85,
+        "content": "ctual energy consumption or battery consumption\n# by far multiple thesis have been stated, but yet unproven and unimplemented.\n# the primary objective of this project is to create computer operating bots that can understand human intentions and do everyday tasks on their own, including browsing, coding and searching.\n# it is not clear whether this project will create some artificial life, and it is not our objective. it might be a good research project for the bots, but i can say for sure it is not for me. i have limited capacity of knowledge and resources. i don't allocate that much memory biologically or physically. i choose to build the bot first. it does not have to be that complex that i cannot imagine or create.\n# decision matters. the executors of this 'life' project should be bots. i am the project manager. besides, i could participate in the 'cybergod' project which controls the computer by computer itself.\n# noise in, words out, recurse. that is dream.",
+        "type": "code",
+        "location": "/dynamic_plasticity_neural_networks/dynamic_neural_network.py:99-109"
     },
     "679": {
-        "file_id": 86,
-        "content": "Installing pip, open-interpreter using Tsinghua mirror.",
-        "type": "summary"
+        "file_id": 85,
+        "content": "This code discusses the creation of computer bots that can understand human intentions and perform tasks, with a focus on browsing, coding, and searching. The author expresses their limited capacity to create an artificial life form but believes in using bots for decision making. They also mention participating in a 'cybergod' project that controls computers by themselves.",
+        "type": "comment"
     },
     "680": {
         "file_id": 86,
-        "content": "FROM ubuntu:22.04\nWORKDIR /root\nCOPY install_pip.sh .\nRUN bash install_pip.sh\nRUN pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple open-interpreter",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/Dockerfile:1-5"
+        "content": "/dynamic_plasticity_neural_networks/neural_evolution.py",
+        "type": "filepath"
     },
     "681": {
         "file_id": 86,
-        "content": "Installing pip, open-interpreter using Tsinghua mirror.",
-        "type": "comment"
+        "content": "This code is importing the NEAT (Nature-Inspired Evolutionary Algorithms Toolkit) module from evotorch library, and creating a NEProblem object for neural evolution problem.",
+        "type": "summary"
     },
     "682": {
-        "file_id": 87,
-        "content": "/containerized_chatgpt_agent/Dockerfile_autoexec",
-        "type": "filepath"
+        "file_id": 86,
+        "content": "# NEAT?\nimport evotorch\nevotorch.neuroevolution.NEProblem",
+        "type": "code",
+        "location": "/dynamic_plasticity_neural_networks/neural_evolution.py:1-4"
     },
     "683": {
-        "file_id": 87,
-        "content": "This Dockerfile installs required packages for a Python-based chat agent, including pip and specific libraries, then copies necessary script files.",
-        "type": "summary"
+        "file_id": 86,
+        "content": "This code is importing the NEAT (Nature-Inspired Evolutionary Algorithms Toolkit) module from evotorch library, and creating a NEProblem object for neural evolution problem.",
+        "type": "comment"
     },
     "684": {
         "file_id": 87,
-        "content": "FROM ubuntu:22.04\nWORKDIR /root\nCOPY install_pip.sh .\nRUN bash install_pip.sh\nRUN pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple litellm pyte ptyprocess requests tornado\nRUN pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple progressbar2\nCOPY ptyproc.py .\nCOPY terminal_config.py .\nCOPY diff_utils.py .\nCOPY ollama_utils.py .\nCOPY port_util.py .\nCOPY container_autoexec_example.py .",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/Dockerfile_autoexec:1-12"
+        "content": "/dynamic_plasticity_neural_networks/sparse_matrix_multiplication.py",
+        "type": "filepath"
     },
     "685": {
         "file_id": 87,
-        "content": "This Dockerfile installs required packages for a Python-based chat agent, including pip and specific libraries, then copies necessary script files.",
-        "type": "comment"
+        "content": "Creates a sparse matrix with random values and average synapses, then times the calculation of multiplying it by either another dense or sparse matrix.",
+        "type": "summary"
     },
     "686": {
-        "file_id": 88,
-        "content": "/containerized_chatgpt_agent/Dockerfile_autoexec_visual",
-        "type": "filepath"
+        "file_id": 87,
+        "content": "import torch\nimport sparse\nimport time\nlarge_number = 1_000_000\naverage_synapses = 3 # 1.7s, 0.146s\n# average_synapses = 10 # 11.8s, 0.505s\n# average_synapses = 100 # ..., 13.258s\n# average_synapses = 1_000\nnp_sparse = sparse.random((large_number, large_number), nnz=large_number*average_synapses)\n# print(np_sparse.coords, np_sparse.data, np_sparse.shape)\n# breakpoint()\ntorch_sparse = torch.sparse_coo_tensor(np_sparse.coords, np_sparse.data, np_sparse.shape)\ntorch_dense = torch.randn(large_number, dtype=torch.double)\n# before = time.time()\n# result = torch_sparse@torch_sparse\n# after = time.time()\n# print(result)\n# print(f\"calculation time: {after-before:.3f}s\")\nbefore = time.time()\nresult_dense = torch_dense@torch_sparse\nafter = time.time()\nprint(result_dense)\nprint(f\"calculation time: {after-before:.3f}s\")",
+        "type": "code",
+        "location": "/dynamic_plasticity_neural_networks/sparse_matrix_multiplication.py:1-27"
     },
     "687": {
-        "file_id": 88,
-        "content": "This Dockerfile installs Xfce4 and Xvfb, sets up the screenshot process using xfce4-session and PyAutoGUI. It then installs various Python packages and copies required scripts and files for the application to function properly.",
-        "type": "summary"
+        "file_id": 87,
+        "content": "Creates a sparse matrix with random values and average synapses, then times the calculation of multiplying it by either another dense or sparse matrix.",
+        "type": "comment"
     },
     "688": {
         "file_id": 88,
-        "content": "# install xfce4, xvfb\n# run the screenshot process.\n# xvfb-run -n 99 -f ~/.Xauthority xfce4-session\nFROM ubuntu:22.04\nWORKDIR /root\nENV DEBIAN_FRONTEND=noninteractive\nCOPY install_pip_and_pyautogui_prequisites.sh .\nRUN bash install_pip_and_pyautogui_prequisites.sh\nRUN pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple litellm requests fastapi uvicorn pytesseract ascii_magic pyautogui\nRUN pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple progressbar2\nCOPY ptyproc.py .\nCOPY port_util.py .\nCOPY visual_autoexec_example.py .\nCOPY ollama_utils.py .\nCOPY diff_utils.py .\nCOPY cursor.png .\nCOPY visual_server_on_ubuntu.py .\nCOPY visual_autoexec_main.sh main.sh",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/Dockerfile_autoexec_visual:1-18"
+        "content": "/external_reference/extra_init.sh",
+        "type": "filepath"
     },
     "689": {
         "file_id": 88,
-        "content": "This Dockerfile installs Xfce4 and Xvfb, sets up the screenshot process using xfce4-session and PyAutoGUI. It then installs various Python packages and copies required scripts and files for the application to function properly.",
-        "type": "comment"
+        "content": "Clone CogVLM and AppAgent repositories from their respective GitHub URLs.",
+        "type": "summary"
     },
     "690": {
-        "file_id": 89,
-        "content": "/containerized_chatgpt_agent/Modelfile",
-        "type": "filepath"
+        "file_id": 88,
+        "content": "git clone https://github.com/THUDM/CogVLM\ngit clone https://github.com/mnotgod96/AppAgent",
+        "type": "code",
+        "location": "/external_reference/extra_init.sh:1-2"
     },
     "691": {
-        "file_id": 89,
-        "content": "This Docker image uses the llama2 model and sets a temperature of 1 for more coherent responses. It includes a system prompt for AI interactions within a bash shell environment, with available commands like \"type\".",
-        "type": "summary"
+        "file_id": 88,
+        "content": "Clone CogVLM and AppAgent repositories from their respective GitHub URLs.",
+        "type": "comment"
     },
     "692": {
         "file_id": 89,
-        "content": "FROM llama2\n# set the temperature to 1 [higher is more creative, lower is more coherent]\nPARAMETER temperature 1\n# PARAMETER temperature 0.5\n# set the system prompt\nSYSTEM \"\"\"\nYou are an AI agent inside a terminal environment. The terminal environment is bash shell. You can interact with the environment by writing special commands separated by newline. After your actions, the environment will execute the command and return the current terminal view. You can input special characters like carriage return or delete by using escape sequences, starting with a backslash and ending with a letter, like '\\\\b'.\nDo not talk back to me. Only generate commands. The system will not add the return '\\\\n' for you. You have to be explicit.\nEverytime you try to input anything, a random command will be generated and executed before you. You can view it.\nAvaliable commands:\ntype <character sequence>\nExample:\ntype apt\\\\n\ntype ls\\\\n\n\"\"\"",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/Modelfile:1-24"
+        "content": "/external_reference/init.cmd",
+        "type": "filepath"
     },
     "693": {
         "file_id": 89,
-        "content": "This Docker image uses the llama2 model and sets a temperature of 1 for more coherent responses. It includes a system prompt for AI interactions within a bash shell environment, with available commands like \"type\".",
-        "type": "comment"
+        "content": "Cloning necessary repositories for project setup.",
+        "type": "summary"
     },
     "694": {
-        "file_id": 90,
-        "content": "/containerized_chatgpt_agent/Modelfile_visual",
-        "type": "filepath"
+        "file_id": 89,
+        "content": "git clone https://github.com/abhiprojectz/SingularGPT\ngit clone https://github.com/ddupont808/GPT-4V-Act\ngit clone https://github.com/openai/Video-Pre-Training\ngit clone https://github.com/Charmve/gpt-eyes\ngit clone https://github.com/ruvnet/q-star",
+        "type": "code",
+        "location": "/external_reference/init.cmd:1-5"
     },
     "695": {
-        "file_id": 90,
-        "content": "The summary is as follows: The given comments describe a containerized ChatGPT agent with specific settings, such as using llama2-uncensored base and setting the temperature to 1 for creativity and coherence. It provides available commands for interacting with the agent in a containerized environment including typing character sequences, clicking, and moving the cursor.",
-        "type": "summary"
+        "file_id": 89,
+        "content": "Cloning necessary repositories for project setup.",
+        "type": "comment"
     },
     "696": {
         "file_id": 90,
-        "content": "FROM llama2-uncensored\n# llama2 won't comply.\n# set the temperature to 1 [higher is more creative, lower is more coherent]\nPARAMETER temperature 1\n# PARAMETER temperature 0.5\n# set the system prompt\nSYSTEM \"\"\"\nYou are a visual AI agent inside a graphical environment which is xfce4. The OS is Ubuntu 22.04. You can interact with the environment by writing special commands separated by newline. After your actions, the environment will execute the command and return the current desktop view in text. You can input special characters like carriage return or delete by using escape sequences, starting with a backslash and ending with a letter, like '\\\\b'.\nThink of Helen Keller, the human writer who is bilnd. You can operate the GUI with text command. Everytime you try to input anything, a random command will be generated and executed before you. You can view it.\nBelow are some information separated by title and colon. Do not confuse them.\nIn the end you will be asked to give your commands similar to the",
-        "type": "code",
-        "location": "/containerized_chatgpt_agent/Modelfile_visual:1-16"
+        "content": "/external_reference/supercharge_init.sh",
+        "type": "filepath"
     },
     "697": {
         "file_id": 90,
-        "content": "Containerized ChatGPT agent with Modelfile_visual: Docker image using llama2-uncensored as base, setting temperature to 1 for creativity and coherence, system prompt provided for visual AI agent interaction within xfce4 on Ubuntu 22.04.",
-        "type": "comment"
+        "content": "The code is cloning four GitHub repositories: \"self-operating-computer\", \"QStarLearning.mojo\", \"open_qstar\", and \"gpt4v-browsing\".",
+        "type": "summary"
     },
     "698": {
         "file_id": 90,
-        "content": " random commands. Do not emit anything other than commands.\nAvaliable commands:\ntype <character sequence (escaped)>\nclick [left|right|middle]\nclick\nmove_abs <x>,<y>\n\"\"\"",
+        "content": "git clone https://github.com/OthersideAI/self-operating-computer\ngit clone https://github.com/tairov/QStarLearning.mojo\ngit clone https://github.com/estill01/open_qstar\ngit clone https://github.com/unconv/gpt4v-browsing",
         "type": "code",
-        "location": "/containerized_chatgpt_agent/Modelfile_visual:16-25"
+        "location": "/external_reference/supercharge_init.sh:1-4"
     },
     "699": {
         "file_id": 90,
-        "content": "This code provides available commands for a chatGPT agent in a containerized environment. Commands include typing character sequences, clicking with different mouse buttons, and moving the cursor to an absolute position.",
+        "content": "The code is cloning four GitHub repositories: \"self-operating-computer\", \"QStarLearning.mojo\", \"open_qstar\", and \"gpt4v-browsing\".",
         "type": "comment"
     }
 }
