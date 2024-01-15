@@ -17,7 +17,7 @@
         "2": {
             "filepath": "/README.md",
             "entry_id": 10,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "3": {
             "filepath": "/action_state_machine/example.txt",
@@ -52,7 +52,7 @@
         "9": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/README.md",
             "entry_id": 70,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "10": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py",
@@ -472,7 +472,7 @@
         "93": {
             "filepath": "/hardware_capture_hid_power_control/README.md",
             "entry_id": 708,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "94": {
             "filepath": "/hardware_capture_hid_power_control/common_keycodes.py",
@@ -632,7 +632,7 @@
         "125": {
             "filepath": "/propaganda/video_script/README.md",
             "entry_id": 958,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "126": {
             "filepath": "/propaganda/video_script/clyde_script.txt",
@@ -697,7 +697,7 @@
         "138": {
             "filepath": "/qstar_my_guess/README.md",
             "entry_id": 1028,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "139": {
             "filepath": "/qstar_my_guess/astar_test.py",
@@ -767,7 +767,7 @@
         "152": {
             "filepath": "/rt_x_experiments/README.md",
             "entry_id": 1168,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "153": {
             "filepath": "/rt_x_experiments/audio_to_mel/test_librosa.py",
@@ -952,7 +952,7 @@
         "189": {
             "filepath": "/the_frozen_forest_intro/README.md",
             "entry_id": 1444,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "190": {
             "filepath": "/the_frozen_forest_intro/drissionpage_common.py",
@@ -1082,7 +1082,7 @@
         "215": {
             "filepath": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/README.md",
             "entry_id": 1638,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "216": {
             "filepath": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/check_vm.sh",
@@ -1317,12 +1317,12 @@
         "262": {
             "filepath": "/usb_power_management/README.md",
             "entry_id": 1888,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "263": {
             "filepath": "/usb_power_management/linux/README.md",
             "entry_id": 1892,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "264": {
             "filepath": "/usb_power_management/linux/devcontrol.sh",
