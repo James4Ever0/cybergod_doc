@@ -52,7 +52,7 @@
         "9": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/README.md",
             "entry_id": 70,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "10": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py",
@@ -272,7 +272,7 @@
         "53": {
             "filepath": "/containerized_chatgpt_agent/README.md",
             "entry_id": 462,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "54": {
             "filepath": "/containerized_chatgpt_agent/ai_captialism.py",
@@ -422,7 +422,7 @@
         "83": {
             "filepath": "/dynamic_plasticity_neural_networks/README.md",
             "entry_id": 660,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "84": {
             "filepath": "/dynamic_plasticity_neural_networks/dnn_reference.py",
@@ -472,7 +472,7 @@
         "93": {
             "filepath": "/hardware_capture_hid_power_control/README.md",
             "entry_id": 708,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "94": {
             "filepath": "/hardware_capture_hid_power_control/common_keycodes.py",
@@ -552,7 +552,7 @@
         "109": {
             "filepath": "/lego_mindstorm_physical_mouse_keyboard_control/README.md",
             "entry_id": 876,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "110": {
             "filepath": "/lego_mindstorm_physical_mouse_keyboard_control/test.py",
@@ -572,7 +572,7 @@
         "113": {
             "filepath": "/metalearning_random_shuffle/README.md",
             "entry_id": 892,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "114": {
             "filepath": "/metalearning_random_shuffle/main.py",
@@ -627,7 +627,7 @@
         "124": {
             "filepath": "/propaganda/cybergod_propaganda/README.md",
             "entry_id": 954,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "125": {
             "filepath": "/propaganda/video_script/README.md",
@@ -952,7 +952,7 @@
         "189": {
             "filepath": "/the_frozen_forest_intro/README.md",
             "entry_id": 1444,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "190": {
             "filepath": "/the_frozen_forest_intro/drissionpage_common.py",
@@ -1317,7 +1317,7 @@
         "262": {
             "filepath": "/usb_power_management/README.md",
             "entry_id": 1888,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "263": {
             "filepath": "/usb_power_management/linux/README.md",
