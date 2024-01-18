@@ -472,7 +472,7 @@
         "93": {
             "filepath": "/hardware_capture_hid_power_control/README.md",
             "entry_id": 708,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "94": {
             "filepath": "/hardware_capture_hid_power_control/common_keycodes.py",
@@ -552,7 +552,7 @@
         "109": {
             "filepath": "/lego_mindstorm_physical_mouse_keyboard_control/README.md",
             "entry_id": 876,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "110": {
             "filepath": "/lego_mindstorm_physical_mouse_keyboard_control/test.py",
@@ -572,7 +572,7 @@
         "113": {
             "filepath": "/metalearning_random_shuffle/README.md",
             "entry_id": 892,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "114": {
             "filepath": "/metalearning_random_shuffle/main.py",
@@ -632,7 +632,7 @@
         "125": {
             "filepath": "/propaganda/video_script/README.md",
             "entry_id": 958,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "126": {
             "filepath": "/propaganda/video_script/clyde_script.txt",
@@ -767,7 +767,7 @@
         "152": {
             "filepath": "/rt_x_experiments/README.md",
             "entry_id": 1168,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "153": {
             "filepath": "/rt_x_experiments/audio_to_mel/test_librosa.py",
@@ -1047,7 +1047,7 @@
         "208": {
             "filepath": "/ubuntu_qemu_utm_arm_record/README.md",
             "entry_id": 1604,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "209": {
             "filepath": "/ubuntu_qemu_utm_arm_record/audio_record.py",
