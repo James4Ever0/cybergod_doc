@@ -197,7 +197,7 @@
         "38": {
             "filepath": "/binary_program_synthesis_cpu_assembly_execution/README.md",
             "entry_id": 286,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "39": {
             "filepath": "/binary_program_synthesis_cpu_assembly_execution/bnn_data_ingest.py",
@@ -472,7 +472,7 @@
         "93": {
             "filepath": "/hardware_capture_hid_power_control/README.md",
             "entry_id": 708,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "94": {
             "filepath": "/hardware_capture_hid_power_control/common_keycodes.py",
@@ -627,12 +627,12 @@
         "124": {
             "filepath": "/propaganda/cybergod_propaganda/README.md",
             "entry_id": 954,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "125": {
             "filepath": "/propaganda/video_script/README.md",
             "entry_id": 958,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "126": {
             "filepath": "/propaganda/video_script/clyde_script.txt",
@@ -697,7 +697,7 @@
         "138": {
             "filepath": "/qstar_my_guess/README.md",
             "entry_id": 1028,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "139": {
             "filepath": "/qstar_my_guess/astar_test.py",
@@ -1322,7 +1322,7 @@
         "263": {
             "filepath": "/usb_power_management/linux/README.md",
             "entry_id": 1892,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "264": {
             "filepath": "/usb_power_management/linux/devcontrol.sh",
