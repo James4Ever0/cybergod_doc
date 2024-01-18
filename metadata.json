@@ -17,7 +17,7 @@
         "2": {
             "filepath": "/README.md",
             "entry_id": 10,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "3": {
             "filepath": "/action_state_machine/example.txt",
@@ -52,7 +52,7 @@
         "9": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/README.md",
             "entry_id": 70,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "10": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py",
@@ -197,7 +197,7 @@
         "38": {
             "filepath": "/binary_program_synthesis_cpu_assembly_execution/README.md",
             "entry_id": 286,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "39": {
             "filepath": "/binary_program_synthesis_cpu_assembly_execution/bnn_data_ingest.py",
@@ -422,7 +422,7 @@
         "83": {
             "filepath": "/dynamic_plasticity_neural_networks/README.md",
             "entry_id": 660,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "84": {
             "filepath": "/dynamic_plasticity_neural_networks/dnn_reference.py",
@@ -472,7 +472,7 @@
         "93": {
             "filepath": "/hardware_capture_hid_power_control/README.md",
             "entry_id": 708,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "94": {
             "filepath": "/hardware_capture_hid_power_control/common_keycodes.py",
@@ -572,7 +572,7 @@
         "113": {
             "filepath": "/metalearning_random_shuffle/README.md",
             "entry_id": 892,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "114": {
             "filepath": "/metalearning_random_shuffle/main.py",
@@ -947,12 +947,12 @@
         "188": {
             "filepath": "/the_cage_dataset/README.md",
             "entry_id": 1440,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "189": {
             "filepath": "/the_frozen_forest_intro/README.md",
             "entry_id": 1444,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "190": {
             "filepath": "/the_frozen_forest_intro/drissionpage_common.py",
@@ -967,7 +967,7 @@
         "192": {
             "filepath": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/README.md",
             "entry_id": 1460,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "193": {
             "filepath": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/index.js",
@@ -1317,12 +1317,12 @@
         "262": {
             "filepath": "/usb_power_management/README.md",
             "entry_id": 1888,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "263": {
             "filepath": "/usb_power_management/linux/README.md",
             "entry_id": 1892,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "264": {
             "filepath": "/usb_power_management/linux/devcontrol.sh",
