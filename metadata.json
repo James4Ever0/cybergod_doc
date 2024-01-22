@@ -17,7 +17,7 @@
         "2": {
             "filepath": "/README.md",
             "entry_id": 10,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "3": {
             "filepath": "/action_state_machine/example.txt",
@@ -52,7 +52,7 @@
         "9": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/README.md",
             "entry_id": 70,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "10": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py",
@@ -197,7 +197,7 @@
         "38": {
             "filepath": "/binary_program_synthesis_cpu_assembly_execution/README.md",
             "entry_id": 286,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "39": {
             "filepath": "/binary_program_synthesis_cpu_assembly_execution/bnn_data_ingest.py",
@@ -422,7 +422,7 @@
         "83": {
             "filepath": "/dynamic_plasticity_neural_networks/README.md",
             "entry_id": 660,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "84": {
             "filepath": "/dynamic_plasticity_neural_networks/dnn_reference.py",
@@ -572,7 +572,7 @@
         "113": {
             "filepath": "/metalearning_random_shuffle/README.md",
             "entry_id": 892,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "114": {
             "filepath": "/metalearning_random_shuffle/main.py",
@@ -697,7 +697,7 @@
         "138": {
             "filepath": "/qstar_my_guess/README.md",
             "entry_id": 1028,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "139": {
             "filepath": "/qstar_my_guess/astar_test.py",
@@ -947,7 +947,7 @@
         "188": {
             "filepath": "/the_cage_dataset/README.md",
             "entry_id": 1440,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "189": {
             "filepath": "/the_frozen_forest_intro/README.md",
@@ -1082,7 +1082,7 @@
         "215": {
             "filepath": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/README.md",
             "entry_id": 1638,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "216": {
             "filepath": "/ubuntu_qemu_utm_arm_record/kali_vbox_control/check_vm.sh",
@@ -1322,7 +1322,7 @@
         "263": {
             "filepath": "/usb_power_management/linux/README.md",
             "entry_id": 1892,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "264": {
             "filepath": "/usb_power_management/linux/devcontrol.sh",
