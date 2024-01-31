@@ -52,7 +52,7 @@
         "9": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/README.md",
             "entry_id": 70,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "10": {
             "filepath": "/basic_interactive_program_emulation_and_image_with_docker_support/alpine_actor.py",
@@ -422,7 +422,7 @@
         "83": {
             "filepath": "/dynamic_plasticity_neural_networks/README.md",
             "entry_id": 660,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "84": {
             "filepath": "/dynamic_plasticity_neural_networks/dnn_reference.py",
@@ -472,7 +472,7 @@
         "93": {
             "filepath": "/hardware_capture_hid_power_control/README.md",
             "entry_id": 708,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "94": {
             "filepath": "/hardware_capture_hid_power_control/common_keycodes.py",
@@ -632,7 +632,7 @@
         "125": {
             "filepath": "/propaganda/video_script/README.md",
             "entry_id": 958,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "126": {
             "filepath": "/propaganda/video_script/clyde_script.txt",
@@ -952,7 +952,7 @@
         "189": {
             "filepath": "/the_frozen_forest_intro/README.md",
             "entry_id": 1444,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "190": {
             "filepath": "/the_frozen_forest_intro/drissionpage_common.py",
@@ -967,7 +967,7 @@
         "192": {
             "filepath": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/README.md",
             "entry_id": 1460,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "193": {
             "filepath": "/the_frozen_forest_intro/keylogger_extension/virtual-keylogger/src/index.js",
@@ -1047,7 +1047,7 @@
         "208": {
             "filepath": "/ubuntu_qemu_utm_arm_record/README.md",
             "entry_id": 1604,
-            "language_id": "plain-text"
+            "language_id": "markdown"
         },
         "209": {
             "filepath": "/ubuntu_qemu_utm_arm_record/audio_record.py",
@@ -1322,7 +1322,7 @@
         "263": {
             "filepath": "/usb_power_management/linux/README.md",
             "entry_id": 1892,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "264": {
             "filepath": "/usb_power_management/linux/devcontrol.sh",
@@ -1332,7 +1332,7 @@
         "265": {
             "filepath": "/usb_power_management/windows/README.md",
             "entry_id": 1906,
-            "language_id": "markdown"
+            "language_id": "plain-text"
         },
         "266": {
             "filepath": "/use_logging.py",
